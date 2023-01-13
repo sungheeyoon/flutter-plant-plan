@@ -11,7 +11,7 @@ class DummyBackgroundContent extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Container(
-        height: 100,
+        height: 2100,
         color: Colors.grey[400],
         child: Padding(
           padding: const EdgeInsets.all(25.0),

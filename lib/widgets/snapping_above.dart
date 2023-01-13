@@ -20,11 +20,6 @@ class SnappingAbove extends StatelessWidget {
             positionFactor: 1,
           ),
           SnappingPosition.factor(
-            snappingCurve: Curves.elasticInOut,
-            snappingDuration: Duration(milliseconds: 1750),
-            positionFactor: 0.34,
-          ),
-          SnappingPosition.factor(
             positionFactor: 0.34,
             grabbingContentOffset: GrabbingContentOffset.top,
           ),

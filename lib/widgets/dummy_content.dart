@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class DummyContent extends StatelessWidget {
-  final bool reverse;
+  final bool? reverse;
   final ScrollController? controller;
 
   const DummyContent({Key? key, this.controller, this.reverse = false})
@@ -10,9 +10,11 @@ class DummyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
+      controller: controller,
+      physics: const NeverScrollableScrollPhysics(),
+      child: Container(
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 62),
           child: Column(
