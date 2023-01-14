@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
-class DummyContent extends StatelessWidget {
+class SnappingScreen extends StatelessWidget {
   final bool? reverse;
   final ScrollController? controller;
 
-  const DummyContent({Key? key, this.controller, this.reverse = false})
+  const SnappingScreen({Key? key, this.controller, this.reverse = false})
       : super(key: key);
 
   @override
