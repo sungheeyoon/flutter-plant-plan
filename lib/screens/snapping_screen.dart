@@ -30,19 +30,35 @@ class SnappingScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  ImageBox(imageUri: 'assets/images/humid_outline.png'),
+                  ImageBox(
+                    imageUri: 'assets/images/humid_outline.png',
+                    width: 70,
+                    height: 70,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
-                  ImageBox(imageUri: 'assets/images/sun_outline.png'),
+                  ImageBox(
+                    imageUri: 'assets/images/sun_outline.png',
+                    width: 70,
+                    height: 70,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
-                  ImageBox(imageUri: 'assets/images/division_outline.png'),
+                  ImageBox(
+                    imageUri: 'assets/images/division_outline.png',
+                    width: 70,
+                    height: 70,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
-                  ImageBox(imageUri: 'assets/images/nutrient_outline.png')
+                  ImageBox(
+                    imageUri: 'assets/images/nutrient_outline.png',
+                    width: 70,
+                    height: 70,
+                  )
                 ],
               ),
               const SizedBox(
