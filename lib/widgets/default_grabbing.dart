@@ -27,8 +27,8 @@ class DefaultGrabbing extends StatelessWidget {
         boxShadow: const [
           BoxShadow(
             blurRadius: 20,
-            spreadRadius: 10,
-            color: Color.fromARGB(6, 51, 103, 57),
+            color: Color.fromRGBO(51, 103, 57, 0.06),
+            offset: Offset(0, 3),
           )
         ],
         borderRadius: _getBorderRadius(),
@@ -41,6 +41,7 @@ class DefaultGrabbing extends StatelessWidget {
             const RotatedBox(
               quarterTurns: 2,
               child: Align(
+                heightFactor: 4.0,
                 child: Text(
                   "현재 모든 식물들이 건강해요!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),

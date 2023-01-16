@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/models/toon_model.dart';
 import 'package:plant_plan/services/api_service.dart';
+import 'package:plant_plan/widgets/clear_card.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/widgets/round_image_widget.dart';
 
@@ -17,17 +18,24 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 140, 24, 24),
+            padding: const EdgeInsets.fromLTRB(24, 128, 24, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Text(
                   "More Plants,",
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 32),
+                  style: TextStyle(
+                      fontFamily: "PyeongChangPeace",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 32,
+                      color: Color.fromRGBO(29, 49, 91, 1)),
                 ),
                 Text("More Happiness",
-                    style:
-                        TextStyle(fontWeight: FontWeight.w300, fontSize: 32)),
+                    style: TextStyle(
+                        fontFamily: "PyeongChangPeace",
+                        fontWeight: FontWeight.w300,
+                        fontSize: 32,
+                        color: Color.fromRGBO(29, 49, 91, 1))),
               ],
             ),
           ),
@@ -91,15 +99,8 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
                                   ImageBox(
-                                    imageUri: 'assets/images/humid_outline.png',
-                                    width: 48,
-                                    height: 48,
-                                  ),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  ImageBox(
-                                    imageUri: 'assets/images/sun_outline.png',
+                                    imageUri:
+                                        'assets/images/management/humid_outline.png',
                                     width: 48,
                                     height: 48,
                                   ),
@@ -108,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   ImageBox(
                                     imageUri:
-                                        'assets/images/division_outline.png',
+                                        'assets/images/management/sun_outline.png',
                                     width: 48,
                                     height: 48,
                                   ),
@@ -117,7 +118,16 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   ImageBox(
                                     imageUri:
-                                        'assets/images/nutrient_outline.png',
+                                        'assets/images/management/division_outline.png',
+                                    width: 48,
+                                    height: 48,
+                                  ),
+                                  SizedBox(
+                                    width: 24,
+                                  ),
+                                  ImageBox(
+                                    imageUri:
+                                        'assets/images/management/nutrient_outline.png',
                                     width: 48,
                                     height: 48,
                                   )
@@ -151,6 +161,182 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    const Text(
+                      "곧 다가오는 내 식물 관리",
+                      style: TextStyle(
+                          color: Color.fromRGBO(29, 49, 91, 1),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const ClearCard(
+                        imageUri:
+                            'assets/images/management/nutrient_outline.png',
+                        title: '인도고무나무',
+                        action: '물 주기',
+                        day: '8.15(일)',
+                        time: '13:00',
+                        dayBool: true,
+                        clear: true),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    const ClearCard(
+                        imageUri:
+                            'assets/images/management/nutrient_outline.png',
+                        title: '인도고무나무',
+                        action: '물 주기',
+                        day: '8.15(일)',
+                        time: '13:00',
+                        dayBool: false,
+                        clear: false),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    const ClearCard(
+                        imageUri:
+                            'assets/images/management/nutrient_outline.png',
+                        title: '인도고무나무',
+                        action: '물 주기',
+                        day: '8.15(일)',
+                        time: '13:00',
+                        dayBool: false,
+                        clear: true),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    const ClearCard(
+                        imageUri:
+                            'assets/images/management/nutrient_outline.png',
+                        title: '인도고무나무',
+                        action: '물 주기',
+                        day: '8.15(일)',
+                        time: '13:00',
+                        dayBool: true,
+                        clear: false),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    Center(
+                      child: SizedBox(
+                        width: 200,
+                        height: 40,
+                        child: OutlinedButton(
+                            onPressed: () {},
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              side: const BorderSide(
+                                  width: 0,
+                                  color: Color.fromRGBO(192, 220, 185, 1)),
+                              backgroundColor:
+                                  const Color.fromRGBO(192, 220, 185, 1),
+                            ),
+                            child: const Text(
+                              "전체보기",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: Colors.white),
+                            )),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 80,
+                    )
+                  ],
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text(
+                    "오늘의 날씨",
+                    style: TextStyle(
+                        color: Color.fromRGBO(29, 49, 91, 1),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                          height: 22,
+                          width: 60,
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(244, 244, 244, 1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Center(
+                            child: Text(
+                              "26° / 16°",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(136, 138, 143, 1)),
+                            ),
+                          )),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const ImageBox(
+                          imageUri: 'assets/images/weather/partly_sunny.png',
+                          width: 80,
+                          height: 80),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      Column(
+                        children: const [
+                          Text(
+                            "22°",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 40,
+                                color: Color.fromRGBO(29, 49, 91, 1)),
+                          ),
+                          Text(
+                            "강수확률30% 습도60%",
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Color.fromRGBO(29, 49, 91, 1)),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Center(
+                    child: Text(
+                      '햇빛이 적당히 필요한 식물에게 좋은 날이에요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16, color: Color.fromRGBO(29, 49, 91, 1)),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ])
+              ],
+            ),
           )
         ],
       ),

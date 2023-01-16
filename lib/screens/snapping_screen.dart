@@ -16,7 +16,7 @@ class SnappingScreen extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 62),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 52),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,7 +31,7 @@ class SnappingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   ImageBox(
-                    imageUri: 'assets/images/humid_outline.png',
+                    imageUri: 'assets/images/management/humid_outline.png',
                     width: 70,
                     height: 70,
                   ),
@@ -39,7 +39,7 @@ class SnappingScreen extends StatelessWidget {
                     width: 10,
                   ),
                   ImageBox(
-                    imageUri: 'assets/images/sun_outline.png',
+                    imageUri: 'assets/images/management/sun_outline.png',
                     width: 70,
                     height: 70,
                   ),
@@ -47,7 +47,7 @@ class SnappingScreen extends StatelessWidget {
                     width: 10,
                   ),
                   ImageBox(
-                    imageUri: 'assets/images/division_outline.png',
+                    imageUri: 'assets/images/management/division_outline.png',
                     width: 70,
                     height: 70,
                   ),
@@ -55,7 +55,7 @@ class SnappingScreen extends StatelessWidget {
                     width: 10,
                   ),
                   ImageBox(
-                    imageUri: 'assets/images/nutrient_outline.png',
+                    imageUri: 'assets/images/management/nutrient_outline.png',
                     width: 70,
                     height: 70,
                   )
@@ -66,7 +66,7 @@ class SnappingScreen extends StatelessWidget {
               ),
               Row(children: const [
                 SnappingContainer(
-                    imageUrl: "assets/images/humid.png",
+                    imageUrl: "assets/images/management/humid.png",
                     title: "수분량",
                     measure: "88%",
                     explain: "모든 식물이들 수분 충분해요"),
@@ -74,7 +74,7 @@ class SnappingScreen extends StatelessWidget {
                   width: 10,
                 ),
                 SnappingContainer(
-                    imageUrl: "assets/images/sun.png",
+                    imageUrl: "assets/images/management/sun.png",
                     title: "일조량",
                     measure: "75%",
                     explain: "모든 식물이들 일조량 충분해요"),
@@ -84,7 +84,7 @@ class SnappingScreen extends StatelessWidget {
               ),
               Row(children: const [
                 SnappingContainer(
-                    imageUrl: "assets/images/division.png",
+                    imageUrl: "assets/images/management/division.png",
                     title: "분갈이",
                     measure: "D-120",
                     explain: "분갈이 시기 확인하세요"),
@@ -92,7 +92,7 @@ class SnappingScreen extends StatelessWidget {
                   width: 10,
                 ),
                 SnappingContainer(
-                    imageUrl: "assets/images/nutrient.png",
+                    imageUrl: "assets/images/management/nutrient.png",
                     title: "영양제",
                     measure: "D-80",
                     explain: "영양제 종류/목적 중요해요")

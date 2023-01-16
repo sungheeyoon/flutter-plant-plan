@@ -12,6 +12,7 @@ class SnappingAbove extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SnappingSheet(
         lockOverflowDrag: true,
         snappingPositions: const [
@@ -24,7 +25,7 @@ class SnappingAbove extends StatelessWidget {
             grabbingContentOffset: GrabbingContentOffset.top,
           ),
         ],
-        grabbingHeight: 75,
+        grabbingHeight: 88,
         grabbing: const DefaultGrabbing(
           reverse: true,
         ),

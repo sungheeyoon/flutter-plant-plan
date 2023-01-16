@@ -25,7 +25,10 @@ class RoundImage extends StatelessWidget {
         ),
         const Text(
           "이름이름이름",
-          style: TextStyle(fontSize: 12),
+          style: TextStyle(
+            fontSize: 12,
+            color: Color.fromRGBO(29, 49, 91, 1),
+          ),
         )
       ],
     );
