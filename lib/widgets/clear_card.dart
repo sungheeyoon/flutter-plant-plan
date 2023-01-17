@@ -98,6 +98,7 @@ class ClearCard extends StatelessWidget {
                         height: 22,
                         width: 53,
                         decoration: BoxDecoration(
+                          color: const Color.fromRGBO(255, 133, 63, 1),
                           borderRadius: const BorderRadius.horizontal(
                               right: Radius.circular(12),
                               left: Radius.circular(12)),
@@ -112,7 +113,7 @@ class ClearCard extends StatelessWidget {
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
-                                color: Color.fromRGBO(255, 133, 63, 1)),
+                                color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),

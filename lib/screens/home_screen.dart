@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/models/toon_model.dart';
 import 'package:plant_plan/services/api_service.dart';
-import 'package:plant_plan/widgets/clear_card.dart';
 import 'package:plant_plan/widgets/image_box.dart';
+import 'package:plant_plan/widgets/management_widget.dart';
 import 'package:plant_plan/widgets/round_image_widget.dart';
+import 'package:plant_plan/widgets/weather_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
+  List<Map<String, String>> weathers = [
+    {'img': 'assets/images/weather/partly_sunny.png', 'time': '11:00'},
+    {'img': 'assets/images/weather/partly_sunny.png', 'time': '12:00'},
+    {'img': 'assets/images/weather/cloudy.png', 'time': '13:00'},
+    {'img': 'assets/images/weather/cloudy.png', 'time': '14:00'},
+    {'img': 'assets/images/weather/sunny.png', 'time': '15:00'},
+    {'img': 'assets/images/weather/sunny.png', 'time': '16:00'},
+    {'img': 'assets/images/weather/partly_sunny.png', 'time': '17:00'},
+    {'img': 'assets/images/weather/sunny.png', 'time': '18:00'},
+    {'img': 'assets/images/weather/partly_sunny.png', 'time': '19:00'},
+    {'img': 'assets/images/weather/cloudy.png', 'time': '20:00'},
+    {'img': 'assets/images/weather/partly_sunny.png', 'time': '21:00'},
+  ];
 
   final Future<List<ToonModel>> webtoons = ApiService.getTodaysToons();
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const ScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -39,305 +54,192 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          Column(
-            children: [
-              Container(
-                color: const Color.fromRGBO(235, 247, 232, 1),
-                height: 328,
-                child: Column(
-                  children: [
-                    FutureBuilder(
-                      future: webtoons,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Expanded(
-                            child: Column(
-                              children: [Expanded(child: makeList(snapshot))],
-                            ),
-                          );
-                        }
-                        return const Center(
+          Container(
+            color: const Color.fromRGBO(235, 247, 232, 1),
+            height: 328,
+            child: Column(
+              children: [
+                FutureBuilder(
+                  future: webtoons,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Expanded(
+                        child: Column(
+                          children: [Expanded(child: makeList(snapshot))],
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: const [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
                           child: CircularProgressIndicator(),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 24),
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          height: 186,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text(
-                                    "안시리움",
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(29, 49, 91, 1),
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16),
-                                  ),
-                                  Text(
-                                    "20.05.17",
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(187, 187, 187, 1),
-                                        fontSize: 12),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  ImageBox(
-                                    imageUri:
-                                        'assets/images/management/humid_outline.png',
-                                    width: 48,
-                                    height: 48,
-                                  ),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  ImageBox(
-                                    imageUri:
-                                        'assets/images/management/sun_outline.png',
-                                    width: 48,
-                                    height: 48,
-                                  ),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  ImageBox(
-                                    imageUri:
-                                        'assets/images/management/division_outline.png',
-                                    width: 48,
-                                    height: 48,
-                                  ),
-                                  SizedBox(
-                                    width: 24,
-                                  ),
-                                  ImageBox(
-                                    imageUri:
-                                        'assets/images/management/nutrient_outline.png',
-                                    width: 48,
-                                    height: 48,
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              const Text(
-                                "\"아주 쑥쑥 자라는 중이에요\"",
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      height: 186,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
+                                "안시리움",
                                 style: TextStyle(
-                                    color: Color.fromRGBO(146, 205, 141, 1),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700),
+                                    color: Color.fromRGBO(29, 49, 91, 1),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16),
                               ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              const Text(
-                                "자세히 보기",
+                              Text(
+                                "20.05.17",
                                 style: TextStyle(
-                                    color: Color.fromRGBO(165, 165, 165, 1),
+                                    color: Color.fromRGBO(187, 187, 187, 1),
                                     fontSize: 12),
-                              ),
+                              )
                             ],
                           ),
-                        ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              ImageBox(
+                                imageUri:
+                                    'assets/images/management/humid_outline.png',
+                                width: 48,
+                                height: 48,
+                              ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                              ImageBox(
+                                imageUri:
+                                    'assets/images/management/sun_outline.png',
+                                width: 48,
+                                height: 48,
+                              ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                              ImageBox(
+                                imageUri:
+                                    'assets/images/management/division_outline.png',
+                                width: 48,
+                                height: 48,
+                              ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                              ImageBox(
+                                imageUri:
+                                    'assets/images/management/nutrient_outline.png',
+                                width: 48,
+                                height: 48,
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text(
+                            "\"아주 쑥쑥 자라는 중이에요\"",
+                            style: TextStyle(
+                                color: Color.fromRGBO(146, 205, 141, 1),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text(
+                            "자세히 보기",
+                            style: TextStyle(
+                                color: Color.fromRGBO(165, 165, 165, 1),
+                                fontSize: 12),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    const Text(
-                      "곧 다가오는 내 식물 관리",
-                      style: TextStyle(
-                          color: Color.fromRGBO(29, 49, 91, 1),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    const ClearCard(
-                        imageUri:
-                            'assets/images/management/nutrient_outline.png',
-                        title: '인도고무나무',
-                        action: '물 주기',
-                        day: '8.15(일)',
-                        time: '13:00',
-                        dayBool: true,
-                        clear: true),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const ClearCard(
-                        imageUri:
-                            'assets/images/management/nutrient_outline.png',
-                        title: '인도고무나무',
-                        action: '물 주기',
-                        day: '8.15(일)',
-                        time: '13:00',
-                        dayBool: false,
-                        clear: false),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const ClearCard(
-                        imageUri:
-                            'assets/images/management/nutrient_outline.png',
-                        title: '인도고무나무',
-                        action: '물 주기',
-                        day: '8.15(일)',
-                        time: '13:00',
-                        dayBool: false,
-                        clear: true),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const ClearCard(
-                        imageUri:
-                            'assets/images/management/nutrient_outline.png',
-                        title: '인도고무나무',
-                        action: '물 주기',
-                        day: '8.15(일)',
-                        time: '13:00',
-                        dayBool: true,
-                        clear: false),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    Center(
-                      child: SizedBox(
-                        width: 200,
-                        height: 40,
-                        child: OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              side: const BorderSide(
-                                  width: 0,
-                                  color: Color.fromRGBO(192, 220, 185, 1)),
-                              backgroundColor:
-                                  const Color.fromRGBO(192, 220, 185, 1),
-                            ),
-                            child: const Text(
-                              "전체보기",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            )),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 80,
-                    )
-                  ],
-                ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text(
-                    "오늘의 날씨",
+          const Management(),
+          const SizedBox(
+            height: 80,
+          ),
+          Weather(weathers: weathers),
+          const SizedBox(
+            height: 80,
+          ),
+          Column(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "식플 BEST 포스트",
                     style: TextStyle(
                         color: Color.fromRGBO(29, 49, 91, 1),
                         fontWeight: FontWeight.w700,
                         fontSize: 20),
                   ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                          height: 22,
-                          width: 60,
-                          decoration: BoxDecoration(
-                              color: const Color.fromRGBO(244, 244, 244, 1),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Center(
-                            child: Text(
-                              "26° / 16°",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromRGBO(136, 138, 143, 1)),
-                            ),
-                          )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const ImageBox(
-                          imageUri: 'assets/images/weather/partly_sunny.png',
-                          width: 80,
-                          height: 80),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Column(
-                        children: const [
-                          Text(
-                            "22°",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 40,
-                                color: Color.fromRGBO(29, 49, 91, 1)),
-                          ),
-                          Text(
-                            "강수확률30% 습도60%",
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: Color.fromRGBO(29, 49, 91, 1)),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  const Center(
-                    child: Text(
-                      '햇빛이 적당히 필요한 식물에게 좋은 날이에요!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 16, color: Color.fromRGBO(29, 49, 91, 1)),
-                    ),
-                  ),
-                  const SizedBox(
+                  SizedBox(
                     height: 16,
                   ),
-                ])
-              ],
+                ],
+              ),
             ),
-          )
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: GridView.count(
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.65),
+                  physics: const ScrollPhysics(),
+                  crossAxisSpacing: 8.0,
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  children: List.generate(6, (index) {
+                    return Column(
+                      children: [
+                        Container(
+                          width: 152,
+                          height: 132,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image:
+                                  AssetImage("assets/images/plants/plantA.png"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: const Text("요즘 식집사 생활엔 식물등이"),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const Text("요즘 식집사 생활엔 식물등이asd김김김김김sad갬")
+                      ],
+                    );
+                  })),
+            )
+          ])
         ],
       ),
     );
