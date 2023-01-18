@@ -5,9 +5,16 @@ import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/widgets/management_widget.dart';
 import 'package:plant_plan/widgets/round_image_widget.dart';
 import 'package:plant_plan/widgets/weather_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> weathers = [
     {'img': 'assets/images/weather/partly_sunny.png', 'time': '11:00'},
     {'img': 'assets/images/weather/partly_sunny.png', 'time': '12:00'},
@@ -22,7 +29,36 @@ class HomeScreen extends StatelessWidget {
     {'img': 'assets/images/weather/partly_sunny.png', 'time': '21:00'},
   ];
 
+  late SharedPreferences prefs;
   final Future<List<ToonModel>> webtoons = ApiService.getTodaysToons();
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedPosts = prefs.getStringList('likedPosts');
+    if (likedPosts == null) {
+      await prefs.setStringList('likedPosts', ["0", "0", "0", "0", "0", "0"]);
+    } else {
+      await prefs.setStringList('likedPosts', likedPosts);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPrefs();
+  }
+
+  // onHeartTap(int idx) async {
+  //   final likedPosts = prefs.getStringList('likedPosts');
+  //   if (likedPosts != null) {
+  //     if (likedPosts[idx] == "0") {
+  //       likedPosts[idx] == "1";
+  //     } else {
+  //       likedPosts[idx] == "0";
+  //     }
+  //     await prefs.setStringList('likedPosts', likedPosts);
+  //     setState(() {});
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,19 +131,24 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text(
                                 "안시리움",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(29, 49, 91, 1),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                        color: const Color.fromRGBO(
+                                            29, 49, 91, 1)),
                               ),
                               Text(
-                                "20.05.17",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(187, 187, 187, 1),
-                                    fontSize: 12),
+                                "20. 05. 17",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                        color: const Color.fromRGBO(
+                                            187, 187, 187, 1)),
                               )
                             ],
                           ),
@@ -155,21 +196,26 @@ class HomeScreen extends StatelessWidget {
                           const SizedBox(
                             height: 16,
                           ),
-                          const Text(
+                          Text(
                             "\"아주 쑥쑥 자라는 중이에요\"",
-                            style: TextStyle(
-                                color: Color.fromRGBO(146, 205, 141, 1),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                    color:
+                                        const Color.fromRGBO(146, 205, 141, 1)),
                           ),
                           const SizedBox(
                             height: 16,
                           ),
-                          const Text(
+                          Text(
                             "자세히 보기",
-                            style: TextStyle(
-                                color: Color.fromRGBO(165, 165, 165, 1),
-                                fontSize: 12),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color:
+                                        const Color.fromRGBO(187, 187, 187, 1)),
                           ),
                         ],
                       ),
@@ -187,28 +233,29 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 80,
           ),
-          Column(children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "식플 BEST 포스트",
-                    style: TextStyle(
-                        color: Color.fromRGBO(29, 49, 91, 1),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    Text(
+                      "식플 BEST 포스트",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: GridView.count(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: GridView.count(
                   childAspectRatio: MediaQuery.of(context).size.width /
                       (MediaQuery.of(context).size.height / 1.65),
                   physics: const ScrollPhysics(),
@@ -229,17 +276,67 @@ class HomeScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: const Text("요즘 식집사 생활엔 식물등이"),
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Container(
+                              width: 152,
+                              height: 24,
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(8)),
+                                color: Color.fromRGBO(2, 2, 2, 0.7),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "내 식물을 위해 알아야할 TIP",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                      IconButton(
+                                        iconSize: 16,
+                                        padding: EdgeInsets.zero, // 패딩 설정
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () {},
+                                        // icon: likedPosts?[index] == '1'
+                                        //     ? Image.asset(
+                                        //         "assets/icons/favorite.png")
+                                        //     : Image.asset(
+                                        //         "assets/icons/favorite_outline.png")
+                                        icon: Image.asset(
+                                            "assets/icons/favorite_outline.png"),
+                                      )
+                                    ]),
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           height: 4,
                         ),
-                        const Text("요즘 식집사 생활엔 식물등이asd김김김김김sad갬")
+                        Text(
+                          "요즘 식집사 생활엔 식물등이asd김김김김김sad갬",
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: const Color.fromRGBO(29, 49, 91, 1),
+                                  ),
+                        )
                       ],
                     );
-                  })),
-            )
-          ])
+                  }),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

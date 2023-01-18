@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class Weather extends StatelessWidget {
@@ -18,12 +18,12 @@ class Weather extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "오늘의 날씨",
-                style: TextStyle(
-                    color: Color.fromRGBO(29, 49, 91, 1),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
               ),
               const SizedBox(
                 height: 4,
@@ -37,13 +37,15 @@ class Weather extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: const Color.fromRGBO(244, 244, 244, 1),
                           borderRadius: BorderRadius.circular(10)),
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           "26° / 16°",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(136, 138, 143, 1)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: const Color.fromRGBO(95, 95, 95, 1)),
                         ),
                       )),
                 ],
@@ -59,8 +61,8 @@ class Weather extends StatelessWidget {
                     width: 24,
                   ),
                   Column(
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "22°",
                         style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -69,8 +71,8 @@ class Weather extends StatelessWidget {
                       ),
                       Text(
                         "강수확률30% 습도60%",
-                        style: TextStyle(
-                            fontSize: 10, color: Color.fromRGBO(29, 49, 91, 1)),
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color: const Color.fromRGBO(29, 49, 91, 1)),
                       )
                     ],
                   )
@@ -82,12 +84,14 @@ class Weather extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        const Center(
+        Center(
           child: Text(
             '햇빛이 적당히 필요한 식물에게 좋은 날이에요!',
             textAlign: TextAlign.center,
-            style:
-                TextStyle(fontSize: 16, color: Color.fromRGBO(29, 49, 91, 1)),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
           ),
         ),
         const SizedBox(
@@ -105,38 +109,40 @@ class Weather extends StatelessWidget {
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return Column(
-                        children: const [
-                          SizedBox(
+                        children: [
+                          const SizedBox(
                             width: 24,
                           ),
-                          ImageBox(
+                          const ImageBox(
                               imageUri:
                                   'assets/images/weather/partly_sunny.png',
                               width: 48,
                               height: 48),
                           Text(
                             '13:00',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(29, 49, 91, 1),
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color: const Color.fromRGBO(29, 49, 91, 1)),
                           )
                         ],
                       );
                     }
                     return Column(
-                      children: const [
-                        ImageBox(
+                      children: [
+                        const ImageBox(
                             imageUri: 'assets/images/weather/partly_sunny.png',
                             width: 48,
                             height: 48),
                         Text(
                           '13:00',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(29, 49, 91, 1),
-                          ),
-                        )
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: const Color.fromRGBO(29, 49, 91, 1)),
+                        ),
                       ],
                     );
                   },

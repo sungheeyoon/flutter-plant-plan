@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   snapping_sheet: ^3.1.0
   http: ^0.13.5
+  shared_preferences: ^2.0.16
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,9 @@ flutter:
     - assets/images/weather/sunny.png
 
     - assets/images/plants/plantA.png
+
+    - assets/icons/favorite_outline.png
+    - assets/icons/favorite.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

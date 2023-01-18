@@ -23,13 +23,13 @@ class RoundImage extends StatelessWidget {
         const SizedBox(
           height: 4,
         ),
-        const Text(
+        Text(
           "이름이름이름",
-          style: TextStyle(
-            fontSize: 12,
-            color: Color.fromRGBO(29, 49, 91, 1),
-          ),
-        )
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall!
+              .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
+        ),
       ],
     );
   }

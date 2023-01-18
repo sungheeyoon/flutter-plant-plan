@@ -19,12 +19,12 @@ class Management extends StatelessWidget {
               const SizedBox(
                 height: 60,
               ),
-              const Text(
+              Text(
                 "곧 다가오는 내 식물 관리",
-                style: TextStyle(
-                    color: Color.fromRGBO(29, 49, 91, 1),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
               ),
               const SizedBox(
                 height: 16,
@@ -86,12 +86,12 @@ class Management extends StatelessWidget {
                             width: 0, color: Color.fromRGBO(192, 220, 185, 1)),
                         backgroundColor: const Color.fromRGBO(192, 220, 185, 1),
                       ),
-                      child: const Text(
+                      child: Text(
                         "전체보기",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: Colors.white),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(color: Colors.white),
                       )),
                 ),
               ),

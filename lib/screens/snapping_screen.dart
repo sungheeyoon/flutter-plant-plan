@@ -20,9 +20,12 @@ class SnappingScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "현재 전체적인 식물 상태",
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
               ),
               const SizedBox(
                 height: 18,
@@ -134,10 +137,15 @@ class SnappingContainer extends StatelessWidget {
                     height: 20,
                     width: 20,
                   ),
+                  const SizedBox(
+                    width: 4,
+                  ),
                   Text(
                     title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w400, fontSize: 14),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
                   )
                 ],
               ),
@@ -150,19 +158,30 @@ class SnappingContainer extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text("평균", style: TextStyle(fontSize: 12)),
+                      Text(
+                        "평균",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: const Color.fromRGBO(29, 49, 91, 1)),
+                      ),
                       const SizedBox(
                         width: 4,
                       ),
-                      Text(measure,
-                          style: const TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.w700))
+                      Text(
+                        measure,
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge!
+                            .copyWith(
+                                color: const Color.fromRGBO(29, 49, 91, 1)),
+                      )
                     ],
                   ),
                   Text(
                     explain,
-                    style: const TextStyle(
-                        fontSize: 10, color: Color.fromRGBO(148, 148, 148, 1)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall!
+                        .copyWith(color: const Color.fromRGBO(95, 95, 95, 1)),
                   )
                 ],
               ),

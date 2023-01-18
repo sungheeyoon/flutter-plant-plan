@@ -38,13 +38,16 @@ class DefaultGrabbing extends StatelessWidget {
         angle: reverse ? pi : 0,
         child: Stack(
           children: [
-            const RotatedBox(
+            RotatedBox(
               quarterTurns: 2,
               child: Align(
                 heightFactor: 4.0,
                 child: Text(
                   "현재 모든 식물들이 건강해요!",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: const Color.fromRGBO(2, 2, 2, 1)),
                 ),
               ),
             ),

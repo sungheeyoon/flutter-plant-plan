@@ -47,15 +47,15 @@ class ClearCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          color: Color.fromRGBO(116, 159, 149, 1),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12),
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: const Color.fromRGBO(116, 159, 149, 1)),
                     ),
                     Text(
                       action,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 18),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(color: const Color.fromRGBO(2, 2, 2, 1)),
                     ),
                   ],
                 ),
@@ -69,10 +69,12 @@ class ClearCard extends StatelessWidget {
                         children: [
                           Text(
                             "$day $time",
-                            style: const TextStyle(
-                                color: Color.fromRGBO(116, 159, 149, 1),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color:
+                                        const Color.fromRGBO(116, 159, 149, 1)),
                           ),
                           const SizedBox(
                             width: 11,
@@ -83,10 +85,12 @@ class ClearCard extends StatelessWidget {
                         children: [
                           Text(
                             time,
-                            style: const TextStyle(
-                                color: Color.fromRGBO(116, 159, 149, 1),
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color:
+                                        const Color.fromRGBO(116, 159, 149, 1)),
                           ),
                           const SizedBox(
                             width: 11,
@@ -107,13 +111,13 @@ class ClearCard extends StatelessWidget {
                             color: const Color.fromRGBO(255, 133, 63, 1),
                           ),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             "CLEAR",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                                color: Colors.white),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.white),
                             textAlign: TextAlign.center,
                           ),
                         ),
