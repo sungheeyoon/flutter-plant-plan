@@ -37,7 +37,7 @@ class SnappingAbove extends StatelessWidget {
             controller: _scrollController,
           ),
         ),
-        child: HomeScreen(),
+        child: const HomeScreen(),
       ),
     );
   }

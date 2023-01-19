@@ -28,16 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
     {'img': 'assets/images/weather/cloudy.png', 'time': '20:00'},
     {'img': 'assets/images/weather/partly_sunny.png', 'time': '21:00'},
   ];
-
+  List likeList = ['0', '0', '0', '0', '0', '0'];
   late SharedPreferences prefs;
   final Future<List<ToonModel>> webtoons = ApiService.getTodaysToons();
+
   Future initPrefs() async {
     prefs = await SharedPreferences.getInstance();
-    final likedPosts = prefs.getStringList('likedPosts');
+    final List<String>? likedPosts = prefs.getStringList('likedPosts');
     if (likedPosts == null) {
-      await prefs.setStringList('likedPosts', ["0", "0", "0", "0", "0", "0"]);
+      await prefs
+          .setStringList('likedPosts', <String>['0', '0', '0', '0', '0', '0']);
     } else {
-      await prefs.setStringList('likedPosts', likedPosts);
+      setState(() {
+        likeList = prefs.getStringList('likedPosts') ?? [];
+      });
     }
   }
 
@@ -47,18 +51,19 @@ class _HomeScreenState extends State<HomeScreen> {
     initPrefs();
   }
 
-  // onHeartTap(int idx) async {
-  //   final likedPosts = prefs.getStringList('likedPosts');
-  //   if (likedPosts != null) {
-  //     if (likedPosts[idx] == "0") {
-  //       likedPosts[idx] == "1";
-  //     } else {
-  //       likedPosts[idx] == "0";
-  //     }
-  //     await prefs.setStringList('likedPosts', likedPosts);
-  //     setState(() {});
-  //   }
-  // }
+  onHeartTap(int idx) {
+    // prefs = await SharedPreferences.getInstance();
+    // List<String>? likedPosts = prefs.getStringList('likedPosts');
+    if (likeList[idx] == '0') {
+      setState(() {
+        likeList[idx] = '1';
+      });
+    } else {
+      setState(() {
+        likeList[idx] = '0';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -306,14 +311,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         iconSize: 16,
                                         padding: EdgeInsets.zero, // 패딩 설정
                                         constraints: const BoxConstraints(),
-                                        onPressed: () {},
-                                        // icon: likedPosts?[index] == '1'
-                                        //     ? Image.asset(
-                                        //         "assets/icons/favorite.png")
-                                        //     : Image.asset(
-                                        //         "assets/icons/favorite_outline.png")
-                                        icon: Image.asset(
-                                            "assets/icons/favorite_outline.png"),
+                                        onPressed: () => onHeartTap(index),
+                                        icon: likeList[index] == "1"
+                                            ? Image.asset(
+                                                "assets/icons/favorite.png")
+                                            : Image.asset(
+                                                "assets/icons/favorite_outline.png"),
                                       )
                                     ]),
                               ),
