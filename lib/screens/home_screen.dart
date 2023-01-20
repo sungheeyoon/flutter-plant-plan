@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'img': 'assets/images/weather/cloudy.png', 'time': '20:00'},
     {'img': 'assets/images/weather/partly_sunny.png', 'time': '21:00'},
   ];
-  List likeList = ['0', '0', '0', '0', '0', '0'];
+  List<String> likeList = ['0', '0', '0', '0', '0', '0'];
   late SharedPreferences prefs;
   final Future<List<ToonModel>> webtoons = ApiService.getTodaysToons();
 
@@ -51,9 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
     initPrefs();
   }
 
-  onHeartTap(int idx) {
-    // prefs = await SharedPreferences.getInstance();
-    // List<String>? likedPosts = prefs.getStringList('likedPosts');
+  onHeartTap(int idx) async {
+    prefs = await SharedPreferences.getInstance();
     if (likeList[idx] == '0') {
       setState(() {
         likeList[idx] = '1';
@@ -63,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         likeList[idx] = '0';
       });
     }
+    await prefs.setStringList('likedPosts', likeList);
   }
 
   @override
@@ -337,6 +337,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }),
                 ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        side: const BorderSide(
+                            width: 0, color: Color.fromRGBO(192, 220, 185, 1)),
+                        backgroundColor: const Color.fromRGBO(192, 220, 185, 1),
+                      ),
+                      child: Text(
+                        "포스트 페이지 바로가기",
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(color: Colors.white),
+                      )),
+                ),
+              ),
+              const SizedBox(
+                height: 84,
               )
             ],
           )
