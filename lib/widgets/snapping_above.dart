@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/widgets/default_grabbing.dart';
-import 'package:plant_plan/screens/home_screen.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
+import 'package:plant_plan/widgets/navbar.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 
 class SnappingAbove extends StatelessWidget {
@@ -37,7 +37,7 @@ class SnappingAbove extends StatelessWidget {
             controller: _scrollController,
           ),
         ),
-        child: const HomeScreen(),
+        child: const NavBar(),
       ),
     );
   }

@@ -80,6 +80,11 @@ flutter:
     - assets/icons/favorite_outline.png
     - assets/icons/favorite.png
 
+    - assets/icons/navbar/home.png
+    - assets/icons/navbar/post.png
+    - assets/icons/navbar/calendar.png
+    - assets/icons/navbar/mypage.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
