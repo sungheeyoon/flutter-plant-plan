@@ -84,6 +84,10 @@ flutter:
     - assets/icons/navbar/post.png
     - assets/icons/navbar/calendar.png
     - assets/icons/navbar/mypage.png
+    - assets/icons/navbar/home_active.png
+    - assets/icons/navbar/post_active.png
+    - assets/icons/navbar/calendar_active.png
+    - assets/icons/navbar/mypage_active.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
