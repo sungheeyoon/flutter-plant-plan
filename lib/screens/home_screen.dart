@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/models/toon_model.dart';
+import 'package:plant_plan/screens/add_screen.dart';
 import 'package:plant_plan/services/api_service.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/widgets/management_widget.dart';
@@ -383,29 +384,38 @@ class _HomeScreenState extends State<HomeScreen> {
         if (index == 0) {
           return Column(
             children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 1,
-                    color: const Color.fromRGBO(170, 226, 177, 1),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddScreen(),
+                      ));
+                },
+                child: Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 1,
+                      color: const Color.fromRGBO(170, 226, 177, 1),
+                    ),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "+",
-                      style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.w100,
-                          color: Color.fromRGBO(170, 226, 177, 1)),
-                    )
-                  ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "+",
+                        style: TextStyle(
+                            fontSize: 35,
+                            fontWeight: FontWeight.w100,
+                            color: Color.fromRGBO(170, 226, 177, 1)),
+                      )
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(
