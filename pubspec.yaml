@@ -77,8 +77,12 @@ flutter:
 
     - assets/images/plants/plantA.png
 
+    - assets/images/pot.png
+
     - assets/icons/favorite_outline.png
     - assets/icons/favorite.png
+    - assets/icons/img.png
+    - assets/icons/search.png
 
     - assets/icons/navbar/home.png
     - assets/icons/navbar/post.png
