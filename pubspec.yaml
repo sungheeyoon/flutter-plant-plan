@@ -83,6 +83,7 @@ flutter:
     - assets/icons/favorite.png
     - assets/icons/img.png
     - assets/icons/search.png
+    - assets/icons/pen.png
 
     - assets/icons/navbar/home.png
     - assets/icons/navbar/post.png
