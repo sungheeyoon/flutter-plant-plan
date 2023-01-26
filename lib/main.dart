@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_plan/screens/splash_screen.dart';
 import 'package:plant_plan/widgets/snapping_above.dart';
 
 void main() {
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
               letterSpacing: -0.4,
             ),
           ).apply(decorationColor: Colors.orange)),
-      home: SnappingAbove(),
+      home: const SplashScreen(),
     );
   }
 }
