@@ -80,6 +80,10 @@ flutter:
     - assets/images/pot.png
     - assets/images/splash.png
 
+    - assets/images/onbording/onbording1.png
+    - assets/images/onbording/onbording2.png
+    - assets/images/onbording/onbording3.png
+
     - assets/icons/favorite_outline.png
     - assets/icons/favorite.png
     - assets/icons/img.png

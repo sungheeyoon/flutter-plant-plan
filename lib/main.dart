@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_plan/screens/splash_screen.dart';
-import 'package:plant_plan/widgets/snapping_above.dart';
+import 'package:plant_plan/screens/onbording_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,7 +75,7 @@ class MyApp extends StatelessWidget {
               letterSpacing: -0.4,
             ),
           ).apply(decorationColor: Colors.orange)),
-      home: const SplashScreen(),
+      home: const OnBordingScreen(),
     );
   }
 }
