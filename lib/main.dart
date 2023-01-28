@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/onbording_screen.dart';
+import 'package:plant_plan/widgets/snapping_above.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  final showHome = prefs.getBool('showHome') ?? false;
+
+  runApp(MyApp(showHome: showHome));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool showHome;
+
+  const MyApp({Key? key, required this.showHome}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +84,7 @@ class MyApp extends StatelessWidget {
               letterSpacing: -0.4,
             ),
           ).apply(decorationColor: Colors.orange)),
-      home: const OnBordingScreen(),
+      home: showHome ? SnappingAbove() : const OnBordingScreen(),
     );
   }
 }

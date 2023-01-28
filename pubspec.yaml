@@ -83,6 +83,8 @@ flutter:
     - assets/images/onbording/onbording1.png
     - assets/images/onbording/onbording2.png
     - assets/images/onbording/onbording3.png
+    - assets/images/onbording/dot.png
+    - assets/images/onbording/long_dot.png
 
     - assets/icons/favorite_outline.png
     - assets/icons/favorite.png
