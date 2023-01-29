@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
+import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddScreen extends StatelessWidget {
@@ -8,18 +9,8 @@ class AddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: const Color.fromRGBO(235, 247, 232, 1),
-          title: Text('식물 추가',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge!
-                  .copyWith(color: const Color.fromRGBO(29, 49, 91, 1))),
-          centerTitle: true,
-        ),
+      appBar: const CustomAppBar(
+        title: "식물추가",
       ),
       body: SingleChildScrollView(
         child: Padding(
