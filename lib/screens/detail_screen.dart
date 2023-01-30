@@ -35,33 +35,84 @@ class DetailScreen extends StatelessWidget {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      ImageBox(
-                        imageUri: 'assets/images/management/humid_outline.png',
-                        width: 70,
-                        height: 70,
+                    children: [
+                      Column(
+                        children: [
+                          const ImageBox(
+                            imageUri:
+                                'assets/images/management/humid_outline.png',
+                            width: 70,
+                            height: 70,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            height: 80,
+                            width: 68,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10.0)),
+                              color: Colors.grey[200],
+                            ),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Text("수분량",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(
+                                              color: const Color.fromRGBO(
+                                                  29, 49, 91, 1))),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text("95%",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                              color: const Color.fromRGBO(
+                                                  29, 49, 91, 1))),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text("12.14 19:00",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .copyWith(
+                                              color: const Color.fromRGBO(
+                                                  29, 49, 91, 1)))
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      ImageBox(
+                      const ImageBox(
                         imageUri: 'assets/images/management/sun_outline.png',
                         width: 70,
                         height: 70,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      ImageBox(
+                      const ImageBox(
                         imageUri:
                             'assets/images/management/division_outline.png',
                         width: 70,
                         height: 70,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      ImageBox(
+                      const ImageBox(
                         imageUri:
                             'assets/images/management/nutrient_outline.png',
                         width: 70,

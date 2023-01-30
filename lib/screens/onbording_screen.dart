@@ -54,7 +54,7 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
   }
 }
 
-class OnBording extends StatelessWidget {
+class OnBording extends StatefulWidget {
   final int pageNum;
   final String title, sub1, sub2;
   final PageController controller;
@@ -67,6 +67,11 @@ class OnBording extends StatelessWidget {
     required this.controller,
   }) : super(key: key);
 
+  @override
+  State<OnBording> createState() => _OnBordingState();
+}
+
+class _OnBordingState extends State<OnBording> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -82,7 +87,7 @@ class OnBording extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (pageNum == 1)
+                  if (widget.pageNum == 1)
                     Row(
                       children: [
                         const ImageBox(
@@ -98,7 +103,7 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(1),
+                            onPressed: () => widget.controller.jumpToPage(1),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
@@ -112,14 +117,14 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(2),
+                            onPressed: () => widget.controller.jumpToPage(2),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
                         )
                       ],
                     )
-                  else if (pageNum == 2)
+                  else if (widget.pageNum == 2)
                     Row(
                       children: [
                         Container(
@@ -128,7 +133,7 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(0),
+                            onPressed: () => widget.controller.jumpToPage(0),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
@@ -149,14 +154,14 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(2),
+                            onPressed: () => widget.controller.jumpToPage(2),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
                         )
                       ],
                     )
-                  else if (pageNum == 3)
+                  else if (widget.pageNum == 3)
                     Row(
                       children: [
                         Container(
@@ -165,7 +170,7 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(0),
+                            onPressed: () => widget.controller.jumpToPage(0),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
@@ -179,7 +184,7 @@ class OnBording extends StatelessWidget {
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => controller.jumpToPage(1),
+                            onPressed: () => widget.controller.jumpToPage(1),
                             icon:
                                 Image.asset('assets/images/onbording/dot.png'),
                           ),
@@ -194,14 +199,14 @@ class OnBording extends StatelessWidget {
                       ],
                     ),
                   TextButton(
-                    child: pageNum != 3
+                    child: widget.pageNum != 3
                         ? const Text(
                             "skip",
                             style: TextStyle(
                                 color: Color.fromRGBO(187, 187, 187, 1)),
                           )
                         : const Text(""),
-                    onPressed: () => controller.jumpToPage(2),
+                    onPressed: () => widget.controller.jumpToPage(2),
                   )
                 ],
               ),
@@ -211,19 +216,19 @@ class OnBording extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(title,
+                  Text(widget.title,
                       style: Theme.of(context).textTheme.displayLarge!.copyWith(
                           color: const Color.fromRGBO(29, 49, 91, 1))),
                   const SizedBox(
                     height: 16,
                   ),
-                  Text(sub1,
+                  Text(widget.sub1,
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           color: const Color.fromRGBO(29, 49, 91, 1))),
                   const SizedBox(
                     height: 4,
                   ),
-                  Text(sub2,
+                  Text(widget.sub2,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -236,21 +241,21 @@ class OnBording extends StatelessWidget {
             ],
           ),
         ),
-        if (pageNum == 1)
+        if (widget.pageNum == 1)
           const Image(
             image: AssetImage('assets/images/onbording/onbording1.png'),
             width: 380,
             height: 470,
             fit: BoxFit.fill,
           )
-        else if (pageNum == 2)
+        else if (widget.pageNum == 2)
           const Image(
             image: AssetImage('assets/images/onbording/onbording2.png'),
             width: 380,
             height: 470,
             fit: BoxFit.fill,
           )
-        else if (pageNum == 3)
+        else if (widget.pageNum == 3)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -273,6 +278,7 @@ class OnBording extends StatelessWidget {
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setBool('showHome', true);
 
+                          if (!mounted) return;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) => SnappingAbove()));
