@@ -168,7 +168,7 @@ class SettingCard extends StatelessWidget {
                   title,
                   style: Theme.of(context)
                       .textTheme
-                      .labelMedium!
+                      .labelLarge!
                       .copyWith(color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -202,10 +202,10 @@ class SettingCard extends StatelessWidget {
           ],
         ),
         const SizedBox(
-          height: 10,
+          height: 8,
         ),
         Container(
-            height: 80,
+            height: 78,
             decoration: BoxDecoration(
                 color: const Color.fromRGBO(245, 245, 245, 1),
                 borderRadius: BorderRadius.circular(10)),
