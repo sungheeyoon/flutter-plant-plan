@@ -101,6 +101,13 @@ flutter:
     - assets/icons/navbar/calendar_active.png
     - assets/icons/navbar/mypage_active.png
 
+    - assets/icons/emoji/smile.png
+    - assets/icons/emoji/crying.png
+    - assets/icons/emoji/suprised.png
+
+    - assets/icons/bookmark.png
+    - assets/icons/bookmark_outline.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/detail_screen.dart';
-import 'package:plant_plan/screens/onbording_screen.dart';
-import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
@@ -64,10 +62,8 @@ class MyApp extends StatelessWidget {
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                   letterSpacing: -0.6),
-              bodyMedium: TextStyle(
-                fontSize: 14.0,
-                letterSpacing: -0.6,
-              ),
+              bodyMedium:
+                  TextStyle(fontSize: 14.0, letterSpacing: -0.6, height: 1.5),
               bodySmall: TextStyle(
                 fontSize: 12.0,
                 letterSpacing: -0.5,
