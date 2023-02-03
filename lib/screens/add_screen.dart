@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
+import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
@@ -22,16 +23,92 @@ class AddScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Stack(
-                      alignment: AlignmentDirectional.bottomEnd,
-                      children: const [
-                        ImageBox(
-                            imageUri: 'assets/images/pot.png',
-                            width: 80,
-                            height: 80),
-                        ImageBox(
-                            imageUri: 'assets/icons/img.png',
-                            width: 20,
-                            height: 20)
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20))),
+                              builder: (context) => Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(32, 24, 32, 25),
+                                height: MediaQuery.of(context)
+                                        .copyWith()
+                                        .size
+                                        .height *
+                                    0.25,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("식물 사진 변경",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .copyWith(color: grayBlack)),
+                                    const SizedBox(
+                                      height: 24,
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        minimumSize: Size.zero,
+                                        padding: EdgeInsets.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {},
+                                      child: Align(
+                                        alignment: const Alignment(-1.0, 0.0),
+                                        child: Text("카메라",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(color: gray1Color)),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        minimumSize: Size.zero,
+                                        padding: EdgeInsets.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {},
+                                      child: Align(
+                                        alignment: const Alignment(-1.0, 0.0),
+                                        child: Text("갤러리 사진 선택",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(color: gray1Color)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Stack(children: const [
+                            ImageBox(
+                                imageUri: 'assets/images/pot.png',
+                                width: 80,
+                                height: 80),
+                            Positioned(
+                              right: 1,
+                              bottom: 1,
+                              child: ImageBox(
+                                  imageUri: 'assets/icons/img.png',
+                                  width: 20,
+                                  height: 20),
+                            )
+                          ]),
+                        ),
                       ],
                     ),
                     const SizedBox(

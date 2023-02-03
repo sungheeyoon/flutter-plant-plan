@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:plant_plan/screens/detail_screen.dart';
+import 'package:plant_plan/screens/onbording_screen.dart';
+import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -83,7 +84,7 @@ class MyApp extends StatelessWidget {
                 letterSpacing: -0.4,
               ),
             ).apply(decorationColor: Colors.orange)),
-        home: const DetailScreen()
+        home: const OnBordingScreen()
         //showHome ? SnappingAbove() : const OnBordingScreen(),
         );
   }

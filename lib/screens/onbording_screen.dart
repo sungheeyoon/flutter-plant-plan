@@ -242,17 +242,17 @@ class _OnBordingState extends State<OnBording> {
           ),
         ),
         if (widget.pageNum == 1)
-          const Image(
-            image: AssetImage('assets/images/onbording/onbording1.png'),
-            width: 380,
-            height: 470,
+          Image(
+            image: const AssetImage('assets/images/onbording/onbording1.png'),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1.28,
             fit: BoxFit.fill,
           )
         else if (widget.pageNum == 2)
-          const Image(
-            image: AssetImage('assets/images/onbording/onbording2.png'),
-            width: 380,
-            height: 470,
+          Image(
+            image: const AssetImage('assets/images/onbording/onbording2.png'),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1.28,
             fit: BoxFit.fill,
           )
         else if (widget.pageNum == 3)
@@ -260,10 +260,11 @@ class _OnBordingState extends State<OnBording> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const Image(
-                  image: AssetImage('assets/images/onbording/onbording3.png'),
-                  width: 280,
-                  height: 340,
+                Image(
+                  image: const AssetImage(
+                      'assets/images/onbording/onbording3.png'),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.width * 0.9,
                   fit: BoxFit.fill,
                 ),
                 const SizedBox(
@@ -281,7 +282,7 @@ class _OnBordingState extends State<OnBording> {
                           if (!mounted) return;
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => SnappingAbove()));
+                                  builder: (context) => const AddScreen()));
                         },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -314,7 +315,7 @@ class _OnBordingState extends State<OnBording> {
 
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                  builder: (context) => const AddScreen()));
+                                  builder: (context) => SnappingAbove()));
                         },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
