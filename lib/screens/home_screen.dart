@@ -366,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(
                 height: 84,
-              )
+              ),
             ],
           )
         ],
@@ -403,18 +403,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color.fromRGBO(170, 226, 177, 1),
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "+",
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w100,
-                            color: Color.fromRGBO(170, 226, 177, 1)),
-                      )
-                    ],
+                  child: const Text(
+                    "+",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.w100,
+                        color: Color.fromRGBO(170, 226, 177, 1)),
                   ),
                 ),
               ),
