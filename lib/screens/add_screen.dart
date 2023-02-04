@@ -1,11 +1,44 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
-class AddScreen extends StatelessWidget {
+class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
+
+  @override
+  State<AddScreen> createState() => _AddScreenState();
+}
+
+class _AddScreenState extends State<AddScreen> {
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+
+  Future uploadFile() async {
+    final path = 'files/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    await uploadTask!.whenComplete(() => {});
+  }
+
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedFile = result.files.first;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +112,7 @@ class AddScreen extends StatelessWidget {
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: selectFile,
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
                                         child: Text("갤러리 사진 선택",
@@ -94,12 +127,19 @@ class AddScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Stack(children: const [
-                            ImageBox(
-                                imageUri: 'assets/images/pot.png',
-                                width: 80,
-                                height: 80),
-                            Positioned(
+                          child: Stack(children: [
+                            if (pickedFile != null)
+                              CircleAvatar(
+                                radius: 40, // Image radius
+                                backgroundImage:
+                                    FileImage(File(pickedFile!.path!)),
+                              )
+                            else
+                              const ImageBox(
+                                  imageUri: 'assets/images/pot.png',
+                                  width: 80,
+                                  height: 80),
+                            const Positioned(
                               right: 1,
                               bottom: 1,
                               child: ImageBox(
@@ -206,7 +246,8 @@ class AddScreen extends StatelessWidget {
                     height: 141,
                   ),
                 ],
-              )
+              ),
+              ElevatedButton(onPressed: uploadFile, child: const Text("버툰"))
             ],
           ),
         ),
