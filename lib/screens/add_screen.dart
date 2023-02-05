@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
@@ -152,35 +153,34 @@ class _AddScreenState extends State<AddScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 12,
                     ),
-                    SizedBox(
-                      width: 180,
-                      child: TextField(
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: const Color.fromRGBO(29, 49, 91, 1)),
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          suffixIconConstraints:
-                              BoxConstraints(minHeight: 20, minWidth: 20),
-                          suffixIcon: ImageBox(
-                              imageUri: "assets/icons/search.png",
-                              width: 1,
-                              height: 1),
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 5),
-                          hintText: '식물 이름 검색',
-                          hintStyle:
-                              TextStyle(color: Color.fromRGBO(29, 49, 91, 1)),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: Color.fromRGBO(29, 49, 91, 1)),
-                          ),
+                    OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          backgroundColor: sub1Color,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          side: const BorderSide(
+                              width: 0, color: sub1Color), //<-- SEE HERE
                         ),
-                      ),
-                    ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PlantSearchScreen(),
+                              ));
+                        },
+                        child: Text("식물 이름 검색",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(color: Colors.white))),
                     const SizedBox(
-                      height: 32,
+                      height: 24,
                     ),
                     Row(children: const [
                       SnappingContainer(
