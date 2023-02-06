@@ -4,9 +4,11 @@ import 'package:plant_plan/widgets/snapping_above.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
+  final bool home;
   const CustomAppBar({
     Key? key,
     required this.title,
+    required this.home,
   }) : super(key: key);
 
   @override
@@ -19,11 +21,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
         leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SnappingAbove(),
-                  ));
+              if (home) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SnappingAbove(),
+                    ));
+              } else {
+                Navigator.of(context).pop();
+              }
             },
             icon: const Icon(Icons.arrow_back_ios_new_rounded)),
         elevation: 0,

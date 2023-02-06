@@ -46,6 +46,7 @@ class _AddScreenState extends State<AddScreen> {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "식물추가",
+        home: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

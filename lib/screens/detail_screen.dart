@@ -15,7 +15,10 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "안시리움"),
+      appBar: const CustomAppBar(
+        title: "안시리움",
+        home: false,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
