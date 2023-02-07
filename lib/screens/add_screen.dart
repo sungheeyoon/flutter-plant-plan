@@ -43,10 +43,12 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fullWidth = MediaQuery.of(context).size.width;
+    final fullHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: const CustomAppBar(
-        title: "식물추가",
         home: true,
+        title: "식물추가",
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -271,8 +273,7 @@ class SettingCard extends StatelessWidget {
         Row(
           children: [
             Container(
-              height: 22,
-              width: 53,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(255, 133, 63, 1),
                 borderRadius: const BorderRadius.horizontal(
@@ -297,7 +298,7 @@ class SettingCard extends StatelessWidget {
               width: 12,
             ),
             SizedBox(
-              width: 240,
+              width: 230,
               child: TextField(
                 style: Theme.of(context)
                     .textTheme

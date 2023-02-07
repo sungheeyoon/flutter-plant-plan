@@ -42,6 +42,7 @@ class _NavBarState extends State<NavBar> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.only(
@@ -59,66 +60,64 @@ class _NavBarState extends State<NavBar> {
             topLeft: Radius.circular(16.0),
             topRight: Radius.circular(16.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 46),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: _selectedIndex == 0
-                      ? const ImageBox(
-                          imageUri: "assets/icons/navbar/home_active.png",
-                          width: 32,
-                          height: 32)
-                      : const ImageBox(
-                          imageUri: "assets/icons/navbar/home.png",
-                          width: 32,
-                          height: 32),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: _selectedIndex == 1
-                      ? const ImageBox(
-                          imageUri: "assets/icons/navbar/post_active.png",
-                          width: 32,
-                          height: 32)
-                      : const ImageBox(
-                          imageUri: "assets/icons/navbar/post.png",
-                          width: 32,
-                          height: 32),
-                  label: 'Post',
-                ),
-                BottomNavigationBarItem(
-                  icon: _selectedIndex == 2
-                      ? const ImageBox(
-                          imageUri: "assets/icons/navbar/calendar_active.png",
-                          width: 32,
-                          height: 32)
-                      : const ImageBox(
-                          imageUri: "assets/icons/navbar/calendar.png",
-                          width: 32,
-                          height: 32),
-                  label: 'Calendar',
-                ),
-                BottomNavigationBarItem(
-                  icon: _selectedIndex == 3
-                      ? const ImageBox(
-                          imageUri: "assets/icons/navbar/mypage_active.png",
-                          width: 32,
-                          height: 32)
-                      : const ImageBox(
-                          imageUri: "assets/icons/navbar/mypage.png",
-                          width: 32,
-                          height: 32),
-                  label: 'Mypage',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.amber[800],
-              onTap: _onItemTapped,
-            ),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: _selectedIndex == 0
+                    ? const ImageBox(
+                        imageUri: "assets/icons/navbar/home_active.png",
+                        width: 32,
+                        height: 32)
+                    : const ImageBox(
+                        imageUri: "assets/icons/navbar/home.png",
+                        width: 32,
+                        height: 32),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedIndex == 1
+                    ? const ImageBox(
+                        imageUri: "assets/icons/navbar/post_active.png",
+                        width: 32,
+                        height: 32)
+                    : const ImageBox(
+                        imageUri: "assets/icons/navbar/post.png",
+                        width: 32,
+                        height: 32),
+                label: 'Post',
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedIndex == 2
+                    ? const ImageBox(
+                        imageUri: "assets/icons/navbar/calendar_active.png",
+                        width: 32,
+                        height: 32)
+                    : const ImageBox(
+                        imageUri: "assets/icons/navbar/calendar.png",
+                        width: 32,
+                        height: 32),
+                label: 'Calendar',
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedIndex == 3
+                    ? const ImageBox(
+                        imageUri: "assets/icons/navbar/mypage_active.png",
+                        width: 32,
+                        height: 32)
+                    : const ImageBox(
+                        imageUri: "assets/icons/navbar/mypage.png",
+                        width: 32,
+                        height: 32),
+                label: 'Mypage',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.amber[800],
+            onTap: _onItemTapped,
           ),
         ),
       ),
