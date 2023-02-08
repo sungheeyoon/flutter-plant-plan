@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -17,27 +17,47 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
-  PlatformFile? pickedFile;
   UploadTask? uploadTask;
+  XFile? pickedFile;
 
   Future uploadFile() async {
-    final path = 'files/${pickedFile!.name}';
-    final file = File(pickedFile!.path!);
+    String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
-    final ref = FirebaseStorage.instance.ref().child(path);
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('images');
 
-    await uploadTask!.whenComplete(() => {});
+    Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+    try {
+      setState(() {
+        referenceImageToUpload.putFile(File(pickedFile!.path));
+      });
+    } catch (error) {
+      print(error);
+    }
+
+    await uploadTask?.whenComplete(() => {});
   }
 
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (file == null) return;
 
     setState(() {
-      pickedFile = result.files.first;
+      pickedFile = file;
+    });
+  }
+
+  Future selectCamera() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
+
+    if (file == null) return;
+
+    setState(() {
+      pickedFile = file;
     });
   }
 
@@ -96,7 +116,7 @@ class _AddScreenState extends State<AddScreen> {
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: selectCamera,
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
                                         child: Text("카메라",
@@ -136,27 +156,28 @@ class _AddScreenState extends State<AddScreen> {
                               CircleAvatar(
                                 radius: 40, // Image radius
                                 backgroundImage:
-                                    FileImage(File(pickedFile!.path!)),
+                                    FileImage(File(pickedFile!.path)),
                               )
                             else
-                              const ImageBox(
+                              ImageBox(
                                   imageUri: 'assets/images/pot.png',
-                                  width: 80,
-                                  height: 80),
-                            const Positioned(
+                                  width: fullWidth * 0.25,
+                                  height: fullWidth * 0.25),
+                            Positioned(
                               right: 1,
                               bottom: 1,
                               child: ImageBox(
-                                  imageUri: 'assets/icons/img.png',
-                                  width: 20,
-                                  height: 20),
+                                imageUri: 'assets/icons/img.png',
+                                width: fullWidth * 0.07,
+                                height: fullWidth * 0.07,
+                              ),
                             )
                           ]),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 12,
+                      height: 20,
                     ),
                     OutlinedButton(
                         style: OutlinedButton.styleFrom(

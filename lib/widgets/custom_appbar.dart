@@ -14,35 +14,37 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final fullHeight = MediaQuery.of(context).size.height;
-    return AppBar(
-      toolbarHeight: fullHeight * 0.08,
-      iconTheme: const IconThemeData(
-        color: primary3Color, //색변경
+    return SafeArea(
+      child: AppBar(
+        toolbarHeight: fullHeight * 0.1,
+        iconTheme: const IconThemeData(
+          color: primary3Color, //색변경
+        ),
+        leading: IconButton(
+            onPressed: () {
+              if (home) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SnappingAbove(),
+                    ));
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_rounded)),
+        elevation: 0,
+        backgroundColor: const Color.fromRGBO(235, 247, 232, 1),
+        title: Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .headlineLarge!
+                .copyWith(color: primary3Color)),
+        centerTitle: true,
       ),
-      leading: IconButton(
-          onPressed: () {
-            if (home) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SnappingAbove(),
-                  ));
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-      elevation: 0,
-      backgroundColor: const Color.fromRGBO(235, 247, 232, 1),
-      title: Text(title,
-          style: Theme.of(context)
-              .textTheme
-              .headlineLarge!
-              .copyWith(color: primary3Color)),
-      centerTitle: true,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(80);
 }
