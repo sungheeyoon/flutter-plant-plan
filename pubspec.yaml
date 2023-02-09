@@ -43,6 +43,7 @@ dependencies:
   firebase_storage: ^11.0.10
   font_awesome_flutter: ^10.3.0
   image_picker: ^0.8.6+1
+  korea_regexp: ^1.0.1
 
 dev_dependencies:
   flutter_test:
