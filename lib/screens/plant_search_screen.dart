@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 
@@ -33,14 +34,26 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
 
   void _runFilter(String enteredKeyword) {
     List<Map<String, dynamic>> results = [];
+
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
       results = _allUsers;
     } else {
+      RegExp regExp = getRegExp(
+          enteredKeyword,
+          RegExpOptions(
+            initialSearch: false,
+            startsWith: false,
+            endsWith: false,
+            fuzzy: false,
+            ignoreSpace: false,
+            ignoreCase: false,
+          ));
       results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .where((user) => regExp.hasMatch(user["name"] as String))
           .toList();
+      //     user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+      // .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
     setState(() {
