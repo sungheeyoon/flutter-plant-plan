@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:korea_regexp/korea_regexp.dart';
@@ -12,6 +13,7 @@ class PlantSearchScreen extends StatefulWidget {
 }
 
 class _PlantSearchScreenState extends State<PlantSearchScreen> {
+  late Stream<QuerySnapshot> _streamPlantList;
   final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "Andy", "age": 29},
     {"id": 2, "name": "Aragon", "age": 40},
@@ -25,10 +27,14 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
     {"id": 10, "name": "한글", "age": 32},
   ];
 
+  final CollectionReference _referencePlantList =
+      FirebaseFirestore.instance.collection('plant_list');
+
   List<Map<String, dynamic>> _foundUsers = [];
   @override
   initState() {
     _foundUsers = _allUsers;
+    _streamPlantList = _referencePlantList.snapshots();
     super.initState();
   }
 
@@ -106,6 +112,41 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                 ),
               ]),
             ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _streamPlantList,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+                if (snapshot.connectionState == ConnectionState.active) {
+                  QuerySnapshot querySnapshot = snapshot.data;
+                  List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
+                      querySnapshot.docs;
+                  return ListView.builder(
+                      itemCount: listQueryDocumentSnapshot.length,
+                      itemBuilder: (context, index) {
+                        QueryDocumentSnapshot document =
+                            listQueryDocumentSnapshot[index];
+                        return Card(
+                          key: ValueKey(document["id"]),
+                          color: Colors.blue,
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Text(
+                              document["id"].toString(),
+                              style: const TextStyle(
+                                  fontSize: 24, color: Colors.white),
+                            ),
+                            title: Text(document['name'],
+                                style: const TextStyle(color: Colors.white)),
+                          ),
+                        );
+                      });
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
             Expanded(
               child: _foundUsers.isNotEmpty
                   ? ListView.builder(
@@ -136,6 +177,38 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PlantListItem extends StatefulWidget {
+  const PlantListItem({
+    Key? key,
+    required this.document,
+  }) : super(key: key);
+
+  final QueryDocumentSnapshot<Object?> document;
+
+  @override
+  State<PlantListItem> createState() => _PlantListItemState();
+}
+
+class _PlantListItemState extends State<PlantListItem> {
+  bool _purchased = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.document['name']),
+      subtitle: Text(widget.document['quantity']),
+      trailing: Checkbox(
+        onChanged: (value) {
+          setState(() {
+            _purchased = value ?? false;
+          });
+        },
+        value: _purchased,
       ),
     );
   }
