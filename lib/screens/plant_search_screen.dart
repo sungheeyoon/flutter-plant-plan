@@ -13,6 +13,7 @@ class PlantSearchScreen extends StatefulWidget {
 }
 
 class _PlantSearchScreenState extends State<PlantSearchScreen> {
+  String enteredKeyword = "";
   late Stream<QuerySnapshot> _streamPlantList;
   final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "Andy", "age": 29},
@@ -35,15 +36,20 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
   initState() {
     _foundUsers = _allUsers;
     _streamPlantList = _referencePlantList.snapshots();
+
     super.initState();
   }
 
-  void _runFilter(String enteredKeyword) {
+  void _runFilter(String enteredKeyword) async {
     List<Map<String, dynamic>> results = [];
+    List<QueryDocumentSnapshot<Object?>> plantResults = [];
+    final documents = await _referencePlantList.get();
+    List<QueryDocumentSnapshot<Object?>> allPlants = documents.docs;
 
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
       results = _allUsers;
+      plantResults = allPlants;
     } else {
       RegExp regExp = getRegExp(
           enteredKeyword,
@@ -56,11 +62,14 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
             ignoreCase: false,
           ));
       results = _allUsers
-          .where((user) => regExp.hasMatch(user["name"] as String))
+          .where((plant) => regExp.hasMatch(plant["name"] as String))
           .toList();
       //     user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
       // .toList();
       // we use the toLowerCase() method to make it case-insensitive
+      plantResults = allPlants
+          .where((plant) => regExp.hasMatch(plant["name"] as String))
+          .toList();
     }
     setState(() {
       _foundUsers = results;
@@ -94,7 +103,11 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextField(
-                    onChanged: (value) => _runFilter(value),
+                    onChanged: (value) {
+                      setState(() {
+                        enteredKeyword = value;
+                      });
+                    },
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -112,40 +125,66 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                 ),
               ]),
             ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _streamPlantList,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
-                if (snapshot.connectionState == ConnectionState.active) {
-                  QuerySnapshot querySnapshot = snapshot.data;
-                  List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
-                      querySnapshot.docs;
-                  return ListView.builder(
-                      itemCount: listQueryDocumentSnapshot.length,
-                      itemBuilder: (context, index) {
-                        QueryDocumentSnapshot document =
-                            listQueryDocumentSnapshot[index];
-                        return Card(
-                          key: ValueKey(document["id"]),
-                          color: Colors.blue,
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: ListTile(
-                            leading: Text(
-                              document["id"].toString(),
-                              style: const TextStyle(
-                                  fontSize: 24, color: Colors.white),
-                            ),
-                            title: Text(document['name'],
-                                style: const TextStyle(color: Colors.white)),
-                          ),
-                        );
-                      });
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _streamPlantList,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                    QuerySnapshot querySnapshot = snapshot.data;
+                    List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
+                        querySnapshot.docs;
+                    RegExp regExp = getRegExp(
+                        enteredKeyword,
+                        RegExpOptions(
+                          initialSearch: false,
+                          startsWith: false,
+                          endsWith: false,
+                          fuzzy: false,
+                          ignoreSpace: false,
+                          ignoreCase: false,
+                        ));
+
+                    //     user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+                    // .toList();
+                    // we use the toLowerCase() method to make it case-insensitive
+
+                    return ListView.builder(
+                        itemCount: listQueryDocumentSnapshot.length,
+                        itemBuilder: (context, index) {
+                          QueryDocumentSnapshot document =
+                              listQueryDocumentSnapshot[index];
+                          if (enteredKeyword.isEmpty) {
+                            return Card(
+                              key: ValueKey(document["id"]),
+                              color: Colors.blue,
+                              elevation: 4,
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              child: ListTile(
+                                leading: Text(
+                                  document["id"].toString(),
+                                  style: const TextStyle(
+                                      fontSize: 24, color: Colors.white),
+                                ),
+                                title: Text(document['name'],
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                              ),
+                            );
+                          }
+                          if (document['name']
+                              .where((plant) =>
+                                  regExp.hasMatch(plant["name"] as String))
+                              .toList()) {}
+                          return Container();
+                        });
+                  }
+                },
+              ),
             ),
             Expanded(
               child: _foundUsers.isNotEmpty
@@ -177,38 +216,6 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class PlantListItem extends StatefulWidget {
-  const PlantListItem({
-    Key? key,
-    required this.document,
-  }) : super(key: key);
-
-  final QueryDocumentSnapshot<Object?> document;
-
-  @override
-  State<PlantListItem> createState() => _PlantListItemState();
-}
-
-class _PlantListItemState extends State<PlantListItem> {
-  bool _purchased = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.document['name']),
-      subtitle: Text(widget.document['quantity']),
-      trailing: Checkbox(
-        onChanged: (value) {
-          setState(() {
-            _purchased = value ?? false;
-          });
-        },
-        value: _purchased,
       ),
     );
   }
