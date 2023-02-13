@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
                 letterSpacing: -0.4,
               ),
             ).apply(decorationColor: Colors.orange)),
-        home: const OnBordingScreen()
+        home: showHome ? SnappingAbove() : const OnBordingScreen()
         //showHome ? SnappingAbove() : const OnBordingScreen(),
         );
   }

@@ -13,67 +13,17 @@ class PlantSearchScreen extends StatefulWidget {
 }
 
 class _PlantSearchScreenState extends State<PlantSearchScreen> {
-  String enteredKeyword = "";
   late Stream<QuerySnapshot> _streamPlantList;
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "Andy", "age": 29},
-    {"id": 2, "name": "Aragon", "age": 40},
-    {"id": 3, "name": "Bob", "age": 5},
-    {"id": 4, "name": "Barbara", "age": 35},
-    {"id": 5, "name": "Candy", "age": 21},
-    {"id": 6, "name": "Colin", "age": 55},
-    {"id": 7, "name": "Audra", "age": 30},
-    {"id": 8, "name": "가나다라", "age": 14},
-    {"id": 9, "name": "하늘", "age": 100},
-    {"id": 10, "name": "한글", "age": 32},
-  ];
+  String enteredKeyword = "";
 
   final CollectionReference _referencePlantList =
       FirebaseFirestore.instance.collection('plant_list');
 
-  List<Map<String, dynamic>> _foundUsers = [];
   @override
   initState() {
-    _foundUsers = _allUsers;
     _streamPlantList = _referencePlantList.snapshots();
 
     super.initState();
-  }
-
-  void _runFilter(String enteredKeyword) async {
-    List<Map<String, dynamic>> results = [];
-    List<QueryDocumentSnapshot<Object?>> plantResults = [];
-    final documents = await _referencePlantList.get();
-    List<QueryDocumentSnapshot<Object?>> allPlants = documents.docs;
-
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-      plantResults = allPlants;
-    } else {
-      RegExp regExp = getRegExp(
-          enteredKeyword,
-          RegExpOptions(
-            initialSearch: false,
-            startsWith: false,
-            endsWith: false,
-            fuzzy: false,
-            ignoreSpace: false,
-            ignoreCase: false,
-          ));
-      results = _allUsers
-          .where((plant) => regExp.hasMatch(plant["name"] as String))
-          .toList();
-      //     user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-      // .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-      plantResults = allPlants
-          .where((plant) => regExp.hasMatch(plant["name"] as String))
-          .toList();
-    }
-    setState(() {
-      _foundUsers = results;
-    });
   }
 
   @override
@@ -132,87 +82,81 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                   if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error.toString()));
                   }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
+                  if (snapshot.connectionState == ConnectionState.active) {
                     QuerySnapshot querySnapshot = snapshot.data;
                     List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
                         querySnapshot.docs;
-                    RegExp regExp = getRegExp(
-                        enteredKeyword,
-                        RegExpOptions(
-                          initialSearch: false,
-                          startsWith: false,
-                          endsWith: false,
-                          fuzzy: false,
-                          ignoreSpace: false,
-                          ignoreCase: false,
-                        ));
-
-                    //     user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-                    // .toList();
-                    // we use the toLowerCase() method to make it case-insensitive
-
                     return ListView.builder(
                         itemCount: listQueryDocumentSnapshot.length,
                         itemBuilder: (context, index) {
                           QueryDocumentSnapshot document =
                               listQueryDocumentSnapshot[index];
                           if (enteredKeyword.isEmpty) {
-                            return Card(
-                              key: ValueKey(document["id"]),
-                              color: Colors.blue,
-                              elevation: 4,
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              child: ListTile(
-                                leading: Text(
-                                  document["id"].toString(),
-                                  style: const TextStyle(
-                                      fontSize: 24, color: Colors.white),
-                                ),
-                                title: Text(document['name'],
-                                    style:
-                                        const TextStyle(color: Colors.white)),
+                            return ListTile(
+                              title: Text(
+                                document['name'],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               ),
+                              subtitle: Text(
+                                document['id'].toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              leading: const CircleAvatar(
+                                  backgroundColor: Colors.black),
                             );
+                          } else {
+                            RegExp regExp = getRegExp(
+                                enteredKeyword,
+                                RegExpOptions(
+                                  initialSearch: false,
+                                  startsWith: false,
+                                  endsWith: false,
+                                  fuzzy: false,
+                                  ignoreSpace: false,
+                                  ignoreCase: false,
+                                ));
+                            if (regExp.hasMatch(document["name"] as String)) {
+                              return ListTile(
+                                title: Text(
+                                  document['name'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  document['id'].toString(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                leading: const CircleAvatar(
+                                    backgroundColor: Colors.black),
+                              );
+                            }
                           }
-                          if (document['name']
-                              .where((plant) =>
-                                  regExp.hasMatch(plant["name"] as String))
-                              .toList()) {}
+
                           return Container();
                         });
                   }
+                  return const Center(child: CircularProgressIndicator());
                 },
               ),
-            ),
-            Expanded(
-              child: _foundUsers.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: _foundUsers.length,
-                      itemBuilder: (context, index) => Card(
-                        key: ValueKey(_foundUsers[index]["id"]),
-                        color: Colors.blue,
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: ListTile(
-                          leading: Text(
-                            _foundUsers[index]["id"].toString(),
-                            style: const TextStyle(
-                                fontSize: 24, color: Colors.white),
-                          ),
-                          title: Text(_foundUsers[index]['name'],
-                              style: const TextStyle(color: Colors.white)),
-                          subtitle: Text(
-                              '${_foundUsers[index]["age"].toString()} years old',
-                              style: const TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    )
-                  : const Text(
-                      'No results found',
-                      style: TextStyle(fontSize: 24),
-                    ),
             ),
           ],
         ),
