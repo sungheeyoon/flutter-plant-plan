@@ -44,6 +44,7 @@ dependencies:
   font_awesome_flutter: ^10.3.0
   image_picker: ^0.8.6+1
   korea_regexp: ^1.0.1
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
