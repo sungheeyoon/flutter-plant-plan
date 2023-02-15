@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
@@ -19,7 +21,7 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   UploadTask? uploadTask;
   XFile? pickedFile;
-
+  final imageHelper = ImageHelper();
   Future uploadFile() async {
     String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -37,28 +39,6 @@ class _AddScreenState extends State<AddScreen> {
     }
 
     await uploadTask?.whenComplete(() => {});
-  }
-
-  Future selectFile() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-
-    if (file == null) return;
-
-    setState(() {
-      pickedFile = file;
-    });
-  }
-
-  Future selectCamera() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
-
-    if (file == null) return;
-
-    setState(() {
-      pickedFile = file;
-    });
   }
 
   @override
@@ -116,7 +96,23 @@ class _AddScreenState extends State<AddScreen> {
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
-                                      onPressed: selectCamera,
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        final file = await imageHelper
+                                            .pickImage(camera: true);
+                                        if (file != null) {
+                                          final croppedFile =
+                                              await imageHelper.crop(
+                                                  file: file,
+                                                  cropStyle: CropStyle.circle);
+                                          if (croppedFile != null) {
+                                            setState(() {
+                                              pickedFile =
+                                                  XFile(croppedFile.path);
+                                            });
+                                          }
+                                        }
+                                      },
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
                                         child: Text("카메라",
@@ -136,7 +132,23 @@ class _AddScreenState extends State<AddScreen> {
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
-                                      onPressed: selectFile,
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        final file =
+                                            await imageHelper.pickImage();
+                                        if (file != null) {
+                                          final croppedFile =
+                                              await imageHelper.crop(
+                                                  file: file,
+                                                  cropStyle: CropStyle.circle);
+                                          if (croppedFile != null) {
+                                            setState(() {
+                                              pickedFile =
+                                                  XFile(croppedFile.path);
+                                            });
+                                          }
+                                        }
+                                      },
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
                                         child: Text("갤러리 사진 선택",
@@ -153,10 +165,13 @@ class _AddScreenState extends State<AddScreen> {
                           },
                           child: Stack(children: [
                             if (pickedFile != null)
-                              CircleAvatar(
-                                radius: 40, // Image radius
-                                backgroundImage:
-                                    FileImage(File(pickedFile!.path)),
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: CircleAvatar(
+                                  radius: 40, // Image radius
+                                  backgroundImage:
+                                      FileImage(File(pickedFile!.path)),
+                                ),
                               )
                             else
                               ImageBox(
