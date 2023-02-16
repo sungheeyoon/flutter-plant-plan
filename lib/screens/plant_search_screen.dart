@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
+import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
@@ -29,7 +31,7 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
   Widget build(BuildContext context) {
     Widget buildSearch() => SearchWidget(
           text: enteredKeyword,
-          hintText: '식물 검색을 해보세요',
+          hintText: '식물 이름을 검색하세요',
           onChanged: (value) {
             setState(() {
               enteredKeyword = value;
@@ -64,22 +66,28 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                               document['name'],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(color: primary3Color),
                             ),
-                            subtitle: Text(
-                              document['id'].toString(),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                            leading: CachedNetworkImage(
+                              imageUrl: document['image'],
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 44.0,
+                                height: 44.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
-                            leading: const CircleAvatar(
-                                backgroundColor: Colors.black),
                           );
                         } else {
                           RegExp regExp = getRegExp(
@@ -98,22 +106,29 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                                 document['name'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(color: primary3Color),
                               ),
-                              subtitle: Text(
-                                document['id'].toString(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Colors.black54,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
+                              leading: CachedNetworkImage(
+                                imageUrl: document['image'],
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 44.0,
+                                  height: 44.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
-                              leading: const CircleAvatar(
-                                  backgroundColor: Colors.black),
                             );
                           }
                         }
