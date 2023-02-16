@@ -32,13 +32,19 @@ class _AddScreenState extends State<AddScreen> {
 
     try {
       setState(() {
-        referenceImageToUpload.putFile(File(pickedFile!.path));
+        uploadTask = referenceImageToUpload.putFile(File(pickedFile!.path));
       });
     } catch (error) {
       print(error);
     }
+    final snapshot = await uploadTask!.whenComplete(() => {});
 
-    await uploadTask?.whenComplete(() => {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    print(urlDownload);
+
+    setState(() {
+      uploadTask = null;
+    });
   }
 
   @override
