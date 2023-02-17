@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -12,8 +13,9 @@ import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddScreen extends StatefulWidget {
-  const AddScreen({super.key});
+  final QueryDocumentSnapshot? document;
 
+  const AddScreen({Key? key, this.document}) : super(key: key);
   @override
   State<AddScreen> createState() => _AddScreenState();
 }
@@ -292,6 +294,11 @@ class _AddScreenState extends State<AddScreen> {
                   ),
                 ],
               ),
+              if (widget.document != null)
+                Text(
+                  '${widget.document}',
+                  style: const TextStyle(fontSize: 54),
+                ),
               ElevatedButton(onPressed: uploadFile, child: const Text("버툰"))
             ],
           ),
