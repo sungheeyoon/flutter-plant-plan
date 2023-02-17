@@ -62,33 +62,40 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                             listQueryDocumentSnapshot[index];
                         if (enteredKeyword.isEmpty) {
                           return ListTile(
-                            title: Text(
-                              document['name'],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: primary3Color),
-                            ),
-                            leading: CachedNetworkImage(
-                              imageUrl: document['image'],
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 44.0,
-                                height: 44.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
+                              title: Text(
+                                document['name'],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(color: primary3Color),
                               ),
-                              placeholder: (context, url) =>
-                                  const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                          );
+                              leading: CachedNetworkImage(
+                                imageUrl: document['image'],
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 44.0,
+                                  height: 44.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 44.0,
+                                  height: 44.0,
+                                  child: CircleAvatar(
+                                    backgroundColor: gray1Color,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                              onTap: () => Navigator.of(context)
+                                  .pop({document: document}));
                         } else {
                           RegExp regExp = getRegExp(
                               enteredKeyword,
@@ -124,8 +131,13 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 44.0,
+                                  height: 44.0,
+                                  child: CircleAvatar(
+                                    backgroundColor: gray1Color,
+                                  ),
+                                ),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),
