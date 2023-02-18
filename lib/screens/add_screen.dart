@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -13,7 +13,7 @@ import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddScreen extends StatefulWidget {
-  final QueryDocumentSnapshot? document;
+  final PlantModel? document;
 
   const AddScreen({Key? key, this.document}) : super(key: key);
   @override
@@ -294,9 +294,13 @@ class _AddScreenState extends State<AddScreen> {
                   ),
                 ],
               ),
+              Text(
+                '${widget.document?.name}',
+                style: const TextStyle(fontSize: 54),
+              ),
               if (widget.document != null)
                 Text(
-                  '${widget.document}',
+                  '${widget.document?.id}',
                   style: const TextStyle(fontSize: 54),
                 ),
               ElevatedButton(onPressed: uploadFile, child: const Text("버툰"))
