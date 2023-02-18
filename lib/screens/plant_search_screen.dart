@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
+import 'package:plant_plan/models/plant_model.dart';
+import 'package:plant_plan/screens/add_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
@@ -62,40 +64,44 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                             listQueryDocumentSnapshot[index];
                         if (enteredKeyword.isEmpty) {
                           return ListTile(
-                              title: Text(
-                                document['name'],
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(color: primary3Color),
-                              ),
-                              leading: CachedNetworkImage(
-                                imageUrl: document['image'],
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: 44.0,
-                                  height: 44.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
+                            title: Text(
+                              document['name'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(color: primary3Color),
+                            ),
+                            leading: CachedNetworkImage(
+                              imageUrl: document['image'],
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 44.0,
+                                height: 44.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
                                 ),
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 44.0,
-                                  height: 44.0,
-                                  child: CircleAvatar(
-                                    backgroundColor: gray1Color,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               ),
-                              onTap: () => Navigator.of(context)
-                                  .pop({document: document}));
+                              placeholder: (context, url) => const SizedBox(
+                                width: 44.0,
+                                height: 44.0,
+                                child: CircleAvatar(
+                                  backgroundColor: gray1Color,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AddScreen(
+                                document: PlantModel.fromFirestore(document),
+                              ),
+                            )),
+                          );
                         } else {
                           RegExp regExp = getRegExp(
                               enteredKeyword,
