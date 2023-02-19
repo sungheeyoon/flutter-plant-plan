@@ -6,7 +6,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
-import 'package:plant_plan/screens/snapping_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
@@ -200,20 +199,26 @@ class _AddScreenState extends State<AddScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 32,
                     ),
-                    OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          minimumSize: Size.zero,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          backgroundColor: sub1Color,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          side: const BorderSide(
-                              width: 0, color: sub1Color), //<-- SEE HERE
-                        ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("식물 종류",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelLarge!
+                          .copyWith(color: primary3Color)),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  SizedBox(
+                      width: fullWidth,
+                      height: 40,
+                      child: OutlinedButton(
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -221,49 +226,41 @@ class _AddScreenState extends State<AddScreen> {
                                 builder: (context) => const PlantSearchScreen(),
                               ));
                         },
-                        child: Text("식물 이름 검색",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(color: Colors.white))),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    Row(children: const [
-                      SnappingContainer(
-                          imageUrl: "assets/images/management/humid.png",
-                          title: "수분량",
-                          measure: "88%",
-                          explain: "모든 식물이들 수분 충분해요"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SnappingContainer(
-                          imageUrl: "assets/images/management/sun.png",
-                          title: "일조량",
-                          measure: "75%",
-                          explain: "모든 식물이들 일조량 충분해요"),
-                    ]),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(children: const [
-                      SnappingContainer(
-                          imageUrl: "assets/images/management/division.png",
-                          title: "분갈이",
-                          measure: "D-120",
-                          explain: "분갈이 시기 확인하세요"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      SnappingContainer(
-                          imageUrl: "assets/images/management/nutrient.png",
-                          title: "영양제",
-                          measure: "D-80",
-                          explain: "영양제 종류/목적 중요해요")
-                    ])
-                  ],
-                ),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          side: const BorderSide(
+                              width: 1, color: gray3Color), //<-- SEE HERE
+                        ),
+                        child: Row(
+                          children: [
+                            const ImageBox(
+                                imageUri: 'assets/icons/search.png',
+                                width: 24,
+                                height: 24),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            widget.document != null
+                                ? Text('${widget.document?.name}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: grayBlack))
+                                : Text('검색하기',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: gray2Color))
+                          ],
+                        ),
+                      ))
+                ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
