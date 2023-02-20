@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -22,6 +24,10 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   UploadTask? uploadTask;
   XFile? pickedFile;
+  String? warteringDay;
+  String? divisionDay;
+  String? nutrientDay;
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final imageHelper = ImageHelper();
   Future uploadFile() async {
     String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
@@ -180,6 +186,14 @@ class _AddScreenState extends State<AddScreen> {
                                       FileImage(File(pickedFile!.path)),
                                 ),
                               )
+                            else if (widget.document != null)
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: CircleAvatar(
+                                    radius: 40, // Image radius
+                                    backgroundImage:
+                                        NetworkImage(widget.document!.image)),
+                              )
                             else
                               ImageBox(
                                   imageUri: 'assets/images/pot.png',
@@ -253,6 +267,230 @@ class _AddScreenState extends State<AddScreen> {
                                         .titleMedium!
                                         .copyWith(color: grayBlack))
                                 : Text('검색하기',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: gray2Color))
+                          ],
+                        ),
+                      )),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Image(
+                        image: AssetImage("assets/images/management/humid.png"),
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text('수분량',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  SizedBox(
+                      width: fullWidth,
+                      height: 40,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showRoundedDatePicker(
+                            context: context,
+                            height: 400,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(DateTime.now().year - 1),
+                            lastDate: DateTime(DateTime.now().year + 1),
+                            borderRadius: 16,
+                          );
+                          if (newDate == null) return;
+
+                          setState(() {
+                            warteringDay = formatter.format(newDate);
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          side: const BorderSide(
+                              width: 1, color: gray3Color), //<-- SEE HERE
+                        ),
+                        child: Row(
+                          children: [
+                            const ImageBox(
+                                imageUri: 'assets/icons/calendar_box.png',
+                                width: 24,
+                                height: 24),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            warteringDay != null
+                                ? Text(warteringDay.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: grayBlack))
+                                : Text('마지막으로 물 준 날',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: gray2Color))
+                          ],
+                        ),
+                      )),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Image(
+                        image:
+                            AssetImage("assets/images/management/division.png"),
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text('분갈이',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  SizedBox(
+                      width: fullWidth,
+                      height: 40,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showRoundedDatePicker(
+                            context: context,
+                            height: 400,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(DateTime.now().year - 1),
+                            lastDate: DateTime(DateTime.now().year + 1),
+                            borderRadius: 16,
+                          );
+                          if (newDate == null) return;
+
+                          setState(() {
+                            divisionDay = formatter.format(newDate);
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          side: const BorderSide(
+                              width: 1, color: gray3Color), //<-- SEE HERE
+                        ),
+                        child: Row(
+                          children: [
+                            const ImageBox(
+                                imageUri: 'assets/icons/calendar_box.png',
+                                width: 24,
+                                height: 24),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            divisionDay != null
+                                ? Text(divisionDay.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: grayBlack))
+                                : Text('마지막으로 분갈이 한 날',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: gray2Color))
+                          ],
+                        ),
+                      )),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Image(
+                        image:
+                            AssetImage("assets/images/management/nutrient.png"),
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text('영양제',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  SizedBox(
+                      width: fullWidth,
+                      height: 40,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          DateTime? newDate = await showRoundedDatePicker(
+                            context: context,
+                            height: 400,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(DateTime.now().year - 1),
+                            lastDate: DateTime(DateTime.now().year + 1),
+                            borderRadius: 16,
+                          );
+                          if (newDate == null) return;
+
+                          setState(() {
+                            nutrientDay = formatter.format(newDate);
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size.zero,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 8),
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          side: const BorderSide(
+                              width: 1, color: gray3Color), //<-- SEE HERE
+                        ),
+                        child: Row(
+                          children: [
+                            const ImageBox(
+                                imageUri: 'assets/icons/calendar_box.png',
+                                width: 24,
+                                height: 24),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            nutrientDay != null
+                                ? Text(nutrientDay.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: grayBlack))
+                                : Text('마지막으로 영양제 준 날',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
