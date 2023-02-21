@@ -63,6 +63,21 @@ class _AddScreenState extends State<AddScreen> {
         home: true,
         title: "식물추가",
       ),
+      bottomNavigationBar: Container(
+        height: fullHeight * 0.068,
+        decoration: const BoxDecoration(color: pointColor),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: pointColor, // Background color
+          ),
+          onPressed: () {},
+          child: Text("다음",
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineLarge!
+                  .copyWith(color: Colors.white)),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
@@ -274,6 +289,25 @@ class _AddScreenState extends State<AddScreen> {
                           ],
                         ),
                       )),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Text('식물 별칭',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  TextField(
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: gray2Color),
+                  ),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -538,7 +572,7 @@ class _AddScreenState extends State<AddScreen> {
                   '${widget.document?.id}',
                   style: const TextStyle(fontSize: 54),
                 ),
-              ElevatedButton(onPressed: uploadFile, child: const Text("버툰"))
+              ElevatedButton(onPressed: uploadFile, child: const Text("버툰")),
             ],
           ),
         ),
