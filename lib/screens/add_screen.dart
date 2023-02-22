@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_plan/controllers/addscreen_controller.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -21,10 +23,11 @@ class AddScreen extends StatefulWidget {
   State<AddScreen> createState() => _AddScreenState();
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _AddScreenState extends State<AddScreen>
+    with AutomaticKeepAliveClientMixin<AddScreen> {
   UploadTask? uploadTask;
   XFile? pickedFile;
-  String? warteringDay;
+  String? watering;
   String? divisionDay;
   String? nutrientDay;
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -56,8 +59,10 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(AddScreenController());
     final fullWidth = MediaQuery.of(context).size.width;
     final fullHeight = MediaQuery.of(context).size.height;
+    super.build(context);
     return Scaffold(
       appBar: const CustomAppBar(
         home: true,
@@ -134,6 +139,11 @@ class _AddScreenState extends State<AddScreen> {
                                                   file: file,
                                                   cropStyle: CropStyle.circle);
                                           if (croppedFile != null) {
+                                            Get.find<AddScreenController>()
+                                                .updateImage(File(
+                                                    XFile(croppedFile.path)
+                                                        .path));
+
                                             setState(() {
                                               pickedFile =
                                                   XFile(croppedFile.path);
@@ -193,14 +203,16 @@ class _AddScreenState extends State<AddScreen> {
                           },
                           child: Stack(children: [
                             if (pickedFile != null)
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: CircleAvatar(
-                                  radius: 40, // Image radius
-                                  backgroundImage:
-                                      FileImage(File(pickedFile!.path)),
-                                ),
-                              )
+                              Obx(() {
+                                return FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: CircleAvatar(
+                                    radius: 40, // Image radius
+                                    backgroundImage:
+                                        FileImage(File(pickedFile!.path)),
+                                  ),
+                                );
+                              })
                             else if (widget.document != null)
                               FittedBox(
                                 fit: BoxFit.contain,
@@ -307,6 +319,12 @@ class _AddScreenState extends State<AddScreen> {
                         .textTheme
                         .titleMedium!
                         .copyWith(color: gray2Color),
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      border: OutlineInputBorder(),
+                      hintText: '선택사항',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -345,7 +363,7 @@ class _AddScreenState extends State<AddScreen> {
                           if (newDate == null) return;
 
                           setState(() {
-                            warteringDay = formatter.format(newDate);
+                            watering = formatter.format(newDate);
                           });
                         },
                         style: OutlinedButton.styleFrom(
@@ -368,8 +386,8 @@ class _AddScreenState extends State<AddScreen> {
                             const SizedBox(
                               width: 8,
                             ),
-                            warteringDay != null
-                                ? Text(warteringDay.toString(),
+                            watering != null
+                                ? Text(watering.toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
@@ -579,6 +597,9 @@ class _AddScreenState extends State<AddScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class SettingCard extends StatelessWidget {
