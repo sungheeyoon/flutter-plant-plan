@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
-import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:plant_plan/controllers/addscreen_controller.dart';
 import 'package:plant_plan/models/plant_model.dart';
+import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/plant_search_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
@@ -17,21 +16,23 @@ import 'package:plant_plan/widgets/image_box.dart';
 
 class AddScreen extends StatefulWidget {
   final PlantModel? document;
+  final PreserveModel? prev;
 
-  const AddScreen({Key? key, this.document}) : super(key: key);
+  const AddScreen({Key? key, this.document, this.prev}) : super(key: key);
   @override
   State<AddScreen> createState() => _AddScreenState();
 }
 
-class _AddScreenState extends State<AddScreen>
-    with AutomaticKeepAliveClientMixin<AddScreen> {
+class _AddScreenState extends State<AddScreen> {
   UploadTask? uploadTask;
   XFile? pickedFile;
-  String? watering;
+  String? wateringDay;
   String? divisionDay;
   String? nutrientDay;
+  String? alias;
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
   final imageHelper = ImageHelper();
+
   Future uploadFile() async {
     String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -50,7 +51,6 @@ class _AddScreenState extends State<AddScreen>
     final snapshot = await uploadTask!.whenComplete(() => {});
 
     final urlDownload = await snapshot.ref.getDownloadURL();
-    print(urlDownload);
 
     setState(() {
       uploadTask = null;
@@ -58,11 +58,27 @@ class _AddScreenState extends State<AddScreen>
   }
 
   @override
+  void initState() {
+    if (widget.prev?.alias != null) {
+      alias = '${widget.prev!.alias}';
+    }
+    if (widget.prev?.wateringDay != null) {
+      wateringDay = '${widget.prev!.wateringDay}';
+    }
+    if (widget.prev?.divisionDay != null) {
+      divisionDay = '${widget.prev!.divisionDay}';
+    }
+    if (widget.prev?.nutrientDay != null) {
+      nutrientDay = '${widget.prev!.nutrientDay}';
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddScreenController());
     final fullWidth = MediaQuery.of(context).size.width;
     final fullHeight = MediaQuery.of(context).size.height;
-    super.build(context);
+
     return Scaffold(
       appBar: const CustomAppBar(
         home: true,
@@ -139,11 +155,6 @@ class _AddScreenState extends State<AddScreen>
                                                   file: file,
                                                   cropStyle: CropStyle.circle);
                                           if (croppedFile != null) {
-                                            Get.find<AddScreenController>()
-                                                .updateImage(File(
-                                                    XFile(croppedFile.path)
-                                                        .path));
-
                                             setState(() {
                                               pickedFile =
                                                   XFile(croppedFile.path);
@@ -202,18 +213,21 @@ class _AddScreenState extends State<AddScreen>
                             );
                           },
                           child: Stack(children: [
-                            if (pickedFile != null)
-                              Obx(() {
-                                return FittedBox(
+                            if (pickedFile != null) //찍은애
+                              FittedBox(
                                   fit: BoxFit.contain,
                                   child: CircleAvatar(
-                                    radius: 40, // Image radius
-                                    backgroundImage:
-                                        FileImage(File(pickedFile!.path)),
-                                  ),
-                                );
-                              })
-                            else if (widget.document != null)
+                                      radius: 40, // Image radius
+                                      backgroundImage:
+                                          FileImage(File(pickedFile!.path))))
+                            else if (widget.prev?.image != null) //찍엇는데 갔다왓음
+                              FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: CircleAvatar(
+                                      radius: 40, // Image radius
+                                      backgroundImage: FileImage(
+                                          File(widget.prev!.image!.path))))
+                            else if (widget.document != null) //안찍었는데 깟다왓어
                               FittedBox(
                                 fit: BoxFit.contain,
                                 child: CircleAvatar(
@@ -260,11 +274,18 @@ class _AddScreenState extends State<AddScreen>
                       width: fullWidth,
                       height: 40,
                       child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
+                        onPressed: () async {
+                          await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const PlantSearchScreen(),
+                                builder: (context) => PlantSearchScreen(
+                                    prev: PreserveModel.fromJson({
+                                  'image': pickedFile,
+                                  'alias': alias,
+                                  'wateringDay': wateringDay,
+                                  'divisionDay': divisionDay,
+                                  'nutrientDay': nutrientDay,
+                                })),
                               ));
                         },
                         style: OutlinedButton.styleFrom(
@@ -314,16 +335,40 @@ class _AddScreenState extends State<AddScreen>
                   const SizedBox(
                     height: 6,
                   ),
-                  TextField(
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: gray2Color),
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      border: OutlineInputBorder(),
-                      hintText: '선택사항',
+                  SizedBox(
+                    height: 40,
+                    child: TextFormField(
+                      onChanged: (text) {
+                        setState(() {
+                          alias = text;
+                        });
+                      },
+                      initialValue: alias,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: grayBlack),
+                      decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                  width: 1, color: gray3Color)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                  color: gray3Color, width: 1.0)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                  color: gray3Color, width: 1.0)),
+                          hintText: '선택사항',
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(color: gray2Color)),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -363,7 +408,7 @@ class _AddScreenState extends State<AddScreen>
                           if (newDate == null) return;
 
                           setState(() {
-                            watering = formatter.format(newDate);
+                            wateringDay = formatter.format(newDate);
                           });
                         },
                         style: OutlinedButton.styleFrom(
@@ -386,17 +431,24 @@ class _AddScreenState extends State<AddScreen>
                             const SizedBox(
                               width: 8,
                             ),
-                            watering != null
-                                ? Text(watering.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: grayBlack))
-                                : Text('마지막으로 물 준 날',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: gray2Color))
+                            if (wateringDay != null)
+                              Text(wateringDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else if (widget.prev?.wateringDay != null)
+                              Text(widget.prev!.wateringDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else
+                              Text('마지막으로 물 준 날',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: gray2Color))
                           ],
                         ),
                       )),
@@ -461,17 +513,24 @@ class _AddScreenState extends State<AddScreen>
                             const SizedBox(
                               width: 8,
                             ),
-                            divisionDay != null
-                                ? Text(divisionDay.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: grayBlack))
-                                : Text('마지막으로 분갈이 한 날',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: gray2Color))
+                            if (divisionDay != null)
+                              Text(divisionDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else if (widget.prev?.divisionDay != null)
+                              Text(widget.prev!.divisionDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else
+                              Text('마지막으로 분갈이 한 날',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: gray2Color))
                           ],
                         ),
                       )),
@@ -536,17 +595,24 @@ class _AddScreenState extends State<AddScreen>
                             const SizedBox(
                               width: 8,
                             ),
-                            nutrientDay != null
-                                ? Text(nutrientDay.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: grayBlack))
-                                : Text('마지막으로 영양제 준 날',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: gray2Color))
+                            if (nutrientDay != null)
+                              Text(nutrientDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else if (widget.prev?.nutrientDay != null)
+                              Text(widget.prev!.nutrientDay.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: grayBlack))
+                            else
+                              Text('마지막으로 영양제 준 날',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: gray2Color))
                           ],
                         ),
                       ))
@@ -581,6 +647,7 @@ class _AddScreenState extends State<AddScreen>
                   ),
                 ],
               ),
+              if (widget.prev != null) Text('${widget.prev?.alias}'),
               Text(
                 '${widget.document?.name}',
                 style: const TextStyle(fontSize: 54),
@@ -597,9 +664,6 @@ class _AddScreenState extends State<AddScreen>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class SettingCard extends StatelessWidget {

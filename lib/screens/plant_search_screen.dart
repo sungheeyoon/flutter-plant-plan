@@ -3,13 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/models/plant_model.dart';
+import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/add_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
 class PlantSearchScreen extends StatefulWidget {
-  const PlantSearchScreen({super.key});
+  final PreserveModel? prev;
+  const PlantSearchScreen({Key? key, this.prev}) : super(key: key);
 
   @override
   State<PlantSearchScreen> createState() => _PlantSearchScreenState();
@@ -44,6 +46,7 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
       appBar: const CustomAppBar(title: "식물검색", home: false),
       body: Column(
         children: <Widget>[
+          Text("${widget.prev?.image.toString()}"),
           buildSearch(),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -99,6 +102,7 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                                 Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => AddScreen(
                                 document: PlantModel.fromFirestore(document),
+                                prev: widget.prev,
                               ),
                             )),
                           );
@@ -147,6 +151,10 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),
+                              onTap: () => Navigator.pop(context, {
+                                'document': PlantModel.fromFirestore(document),
+                                'prev': widget.prev
+                              }),
                             );
                           }
                         }

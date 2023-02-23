@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:get/get.dart';
 
 class AddScreenController extends GetxController {
-  File? image;
+  File img = File("assets/images/pot.png");
   RxString name = "".obs;
   RxString humid = "".obs;
   RxString division = "".obs;
   RxString nutrient = "".obs;
 
   void updateImage(File image) {
-    image = image;
+    img = image;
     update();
   }
 
