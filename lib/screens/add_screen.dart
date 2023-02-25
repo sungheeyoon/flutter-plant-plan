@@ -76,6 +76,7 @@ class _AddScreenState extends State<AddScreen> {
     if (widget.document?.name != null) {
       _isButtonDisabled = false;
     }
+
     super.initState();
   }
 
@@ -99,66 +100,76 @@ class _AddScreenState extends State<AddScreen> {
           onPressed: _isButtonDisabled
               ? null
               : () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const SizedBox(
-                              height: 32,
-                            ),
-                            Text('관리 날짜를 지정하지 않은 경우',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: grayBlack)),
-                            Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: grayBlack)),
-                            const SizedBox(
-                              height: 32,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 1,
-                                  color: gray4Color,
+                  if (wateringDay != null &&
+                      divisionDay != null &&
+                      nutrientDay != null) {
+                    _controller.jumpToPage(1);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(
+                                height: 32,
+                              ),
+                              Text('관리 날짜를 지정하지 않은 경우',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: grayBlack)),
+                              Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: grayBlack)),
+                              const SizedBox(
+                                height: 32,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: gray4Color,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 16)),
-                                    child: Text('돌아가기',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(color: primary3Color))),
-                                TextButton(
-                                    onPressed: () {},
-                                    child: Text('다음',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(color: primary3Color)))
-                              ],
-                            )
-                          ],
-                        )),
-                  );
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16)),
+                                      child: Text('돌아가기',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge!
+                                              .copyWith(color: primary3Color))),
+                                  TextButton(
+                                      onPressed: () {
+                                        _controller.jumpToPage(1);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('다음',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge!
+                                              .copyWith(color: primary3Color)))
+                                ],
+                              )
+                            ],
+                          )),
+                    );
+                  }
                   //_controller.jumpToPage(1);
                 },
           child: Text("다음",
@@ -775,28 +786,6 @@ class SettingCard extends StatelessWidget {
             const SizedBox(
               width: 12,
             ),
-            SizedBox(
-              width: 230,
-              child: TextField(
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  suffixIconConstraints:
-                      BoxConstraints(minHeight: 20, minWidth: 20),
-                  suffixIcon: ImageBox(
-                      imageUri: "assets/icons/pen.png", width: 1, height: 1),
-                  isCollapsed: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 5),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        width: 1, color: Color.fromRGBO(29, 49, 91, 1)),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
         const SizedBox(
@@ -805,10 +794,13 @@ class SettingCard extends StatelessWidget {
         Container(
             height: 78,
             decoration: BoxDecoration(
-                color: const Color.fromRGBO(245, 245, 245, 1),
-                borderRadius: BorderRadius.circular(10)),
+                color: gray5Color, borderRadius: BorderRadius.circular(10)),
             child: Center(
-              child: Text("$title 알람을 설정하세요"),
+              child: Text("$title 알람을 설정하세요",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: primary3Color)),
             )),
       ],
     );
