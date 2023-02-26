@@ -46,7 +46,6 @@ class _PlantSearchScreenState extends State<PlantSearchScreen> {
       appBar: const CustomAppBar(title: "식물검색", home: false),
       body: Column(
         children: <Widget>[
-          Text("${widget.prev?.image.toString()}"),
           buildSearch(),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
