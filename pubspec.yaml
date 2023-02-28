@@ -52,6 +52,7 @@ dependencies:
   flutter_rounded_date_picker: ^3.0.2
   intl: ^0.17.0
   flutter_time_picker_spinner: ^2.0.0
+  flutter_local_notifications: ^13.0.0
 
 dev_dependencies:
   flutter_test:
