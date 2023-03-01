@@ -44,7 +44,7 @@ class LocalNotificationService {
     required String body,
   }) async {
     final details = await _notificationDetails();
-    await _localNotificationService.show(id, title, body, details);
+    return await _localNotificationService.show(id, title, body, details);
   }
 
   Future onDidReceiveLocalNotification(
@@ -57,7 +57,7 @@ class LocalNotificationService {
     }
   }
 
-  void onDidReceiveNotificationResponse(NotificationResponse details) {
+  void onDidReceiveNotificationResponse(NotificationResponse details) async {
     print('payload $details');
   }
 }

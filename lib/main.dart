@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/screens/onbording_screen.dart';
+import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
   await Firebase.initializeApp();
 
   final prefs = await SharedPreferences.getInstance();
