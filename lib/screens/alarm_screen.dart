@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
+import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 
@@ -120,9 +121,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
           ElevatedButton(
               onPressed: () async {
-                await service.showNotificaion(
-                    id: 0, title: 'Notification Title', body: 'some body');
-                print('clicked');
+                // await NotificationService().showNotification(
+                //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
+                debugPrint('Notification Scheduled for $_dateTime');
+                NotificationService().scheduleNotification(
+                    title: 'Scheduled Notification',
+                    body: '$_dateTime',
+                    scheduledNotificationDateTime: _dateTime);
               },
               child: const Text('alarm'))
         ]),

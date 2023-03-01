@@ -53,6 +53,7 @@ dependencies:
   intl: ^0.17.0
   flutter_time_picker_spinner: ^2.0.0
   flutter_local_notifications: ^13.0.0
+  timezone: ^0.9.1
 
 dev_dependencies:
   flutter_test:
