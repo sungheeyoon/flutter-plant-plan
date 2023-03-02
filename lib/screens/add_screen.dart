@@ -492,152 +492,6 @@ class _AddScreenState extends State<AddScreen> {
         home: true,
         title: "식물추가",
       ),
-      bottomNavigationBar: SizedBox(
-          height: fullHeight * 0.068,
-          child: bottomSelectedIndex == 0
-              ? ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      disabledBackgroundColor: gray3Color,
-                      backgroundColor: pointColor // Background color
-                      ),
-                  onPressed: _isButtonDisabled
-                      ? null
-                      : () {
-                          if (wateringDay != null &&
-                              divisionDay != null &&
-                              nutrientDay != null) {
-                            _controller.jumpToPage(1);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(
-                                        height: 32,
-                                      ),
-                                      Text('관리 날짜를 지정하지 않은 경우',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(color: grayBlack)),
-                                      Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(color: grayBlack)),
-                                      const SizedBox(
-                                        height: 32,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color: gray4Color,
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              style: TextButton.styleFrom(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 16)),
-                                              child: Text('돌아가기',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelLarge!
-                                                      .copyWith(
-                                                          color:
-                                                              primary3Color))),
-                                          TextButton(
-                                              onPressed: () {
-                                                _controller.jumpToPage(1);
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('다음',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelLarge!
-                                                      .copyWith(
-                                                          color:
-                                                              primary3Color)))
-                                        ],
-                                      )
-                                    ],
-                                  )),
-                            );
-                          }
-                        },
-                  child: Text("다음",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(color: Colors.white)),
-                )
-              : Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: pointColor,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: TextButton(
-                                onPressed: () {
-                                  _controller.jumpToPage(0);
-                                },
-                                style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16)),
-                                child: Text('이전',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineLarge!
-                                        .copyWith(color: pointColor))),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: fullHeight * 0.0657,
-                            color: pointColor,
-                            child: Center(
-                              child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text('식물 추가 완료',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge!
-                                          .copyWith(color: Colors.white))),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
@@ -807,6 +661,150 @@ class _AddScreenState extends State<AddScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: SizedBox(
+          width: fullWidth,
+          height: fullHeight * 0.068,
+          child: bottomSelectedIndex == 0
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      disabledBackgroundColor: gray3Color,
+                      backgroundColor: pointColor // Background color
+                      ),
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () {
+                          if (wateringDay != null &&
+                              divisionDay != null &&
+                              nutrientDay != null) {
+                            _controller.jumpToPage(1);
+                          } else {
+                            dialog(context);
+                          }
+                        },
+                  child: Text("다음",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(color: Colors.white)),
+                )
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: fullHeight * 0.068,
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        width: 1, color: pointColor))),
+                            child: Center(
+                              child: TextButton(
+                                  onPressed: () {
+                                    _controller.jumpToPage(0);
+                                  },
+                                  style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16)),
+                                  child: Text('이전',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge!
+                                          .copyWith(color: pointColor))),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: fullHeight * 0.068,
+                            color: pointColor,
+                            child: Center(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: EdgeInsets.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text('식물 추가 완료',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge!
+                                          .copyWith(color: Colors.white))),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                )),
+    );
+  }
+
+  Future<dynamic> dialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                height: 32,
+              ),
+              Text('관리 날짜를 지정하지 않은 경우',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: grayBlack)),
+              Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: grayBlack)),
+              const SizedBox(
+                height: 32,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                    color: gray4Color,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16)),
+                      child: Text('돌아가기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color))),
+                  TextButton(
+                      onPressed: () {
+                        _controller.jumpToPage(1);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('다음',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(color: primary3Color)))
+                ],
+              )
+            ],
+          )),
     );
   }
 }
@@ -827,12 +825,12 @@ class SettingCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color.fromRGBO(255, 133, 63, 1),
+                color: pointColor,
                 borderRadius: const BorderRadius.horizontal(
                     right: Radius.circular(10), left: Radius.circular(10)),
                 border: Border.all(
                   width: 1,
-                  color: const Color.fromRGBO(255, 133, 63, 1),
+                  color: pointColor,
                 ),
               ),
               child: Center(

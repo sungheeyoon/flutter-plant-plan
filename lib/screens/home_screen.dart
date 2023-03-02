@@ -37,8 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs = await SharedPreferences.getInstance();
     final List<String>? likedPosts = prefs.getStringList('likedPosts');
     if (likedPosts == null) {
-      await prefs
-          .setStringList('likedPosts', <String>['0', '0', '0', '0', '0', '0']);
+      await prefs.setStringList('likedPosts', likeList);
     } else {
       setState(() {
         likeList = prefs.getStringList('likedPosts') ?? [];
