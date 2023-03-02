@@ -5,11 +5,13 @@ import 'package:plant_plan/widgets/snapping_above.dart';
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
   final bool home;
-  const CustomAppBar({
-    Key? key,
-    required this.title,
-    required this.home,
-  }) : super(key: key);
+  final Color bgColor;
+  const CustomAppBar(
+      {Key? key,
+      required this.title,
+      required this.home,
+      this.bgColor = primary2Color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             },
             icon: const Icon(Icons.arrow_back_ios_new_rounded)),
         elevation: 0,
-        backgroundColor: const Color.fromRGBO(235, 247, 232, 1),
+        backgroundColor: bgColor,
         title: Text(title,
             style: Theme.of(context)
                 .textTheme

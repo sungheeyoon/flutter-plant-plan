@@ -27,7 +27,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: '알람설정', home: false),
+      appBar: const CustomAppBar(
+        title: '알림 설정',
+        home: false,
+        bgColor: Colors.white,
+      ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         color: gray5Color,
@@ -48,7 +52,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                '알람 제목',
+                '제목',
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
