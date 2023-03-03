@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: const [
           Locale('ko', 'KR'),
-          // include country code too
         ],
         theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,

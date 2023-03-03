@@ -124,16 +124,27 @@ class _AlarmScreenState extends State<AlarmScreen> {
             ]),
           ),
           ElevatedButton(
-              onPressed: () async {
-                // await NotificationService().showNotification(
-                //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
-                debugPrint('Notification Scheduled for $_dateTime');
-                NotificationService().scheduleNotification(
-                    title: 'Scheduled Notification',
-                    body: '$_dateTime',
-                    scheduledNotificationDateTime: _dateTime);
-              },
-              child: const Text('alarm'))
+            onPressed: () async {
+              // await NotificationService().showNotification(
+              //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
+              debugPrint('Notification Scheduled for $_dateTime');
+              NotificationService().scheduleNotification(
+                  title: 'Scheduled Notification',
+                  body: '$_dateTime',
+                  scheduledNotificationDateTime: _dateTime);
+            },
+            child: const Text('Scheduled Notification'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              debugPrint('periodically Scheduled for $_dateTime');
+              NotificationService().periodicallyNotification(
+                title: 'periodically Notification',
+                body: '$_dateTime',
+              );
+            },
+            child: const Text('periodically Notification'),
+          )
         ]),
       ),
     );
