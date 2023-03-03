@@ -100,28 +100,69 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 328,
             child: Column(
               children: [
-                FutureBuilder(
-                  future: webtoons,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Expanded(
-                        child: Column(
-                          children: [Expanded(child: makeList(snapshot))],
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddScreen(),
+                            ));
+                      },
+                      child: Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 1,
+                            color: const Color.fromRGBO(170, 226, 177, 1),
+                          ),
                         ),
-                      );
-                    }
-                    return Column(
-                      children: const [
-                        SizedBox(
-                          height: 20,
+                        child: const Text(
+                          "+",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.w100,
+                              color: Color.fromRGBO(170, 226, 177, 1)),
                         ),
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ],
-                    );
-                  },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    const Text(
+                      "",
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
                 ),
+                // supossed webttons to firebase
+                // FutureBuilder(
+                //   future: webtoons,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.hasData) {
+                //       return Expanded(
+                //         child: Column(
+                //           children: [Expanded(child: makeList(snapshot))],
+                //         ),
+                //       );
+                //     }
+                //     return Column(
+                //       children: const [
+                //         SizedBox(
+                //           height: 20,
+                //         ),
+                //         Center(
+                //           child: CircularProgressIndicator(),
+                //         ),
+                //       ],
+                //     );
+                //   },
+                // ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 18, horizontal: 24),

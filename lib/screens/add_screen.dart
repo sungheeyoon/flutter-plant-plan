@@ -229,13 +229,16 @@ class _AddScreenState extends State<AddScreen> {
                 child: OutlinedButton(
                   onPressed: () async {
                     DateTime? newDate = await showRoundedDatePicker(
-                      context: context,
-                      height: 400,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                      borderRadius: 16,
-                    );
+                        theme: ThemeData(
+                          primaryColor: Colors.white,
+                        ),
+                        context: context,
+                        height: 400,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(DateTime.now().year - 1),
+                        lastDate: DateTime(DateTime.now().year + 1),
+                        borderRadius: 16,
+                        styleDatePicker: MaterialRoundedDatePickerStyle());
                     if (newDate == null) return;
 
                     setState(() {

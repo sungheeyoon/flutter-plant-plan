@@ -47,7 +47,10 @@ class NotificationService {
       String? body,
       String? payLoad,
       required DateTime scheduledNotificationDateTime}) async {
-    return notificationsPlugin.zonedSchedule(
+    await notificationsPlugin.periodicallyShow(id, title, body,
+        RepeatInterval.everyMinute, await notificationDetails());
+
+    return await notificationsPlugin.zonedSchedule(
         id,
         title,
         body,
@@ -59,5 +62,14 @@ class NotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  Future periodicallyNotification({
+    int id = 0,
+    String? title,
+    String? body,
+  }) async {
+    await notificationsPlugin.periodicallyShow(id, title, body,
+        RepeatInterval.everyMinute, await notificationDetails());
   }
 }
