@@ -1,31 +1,53 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'dart:io' show File, Platform;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   Future<void> initNotification() async {
-    notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+    if (Platform.isIOS) {
+      _requestIOSPermission();
+    }
+    if (Platform.isAndroid) {
+      _requestAndroidPermission();
+    }
 
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('@drawable/home');
 
-    var initializationSettingsIOS = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-        onDidReceiveLocalNotification:
-            (int id, String? title, String? body, String? payload) async {});
+    DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+            onDidReceiveLocalNotification: (int id, String? title, String? body,
+                String? payload) async {});
 
-    var initializationSettings = InitializationSettings(
+    InitializationSettings initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {});
+  }
+
+  _requestIOSPermission() async {
+    return await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
+  _requestAndroidPermission() async {
+    return await notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
   }
 
   notificationDetails() {
@@ -71,5 +93,9 @@ class NotificationService {
   }) async {
     await notificationsPlugin.periodicallyShow(id, title, body,
         RepeatInterval.everyMinute, await notificationDetails());
+  }
+
+  Future cancel(int id) async {
+    return await notificationsPlugin.cancel(id);
   }
 }

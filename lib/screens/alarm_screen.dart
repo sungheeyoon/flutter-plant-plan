@@ -137,14 +137,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-              debugPrint('periodically Scheduled for $_dateTime');
-              NotificationService().periodicallyNotification(
-                title: 'periodically Notification',
-                body: '$_dateTime',
-              );
+              debugPrint('cancel Notification Scheduled');
+              NotificationService().cancel(0);
             },
-            child: const Text('periodically Notification'),
-          )
+            child: const Text('Scheduled Notification'),
+          ),
         ]),
       ),
     );
