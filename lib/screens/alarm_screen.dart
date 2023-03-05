@@ -140,7 +140,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
               debugPrint('cancel Notification Scheduled');
               NotificationService().cancel(0);
             },
-            child: const Text('Scheduled Notification'),
+            child: const Text('cancel Notification'),
           ),
         ]),
       ),

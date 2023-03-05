@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'dart:io' show File, Platform;
+import 'dart:io' show Platform;
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -29,7 +29,8 @@ class NotificationService {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {});
+            (NotificationResponse notificationResponse) async {},
+        onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
   }
 
   _requestIOSPermission() async {
@@ -69,10 +70,7 @@ class NotificationService {
       String? body,
       String? payLoad,
       required DateTime scheduledNotificationDateTime}) async {
-    await notificationsPlugin.periodicallyShow(id, title, body,
-        RepeatInterval.everyMinute, await notificationDetails());
-
-    return await notificationsPlugin.zonedSchedule(
+    await notificationsPlugin.zonedSchedule(
         id,
         title,
         body,
@@ -84,6 +82,7 @@ class NotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
+    return await periodicallyNotification();
   }
 
   Future periodicallyNotification({
@@ -97,5 +96,17 @@ class NotificationService {
 
   Future cancel(int id) async {
     return await notificationsPlugin.cancel(id);
+  }
+
+  void notificationTapBackground(NotificationResponse notificationResponse) {
+    // ignore: avoid_print
+    print('notification(${notificationResponse.id}) action tapped: '
+        '${notificationResponse.actionId} with'
+        ' payload: ${notificationResponse.payload}');
+    if (notificationResponse.input?.isNotEmpty ?? false) {
+      // ignore: avoid_print
+      print(
+          'notification action tapped with input: ${notificationResponse.input}');
+    }
   }
 }
