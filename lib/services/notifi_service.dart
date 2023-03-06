@@ -29,8 +29,10 @@ class NotificationService {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await notificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {},
-        onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
+            (NotificationResponse notificationResponse) async {
+      var a = notificationResponse.id ?? 0;
+      await cancel(a);
+    });
   }
 
   _requestIOSPermission() async {
@@ -82,7 +84,6 @@ class NotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
-    return await periodicallyNotification();
   }
 
   Future periodicallyNotification({
@@ -96,17 +97,5 @@ class NotificationService {
 
   Future cancel(int id) async {
     return await notificationsPlugin.cancel(id);
-  }
-
-  void notificationTapBackground(NotificationResponse notificationResponse) {
-    // ignore: avoid_print
-    print('notification(${notificationResponse.id}) action tapped: '
-        '${notificationResponse.actionId} with'
-        ' payload: ${notificationResponse.payload}');
-    if (notificationResponse.input?.isNotEmpty ?? false) {
-      // ignore: avoid_print
-      print(
-          'notification action tapped with input: ${notificationResponse.input}');
-    }
   }
 }
