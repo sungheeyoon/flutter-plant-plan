@@ -30,27 +30,88 @@ class _AlarmScreenState extends State<AlarmScreen> {
       appBar: const CustomAppBar(
         title: '알림 설정',
         home: false,
-        bgColor: Colors.white,
+        bgColor: gray5Color,
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         color: gray5Color,
-        child: Column(children: <Widget>[
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+            Widget>[
           const SizedBox(
             height: 10,
           ),
-          hourMinute12H(),
-          const SizedBox(
-            height: 22,
-          ),
           Container(
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            height: 81,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            child: hourMinute12H(),
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '반복 주기',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: primary3Color),
+                  ),
+                  Text(
+                    '식물에게 알맞은 알림 주기를 선택해주세요',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: gray2Color),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: const [
+                  PeriodCard(
+                    number: 2,
+                    text: '매일',
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  PeriodCard(
+                    number: 2,
+                    text: '매주',
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  PeriodCard(
+                    number: 2,
+                    text: '매월',
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  PeriodCard(
+                    number: 3,
+                    text: '직접 입력',
+                  ),
+                ],
+              )
+            ],
+          ),
+          const SizedBox(height: 40),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
                 '제목',
                 style: Theme.of(context)
@@ -73,55 +134,38 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       .titleMedium!
                       .copyWith(color: grayBlack),
                   decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                      enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: gray3Color)),
-                      border: const UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: gray3Color, width: 1.0)),
-                      focusedBorder: const UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: gray3Color, width: 1.0)),
-                      hintText: '선택사항',
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(color: gray2Color)),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                    enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: gray3Color)),
+                    border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: gray3Color, width: 1.0)),
+                    focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: gray3Color, width: 1.0)),
+                    hintText: '물주기 알림 설정 제목',
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: gray2Color),
+                  ),
                 ),
               ),
-            ]),
+            ],
           ),
           const SizedBox(
-            height: 20,
+            height: 40,
           ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            height: 72,
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '알람 주기',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelLarge!
-                        .copyWith(color: primary3Color),
-                  ),
-                  Text(
-                    '다음 알람은 000000000',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: gray2Color),
-                  )
-                ],
-              )
-            ]),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '다시 알림',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(color: primary3Color),
+              ),
+            ],
           ),
           ElevatedButton(
             onPressed: () async {
@@ -163,6 +207,44 @@ class _AlarmScreenState extends State<AlarmScreen> {
           _dateTime = time;
         });
       },
+    );
+  }
+}
+
+class PeriodCard extends StatelessWidget {
+  final String text;
+  final int number;
+  const PeriodCard({
+    super.key,
+    required this.text,
+    required this.number,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      flex: number,
+      fit: FlexFit.loose,
+      child: Container(
+        height: 36,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(
+            width: 1,
+            color: gray3Color,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: gray2Color),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 }
