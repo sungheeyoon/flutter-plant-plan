@@ -14,6 +14,7 @@ class AlarmScreen extends StatefulWidget {
 
 class _AlarmScreenState extends State<AlarmScreen> {
   late final LocalNotificationService service;
+  bool isSwitched = false;
   String? title;
   DateTime _dateTime = DateTime.now();
 
@@ -27,6 +28,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(
         title: '알림 설정',
         home: false,
@@ -155,8 +157,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
           const SizedBox(
             height: 40,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 '다시 알림',
@@ -165,6 +168,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     .labelLarge!
                     .copyWith(color: primary3Color),
               ),
+              Switch(
+                  value: isSwitched,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitched = value;
+                    });
+                  },
+                  activeTrackColor: primary3Color.withOpacity(0.4),
+                  activeColor: primary3Color),
             ],
           ),
           ElevatedButton(
