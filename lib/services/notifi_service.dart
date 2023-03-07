@@ -73,17 +73,19 @@ class NotificationService {
       String? payLoad,
       required DateTime scheduledNotificationDateTime}) async {
     await notificationsPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(
-          scheduledNotificationDateTime,
-          tz.local,
-        ),
-        await notificationDetails(),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(
+        scheduledNotificationDateTime,
+        tz.local,
+      ),
+      await notificationDetails(),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
   Future periodicallyNotification({
@@ -97,5 +99,19 @@ class NotificationService {
 
   Future cancel(int id) async {
     return await notificationsPlugin.cancel(id);
+  }
+
+  tz.TZDateTime makeDate(
+      {required DateTime scheduledNotificationDateTime, required int days}) {
+    var now = tz.TZDateTime.now(tz.local);
+    var when = tz.TZDateTime.from(
+      scheduledNotificationDateTime,
+      tz.local,
+    );
+    if (when.isBefore(now)) {
+      return when.add(Duration(days: days));
+    } else {
+      return when;
+    }
   }
 }
