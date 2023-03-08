@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'plant.g.dart';
 part 'plant.freezed.dart';
 
-@Freezed()
+@freezed
 class Plant with _$Plant {
   factory Plant({
     required int id,
