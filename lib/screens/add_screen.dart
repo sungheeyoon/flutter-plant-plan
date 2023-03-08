@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/alarm_screen.dart';
-import 'package:plant_plan/screens/plant_search_screen.dart';
+import 'package:plant_plan/screens/search_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/utils/sizes_helpers.dart';
@@ -111,7 +111,7 @@ class _AddScreenState extends State<AddScreen> {
                     await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PlantSearchScreen(
+                          builder: (context) => SearchScreen(
                               prev: PreserveModel.fromJson({
                             'image': pickedFile,
                             'alias': alias,
