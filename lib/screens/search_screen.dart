@@ -9,15 +9,15 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
-class PlantSearchScreen extends StatefulWidget {
+class SearchScreen extends StatefulWidget {
   final PreserveModel? prev;
-  const PlantSearchScreen({Key? key, this.prev}) : super(key: key);
+  const SearchScreen({Key? key, this.prev}) : super(key: key);
 
   @override
-  State<PlantSearchScreen> createState() => _PlantSearchScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _PlantSearchScreenState extends State<PlantSearchScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   late Stream<QuerySnapshot> _streamPlantList;
   String enteredKeyword = "";
 
