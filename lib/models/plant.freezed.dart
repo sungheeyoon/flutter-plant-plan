@@ -22,7 +22,7 @@ Plant _$PlantFromJson(Map<String, dynamic> json) {
 mixin _$Plant {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get imageUrl => throw _privateConstructorUsedError;
+  String get imgUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $PlantCopyWith<$Res> {
   factory $PlantCopyWith(Plant value, $Res Function(Plant) then) =
       _$PlantCopyWithImpl<$Res, Plant>;
   @useResult
-  $Res call({int id, String name, String imageUrl});
+  $Res call({int id, String name, String imgUrl});
 }
 
 /// @nodoc
@@ -52,7 +52,7 @@ class _$PlantCopyWithImpl<$Res, $Val extends Plant>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? imageUrl = null,
+    Object? imgUrl = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -63,9 +63,9 @@ class _$PlantCopyWithImpl<$Res, $Val extends Plant>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
+      imgUrl: null == imgUrl
+          ? _value.imgUrl
+          : imgUrl // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -77,7 +77,7 @@ abstract class _$$_PlantCopyWith<$Res> implements $PlantCopyWith<$Res> {
       __$$_PlantCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, String imageUrl});
+  $Res call({int id, String name, String imgUrl});
 }
 
 /// @nodoc
@@ -91,7 +91,7 @@ class __$$_PlantCopyWithImpl<$Res> extends _$PlantCopyWithImpl<$Res, _$_Plant>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? imageUrl = null,
+    Object? imgUrl = null,
   }) {
     return _then(_$_Plant(
       id: null == id
@@ -102,9 +102,9 @@ class __$$_PlantCopyWithImpl<$Res> extends _$PlantCopyWithImpl<$Res, _$_Plant>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
+      imgUrl: null == imgUrl
+          ? _value.imgUrl
+          : imgUrl // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -113,7 +113,7 @@ class __$$_PlantCopyWithImpl<$Res> extends _$PlantCopyWithImpl<$Res, _$_Plant>
 /// @nodoc
 @JsonSerializable()
 class _$_Plant implements _Plant {
-  _$_Plant({required this.id, required this.name, required this.imageUrl});
+  _$_Plant({required this.id, required this.name, required this.imgUrl});
 
   factory _$_Plant.fromJson(Map<String, dynamic> json) =>
       _$$_PlantFromJson(json);
@@ -123,11 +123,11 @@ class _$_Plant implements _Plant {
   @override
   final String name;
   @override
-  final String imageUrl;
+  final String imgUrl;
 
   @override
   String toString() {
-    return 'Plant(id: $id, name: $name, imageUrl: $imageUrl)';
+    return 'Plant(id: $id, name: $name, imgUrl: $imgUrl)';
   }
 
   @override
@@ -137,13 +137,12 @@ class _$_Plant implements _Plant {
             other is _$_Plant &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+            (identical(other.imgUrl, imgUrl) || other.imgUrl == imgUrl));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, imageUrl);
+  int get hashCode => Object.hash(runtimeType, id, name, imgUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -163,7 +162,7 @@ abstract class _Plant implements Plant {
   factory _Plant(
       {required final int id,
       required final String name,
-      required final String imageUrl}) = _$_Plant;
+      required final String imgUrl}) = _$_Plant;
 
   factory _Plant.fromJson(Map<String, dynamic> json) = _$_Plant.fromJson;
 
@@ -172,7 +171,7 @@ abstract class _Plant implements Plant {
   @override
   String get name;
   @override
-  String get imageUrl;
+  String get imgUrl;
   @override
   @JsonKey(ignore: true)
   _$$_PlantCopyWith<_$_Plant> get copyWith =>

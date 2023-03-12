@@ -5,7 +5,7 @@ import 'package:plant_plan/models/plant.dart';
 @immutable
 abstract class PlantEvent extends Equatable {}
 
-class ListPlantsEvent extends PlantEvent {
+class GetPlantListEvent extends PlantEvent {
   @override
   List<Object> get props => [];
 }

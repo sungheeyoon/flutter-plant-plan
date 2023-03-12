@@ -8,7 +8,7 @@ class Plant with _$Plant {
   factory Plant({
     required int id,
     required String name,
-    required String imageUrl,
+    required String imgUrl,
   }) = _Plant;
 
   factory Plant.fromJson(Map<String, dynamic> json) => _$PlantFromJson(json);
