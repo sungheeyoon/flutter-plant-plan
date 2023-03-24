@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,6 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/utils/sizes_helpers.dart';
 
-import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddScreen extends StatefulWidget {
@@ -228,22 +227,22 @@ class _AddScreenState extends State<AddScreen> {
                 height: 40,
                 child: OutlinedButton(
                   onPressed: () async {
-                    DateTime? newDate = await showRoundedDatePicker(
-                        theme: ThemeData(
-                          primaryColor: Colors.white,
-                        ),
-                        context: context,
-                        height: 400,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(DateTime.now().year - 1),
-                        lastDate: DateTime(DateTime.now().year + 1),
-                        borderRadius: 16,
-                        styleDatePicker: MaterialRoundedDatePickerStyle());
-                    if (newDate == null) return;
+                    // DateTime? newDate = await showRoundedDatePicker(
+                    //     theme: ThemeData(
+                    //       primaryColor: Colors.white,
+                    //     ),
+                    //     context: context,
+                    //     height: 400,
+                    //     initialDate: DateTime.now(),
+                    //     firstDate: DateTime(DateTime.now().year - 1),
+                    //     lastDate: DateTime(DateTime.now().year + 1),
+                    //     borderRadius: 16,
+                    //     styleDatePicker: MaterialRoundedDatePickerStyle());
+                    // if (newDate == null) return;
 
-                    setState(() {
-                      wateringDay = formatter.format(newDate);
-                    });
+                    // setState(() {
+                    //   wateringDay = formatter.format(newDate);
+                    // });
                   },
                   style: OutlinedButton.styleFrom(
                     minimumSize: Size.zero,
@@ -311,19 +310,19 @@ class _AddScreenState extends State<AddScreen> {
                 height: 40,
                 child: OutlinedButton(
                   onPressed: () async {
-                    DateTime? newDate = await showRoundedDatePicker(
-                      context: context,
-                      height: 400,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                      borderRadius: 16,
-                    );
-                    if (newDate == null) return;
+                    // DateTime? newDate = await showRoundedDatePicker(
+                    //   context: context,
+                    //   height: 400,
+                    //   initialDate: DateTime.now(),
+                    //   firstDate: DateTime(DateTime.now().year - 1),
+                    //   lastDate: DateTime(DateTime.now().year + 1),
+                    //   borderRadius: 16,
+                    // );
+                    // if (newDate == null) return;
 
-                    setState(() {
-                      divisionDay = formatter.format(newDate);
-                    });
+                    // setState(() {
+                    //   divisionDay = formatter.format(newDate);
+                    // });
                   },
                   style: OutlinedButton.styleFrom(
                     minimumSize: Size.zero,
@@ -391,19 +390,19 @@ class _AddScreenState extends State<AddScreen> {
                 height: 40,
                 child: OutlinedButton(
                   onPressed: () async {
-                    DateTime? newDate = await showRoundedDatePicker(
-                      context: context,
-                      height: 400,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                      borderRadius: 16,
-                    );
-                    if (newDate == null) return;
+                    // DateTime? newDate = await showRoundedDatePicker(
+                    //   context: context,
+                    //   height: 400,
+                    //   initialDate: DateTime.now(),
+                    //   firstDate: DateTime(DateTime.now().year - 1),
+                    //   lastDate: DateTime(DateTime.now().year + 1),
+                    //   borderRadius: 16,
+                    // );
+                    // if (newDate == null) return;
 
-                    setState(() {
-                      nutrientDay = formatter.format(newDate);
-                    });
+                    // setState(() {
+                    //   nutrientDay = formatter.format(newDate);
+                    // });
                   },
                   style: OutlinedButton.styleFrom(
                     minimumSize: Size.zero,
@@ -491,10 +490,6 @@ class _AddScreenState extends State<AddScreen> {
     final fullHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: const CustomAppBar(
-        home: true,
-        title: "식물추가",
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
@@ -671,7 +666,7 @@ class _AddScreenState extends State<AddScreen> {
               ? ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       disabledBackgroundColor: gray3Color,
-                      backgroundColor: pointColor // Background color
+                      backgroundColor: point1Color // Background color
                       ),
                   onPressed: _isButtonDisabled
                       ? null
@@ -701,7 +696,7 @@ class _AddScreenState extends State<AddScreen> {
                             decoration: const BoxDecoration(
                                 border: Border(
                                     top: BorderSide(
-                                        width: 1, color: pointColor))),
+                                        width: 1, color: point1Color))),
                             child: Center(
                               child: TextButton(
                                   onPressed: () {
@@ -714,14 +709,14 @@ class _AddScreenState extends State<AddScreen> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineLarge!
-                                          .copyWith(color: pointColor))),
+                                          .copyWith(color: point1Color))),
                             ),
                           ),
                         ),
                         Expanded(
                           child: Container(
                             height: fullHeight * 0.068,
-                            color: pointColor,
+                            color: point1Color,
                             child: Center(
                               child: TextButton(
                                   onPressed: () {},
@@ -828,12 +823,12 @@ class SettingCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: pointColor,
+                color: point1Color,
                 borderRadius: const BorderRadius.horizontal(
                     right: Radius.circular(10), left: Radius.circular(10)),
                 border: Border.all(
                   width: 1,
-                  color: pointColor,
+                  color: point1Color,
                 ),
               ),
               child: Center(

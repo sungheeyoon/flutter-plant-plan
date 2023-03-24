@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -15,10 +14,6 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "안시리움",
-        home: false,
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -155,12 +150,12 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: pointColor,
+                            color: point1Color,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
                             border: Border.all(
                               width: 1,
-                              color: pointColor,
+                              color: point1Color,
                             ),
                           ),
                           child: Center(

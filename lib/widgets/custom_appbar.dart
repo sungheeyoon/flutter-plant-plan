@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/snapping_above.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget {
   final String title;
   final bool home;
   final Color bgColor;
@@ -46,7 +46,4 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
 }
