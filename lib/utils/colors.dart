@@ -4,7 +4,8 @@ const primary1Color = Color(0xffAAE2B1);
 const primary2Color = Color(0xffEBF7E8);
 const primary3Color = Color(0xff1D315B);
 
-const pointColor = Color(0xffFF853F);
+const point1Color = Color(0xffFF853F);
+const point2Color = Color(0xff388CED);
 
 const sub1Color = Color(0xff92CD8D);
 const sub2Color = Color(0xffC0DCB9);

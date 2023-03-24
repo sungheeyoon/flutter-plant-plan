@@ -6,7 +6,6 @@ import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/add_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/custom_appbar.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -43,7 +42,6 @@ class _SearchScreenState extends State<SearchScreen> {
           },
         );
     return Scaffold(
-      appBar: const CustomAppBar(title: "식물검색", home: false),
       body: Column(
         children: <Widget>[
           buildSearch(),
