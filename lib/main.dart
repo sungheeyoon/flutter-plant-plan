@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 720),
+      designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp(
             localizationsDelegates: const [
@@ -40,70 +40,84 @@ class MyApp extends StatelessWidget {
               Locale('ko', 'KR'),
             ],
             theme: ThemeData(
-                scaffoldBackgroundColor: Colors.white,
-                fontFamily: 'Pretendard',
-                textTheme: TextTheme(
-                  displayLarge: TextStyle(
-                    fontSize: 28.0.sp,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1.sp,
-                  ),
-                  displayMedium: TextStyle(
-                    fontSize: 24.0.sp,
-                    letterSpacing: -1.sp,
-                  ),
-                  displaySmall: TextStyle(
-                    fontSize: 22.0.sp,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1,
-                  ),
-                  headlineLarge: TextStyle(
-                    fontSize: 20.0.sp,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1.sp,
-                  ),
-                  headlineMedium: TextStyle(
-                    fontSize: 20.0.sp,
-                    letterSpacing: -0.8.sp,
-                  ),
-                  headlineSmall: TextStyle(
-                      fontSize: 18.0.sp,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.7.sp),
-                  titleLarge: TextStyle(
-                    fontSize: 18.0.sp,
-                    letterSpacing: -0.7.sp,
-                  ),
-                  titleMedium: TextStyle(
-                    fontSize: 16.0.sp,
-                    letterSpacing: -0.6.sp,
-                  ),
-                  bodyLarge: TextStyle(
-                      fontSize: 16.0.sp,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.6.sp),
-                  bodyMedium: TextStyle(
-                    fontSize: 14.0,
-                    letterSpacing: -0.6.sp,
-                    height: 1.5.sp,
-                  ),
-                  bodySmall: TextStyle(
-                    fontSize: 12.0.sp,
-                    letterSpacing: -0.5.sp,
-                  ),
-                  labelLarge: TextStyle(
-                      fontSize: 14.0.sp,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.6.sp),
-                  labelMedium: TextStyle(
-                      fontSize: 12.0.sp,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5.sp),
-                  labelSmall: TextStyle(
-                    fontSize: 10.0.sp,
-                    letterSpacing: -0.4.sp,
-                  ),
-                ).apply(decorationColor: Colors.orange)),
+              scaffoldBackgroundColor: Colors.white,
+              fontFamily: 'Pretendard',
+              textTheme: TextTheme(
+                displayLarge: TextStyle(
+                  fontSize: 28.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.sp,
+                ),
+                displayMedium: TextStyle(
+                  fontSize: 24.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -1.sp,
+                ),
+                displaySmall: TextStyle(
+                  fontSize: 22.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.sp,
+                ),
+                headlineLarge: TextStyle(
+                  fontSize: 20.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.sp,
+                ),
+                headlineMedium: TextStyle(
+                  fontSize: 20.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.8.sp,
+                ),
+                headlineSmall: TextStyle(
+                  fontSize: 18.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.7.sp,
+                ),
+                titleLarge: TextStyle(
+                  fontSize: 18.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.7.sp,
+                ),
+                titleMedium: TextStyle(
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.6.sp,
+                ),
+                bodyLarge: TextStyle(
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.6.sp,
+                ),
+                bodyMedium: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.6.sp,
+                  height: 1.5.sp,
+                ),
+                bodySmall: TextStyle(
+                  fontSize: 12.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.5.sp,
+                ),
+                labelLarge: TextStyle(
+                  fontSize: 14.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.6.sp,
+                ),
+                labelMedium: TextStyle(
+                  fontSize: 12.0.sp,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5.sp,
+                ),
+                labelSmall: TextStyle(
+                  fontSize: 10.0.sp,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.4.sp,
+                ),
+              ).apply(
+                decorationColor: Colors.orange,
+              ),
+            ),
             home: const OnBordingScreen()
             //showHome ? SnappingAbove() : const OnBordingScreen(),
             );
