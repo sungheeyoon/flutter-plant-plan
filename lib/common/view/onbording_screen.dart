@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/screens/add_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -27,39 +28,96 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      child: Column(children: [
-        const SizedBox(
-          height: 60,
-        ),
-        buildDot(index: currentPage)
-      ]),
-      // child: PageView(
-      //   controller: controller,
-      //   children: [
-      //     OnBording(
-      //       pageNum: 1,
-      //       title: "잊지 말고,",
-      //       sub1: "내 식물에게 꼭 필요한 관리",
-      //       sub2: "까먹지 말고 사랑해주세요",
-      //       controller: controller,
-      //     ),
-      //     OnBording(
-      //       pageNum: 2,
-      //       title: "알아 두고,",
-      //       sub1: "내 식물을 위한 다양하고 쓸모있는 지식을",
-      //       sub2: "쉽고 빠르게 알아두어 잘 자랄 수 있도록 해주세요",
-      //       controller: controller,
-      //     ),
-      //     OnBording(
-      //       pageNum: 3,
-      //       title: "기억하자",
-      //       sub1: "내 식물들과 함께한 시간을 기억하고",
-      //       sub2: "꺼내어보며 행복했던 순간을 추억해보세요",
-      //       controller: controller,
-      //     ),
-      //   ],
-      // ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(
+                  height: 52,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        3,
+                        (index) => buildDot(index: index),
+                      ),
+                    ),
+                    Text(
+                      "skip",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: gray3Color,
+                          ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 32.h,
+                ),
+                Text(
+                  "잊지 말고,",
+                  style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                        color: primary3Color,
+                      ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "내 식물에게 꼭 필요한 관리\n 까먹지 말고 사랑해주세요",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: primary3Color,
+                      ),
+                  textAlign: TextAlign.end,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 23.h,
+          ),
+          Image(
+            image: const AssetImage('assets/images/onbording/onbording1.png'),
+            width: 540.w,
+            height: 484.h,
+            fit: BoxFit.cover,
+          ),
+        ],
+      ),
     );
+    // child: PageView(
+    //   controller: controller,
+    //   children: [
+    //     OnBording(
+    //       pageNum: 1,
+    //       title: "잊지 말고,",
+    //       sub1: "내 식물에게 꼭 필요한 관리",
+    //       sub2: "까먹지 말고 사랑해주세요",
+    //       controller: controller,
+    //     ),
+    //     OnBording(
+    //       pageNum: 2,
+    //       title: "알아 두고,",
+    //       sub1: "내 식물을 위한 다양하고 쓸모있는 지식을",
+    //       sub2: "쉽고 빠르게 알아두어 잘 자랄 수 있도록 해주세요",
+    //       controller: controller,
+    //     ),
+    //     OnBording(
+    //       pageNum: 3,
+    //       title: "기억하자",
+    //       sub1: "내 식물들과 함께한 시간을 기억하고",
+    //       sub2: "꺼내어보며 행복했던 순간을 추억해보세요",
+    //       controller: controller,
+    //     ),
+    //   ],
+    // ),
   }
 
   AnimatedContainer buildDot({int? index}) {
@@ -67,7 +125,7 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
       duration: const Duration(seconds: 1),
       margin: const EdgeInsets.only(right: 5),
       height: 6,
-      width: currentPage == index ? 20 : 6,
+      width: currentPage == index ? 18 : 6,
       decoration: BoxDecoration(
         color: currentPage == index ? primary3Color : gray3Color,
         borderRadius: BorderRadius.circular(3),
