@@ -23,7 +23,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     TextStyle styleActive =
-        Theme.of(context).textTheme.titleMedium!.copyWith(color: primary3Color);
+        Theme.of(context).textTheme.titleMedium!.copyWith(color: primaryColor);
     TextStyle styleHint =
         Theme.of(context).textTheme.titleMedium!.copyWith(color: gray2Color);
     final style = widget.text.isEmpty ? styleHint : styleActive;

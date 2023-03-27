@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget {
       child: AppBar(
         toolbarHeight: fullHeight * 0.1,
         iconTheme: const IconThemeData(
-          color: primary3Color, //색변경
+          color: primaryColor, //색변경
         ),
         leading: IconButton(
             onPressed: () {
@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .headlineLarge!
-                .copyWith(color: primary3Color)),
+                .copyWith(color: primaryColor)),
         centerTitle: true,
       ),
     );

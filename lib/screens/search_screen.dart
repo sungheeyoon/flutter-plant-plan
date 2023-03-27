@@ -71,7 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
-                                  .copyWith(color: primary3Color),
+                                  .copyWith(color: primaryColor),
                             ),
                             leading: CachedNetworkImage(
                               imageUrl: document['image'],
@@ -123,7 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
-                                    .copyWith(color: primary3Color),
+                                    .copyWith(color: primaryColor),
                               ),
                               leading: CachedNetworkImage(
                                 imageUrl: document['image'],
