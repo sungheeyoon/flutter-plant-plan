@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/common/view/onbording_screen.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future main() async {
@@ -15,14 +16,22 @@ Future main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
+  KakaoSdk.init(nativeAppKey: '네이티브 앱 키');
 
-  runApp(MyApp(showHome: showHome));
+  runApp(
+    ProviderScope(
+      child: MyApp(showHome: showHome),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   final bool showHome;
 
-  const MyApp({Key? key, required this.showHome}) : super(key: key);
+  const MyApp({
+    Key? key,
+    required this.showHome,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +39,15 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp(
-            localizationsDelegates: const [
-              // ... app-specific localization delegate[s] here
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('ko', 'KR'),
-            ],
+            // localizationsDelegates: const [
+            //   // ... app-specific localization delegate[s] here
+            //   GlobalMaterialLocalizations.delegate,
+            //   GlobalWidgetsLocalizations.delegate,
+            //   GlobalCupertinoLocalizations.delegate,
+            // ],
+            // supportedLocales: const [
+            //   Locale('ko', 'KR'),
+            // ],
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               fontFamily: 'Pretendard',
@@ -118,8 +127,8 @@ class MyApp extends StatelessWidget {
                 decorationColor: Colors.orange,
               ),
             ),
-            home: const OnBordingScreen()
-            //showHome ? SnappingAbove() : const OnBordingScreen(),
+            home: const LoginScreen()
+            //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },
     );

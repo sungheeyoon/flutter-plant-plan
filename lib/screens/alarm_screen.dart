@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/custom_appbar.dart';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key});
@@ -59,7 +58,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         style: Theme.of(context)
                             .textTheme
                             .labelLarge!
-                            .copyWith(color: primary3Color),
+                            .copyWith(color: primaryColor),
                       ),
                       Text(
                         '식물에게 알맞은 알림 주기를 선택해주세요',
@@ -115,7 +114,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color),
+                        .copyWith(color: primaryColor),
                   ),
                   SizedBox(
                     height: 40,
@@ -137,13 +136,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
                             const EdgeInsets.fromLTRB(0, 10, 10, 10),
                         enabledBorder: const UnderlineInputBorder(
                             borderSide:
-                                BorderSide(width: 1, color: gray3Color)),
+                                BorderSide(width: 1, color: grayColor400)),
                         border: const UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: gray3Color, width: 1.0)),
+                                BorderSide(color: grayColor400, width: 1.0)),
                         focusedBorder: const UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: gray3Color, width: 1.0)),
+                                BorderSide(color: grayColor400, width: 1.0)),
                         hintText: '물주기 알림 설정 제목',
                         hintStyle: Theme.of(context)
                             .textTheme
@@ -166,7 +165,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color),
+                        .copyWith(color: primaryColor),
                   ),
                   Switch(
                       value: isSwitched,
@@ -175,8 +174,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
                           isSwitched = value;
                         });
                       },
-                      activeTrackColor: primary3Color.withOpacity(0.4),
-                      activeColor: primary3Color),
+                      activeTrackColor: primaryColor.withOpacity(0.4),
+                      activeColor: primaryColor),
                 ],
               ),
               ElevatedButton(
@@ -210,9 +209,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
     //   normalTextStyle: TextStyle(
     //       fontWeight: FontWeight.w400,
     //       fontSize: 32,
-    //       color: primary3Color.withOpacity(0.2)),
+    //       color: primaryColor.withOpacity(0.2)),
     //   highlightedTextStyle: const TextStyle(
-    //       fontWeight: FontWeight.w700, fontSize: 32, color: primary3Color),
+    //       fontWeight: FontWeight.w700, fontSize: 32, color: primaryColor),
     //   alignment: Alignment.center,
     //   spacing: 40,
     //   onTimeChange: (time) {
@@ -244,7 +243,7 @@ class PeriodCard extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           border: Border.all(
             width: 1,
-            color: gray3Color,
+            color: grayColor400,
           ),
         ),
         child: Center(

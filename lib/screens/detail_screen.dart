@@ -73,7 +73,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall!
-                                              .copyWith(color: primary3Color)),
+                                              .copyWith(color: primaryColor)),
                                       const SizedBox(
                                         height: 4,
                                       ),
@@ -81,7 +81,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .displaySmall!
-                                              .copyWith(color: primary3Color)),
+                                              .copyWith(color: primaryColor)),
                                       const SizedBox(
                                         height: 4,
                                       ),
@@ -139,7 +139,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .headlineLarge!
-                          .copyWith(color: primary3Color),
+                          .copyWith(color: primaryColor),
                     ),
                     const SizedBox(
                       height: 16,
@@ -222,9 +222,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                     isSwitched = value;
                                   });
                                 },
-                                activeTrackColor:
-                                    primary3Color.withOpacity(0.4),
-                                activeColor: primary3Color),
+                                activeTrackColor: primaryColor.withOpacity(0.4),
+                                activeColor: primaryColor),
                           ],
                         )),
                     const SizedBox(
@@ -235,7 +234,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .headlineLarge!
-                          .copyWith(color: primary3Color),
+                          .copyWith(color: primaryColor),
                     ),
                     const SizedBox(
                       height: 16,
@@ -272,12 +271,12 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 9, vertical: 8),
                           decoration: BoxDecoration(
-                            color: gray3Color,
+                            color: grayColor400,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
                             border: Border.all(
                               width: 1,
-                              color: gray3Color,
+                              color: grayColor400,
                             ),
                           ),
                           child: Center(
@@ -338,7 +337,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .headlineLarge!
-                          .copyWith(color: primary3Color),
+                          .copyWith(color: primaryColor),
                     ),
                     const SizedBox(
                       height: 16,

@@ -98,7 +98,7 @@ class _AddScreenState extends State<AddScreen> {
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
-                    .copyWith(color: primary3Color)),
+                    .copyWith(color: primaryColor)),
             const SizedBox(
               height: 6,
             ),
@@ -128,7 +128,7 @@ class _AddScreenState extends State<AddScreen> {
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     side: const BorderSide(
-                        width: 1, color: gray3Color), //<-- SEE HERE
+                        width: 1, color: grayColor400), //<-- SEE HERE
                   ),
                   child: Row(
                     children: [
@@ -160,7 +160,7 @@ class _AddScreenState extends State<AddScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color))
+                        .copyWith(color: primaryColor))
               ],
             ),
             const SizedBox(
@@ -185,15 +185,15 @@ class _AddScreenState extends State<AddScreen> {
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                            const BorderSide(width: 1, color: gray3Color)),
+                            const BorderSide(width: 1, color: grayColor400)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                            const BorderSide(color: gray3Color, width: 1.0)),
+                            const BorderSide(color: grayColor400, width: 1.0)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide:
-                            const BorderSide(color: gray3Color, width: 1.0)),
+                            const BorderSide(color: grayColor400, width: 1.0)),
                     hintText: '선택사항',
                     hintStyle: Theme.of(context)
                         .textTheme
@@ -216,7 +216,7 @@ class _AddScreenState extends State<AddScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color))
+                        .copyWith(color: primaryColor))
               ],
             ),
             const SizedBox(
@@ -252,7 +252,7 @@ class _AddScreenState extends State<AddScreen> {
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     side: const BorderSide(
-                        width: 1, color: gray3Color), //<-- SEE HERE
+                        width: 1, color: grayColor400), //<-- SEE HERE
                   ),
                   child: Row(
                     children: [
@@ -299,7 +299,7 @@ class _AddScreenState extends State<AddScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color))
+                        .copyWith(color: primaryColor))
               ],
             ),
             const SizedBox(
@@ -332,7 +332,7 @@ class _AddScreenState extends State<AddScreen> {
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     side: const BorderSide(
-                        width: 1, color: gray3Color), //<-- SEE HERE
+                        width: 1, color: grayColor400), //<-- SEE HERE
                   ),
                   child: Row(
                     children: [
@@ -379,7 +379,7 @@ class _AddScreenState extends State<AddScreen> {
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
-                        .copyWith(color: primary3Color))
+                        .copyWith(color: primaryColor))
               ],
             ),
             const SizedBox(
@@ -412,7 +412,7 @@ class _AddScreenState extends State<AddScreen> {
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     side: const BorderSide(
-                        width: 1, color: gray3Color), //<-- SEE HERE
+                        width: 1, color: grayColor400), //<-- SEE HERE
                   ),
                   child: Row(
                     children: [
@@ -665,7 +665,7 @@ class _AddScreenState extends State<AddScreen> {
           child: bottomSelectedIndex == 0
               ? ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      disabledBackgroundColor: gray3Color,
+                      disabledBackgroundColor: grayColor400,
                       backgroundColor: point1Color // Background color
                       ),
                   onPressed: _isButtonDisabled
@@ -788,7 +788,7 @@ class _AddScreenState extends State<AddScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
-                              .copyWith(color: primary3Color))),
+                              .copyWith(color: primaryColor))),
                   TextButton(
                       onPressed: () {
                         _controller.jumpToPage(1);
@@ -798,7 +798,7 @@ class _AddScreenState extends State<AddScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
-                              .copyWith(color: primary3Color)))
+                              .copyWith(color: primaryColor)))
                 ],
               )
             ],
@@ -864,7 +864,7 @@ class SettingCard extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
-                        .copyWith(color: primary3Color)),
+                        .copyWith(color: primaryColor)),
               )),
         ),
       ],

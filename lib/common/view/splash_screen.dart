@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -30,19 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(
                 height: 160.h,
               ),
-              Text("내 식물을 위한 플랜",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: const Color.fromRGBO(29, 49, 91, 1))),
-              SizedBox(
-                height: 4.h,
+              Text(
+                "내 식물을 위한 플랜",
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: primaryColor,
+                    ),
               ),
-              const Text("식플",
-                  style: TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromRGBO(29, 49, 91, 1))),
+              const Text(
+                "식플 ",
+                style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.w700,
+                    color: primaryColor,
+                    height: 0),
+              ),
               SizedBox(
                 height: 106.h,
               ),
@@ -51,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   image: const AssetImage('assets/images/splash.png'),
                   width: 312.w,
                   height: 400.h,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.contain,
                 ),
-              )
+              ),
             ],
           ),
         ),
