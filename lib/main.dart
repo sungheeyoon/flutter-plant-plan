@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:plant_plan/common/const/data.dart';
 import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,9 @@ Future main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
-  KakaoSdk.init(nativeAppKey: '네이티브 앱 키');
+  KakaoSdk.init(nativeAppKey: NATIVE_APP_KEY);
+  final origin = await KakaoSdk.origin;
+  print('오리진 오리진 오리진$origin');
 
   runApp(
     ProviderScope(
