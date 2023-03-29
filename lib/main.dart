@@ -18,8 +18,8 @@ Future main() async {
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
   KakaoSdk.init(nativeAppKey: NATIVE_APP_KEY);
-  final origin = await KakaoSdk.origin;
-  print('오리진 오리진 오리진$origin');
+  //해시 키
+  //final origin = await KakaoSdk.origin;
 
   runApp(
     ProviderScope(
@@ -54,77 +54,77 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               fontFamily: 'Pretendard',
-              textTheme: TextTheme(
+              textTheme: const TextTheme(
                 displayLarge: TextStyle(
-                  fontSize: 28.0.sp,
+                  fontSize: 28.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -1.sp,
+                  letterSpacing: -1,
                 ),
                 displayMedium: TextStyle(
-                  fontSize: 24.0.sp,
+                  fontSize: 24.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -1.sp,
+                  letterSpacing: -1,
                 ),
                 displaySmall: TextStyle(
-                  fontSize: 22.0.sp,
+                  fontSize: 22.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -1.sp,
+                  letterSpacing: -1,
                 ),
                 headlineLarge: TextStyle(
-                  fontSize: 20.0.sp,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -1.sp,
+                  letterSpacing: -1,
                 ),
                 headlineMedium: TextStyle(
-                  fontSize: 20.0.sp,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.8.sp,
+                  letterSpacing: -0.8,
                 ),
                 headlineSmall: TextStyle(
-                  fontSize: 18.0.sp,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -0.7.sp,
+                  letterSpacing: -0.7,
                 ),
                 titleLarge: TextStyle(
-                  fontSize: 18.0.sp,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.7.sp,
+                  letterSpacing: -0.7,
                 ),
                 titleMedium: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.sp,
+                  letterSpacing: -0.6,
                 ),
                 bodyLarge: TextStyle(
-                  fontSize: 16.0.sp,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.sp,
+                  letterSpacing: -0.6,
                 ),
                 bodyMedium: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.sp,
-                  height: 1.5.sp,
+                  letterSpacing: -0.6,
+                  height: 1.5,
                 ),
                 bodySmall: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5.sp,
+                  letterSpacing: -0.5,
                 ),
                 labelLarge: TextStyle(
-                  fontSize: 14.0.sp,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.sp,
+                  letterSpacing: -0.6,
                 ),
                 labelMedium: TextStyle(
-                  fontSize: 12.0.sp,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5.sp,
+                  letterSpacing: -0.5,
                 ),
                 labelSmall: TextStyle(
-                  fontSize: 10.0.sp,
+                  fontSize: 10.0,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: -0.4.sp,
+                  letterSpacing: -0.4,
                 ),
               ).apply(
                 decorationColor: Colors.orange,
