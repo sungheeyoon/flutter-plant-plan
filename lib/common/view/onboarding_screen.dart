@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -219,19 +220,31 @@ class OnboardingContent extends StatelessWidget {
               ),
               Center(
                 child: SizedBox(
-                  width: 312.h,
+                  width: 312.w,
                   height: 36.h,
                   child: OutlinedButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setBool('showHome', true);
+
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         side: const BorderSide(
-                            width: 0, color: Color.fromRGBO(255, 133, 63, 1)),
-                        backgroundColor: const Color.fromRGBO(255, 133, 63, 1),
+                          width: 0,
+                          color: pointColor1,
+                        ),
+                        backgroundColor: pointColor1,
                       ),
                       child: Text(
-                        "내 식물 추가하기",
+                        "시작하기",
                         style: Theme.of(context)
                             .textTheme
                             .labelLarge!
@@ -239,35 +252,6 @@ class OnboardingContent extends StatelessWidget {
                       )),
                 ),
               ),
-              SizedBox(
-                height: 8.h,
-              ),
-              Center(
-                child: SizedBox(
-                  width: 312.h,
-                  height: 36.h,
-                  child: OutlinedButton(
-                      onPressed: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('showHome', true);
-
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => SnappingAbove()));
-                      },
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        side: const BorderSide(
-                            width: 1, color: Color.fromRGBO(255, 133, 63, 1)),
-                        backgroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        "메인화면 바로가기",
-                        style:
-                            TextStyle(color: Color.fromRGBO(255, 133, 63, 1)),
-                      )),
-                ),
-              )
             ],
           )
       ],

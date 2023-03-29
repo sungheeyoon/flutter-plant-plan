@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/user/repository/auth_repository.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/widgets/snapping_above.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -13,10 +14,8 @@ class LoginScreen extends ConsumerWidget {
     return DefaultLayout(
       child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 160.h,
-            ),
             Text(
               "내 식물을 위한 플랜",
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
@@ -38,10 +37,10 @@ class LoginScreen extends ConsumerWidget {
             SizedBox(
               height: 66.h,
             ),
-            Image(
-              image: const AssetImage('assets/images/login/login.png'),
-              width: 72.w,
-              height: 90.h,
+            const Image(
+              image: AssetImage('assets/images/login/login.png'),
+              width: 72,
+              height: 90,
               fit: BoxFit.contain,
             ),
             SizedBox(
@@ -60,32 +59,39 @@ class LoginScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    ref.read(authRepositoryProvider).login();
+                  onTap: () async {
+                    final isLogin = await ref.read(kakaoLoginProvider).login();
+                    if (isLogin) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => SnappingAbove(),
+                        ),
+                      );
+                    }
                   },
-                  child: Image(
-                    image: const AssetImage('assets/images/login/kakao.png'),
-                    width: 56.w,
-                    height: 56.w,
+                  child: const Image(
+                    image: AssetImage('assets/images/login/kakao.png'),
+                    width: 56,
+                    height: 56,
                     fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(
                   width: 16.0,
                 ),
-                Image(
-                  image: const AssetImage('assets/images/login/naver.png'),
-                  width: 56.w,
-                  height: 56.w,
+                const Image(
+                  image: AssetImage('assets/images/login/naver.png'),
+                  width: 56,
+                  height: 56,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(
                   width: 16.0,
                 ),
-                Image(
-                  image: const AssetImage('assets/images/login/google.png'),
-                  width: 58.w,
-                  height: 58.w,
+                const Image(
+                  image: AssetImage('assets/images/login/google.png'),
+                  width: 58,
+                  height: 58,
                   fit: BoxFit.contain,
                 ),
               ],
