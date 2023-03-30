@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/alarm_screen.dart';
@@ -489,8 +490,88 @@ class _AddScreenState extends State<AddScreen> {
     final fullWidth = MediaQuery.of(context).size.width;
     final fullHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: SingleChildScrollView(
+    return DefaultLayout(
+      title: '식물추가',
+      bottomNavigationBar: SizedBox(
+          width: fullWidth,
+          height: fullHeight * 0.068,
+          child: bottomSelectedIndex == 0
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      disabledBackgroundColor: grayColor400,
+                      backgroundColor: point1Color // Background color
+                      ),
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () {
+                          if (wateringDay != null &&
+                              divisionDay != null &&
+                              nutrientDay != null) {
+                            _controller.jumpToPage(1);
+                          } else {
+                            dialog(context);
+                          }
+                        },
+                  child: Text("다음",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(color: Colors.white)),
+                )
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: fullHeight * 0.068,
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        width: 1, color: point1Color))),
+                            child: Center(
+                              child: TextButton(
+                                  onPressed: () {
+                                    _controller.jumpToPage(0);
+                                  },
+                                  style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16)),
+                                  child: Text('이전',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge!
+                                          .copyWith(color: point1Color))),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: fullHeight * 0.068,
+                            color: point1Color,
+                            child: Center(
+                              child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: EdgeInsets.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text('식물 추가 완료',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineLarge!
+                                          .copyWith(color: Colors.white))),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                )),
+      child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
           child: Column(
@@ -659,85 +740,6 @@ class _AddScreenState extends State<AddScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: SizedBox(
-          width: fullWidth,
-          height: fullHeight * 0.068,
-          child: bottomSelectedIndex == 0
-              ? ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      disabledBackgroundColor: grayColor400,
-                      backgroundColor: point1Color // Background color
-                      ),
-                  onPressed: _isButtonDisabled
-                      ? null
-                      : () {
-                          if (wateringDay != null &&
-                              divisionDay != null &&
-                              nutrientDay != null) {
-                            _controller.jumpToPage(1);
-                          } else {
-                            dialog(context);
-                          }
-                        },
-                  child: Text("다음",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(color: Colors.white)),
-                )
-              : Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: fullHeight * 0.068,
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        width: 1, color: point1Color))),
-                            child: Center(
-                              child: TextButton(
-                                  onPressed: () {
-                                    _controller.jumpToPage(0);
-                                  },
-                                  style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16)),
-                                  child: Text('이전',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge!
-                                          .copyWith(color: point1Color))),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: fullHeight * 0.068,
-                            color: point1Color,
-                            child: Center(
-                              child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text('식물 추가 완료',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge!
-                                          .copyWith(color: Colors.white))),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )),
     );
   }
 

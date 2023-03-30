@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 
 class SnappingScreen extends StatelessWidget {
   final bool? reverse;
@@ -15,92 +14,75 @@ class SnappingScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       child: Container(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 52),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "현재 전체적인 식물 상태",
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium!
-                    .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  ImageBox(
-                    imageUri: 'assets/images/management/humid_outline.png',
-                    width: 70,
-                    height: 70,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ImageBox(
-                    imageUri: 'assets/images/management/sun_outline.png',
-                    width: 70,
-                    height: 70,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ImageBox(
-                    imageUri: 'assets/images/management/division_outline.png',
-                    width: 70,
-                    height: 70,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ImageBox(
-                    imageUri: 'assets/images/management/nutrient_outline.png',
-                    width: 70,
-                    height: 70,
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              Row(children: const [
-                SnappingContainer(
-                    imageUrl: "assets/images/management/humid.png",
-                    title: "수분량",
-                    measure: "88%",
-                    explain: "모든 식물이들 수분 충분해요"),
-                SizedBox(
-                  width: 10,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  "현재 전체적인 식물 상태",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: const Color.fromRGBO(29, 49, 91, 1)),
                 ),
-                SnappingContainer(
-                    imageUrl: "assets/images/management/sun.png",
-                    title: "일조량",
-                    measure: "75%",
-                    explain: "모든 식물이들 일조량 충분해요"),
-              ]),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(children: const [
-                SnappingContainer(
-                    imageUrl: "assets/images/management/division.png",
-                    title: "분갈이",
-                    measure: "D-120",
-                    explain: "분갈이 시기 확인하세요"),
-                SizedBox(
-                  width: 10,
+                const SizedBox(
+                  height: 32,
                 ),
-                SnappingContainer(
-                    imageUrl: "assets/images/management/nutrient.png",
-                    title: "영양제",
-                    measure: "D-80",
-                    explain: "영양제 종류/목적 중요해요")
-              ])
-            ],
+                const Row(children: [
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/humid.png",
+                      title: "수분량",
+                      measure: "88%",
+                      explain: "모든 식물이들 수분 충분해요"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/sun.png",
+                      title: "일조량",
+                      measure: "75%",
+                      explain: "모든 식물이들 일조량 충분해요"),
+                ]),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Row(children: [
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/division.png",
+                      title: "분갈이",
+                      measure: "D-120",
+                      explain: "분갈이 시기 확인하세요"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/nutrient.png",
+                      title: "영양제",
+                      measure: "D-80",
+                      explain: "영양제 종류/목적 중요해요")
+                ]),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Row(children: [
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/division.png",
+                      title: "분갈이",
+                      measure: "D-120",
+                      explain: "분갈이 시기 확인하세요"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  SnappingContainer(
+                      imageUrl: "assets/images/management/nutrient.png",
+                      title: "영양제",
+                      measure: "D-80",
+                      explain: "영양제 종류/목적 중요해요")
+                ])
+              ],
+            ),
           ),
         ),
       ),
@@ -121,7 +103,7 @@ class SnappingContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 91,
+      height: 78,
       width: 150,
       child: Container(
           decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_plan/utils/colors.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Widget child;
@@ -20,28 +21,29 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor ?? Colors.white,
-      appBar: renderAppBar(),
+      appBar: renderAppBar(context),
       body: child,
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
     );
   }
 
-  AppBar? renderAppBar() {
+  AppBar? renderAppBar(context) {
     if (title == null) {
       return null;
     } else {
       return AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         title: Text(
           title!,
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w500,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .headlineSmall!
+              .copyWith(color: primaryColor),
         ),
-        foregroundColor: Colors.black,
+        foregroundColor: primaryColor,
       );
     }
   }

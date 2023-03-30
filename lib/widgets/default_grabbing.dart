@@ -41,7 +41,7 @@ class DefaultGrabbing extends StatelessWidget {
             RotatedBox(
               quarterTurns: 2,
               child: Align(
-                heightFactor: 4.0,
+                heightFactor: 10.0,
                 child: Text(
                   "현재 모든 식물들이 건강해요!",
                   style: Theme.of(context)
