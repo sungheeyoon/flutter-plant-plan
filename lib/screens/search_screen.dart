@@ -42,79 +42,28 @@ class _SearchScreenState extends State<SearchScreen> {
           },
         );
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          buildSearch(),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _streamPlantList,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                }
-                if (snapshot.connectionState == ConnectionState.active) {
-                  QuerySnapshot querySnapshot = snapshot.data;
-                  List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
-                      querySnapshot.docs;
-                  return ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      itemCount: listQueryDocumentSnapshot.length,
-                      itemBuilder: (context, index) {
-                        QueryDocumentSnapshot document =
-                            listQueryDocumentSnapshot[index];
-                        if (enteredKeyword.isEmpty) {
-                          return ListTile(
-                            title: Text(
-                              document['name'],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: primaryColor),
-                            ),
-                            leading: CachedNetworkImage(
-                              imageUrl: document['image'],
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 44.0,
-                                height: 44.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                              placeholder: (context, url) => const SizedBox(
-                                width: 44.0,
-                                height: 44.0,
-                                child: CircleAvatar(
-                                  backgroundColor: gray1Color,
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                            onTap: () =>
-                                Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => AddScreen(
-                                document: PlantModel.fromFirestore(document),
-                                prev: widget.prev,
-                              ),
-                            )),
-                          );
-                        } else {
-                          RegExp regExp = getRegExp(
-                              enteredKeyword,
-                              RegExpOptions(
-                                initialSearch: false,
-                                startsWith: false,
-                                endsWith: false,
-                                fuzzy: false,
-                                ignoreSpace: false,
-                                ignoreCase: false,
-                              ));
-                          if (regExp.hasMatch(document["name"] as String)) {
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            buildSearch(),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _streamPlantList,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  }
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    QuerySnapshot querySnapshot = snapshot.data;
+                    List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
+                        querySnapshot.docs;
+                    return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        itemCount: listQueryDocumentSnapshot.length,
+                        itemBuilder: (context, index) {
+                          QueryDocumentSnapshot document =
+                              listQueryDocumentSnapshot[index];
+                          if (enteredKeyword.isEmpty) {
                             return ListTile(
                               title: Text(
                                 document['name'],
@@ -148,22 +97,77 @@ class _SearchScreenState extends State<SearchScreen> {
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               ),
-                              onTap: () => Navigator.pop(context, {
-                                'document': PlantModel.fromFirestore(document),
-                                'prev': widget.prev
-                              }),
+                              onTap: () =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddScreen(
+                                  document: PlantModel.fromFirestore(document),
+                                  prev: widget.prev,
+                                ),
+                              )),
                             );
+                          } else {
+                            RegExp regExp = getRegExp(
+                                enteredKeyword,
+                                RegExpOptions(
+                                  initialSearch: false,
+                                  startsWith: false,
+                                  endsWith: false,
+                                  fuzzy: false,
+                                  ignoreSpace: false,
+                                  ignoreCase: false,
+                                ));
+                            if (regExp.hasMatch(document["name"] as String)) {
+                              return ListTile(
+                                title: Text(
+                                  document['name'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: primaryColor),
+                                ),
+                                leading: CachedNetworkImage(
+                                  imageUrl: document['image'],
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    width: 44.0,
+                                    height: 44.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) => const SizedBox(
+                                    width: 44.0,
+                                    height: 44.0,
+                                    child: CircleAvatar(
+                                      backgroundColor: gray1Color,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                                onTap: () => Navigator.pop(context, {
+                                  'document':
+                                      PlantModel.fromFirestore(document),
+                                  'prev': widget.prev
+                                }),
+                              );
+                            }
                           }
-                        }
 
-                        return Container();
-                      });
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
+                          return Container();
+                        });
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

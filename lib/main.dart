@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:plant_plan/common/const/data.dart';
-import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/services/notifi_service.dart';
+import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -130,7 +130,7 @@ class MyApp extends StatelessWidget {
                 decorationColor: Colors.orange,
               ),
             ),
-            home: const LoginScreen()
+            home: SnappingAbove()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },

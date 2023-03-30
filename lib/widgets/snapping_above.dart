@@ -20,8 +20,8 @@ class SnappingAbove extends StatelessWidget {
             grabbingContentOffset: GrabbingContentOffset.bottom,
             positionFactor: 1,
           ),
-          SnappingPosition.factor(
-            positionFactor: 0.34,
+          SnappingPosition.pixels(
+            positionPixels: 442,
             grabbingContentOffset: GrabbingContentOffset.top,
           ),
         ],
