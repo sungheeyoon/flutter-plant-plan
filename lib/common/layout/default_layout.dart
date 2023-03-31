@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class DefaultLayout extends StatelessWidget {
@@ -33,6 +34,7 @@ class DefaultLayout extends StatelessWidget {
       return null;
     } else {
       return AppBar(
+        toolbarHeight: 56.h,
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
