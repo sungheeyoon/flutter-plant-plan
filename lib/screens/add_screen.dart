@@ -41,6 +41,9 @@ class _AddScreenState extends State<AddScreen> {
   final PageController _controller = PageController(initialPage: 0);
   int bottomSelectedIndex = 0;
 
+  FocusNode focusNode = FocusNode();
+  bool isFocused = false;
+
   Future uploadFile() async {
     String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -106,56 +109,57 @@ class _AddScreenState extends State<AddScreen> {
               height: 6,
             ),
             SizedBox(
-                width: displayWidth(context),
-                height: 40,
-                child: OutlinedButton(
-                  onPressed: () async {
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchScreen(
-                              prev: PreserveModel.fromJson({
-                            'image': pickedFile,
-                            'alias': alias,
-                            'wateringDay': wateringDay,
-                            'divisionDay': divisionDay,
-                            'nutrientDay': nutrientDay,
-                          })),
-                        ));
-                  },
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: Size.zero,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    side: const BorderSide(
-                        width: 1, color: grayColor400), //<-- SEE HERE
-                  ),
-                  child: Row(
-                    children: [
-                      const ImageBox(
-                          imageUri: 'assets/icons/search.png',
-                          width: 24,
-                          height: 24),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      widget.document != null
-                          ? Text('${widget.document?.name}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: grayBlack))
-                          : Text('검색하기',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: gray2Color))
-                    ],
-                  ),
-                )),
+              width: displayWidth(context),
+              height: 40,
+              child: OutlinedButton(
+                onPressed: () async {
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchScreen(
+                            prev: PreserveModel.fromJson({
+                          'image': pickedFile,
+                          'alias': alias,
+                          'wateringDay': wateringDay,
+                          'divisionDay': divisionDay,
+                          'nutrientDay': nutrientDay,
+                        })),
+                      ));
+                },
+                style: OutlinedButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  side: const BorderSide(
+                      width: 1, color: grayColor400), //<-- SEE HERE
+                ),
+                child: Row(
+                  children: [
+                    const ImageBox(
+                        imageUri: 'assets/icons/search.png',
+                        width: 24,
+                        height: 24),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    widget.document != null
+                        ? Text('${widget.document?.name}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(color: grayBlack))
+                        : Text('검색하기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(color: gray2Color))
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -260,9 +264,10 @@ class _AddScreenState extends State<AddScreen> {
                   child: Row(
                     children: [
                       const ImageBox(
-                          imageUri: 'assets/icons/calendar_box.png',
-                          width: 24,
-                          height: 24),
+                        imageUri: 'assets/icons/calendar_box.png',
+                        width: 24,
+                        height: 24,
+                      ),
                       const SizedBox(
                         width: 8,
                       ),
@@ -494,85 +499,97 @@ class _AddScreenState extends State<AddScreen> {
 
     return DefaultLayout(
       title: '식물추가',
-      bottomNavigationBar: SizedBox(
-          width: fullWidth,
-          height: fullHeight * 0.068,
-          child: bottomSelectedIndex == 0
-              ? ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      disabledBackgroundColor: grayColor400,
-                      backgroundColor: point1Color // Background color
-                      ),
-                  onPressed: _isButtonDisabled
-                      ? null
-                      : () {
-                          if (wateringDay != null &&
-                              divisionDay != null &&
-                              nutrientDay != null) {
-                            _controller.jumpToPage(1);
-                          } else {
-                            dialog(context);
-                          }
-                        },
-                  child: Text("다음",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(color: Colors.white)),
-                )
-              : Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: fullHeight * 0.068,
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        width: 1, color: point1Color))),
-                            child: Center(
-                              child: TextButton(
-                                  onPressed: () {
-                                    _controller.jumpToPage(0);
-                                  },
-                                  style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16)),
-                                  child: Text('이전',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge!
-                                          .copyWith(color: point1Color))),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: fullHeight * 0.068,
-                            color: point1Color,
-                            child: Center(
-                              child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text('식물 추가 완료',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineLarge!
-                                          .copyWith(color: Colors.white))),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )),
+      floatingActionButton: RoundedButton(
+        backgroundColor: pointColor2,
+        borderColor: pointColor2.withOpacity(
+          0.5,
+        ),
+        width: 328,
+        height: 44,
+        textColor: Colors.white,
+        name: '다음',
+      ),
+
+      // bottomNavigationBar: SizedBox(
+      //   width: fullWidth,
+      //   height: fullHeight * 0.068,
+      //   child: bottomSelectedIndex == 0
+      //       ? ElevatedButton(
+      //           style: ElevatedButton.styleFrom(
+      //               disabledBackgroundColor: grayColor400,
+      //               backgroundColor: point1Color // Background color
+      //               ),
+      //           onPressed: _isButtonDisabled
+      //               ? null
+      //               : () {
+      //                   if (wateringDay != null &&
+      //                       divisionDay != null &&
+      //                       nutrientDay != null) {
+      //                     _controller.jumpToPage(1);
+      //                   } else {
+      //                     dialog(context);
+      //                   }
+      //                 },
+      //           child: Text("다음",
+      //               style: Theme.of(context)
+      //                   .textTheme
+      //                   .headlineLarge!
+      //                   .copyWith(color: Colors.white)),
+      //         )
+      //       : Column(
+      //           children: [
+      //             Row(
+      //               mainAxisAlignment: MainAxisAlignment.center,
+      //               children: [
+      //                 Expanded(
+      //                   child: Container(
+      //                     height: fullHeight * 0.068,
+      //                     decoration: const BoxDecoration(
+      //                         border: Border(
+      //                             top: BorderSide(
+      //                                 width: 1, color: point1Color))),
+      //                     child: Center(
+      //                       child: TextButton(
+      //                           onPressed: () {
+      //                             _controller.jumpToPage(0);
+      //                           },
+      //                           style: TextButton.styleFrom(
+      //                               padding: const EdgeInsets.symmetric(
+      //                                   vertical: 16)),
+      //                           child: Text('이전',
+      //                               style: Theme.of(context)
+      //                                   .textTheme
+      //                                   .headlineLarge!
+      //                                   .copyWith(color: point1Color))),
+      //                     ),
+      //                   ),
+      //                 ),
+      //                 Expanded(
+      //                   child: Container(
+      //                     height: fullHeight * 0.068,
+      //                     color: point1Color,
+      //                     child: Center(
+      //                       child: TextButton(
+      //                           onPressed: () {},
+      //                           style: TextButton.styleFrom(
+      //                             minimumSize: Size.zero,
+      //                             padding: EdgeInsets.zero,
+      //                             tapTargetSize:
+      //                                 MaterialTapTargetSize.shrinkWrap,
+      //                           ),
+      //                           child: Text('식물 추가 완료',
+      //                               style: Theme.of(context)
+      //                                   .textTheme
+      //                                   .headlineLarge!
+      //                                   .copyWith(color: Colors.white))),
+      //                     ),
+      //                   ),
+      //                 )
+      //               ],
+      //             )
+      //           ],
+      //         ),
+      // ),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -581,350 +598,470 @@ class _AddScreenState extends State<AddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 34,
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: keyColor500,
-                                child: Text(
-                                  '1',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              // top prograss bar
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 34,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: keyColor500,
+                          child: Text(
+                            '1',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color: Colors.white,
                                 ),
-                              ),
-                            ),
-                            const Expanded(
-                              child: Divider(
-                                indent: 6.0,
-                                endIndent: 6.0,
-                                thickness: 1,
-                                color: keyColor200,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 34,
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: keyColor200,
-                                child: CircleAvatar(
-                                  radius: 11,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const Expanded(
-                              child: Divider(
-                                indent: 6.0,
-                                endIndent: 6.0,
-                                thickness: 1,
-                                color: keyColor200,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 34,
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: keyColor200,
-                                child: CircleAvatar(
-                                  radius: 11,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 34,
-                              child: Text(
-                                '정보추가',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall!
-                                    .copyWith(
-                                      color: keyColor600,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 34,
-                              child: Text(
-                                '알림추가',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall!
-                                    .copyWith(
-                                      color: keyColor300,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 34,
-                              child: Text(
-                                '추가완료',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall!
-                                    .copyWith(
-                                      color: keyColor300,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    Container(
-                      width: 312.w,
-                      height: 164,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: grayBlack.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(2, 2), // Shadow position
                           ),
-                        ],
+                        ),
                       ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(20))),
-                                      builder: (context) => Container(
-                                        padding: const EdgeInsets.all(32),
-                                        height: 180,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text("식물 사진 변경",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        color: grayBlack)),
-                                            const SizedBox(
-                                              height: 32,
-                                            ),
-                                            TextButton(
-                                              style: TextButton.styleFrom(
-                                                minimumSize: Size.zero,
-                                                padding: EdgeInsets.zero,
-                                                tapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
-                                              ),
-                                              onPressed: () async {
-                                                Navigator.pop(context);
-                                                final file = await imageHelper
-                                                    .pickImage(camera: true);
-                                                if (file != null) {
-                                                  final croppedFile =
-                                                      await imageHelper.crop(
-                                                          file: file,
-                                                          cropStyle:
-                                                              CropStyle.circle);
-                                                  if (croppedFile != null) {
-                                                    setState(() {
-                                                      pickedFile = XFile(
-                                                          croppedFile.path);
-                                                    });
-                                                  }
-                                                }
-                                              },
-                                              child: Align(
-                                                alignment:
-                                                    const Alignment(-1.0, 0.0),
-                                                child: Text(
-                                                  "카메라",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
-                                                        color: grayColor700,
-                                                      ),
+                      const Expanded(
+                        child: Divider(
+                          indent: 6.0,
+                          endIndent: 6.0,
+                          thickness: 1,
+                          color: keyColor200,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 34,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: keyColor200,
+                          child: CircleAvatar(
+                            radius: 11,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        child: Divider(
+                          indent: 6.0,
+                          endIndent: 6.0,
+                          thickness: 1,
+                          color: keyColor200,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 34,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: keyColor200,
+                          child: CircleAvatar(
+                            radius: 11,
+                            backgroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 34,
+                        child: Text(
+                          '정보추가',
+                          style:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    color: keyColor600,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 34,
+                        child: Text(
+                          '알림추가',
+                          style:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    color: keyColor300,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 34,
+                        child: Text(
+                          '추가완료',
+                          style:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    color: keyColor300,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              // photo and search box
+              Center(
+                child: Container(
+                  width: 312.w,
+                  height: 172,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: grayBlack.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(2, 2), // Shadow position
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20))),
+                                builder: (context) => Container(
+                                  padding: const EdgeInsets.all(32),
+                                  height: 180,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("식물 사진 변경",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: grayBlack)),
+                                      const SizedBox(
+                                        height: 32,
+                                      ),
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          minimumSize: Size.zero,
+                                          padding: EdgeInsets.zero,
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          final file = await imageHelper
+                                              .pickImage(camera: true);
+                                          if (file != null) {
+                                            final croppedFile =
+                                                await imageHelper.crop(
+                                                    file: file,
+                                                    cropStyle:
+                                                        CropStyle.circle);
+                                            if (croppedFile != null) {
+                                              setState(() {
+                                                pickedFile =
+                                                    XFile(croppedFile.path);
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: Align(
+                                          alignment: const Alignment(-1.0, 0.0),
+                                          child: Text(
+                                            "카메라",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  color: grayColor700,
                                                 ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            TextButton(
-                                              style: TextButton.styleFrom(
-                                                minimumSize: Size.zero,
-                                                padding: EdgeInsets.zero,
-                                                tapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
-                                              ),
-                                              onPressed: () async {
-                                                Navigator.pop(context);
-                                                final file = await imageHelper
-                                                    .pickImage();
-                                                if (file != null) {
-                                                  final croppedFile =
-                                                      await imageHelper.crop(
-                                                          file: file,
-                                                          cropStyle:
-                                                              CropStyle.circle);
-                                                  if (croppedFile != null) {
-                                                    setState(() {
-                                                      pickedFile = XFile(
-                                                          croppedFile.path);
-                                                    });
-                                                  }
-                                                }
-                                              },
-                                              child: Align(
-                                                alignment:
-                                                    const Alignment(-1.0, 0.0),
-                                                child: Text(
-                                                  "갤러리 사진 선택",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
-                                                        color: grayColor700,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: Stack(
-                                    children: [
-                                      if (pickedFile != null) //찍은애
-                                        FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: CircleAvatar(
-                                                radius: 40, // Image radius
-                                                backgroundImage: FileImage(
-                                                    File(pickedFile!.path))))
-                                      else if (widget.prev?.image !=
-                                          null) //찍엇는데 갔다왓음
-                                        FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: CircleAvatar(
-                                                radius: 40, // Image radius
-                                                backgroundImage: FileImage(File(
-                                                    widget.prev!.image!.path))))
-                                      else if (widget.document !=
-                                          null) //안찍었는데 깟다왓어
-                                        FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: CircleAvatar(
-                                              radius: 40, // Image radius
-                                              backgroundImage: NetworkImage(
-                                                  widget.document!.image)),
-                                        )
-                                      else
-                                        const ImageBox(
-                                          imageUri: 'assets/images/pot.png',
-                                          width: 80,
-                                          height: 80,
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          minimumSize: Size.zero,
+                                          padding: EdgeInsets.zero,
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
                                         ),
-                                      const Positioned(
-                                        right: 1,
-                                        bottom: 1,
-                                        child: ImageBox(
-                                          imageUri: 'assets/icons/img.png',
-                                          width: 20,
-                                          height: 20,
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          final file =
+                                              await imageHelper.pickImage();
+                                          if (file != null) {
+                                            final croppedFile =
+                                                await imageHelper.crop(
+                                                    file: file,
+                                                    cropStyle:
+                                                        CropStyle.circle);
+                                            if (croppedFile != null) {
+                                              setState(() {
+                                                pickedFile =
+                                                    XFile(croppedFile.path);
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: Align(
+                                          alignment: const Alignment(-1.0, 0.0),
+                                          child: Text(
+                                            "갤러리 사진 선택",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                  color: grayColor700,
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              );
+                            },
+                            child: Stack(
                               children: [
-                                RoundedButton(
-                                  backgroundColor: Colors.white,
-                                  borderColor: pointColor2.withOpacity(
-                                    0.35,
+                                if (pickedFile != null) //찍은애
+                                  FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: CircleAvatar(
+                                          radius: 40, // Image radius
+                                          backgroundImage: FileImage(
+                                              File(pickedFile!.path))))
+                                else if (widget.prev?.image != null) //찍엇는데 갔다왓음
+                                  FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: CircleAvatar(
+                                          radius: 40, // Image radius
+                                          backgroundImage: FileImage(
+                                              File(widget.prev!.image!.path))))
+                                else if (widget.document != null) //안찍었는데 깟다왓어
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: CircleAvatar(
+                                        radius: 40, // Image radius
+                                        backgroundImage: NetworkImage(
+                                            widget.document!.image)),
+                                  )
+                                else
+                                  const ImageBox(
+                                    imageUri: 'assets/images/pot.png',
+                                    width: 80,
+                                    height: 80,
                                   ),
-                                  width: 136,
-                                  height: 32,
-                                  textColor: pointColor2,
-                                  name: '사진 추가',
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                RoundedButton(
-                                  backgroundColor: Colors.white,
-                                  borderColor: pointColor2.withOpacity(
-                                    0.35,
+                                const Positioned(
+                                  right: 1,
+                                  bottom: 1,
+                                  child: ImageBox(
+                                    imageUri: 'assets/icons/img.png',
+                                    width: 20,
+                                    height: 20,
                                   ),
-                                  width: 136,
-                                  height: 32,
-                                  textColor: pointColor2,
-                                  name: '종류 검색',
                                 ),
                               ],
-                            )
-                          ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RoundedButton(
+                            backgroundColor: Colors.white,
+                            borderColor: pointColor2.withOpacity(
+                              0.5,
+                            ),
+                            width: 136,
+                            height: 32,
+                            textColor: pointColor2,
+                            name: '사진 추가',
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          RoundedButton(
+                            backgroundColor: Colors.white,
+                            borderColor: pointColor2.withOpacity(
+                              0.5,
+                            ),
+                            width: 136,
+                            height: 32,
+                            textColor: pointColor2,
+                            name: '종류 검색',
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 28,
+              ),
+              //별칭
+              Stack(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: TextField(
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(left: 16),
+                        hintText: '내 식물의 별칭을 입력해주세요',
+                        hintStyle:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: grayColor400,
+                                ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              8.0,
+                            ),
+                          ),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: keyColor500,
+                          ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              8.0,
+                            ),
+                          ),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: grayColor400,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.name,
+                    ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    top: 0,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                        ),
+                        child: Text('별칭(선택)',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: grayColor600,
+                                    )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 24.0,
+              ),
+              //물주기 ontap version
+              Stack(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: TextField(
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(left: 16),
+                        hintText: '마지막으로 물 준 날을 선택해주세요',
+                        hintStyle:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: grayColor400,
+                                ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              8.0,
+                            ),
+                          ),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: keyColor500,
+                          ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              8.0,
+                            ),
+                          ),
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: grayColor400,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.name,
+                    ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    top: 0,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                        ),
+                        child: Text(
+                          '물주기',
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: grayColor600,
+                                  ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 32,
+                  ),
+                  Positioned(
+                    right: 10,
+                    bottom: 13,
+                    child: Container(
+                      color: Colors.white,
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                        ),
+                        child: ImageBox(
+                          imageUri: 'assets/icons/calendar_box.png',
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(
-                  width: double.infinity,
-                  height: fullHeight,
-                  child: buildPageView(context)),
-              ElevatedButton(onPressed: uploadFile, child: const Text("버툰")),
+
+              ElevatedButton(
+                  onPressed: uploadFile, child: const Text("예비 업로드버튼")),
             ],
           ),
         ),
