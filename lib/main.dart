@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
                   fontSize: 14.0,
                   fontWeight: FontWeight.w500,
                   letterSpacing: -0.6,
-                  height: 1.5,
+                  height: 22,
                 ),
                 bodySmall: TextStyle(
                   fontSize: 12.0,
