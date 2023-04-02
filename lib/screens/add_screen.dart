@@ -504,11 +504,12 @@ class _AddScreenState extends State<AddScreen> {
         borderColor: pointColor2.withOpacity(
           0.5,
         ),
-        width: 328,
+        width: 328.w,
         height: 44,
         textColor: Colors.white,
         name: '다음',
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
       // bottomNavigationBar: SizedBox(
       //   width: fullWidth,
@@ -628,14 +629,14 @@ class _AddScreenState extends State<AddScreen> {
                           indent: 6.0,
                           endIndent: 6.0,
                           thickness: 1,
-                          color: keyColor200,
+                          color: keyColor300,
                         ),
                       ),
                       const SizedBox(
                         width: 34,
                         child: CircleAvatar(
                           radius: 12,
-                          backgroundColor: keyColor200,
+                          backgroundColor: keyColor300,
                           child: CircleAvatar(
                             radius: 11,
                             backgroundColor: Colors.white,
@@ -647,14 +648,14 @@ class _AddScreenState extends State<AddScreen> {
                           indent: 6.0,
                           endIndent: 6.0,
                           thickness: 1,
-                          color: keyColor200,
+                          color: keyColor300,
                         ),
                       ),
                       const SizedBox(
                         width: 34,
                         child: CircleAvatar(
                           radius: 12,
-                          backgroundColor: keyColor200,
+                          backgroundColor: keyColor300,
                           child: CircleAvatar(
                             radius: 11,
                             backgroundColor: Colors.white,
@@ -686,7 +687,7 @@ class _AddScreenState extends State<AddScreen> {
                           '알림추가',
                           style:
                               Theme.of(context).textTheme.labelSmall!.copyWith(
-                                    color: keyColor300,
+                                    color: keyColor400,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -697,7 +698,7 @@ class _AddScreenState extends State<AddScreen> {
                           '추가완료',
                           style:
                               Theme.of(context).textTheme.labelSmall!.copyWith(
-                                    color: keyColor300,
+                                    color: keyColor400,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -869,9 +870,9 @@ class _AddScreenState extends State<AddScreen> {
                                   ),
                                 const Positioned(
                                   right: 1,
-                                  bottom: 1,
+                                  top: 1,
                                   child: ImageBox(
-                                    imageUri: 'assets/icons/img.png',
+                                    imageUri: 'assets/icons/x.png',
                                     width: 20,
                                     height: 20,
                                   ),
