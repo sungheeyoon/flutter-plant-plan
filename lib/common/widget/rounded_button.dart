@@ -7,6 +7,7 @@ class RoundedButton extends StatelessWidget {
   final String name;
   final double width;
   final double height;
+  final VoidCallback? onPressed;
 
   const RoundedButton({
     super.key,
@@ -16,6 +17,7 @@ class RoundedButton extends StatelessWidget {
     required this.height,
     required this.textColor,
     required this.name,
+    this.onPressed,
   });
 
   @override
@@ -24,7 +26,7 @@ class RoundedButton extends StatelessWidget {
       width: width,
       height: height,
       child: OutlinedButton(
-        onPressed: () async {},
+        onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
-import 'package:plant_plan/screens/add_screen.dart';
+import 'package:plant_plan/add/view/add_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
@@ -99,7 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               onTap: () =>
                                   Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddScreen(
+                                builder: (context) => AddTab(
                                   document: PlantModel.fromFirestore(document),
                                   prev: widget.prev,
                                 ),

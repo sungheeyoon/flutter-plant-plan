@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/models/toon_model.dart';
-import 'package:plant_plan/screens/add_screen.dart';
+import 'package:plant_plan/add/view/add_tab.dart';
 import 'package:plant_plan/services/api_service.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/widgets/management_widget.dart';
@@ -73,11 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 128, 24, 24),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(24, 128, 24, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   "More Plants,",
                   style: TextStyle(
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const AddScreen(),
+                              builder: (context) => const AddTab(),
                             ));
                       },
                       child: Container(
@@ -201,9 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               ImageBox(
                                 imageUri:
                                     'assets/images/management/humid_outline.png',
@@ -429,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AddScreen(),
+                        builder: (context) => const AddTab(),
                       ));
                 },
                 child: Container(
