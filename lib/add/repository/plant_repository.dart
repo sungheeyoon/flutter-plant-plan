@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final _referencePlantList =
-    FirebaseFirestore.instance.collection('plant_list').get();
-
 class PlantRepository {
-  Future getPlantList() async {
+  Future<void> getPlantList() async {
     final first = FirebaseFirestore.instance
         .collection("plant_list")
         .orderBy("name")
-        .limit(25);
+        .limit(1);
 
-    first.get().then(
+    print('first = $first');
+
+    final paginateFirst = await first.get().then(
       (documentSnapshots) async {
         // Get the last visible document
         final lastVisible = documentSnapshots.docs[documentSnapshots.size - 1];
@@ -19,9 +18,9 @@ class PlantRepository {
         // get the next 25 plant_list.
         final next = FirebaseFirestore.instance
             .collection("plant_list")
-            .orderBy("population")
-            .startAfter([lastVisible]).limit(25);
-
+            .orderBy("name")
+            .startAfter([lastVisible]).limit(2);
+        print('paginateNext = $next');
         // Use the query for pagination
         // ...
       },

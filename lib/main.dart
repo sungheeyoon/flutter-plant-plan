@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/const/data.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/widgets/snapping_above.dart';
@@ -130,7 +131,7 @@ class MyApp extends StatelessWidget {
                 decorationColor: Colors.orange,
               ),
             ),
-            home: SnappingAbove()
+            home: const SearchScreen()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },
