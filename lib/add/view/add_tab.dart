@@ -13,7 +13,7 @@ import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/screens/alarm_screen.dart';
-import 'package:plant_plan/screens/search_screen.dart';
+import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/utils/sizes_helpers.dart';

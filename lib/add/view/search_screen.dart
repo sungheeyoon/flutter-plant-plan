@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
+import 'package:plant_plan/add/repository/plant_repository.dart';
 import 'package:plant_plan/models/plant_model.dart';
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/add/view/add_tab.dart';
@@ -18,6 +19,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late Stream<QuerySnapshot> _streamPlantList;
+  late PlantRepository getPlantList;
   String enteredKeyword = "";
 
   final CollectionReference _referencePlantList =
@@ -26,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   initState() {
     _streamPlantList = _referencePlantList.snapshots();
+    getPlantList = PlantRepository();
 
     super.initState();
   }
@@ -166,6 +169,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
+            OutlinedButton(
+                onPressed: () {
+                  getPlantList.getPlantList();
+                },
+                child: const Text("test getplant list pagination"))
           ],
         ),
       ),
