@@ -171,7 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             OutlinedButton(
                 onPressed: () {
-                  getPlantList.getPlantList();
+                  print(getPlantList.getPlants(10));
                 },
                 child: const Text("test getplant list pagination"))
           ],
