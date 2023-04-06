@@ -9,31 +9,29 @@ final plantRepositoryProvider = Provider<PlantRepository>((ref) {
 });
 
 class PlantRepository {
-  Stream<List<PlantModel>> getPlants(
+  Future<QuerySnapshot> getPlants(
     int limit, {
-    DocumentSnapshot? last,
-  }) {
+    DocumentSnapshot? startAfter,
+  }) async {
     final refPlants = FirebaseFirestore.instance
-        .collection("plant_list")
-        .orderBy("name")
+        .collection('plant_list')
+        .orderBy('name')
         .limit(limit);
 
-    if (last == null) {
-      return refPlants.snapshots().map((snapshot) =>
-          snapshot.docs.map((doc) => PlantModel.fromJson(doc.data())).toList());
+    if (startAfter == null) {
+      return await refPlants.get();
     } else {
-      return refPlants
-          .startAfterDocument(last)
-          .snapshots()
-          .map(_plantListFromSnapshot);
+      return await refPlants.startAfterDocument(startAfter).get();
     }
   }
 
-  Stream<List<PlantModel>> getAllPlants() {
-    final refAllPlants =
-        FirebaseFirestore.instance.collection("plant_list").orderBy("name");
+  Future<QuerySnapshot> getAllPlants() {
+    final refAllPlants = FirebaseFirestore.instance
+        .collection("plant_list")
+        .orderBy("name")
+        .get();
 
-    return refAllPlants.snapshots().map(_plantListFromSnapshot);
+    return refAllPlants;
   }
 
   List<PlantModel> _plantListFromSnapshot(QuerySnapshot snapshot) {
