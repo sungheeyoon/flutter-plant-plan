@@ -28,4 +28,6 @@ class PlantModel extends PlantModelBase {
 
   factory PlantModel.fromJson(Map<String, dynamic> json) =>
       _$PlantModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlantModelToJson(this);
 }
