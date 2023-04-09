@@ -18,12 +18,12 @@ class PlantModelLoading extends PlantModelBase {}
 class PlantModel extends PlantModelBase {
   final int id;
   final String name;
-  final String imageUrl;
+  final String image;
 
   PlantModel({
     required this.id,
     required this.name,
-    required this.imageUrl,
+    required this.image,
   });
 
   factory PlantModel.fromJson(Map<String, dynamic> json) =>

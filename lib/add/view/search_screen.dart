@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korea_regexp/korea_regexp.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/repository/plant_repository.dart';
-import 'package:plant_plan/models/plant_model.dart';
+
 import 'package:plant_plan/models/preserve_model.dart';
 import 'package:plant_plan/add/view/add_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -33,6 +34,12 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
   }
 
+  List<PlantModel> _plantListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return PlantModel.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget buildSearch() => SearchWidget(
@@ -57,19 +64,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Center(child: Text(snapshot.error.toString()));
                   }
                   if (snapshot.connectionState == ConnectionState.active) {
-                    QuerySnapshot querySnapshot = snapshot.data;
-                    List<QueryDocumentSnapshot> listQueryDocumentSnapshot =
-                        querySnapshot.docs;
+                    List<PlantModel> plantList =
+                        _plantListFromSnapshot(snapshot.data);
                     return ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        itemCount: listQueryDocumentSnapshot.length,
+                        itemCount: plantList.length,
                         itemBuilder: (context, index) {
-                          QueryDocumentSnapshot document =
-                              listQueryDocumentSnapshot[index];
+                          PlantModel document = plantList[index];
                           if (enteredKeyword.isEmpty) {
                             return ListTile(
                               title: Text(
-                                document['name'],
+                                document.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
@@ -78,7 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     .copyWith(color: primaryColor),
                               ),
                               leading: CachedNetworkImage(
-                                imageUrl: document['image'],
+                                imageUrl: document.image,
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   width: 44.0,
@@ -103,7 +108,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               onTap: () =>
                                   Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => AddTab(
-                                  document: PlantModel.fromFirestore(document),
                                   prev: widget.prev,
                                 ),
                               )),
@@ -119,10 +123,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ignoreSpace: false,
                                   ignoreCase: false,
                                 ));
-                            if (regExp.hasMatch(document["name"] as String)) {
+                            if (regExp.hasMatch(document.name)) {
                               return ListTile(
                                 title: Text(
-                                  document['name'],
+                                  document.name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
@@ -131,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       .copyWith(color: primaryColor),
                                 ),
                                 leading: CachedNetworkImage(
-                                  imageUrl: document['image'],
+                                  imageUrl: document.image,
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     width: 44.0,
@@ -153,11 +157,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   errorWidget: (context, url, error) =>
                                       const Icon(Icons.error),
                                 ),
-                                onTap: () => Navigator.pop(context, {
-                                  'document':
-                                      PlantModel.fromFirestore(document),
-                                  'prev': widget.prev
-                                }),
+                                onTap: () => Navigator.pop(
+                                    context, {'prev': widget.prev}),
                               );
                             }
                           }
