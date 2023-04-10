@@ -25,28 +25,27 @@ class _SearchWidgetState extends State<SearchWidget> {
     TextStyle styleActive =
         Theme.of(context).textTheme.titleMedium!.copyWith(color: primaryColor);
     TextStyle styleHint =
-        Theme.of(context).textTheme.titleMedium!.copyWith(color: gray2Color);
+        Theme.of(context).textTheme.titleMedium!.copyWith(color: grayColor500);
     final style = widget.text.isEmpty ? styleHint : styleActive;
 
     return Container(
-      height: 42,
+      height: 44,
       width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.fromLTRB(24, 20, 24, 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: gray4Color,
-        border: Border.all(color: gray4Color),
+        color: grayColor100,
+        border: Border.all(color: grayColor100),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
-          icon: const Icon(Icons.search, color: gray1Color),
           suffixIcon: widget.text.isNotEmpty
               ? GestureDetector(
                   child: const Padding(
-                    padding: EdgeInsets.only(left: 24),
-                    child: Icon(Icons.close, color: gray1Color),
+                    padding: EdgeInsets.only(left: 20),
+                    child: Icon(Icons.close, color: grayColor600),
                   ),
                   onTap: () {
                     controller.clear();
@@ -54,7 +53,10 @@ class _SearchWidgetState extends State<SearchWidget> {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                 )
-              : null,
+              : const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Icon(Icons.search, color: grayColor600),
+                ),
           hintText: widget.hintText,
           hintStyle: style,
           border: InputBorder.none,

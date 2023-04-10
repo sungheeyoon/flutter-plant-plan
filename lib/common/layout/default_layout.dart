@@ -6,6 +6,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
   final String? title;
+  final Color? titleBackgroundColor;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
@@ -14,6 +15,7 @@ class DefaultLayout extends StatelessWidget {
     required this.child,
     this.backgroundColor,
     this.title,
+    this.titleBackgroundColor,
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -38,7 +40,7 @@ class DefaultLayout extends StatelessWidget {
     } else {
       return AppBar(
         toolbarHeight: 56.h,
-        backgroundColor: Colors.white,
+        backgroundColor: titleBackgroundColor ?? Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text(
