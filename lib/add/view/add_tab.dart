@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:image_cropper/image_cropper.dart';
@@ -20,17 +21,18 @@ import 'package:plant_plan/utils/sizes_helpers.dart';
 
 import 'package:plant_plan/widgets/image_box.dart';
 
-class AddTab extends StatefulWidget {
+class AddTab extends ConsumerStatefulWidget {
   static String get routeName => 'add';
   final PlantModel? document;
   final PreserveModel? prev;
 
   const AddTab({Key? key, this.document, this.prev}) : super(key: key);
   @override
-  State<AddTab> createState() => _AddTabState();
+  ConsumerState<AddTab> createState() => _AddTabState();
 }
 
-class _AddTabState extends State<AddTab> with SingleTickerProviderStateMixin {
+class _AddTabState extends ConsumerState<AddTab>
+    with SingleTickerProviderStateMixin {
   late TabController controller;
   int index = 0;
   UploadTask? uploadTask;
@@ -135,17 +137,11 @@ class _AddTabState extends State<AddTab> with SingleTickerProviderStateMixin {
               child: OutlinedButton(
                 onPressed: () async {
                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchScreen(
-                            prev: PreserveModel.fromJson({
-                          'image': pickedFile,
-                          'alias': alias,
-                          'wateringDay': wateringDay,
-                          'divisionDay': divisionDay,
-                          'nutrientDay': nutrientDay,
-                        })),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size.zero,
