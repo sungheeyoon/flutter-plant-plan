@@ -463,7 +463,6 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                   setState(() {
                     wateringDay = formatter.format(values[0]!);
                     print('print watringggg $wateringDay');
-                    wateringDayController.text = '왜안돼';
                   });
                 }
               },
@@ -475,16 +474,18 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                       enabled: false,
                       controller: wateringDayController,
                       onChanged: (value) {
-                        setState(() {
-                          if (wateringDay != null) {
-                            value = wateringDay!;
-                          }
-                        });
+                        setState(
+                          () {
+                            if (wateringDay != null) {
+                              value = wateringDay!;
+                            }
+                          },
+                        );
                       },
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.only(left: 16),
-                        hintText: '마지막으로 물 준 날을 선택해주세요',
+                        hintText: wateringDay ?? '마지막으로 물 준 날을 선택해주세요',
                         hintStyle:
                             Theme.of(context).textTheme.titleMedium!.copyWith(
                                   color: grayColor400,

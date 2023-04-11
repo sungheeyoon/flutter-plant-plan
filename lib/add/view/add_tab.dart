@@ -250,24 +250,7 @@ class _AddTabState extends ConsumerState<AddTab>
                 width: displayWidth(context),
                 height: 40,
                 child: OutlinedButton(
-                  onPressed: () async {
-                    // DateTime? newDate = await showRoundedDatePicker(
-                    //     theme: ThemeData(
-                    //       primaryColor: Colors.white,
-                    //     ),
-                    //     context: context,
-                    //     height: 400,
-                    //     initialDate: DateTime.now(),
-                    //     firstDate: DateTime(DateTime.now().year - 1),
-                    //     lastDate: DateTime(DateTime.now().year + 1),
-                    //     borderRadius: 16,
-                    //     styleDatePicker: MaterialRoundedDatePickerStyle());
-                    // if (newDate == null) return;
-
-                    // setState(() {
-                    //   wateringDay = formatter.format(newDate);
-                    // });
-                  },
+                  onPressed: () async {},
                   style: OutlinedButton.styleFrom(
                     minimumSize: Size.zero,
                     padding:
