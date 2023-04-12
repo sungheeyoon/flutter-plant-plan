@@ -20,10 +20,10 @@ InfoInputModel _$InfoInputModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$InfoInputModel {
-  String? get alias => throw _privateConstructorUsedError;
-  String? get wateringDay => throw _privateConstructorUsedError;
-  String? get divisionDay => throw _privateConstructorUsedError;
-  String? get nutrientDay => throw _privateConstructorUsedError;
+  String get alias => throw _privateConstructorUsedError;
+  String get wateringDay => throw _privateConstructorUsedError;
+  String get divisionDay => throw _privateConstructorUsedError;
+  String get nutrientDay => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,10 +38,10 @@ abstract class $InfoInputModelCopyWith<$Res> {
       _$InfoInputModelCopyWithImpl<$Res, InfoInputModel>;
   @useResult
   $Res call(
-      {String? alias,
-      String? wateringDay,
-      String? divisionDay,
-      String? nutrientDay});
+      {String alias,
+      String wateringDay,
+      String divisionDay,
+      String nutrientDay});
 }
 
 /// @nodoc
@@ -57,28 +57,28 @@ class _$InfoInputModelCopyWithImpl<$Res, $Val extends InfoInputModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? alias = freezed,
-    Object? wateringDay = freezed,
-    Object? divisionDay = freezed,
-    Object? nutrientDay = freezed,
+    Object? alias = null,
+    Object? wateringDay = null,
+    Object? divisionDay = null,
+    Object? nutrientDay = null,
   }) {
     return _then(_value.copyWith(
-      alias: freezed == alias
+      alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
-              as String?,
-      wateringDay: freezed == wateringDay
+              as String,
+      wateringDay: null == wateringDay
           ? _value.wateringDay
           : wateringDay // ignore: cast_nullable_to_non_nullable
-              as String?,
-      divisionDay: freezed == divisionDay
+              as String,
+      divisionDay: null == divisionDay
           ? _value.divisionDay
           : divisionDay // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nutrientDay: freezed == nutrientDay
+              as String,
+      nutrientDay: null == nutrientDay
           ? _value.nutrientDay
           : nutrientDay // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ) as $Val);
   }
 }
@@ -92,10 +92,10 @@ abstract class _$$_InfoInputModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? alias,
-      String? wateringDay,
-      String? divisionDay,
-      String? nutrientDay});
+      {String alias,
+      String wateringDay,
+      String divisionDay,
+      String nutrientDay});
 }
 
 /// @nodoc
@@ -109,28 +109,28 @@ class __$$_InfoInputModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? alias = freezed,
-    Object? wateringDay = freezed,
-    Object? divisionDay = freezed,
-    Object? nutrientDay = freezed,
+    Object? alias = null,
+    Object? wateringDay = null,
+    Object? divisionDay = null,
+    Object? nutrientDay = null,
   }) {
     return _then(_$_InfoInputModel(
-      alias: freezed == alias
+      alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
-              as String?,
-      wateringDay: freezed == wateringDay
+              as String,
+      wateringDay: null == wateringDay
           ? _value.wateringDay
           : wateringDay // ignore: cast_nullable_to_non_nullable
-              as String?,
-      divisionDay: freezed == divisionDay
+              as String,
+      divisionDay: null == divisionDay
           ? _value.divisionDay
           : divisionDay // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nutrientDay: freezed == nutrientDay
+              as String,
+      nutrientDay: null == nutrientDay
           ? _value.nutrientDay
           : nutrientDay // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ));
   }
 }
@@ -139,19 +139,26 @@ class __$$_InfoInputModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_InfoInputModel implements _InfoInputModel {
   const _$_InfoInputModel(
-      {this.alias, this.wateringDay, this.divisionDay, this.nutrientDay});
+      {this.alias = "",
+      this.wateringDay = "",
+      this.divisionDay = "",
+      this.nutrientDay = ""});
 
   factory _$_InfoInputModel.fromJson(Map<String, dynamic> json) =>
       _$$_InfoInputModelFromJson(json);
 
   @override
-  final String? alias;
+  @JsonKey()
+  final String alias;
   @override
-  final String? wateringDay;
+  @JsonKey()
+  final String wateringDay;
   @override
-  final String? divisionDay;
+  @JsonKey()
+  final String divisionDay;
   @override
-  final String? nutrientDay;
+  @JsonKey()
+  final String nutrientDay;
 
   @override
   String toString() {
@@ -191,24 +198,24 @@ class _$_InfoInputModel implements _InfoInputModel {
   }
 }
 
-abstract class _InfoInputModel implements InfoInputModel, InfoBase {
+abstract class _InfoInputModel implements InfoInputModel {
   const factory _InfoInputModel(
-      {final String? alias,
-      final String? wateringDay,
-      final String? divisionDay,
-      final String? nutrientDay}) = _$_InfoInputModel;
+      {final String alias,
+      final String wateringDay,
+      final String divisionDay,
+      final String nutrientDay}) = _$_InfoInputModel;
 
   factory _InfoInputModel.fromJson(Map<String, dynamic> json) =
       _$_InfoInputModel.fromJson;
 
   @override
-  String? get alias;
+  String get alias;
   @override
-  String? get wateringDay;
+  String get wateringDay;
   @override
-  String? get divisionDay;
+  String get divisionDay;
   @override
-  String? get nutrientDay;
+  String get nutrientDay;
   @override
   @JsonKey(ignore: true)
   _$$_InfoInputModelCopyWith<_$_InfoInputModel> get copyWith =>

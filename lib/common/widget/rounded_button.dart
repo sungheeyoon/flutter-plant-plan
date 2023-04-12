@@ -7,10 +7,12 @@ class RoundedButton extends StatelessWidget {
   final String name;
   final double width;
   final double height;
+  final TextStyle? font;
   final VoidCallback? onPressed;
 
   const RoundedButton({
     super.key,
+    required this.font,
     required this.backgroundColor,
     required this.borderColor,
     required this.width,
@@ -39,9 +41,9 @@ class RoundedButton extends StatelessWidget {
         ),
         child: Text(
           name,
-          style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: textColor,
-              ),
+          style: font!.copyWith(
+            color: textColor,
+          ),
         ),
       ),
     );
