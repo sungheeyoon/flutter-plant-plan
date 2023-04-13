@@ -10,6 +10,7 @@ import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
+import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
@@ -63,105 +64,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               height: 8.0,
             ),
             // top prograss bar
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 34,
-                      child: CircleAvatar(
-                        radius: 12,
-                        backgroundColor: keyColor500,
-                        child: Text(
-                          '1',
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    color: Colors.white,
-                                  ),
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      child: Divider(
-                        indent: 6.0,
-                        endIndent: 6.0,
-                        thickness: 1,
-                        color: keyColor300,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 34,
-                      child: CircleAvatar(
-                        radius: 12,
-                        backgroundColor: keyColor300,
-                        child: CircleAvatar(
-                          radius: 11,
-                          backgroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const Expanded(
-                      child: Divider(
-                        indent: 6.0,
-                        endIndent: 6.0,
-                        thickness: 1,
-                        color: keyColor300,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 34,
-                      child: CircleAvatar(
-                        radius: 12,
-                        backgroundColor: keyColor300,
-                        child: CircleAvatar(
-                          radius: 11,
-                          backgroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 34,
-                      child: Text(
-                        '정보추가',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                              color: keyColor600,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 34,
-                      child: Text(
-                        '알림추가',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                              color: keyColor400,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 34,
-                      child: Text(
-                        '추가완료',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                              color: keyColor400,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
+            const ProgressBar(pageIndex: 0),
+
             const SizedBox(
               height: 20.0,
             ),
@@ -216,7 +120,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                               FittedBox(
                                 fit: BoxFit.contain,
                                 child: CircleAvatar(
-                                  radius: 40, // Image radius
+                                  radius: 40.h, // Image radius
                                   backgroundImage:
                                       NetworkImage(selectedPlant.image),
                                 ),
@@ -268,7 +172,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                             0.5,
                           ),
                           width: 136,
-                          height: 32,
+                          height: 32.h,
                           textColor: pointColor2,
                           name: '종류 검색',
                         ),
@@ -448,7 +352,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                       padding: const EdgeInsets.symmetric(
                         horizontal: 4.0,
                       ),
-                      child: Text('별칭(선택)',
+                      child: Text('별칭',
                           style:
                               Theme.of(context).textTheme.bodySmall!.copyWith(
                                     color: grayColor600,
