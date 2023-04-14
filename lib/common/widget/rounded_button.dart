@@ -31,7 +31,7 @@ class RoundedButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(40),
           ),
           side: BorderSide(
             width: 1,
