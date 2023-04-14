@@ -60,14 +60,14 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 8.0,
+            SizedBox(
+              height: 8.h,
             ),
             // top prograss bar
             const ProgressBar(pageIndex: 0),
 
-            const SizedBox(
-              height: 20.0,
+            SizedBox(
+              height: 20.h,
             ),
             // photo and search box
             Center(
@@ -108,10 +108,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                     onTap: () {
                                       ref.read(photoProvider.notifier).reset();
                                     },
-                                    child: const ImageBox(
+                                    child: ImageBox(
                                       imageUri: 'assets/icons/x.png',
-                                      width: 20,
-                                      height: 20,
+                                      width: 20.h,
+                                      height: 20.h,
                                     ),
                                   ),
                                 ),
@@ -126,10 +126,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                 ),
                               )
                             else
-                              const ImageBox(
+                              ImageBox(
                                 imageUri: 'assets/images/pot.png',
-                                width: 80,
-                                height: 80,
+                                width: 80.h,
+                                height: 80.h,
                               ),
                           ],
                         ),
@@ -138,22 +138,22 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                     if (selectedPlant != null)
                       Column(
                         children: [
-                          const SizedBox(
-                            height: 6,
+                          SizedBox(
+                            height: 8.h,
                           ),
                           Text(
                             selectedPlant.name,
                             style: Theme.of(context)
                                 .textTheme
-                                .titleMedium!
+                                .labelLarge!
                                 .copyWith(
                                   color: grayBlack,
                                 ),
                           ),
                         ],
                       ),
-                    const SizedBox(
-                      height: 20,
+                    SizedBox(
+                      height: 20.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -166,13 +166,13 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                               ),
                             );
                           },
-                          font: Theme.of(context).textTheme.labelLarge,
+                          font: Theme.of(context).textTheme.labelMedium,
                           backgroundColor: Colors.white,
                           borderColor: pointColor2.withOpacity(
                             0.5,
                           ),
                           width: 136,
-                          height: 32.h,
+                          height: 30.h,
                           textColor: pointColor2,
                           name: '종류 검색',
                         ),
@@ -187,18 +187,18 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                     top: Radius.circular(20))),
                             builder: (context) => Container(
                               padding: const EdgeInsets.all(32),
-                              height: 180,
+                              height: 180.h,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("식물 사진 변경",
+                                  Text("식물 사진 추가",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
                                           .copyWith(color: grayBlack)),
-                                  const SizedBox(
-                                    height: 32,
+                                  SizedBox(
+                                    height: 32.h,
                                   ),
                                   TextButton(
                                     style: TextButton.styleFrom(
@@ -236,8 +236,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 20,
+                                  SizedBox(
+                                    height: 20.h,
                                   ),
                                   TextButton(
                                     style: TextButton.styleFrom(
@@ -279,13 +279,13 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                               ),
                             ),
                           ),
-                          font: Theme.of(context).textTheme.labelLarge,
+                          font: Theme.of(context).textTheme.labelMedium,
                           backgroundColor: Colors.white,
                           borderColor: pointColor2.withOpacity(
                             0.5,
                           ),
                           width: 136,
-                          height: 32,
+                          height: 30.h,
                           textColor: pointColor2,
                           name: '사진 추가',
                         ),
@@ -295,8 +295,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 28,
+            SizedBox(
+              height: 28.h,
             ),
             //별칭
             Stack(
@@ -314,7 +314,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                       contentPadding: const EdgeInsets.only(left: 16),
                       hintText: '내 식물의 별칭을 입력해주세요',
                       hintStyle:
-                          Theme.of(context).textTheme.titleMedium!.copyWith(
+                          Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 color: grayColor400,
                               ),
                       focusedBorder: const OutlineInputBorder(
@@ -362,8 +362,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 24.0,
+            SizedBox(
+              height: 20.h,
             ),
             //물주기 ontap version
             GestureDetector(
@@ -378,8 +378,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 labelText: '물주기',
               ),
             ),
-            const SizedBox(
-              height: 24.0,
+            SizedBox(
+              height: 20.h,
             ),
             GestureDetector(
               onTap: () async {
@@ -393,8 +393,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 labelText: '분갈이',
               ),
             ),
-            const SizedBox(
-              height: 24.0,
+            SizedBox(
+              height: 20.h,
             ),
             GestureDetector(
               onTap: () async {

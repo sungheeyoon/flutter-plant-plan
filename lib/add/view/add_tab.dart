@@ -66,7 +66,7 @@ class _AddTabState extends ConsumerState<AddTab>
     return DefaultLayout(
       title: '식물추가',
       floatingActionButton: RoundedButton(
-        font: Theme.of(context).textTheme.headlineSmall,
+        font: Theme.of(context).textTheme.bodyLarge,
         backgroundColor: selectedPlant != null ? pointColor2 : grayColor300,
         borderColor: selectedPlant != null
             ? pointColor2.withOpacity(
@@ -74,7 +74,7 @@ class _AddTabState extends ConsumerState<AddTab>
               )
             : grayColor300,
         width: 328.w,
-        height: 44,
+        height: 44.h,
         textColor: Colors.white,
         name: '다음',
         onPressed: () async {

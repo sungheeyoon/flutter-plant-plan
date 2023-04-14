@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/info_input_model.dart';
 import 'package:plant_plan/add/provider/info_input_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -46,7 +47,7 @@ class DatePickerWidget extends ConsumerWidget {
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 16),
               hintText: info == "" ? hintText : info,
-              hintStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+              hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: info == "" ? grayColor400 : grayBlack,
                   ),
               focusedBorder: const OutlineInputBorder(
@@ -72,7 +73,13 @@ class DatePickerWidget extends ConsumerWidget {
                 ),
               ),
               disabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(width: 1, color: grayColor400)),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    8.0,
+                  ),
+                ),
+                borderSide: BorderSide(width: 1, color: grayColor400),
+              ),
             ),
             keyboardType: TextInputType.name,
           ),
@@ -100,14 +107,14 @@ class DatePickerWidget extends ConsumerWidget {
           bottom: 13,
           child: Container(
             color: Colors.white,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 4.0,
               ),
               child: ImageBox(
                 imageUri: 'assets/icons/calendar_box.png',
-                width: 24,
-                height: 24,
+                width: 20.h,
+                height: 20.h,
               ),
             ),
           ),
