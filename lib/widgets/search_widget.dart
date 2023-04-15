@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class SearchWidget extends StatefulWidget {
@@ -23,14 +24,15 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     TextStyle styleActive =
-        Theme.of(context).textTheme.titleMedium!.copyWith(color: primaryColor);
+        Theme.of(context).textTheme.bodyMedium!.copyWith(color: grayBlack);
     TextStyle styleHint =
-        Theme.of(context).textTheme.titleMedium!.copyWith(color: grayColor500);
+        Theme.of(context).textTheme.bodyMedium!.copyWith(color: grayColor500);
     final style = widget.text.isEmpty ? styleHint : styleActive;
 
     return Container(
-      height: 44,
-      width: MediaQuery.of(context).size.width,
+      height: 42.h,
+      width: 360.w,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: grayColor100,
@@ -39,6 +41,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
+        textAlignVertical: TextAlignVertical.center,
         controller: controller,
         decoration: InputDecoration(
           suffixIcon: widget.text.isNotEmpty
