@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
@@ -40,7 +42,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     Widget buildSearch() => SearchWidget(
           text: enteredKeyword,
-          hintText: 'ex.행운목',
+          hintText: '식물 이름을 입력해주세요',
           onChanged: (value) {
             setState(() {
               enteredKeyword = value;
@@ -53,12 +55,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       child: SafeArea(
         child: Column(
           children: <Widget>[
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: 20.h,
             ),
             buildSearch(),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: 20.h,
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
@@ -86,14 +88,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
-                                  .copyWith(color: primaryColor),
+                                  .copyWith(color: grayBlack),
                             ),
                             leading: CachedNetworkImage(
                               imageUrl: document.image,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
-                                width: 44.0,
-                                height: 44.0,
+                                width: 40.h,
+                                height: 40.h,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
@@ -102,10 +104,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                   ),
                                 ),
                               ),
-                              placeholder: (context, url) => const SizedBox(
-                                width: 44.0,
-                                height: 44.0,
-                                child: CircleAvatar(
+                              placeholder: (context, url) => SizedBox(
+                                width: 40.h,
+                                height: 40.h,
+                                child: const CircleAvatar(
                                   backgroundColor: grayColor200,
                                 ),
                               ),
@@ -122,7 +124,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 ),
                               );
                             },
-                          );
+                          ).paddingOnly(bottom: 6.h);
                         } else {
                           RegExp regExp = getRegExp(
                               enteredKeyword,
@@ -143,14 +145,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
-                                    .copyWith(color: primaryColor),
+                                    .copyWith(color: grayBlack),
                               ),
                               leading: CachedNetworkImage(
                                 imageUrl: document.image,
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
-                                  width: 44.0,
-                                  height: 44.0,
+                                  width: 40.h,
+                                  height: 40.h,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
@@ -158,10 +160,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 44.0,
-                                  height: 44.0,
-                                  child: CircleAvatar(
+                                placeholder: (context, url) => SizedBox(
+                                  width: 40.h,
+                                  height: 40.h,
+                                  child: const CircleAvatar(
                                     backgroundColor: grayColor200,
                                   ),
                                 ),
@@ -178,7 +180,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                   ),
                                 );
                               },
-                            );
+                            ).paddingOnly(bottom: 6.h);
                           }
                         }
 
