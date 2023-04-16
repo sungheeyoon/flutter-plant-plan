@@ -111,6 +111,7 @@ class AddSecondScreen extends ConsumerWidget {
               height: 40.h,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(
                   Icons.timer_outlined, // 플러스 아이콘
@@ -120,11 +121,25 @@ class AddSecondScreen extends ConsumerWidget {
                 SizedBox(
                   width: 8.h,
                 ),
-                Text(
-                  '식물 상태에 따라 관리 주기를\n원하는대로 설정하고 알림을 받아보세요',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: pointColor2,
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '식물 상태에 따라 관리 주기를',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: pointColor2,
+                          ),
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    Text(
+                      '원하는대로 설정하고 알림을 받아보세요',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: pointColor2,
+                          ),
+                    ),
+                  ],
                 )
               ],
             ),

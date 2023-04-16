@@ -40,32 +40,35 @@ class _SearchWidgetState extends State<SearchWidget> {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextField(
-        textAlignVertical: TextAlignVertical.center,
-        controller: controller,
-        decoration: InputDecoration(
-          suffixIcon: widget.text.isNotEmpty
-              ? GestureDetector(
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Icon(Icons.close, color: grayColor600),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: TextField(
+          textAlignVertical: TextAlignVertical.center,
+          controller: controller,
+          decoration: InputDecoration(
+            suffixIcon: widget.text.isNotEmpty
+                ? GestureDetector(
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 3, 1, 0),
+                      child: Icon(Icons.close, color: grayColor600),
+                    ),
+                    onTap: () {
+                      controller.clear();
+                      widget.onChanged('');
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                  )
+                : const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 3, 1, 0),
+                    child: Icon(Icons.search, color: grayColor600),
                   ),
-                  onTap: () {
-                    controller.clear();
-                    widget.onChanged('');
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                )
-              : const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Icon(Icons.search, color: grayColor600),
-                ),
-          hintText: widget.hintText,
-          hintStyle: style,
-          border: InputBorder.none,
+            hintText: widget.hintText,
+            hintStyle: style,
+            border: InputBorder.none,
+          ),
+          style: style,
+          onChanged: widget.onChanged,
         ),
-        style: style,
-        onChanged: widget.onChanged,
       ),
     );
   }
