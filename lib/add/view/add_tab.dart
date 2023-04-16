@@ -8,7 +8,7 @@ import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
-import 'package:plant_plan/screens/alarm_screen.dart';
+import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AddTab extends ConsumerStatefulWidget {

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/common/const/data.dart';
 import 'package:plant_plan/services/notifi_service.dart';
-import 'package:plant_plan/widgets/snapping_above.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -113,7 +113,6 @@ class MyApp extends StatelessWidget {
                   fontSize: 14.0.h,
                   fontWeight: FontWeight.w500,
                   letterSpacing: -0.6.h,
-                  height: 1.5.h,
                 ),
                 bodySmall: TextStyle(
                   fontSize: 12.0.h,
@@ -139,11 +138,9 @@ class MyApp extends StatelessWidget {
                   letterSpacing: -0.4.h,
                   height: 1.2.h,
                 ),
-              ).apply(
-                decorationColor: Colors.orange,
               ),
             ),
-            home: SnappingAbove()
+            home: const AlarmScreen()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },
