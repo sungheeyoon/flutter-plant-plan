@@ -22,7 +22,7 @@ InfoInputModel _$InfoInputModelFromJson(Map<String, dynamic> json) {
 mixin _$InfoInputModel {
   String get alias => throw _privateConstructorUsedError;
   String get wateringDay => throw _privateConstructorUsedError;
-  String get divisionDay => throw _privateConstructorUsedError;
+  String get repottingDay => throw _privateConstructorUsedError;
   String get nutrientDay => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $InfoInputModelCopyWith<$Res> {
   $Res call(
       {String alias,
       String wateringDay,
-      String divisionDay,
+      String repottingDay,
       String nutrientDay});
 }
 
@@ -59,7 +59,7 @@ class _$InfoInputModelCopyWithImpl<$Res, $Val extends InfoInputModel>
   $Res call({
     Object? alias = null,
     Object? wateringDay = null,
-    Object? divisionDay = null,
+    Object? repottingDay = null,
     Object? nutrientDay = null,
   }) {
     return _then(_value.copyWith(
@@ -71,9 +71,9 @@ class _$InfoInputModelCopyWithImpl<$Res, $Val extends InfoInputModel>
           ? _value.wateringDay
           : wateringDay // ignore: cast_nullable_to_non_nullable
               as String,
-      divisionDay: null == divisionDay
-          ? _value.divisionDay
-          : divisionDay // ignore: cast_nullable_to_non_nullable
+      repottingDay: null == repottingDay
+          ? _value.repottingDay
+          : repottingDay // ignore: cast_nullable_to_non_nullable
               as String,
       nutrientDay: null == nutrientDay
           ? _value.nutrientDay
@@ -94,7 +94,7 @@ abstract class _$$_InfoInputModelCopyWith<$Res>
   $Res call(
       {String alias,
       String wateringDay,
-      String divisionDay,
+      String repottingDay,
       String nutrientDay});
 }
 
@@ -111,7 +111,7 @@ class __$$_InfoInputModelCopyWithImpl<$Res>
   $Res call({
     Object? alias = null,
     Object? wateringDay = null,
-    Object? divisionDay = null,
+    Object? repottingDay = null,
     Object? nutrientDay = null,
   }) {
     return _then(_$_InfoInputModel(
@@ -123,9 +123,9 @@ class __$$_InfoInputModelCopyWithImpl<$Res>
           ? _value.wateringDay
           : wateringDay // ignore: cast_nullable_to_non_nullable
               as String,
-      divisionDay: null == divisionDay
-          ? _value.divisionDay
-          : divisionDay // ignore: cast_nullable_to_non_nullable
+      repottingDay: null == repottingDay
+          ? _value.repottingDay
+          : repottingDay // ignore: cast_nullable_to_non_nullable
               as String,
       nutrientDay: null == nutrientDay
           ? _value.nutrientDay
@@ -141,7 +141,7 @@ class _$_InfoInputModel implements _InfoInputModel {
   const _$_InfoInputModel(
       {this.alias = "",
       this.wateringDay = "",
-      this.divisionDay = "",
+      this.repottingDay = "",
       this.nutrientDay = ""});
 
   factory _$_InfoInputModel.fromJson(Map<String, dynamic> json) =>
@@ -155,14 +155,14 @@ class _$_InfoInputModel implements _InfoInputModel {
   final String wateringDay;
   @override
   @JsonKey()
-  final String divisionDay;
+  final String repottingDay;
   @override
   @JsonKey()
   final String nutrientDay;
 
   @override
   String toString() {
-    return 'InfoInputModel(alias: $alias, wateringDay: $wateringDay, divisionDay: $divisionDay, nutrientDay: $nutrientDay)';
+    return 'InfoInputModel(alias: $alias, wateringDay: $wateringDay, repottingDay: $repottingDay, nutrientDay: $nutrientDay)';
   }
 
   @override
@@ -173,8 +173,8 @@ class _$_InfoInputModel implements _InfoInputModel {
             (identical(other.alias, alias) || other.alias == alias) &&
             (identical(other.wateringDay, wateringDay) ||
                 other.wateringDay == wateringDay) &&
-            (identical(other.divisionDay, divisionDay) ||
-                other.divisionDay == divisionDay) &&
+            (identical(other.repottingDay, repottingDay) ||
+                other.repottingDay == repottingDay) &&
             (identical(other.nutrientDay, nutrientDay) ||
                 other.nutrientDay == nutrientDay));
   }
@@ -182,7 +182,7 @@ class _$_InfoInputModel implements _InfoInputModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, alias, wateringDay, divisionDay, nutrientDay);
+      Object.hash(runtimeType, alias, wateringDay, repottingDay, nutrientDay);
 
   @JsonKey(ignore: true)
   @override
@@ -202,7 +202,7 @@ abstract class _InfoInputModel implements InfoInputModel {
   const factory _InfoInputModel(
       {final String alias,
       final String wateringDay,
-      final String divisionDay,
+      final String repottingDay,
       final String nutrientDay}) = _$_InfoInputModel;
 
   factory _InfoInputModel.fromJson(Map<String, dynamic> json) =
@@ -213,7 +213,7 @@ abstract class _InfoInputModel implements InfoInputModel {
   @override
   String get wateringDay;
   @override
-  String get divisionDay;
+  String get repottingDay;
   @override
   String get nutrientDay;
   @override

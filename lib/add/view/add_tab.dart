@@ -213,8 +213,12 @@ class SettingCard extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const AlarmScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AlarmScreen(
+                          title: title,
+                        )));
           },
           child: Container(
               height: 78,

@@ -110,7 +110,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                           const ImageBox(
                             imageUri:
-                                'assets/images/management/division_outline.png',
+                                'assets/images/management/repotting_outline.png',
                             width: 70,
                             height: 70,
                           ),

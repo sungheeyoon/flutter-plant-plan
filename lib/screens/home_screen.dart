@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               ImageBox(
                                 imageUri:
-                                    'assets/images/management/division_outline.png',
+                                    'assets/images/management/repotting_outline.png',
                                 width: 48,
                                 height: 48,
                               ),

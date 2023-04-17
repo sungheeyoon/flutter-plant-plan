@@ -6,7 +6,7 @@ part 'info_input_model.freezed.dart';
 enum InfoKey {
   alias,
   wateringDay,
-  divisionDay,
+  repottingDay,
   nutrientDay,
 }
 
@@ -15,7 +15,7 @@ class InfoInputModel with _$InfoInputModel {
   const factory InfoInputModel({
     @Default("") String alias,
     @Default("") String wateringDay,
-    @Default("") String divisionDay,
+    @Default("") String repottingDay,
     @Default("") String nutrientDay,
   }) = _InfoInputModel;
 
@@ -31,8 +31,8 @@ class InfoInputModel with _$InfoInputModel {
         return InfoInputModel(alias: value);
       case InfoKey.wateringDay:
         return InfoInputModel(wateringDay: value);
-      case InfoKey.divisionDay:
-        return InfoInputModel(divisionDay: value);
+      case InfoKey.repottingDay:
+        return InfoInputModel(repottingDay: value);
       case InfoKey.nutrientDay:
         return InfoInputModel(nutrientDay: value);
       default:

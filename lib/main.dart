@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:plant_plan/add/view/alarm_screen.dart';
+import 'package:plant_plan/add/view/add_tab.dart';
 import 'package:plant_plan/common/const/data.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -140,7 +140,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: const AlarmScreen()
+            home: const AddTab()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },

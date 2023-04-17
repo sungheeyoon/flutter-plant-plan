@@ -5,14 +5,14 @@ class PreserveModel {
     required this.image,
     required this.alias,
     required this.wateringDay,
-    required this.divisionDay,
+    required this.repottingDay,
     required this.nutrientDay,
   });
 
   XFile? image;
   String? alias;
   String? wateringDay;
-  String? divisionDay;
+  String? repottingDay;
   String? nutrientDay;
 
   factory PreserveModel.fromJson(Map<String, dynamic> doc) {
@@ -20,7 +20,7 @@ class PreserveModel {
       image: doc['image'],
       alias: doc['alias'],
       wateringDay: doc['wateringDay'],
-      divisionDay: doc['divisionDay'],
+      repottingDay: doc['repottingDay'],
       nutrientDay: doc['nutrientDay'],
     );
   }
