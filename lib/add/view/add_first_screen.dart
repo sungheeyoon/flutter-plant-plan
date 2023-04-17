@@ -1,9 +1,7 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_plan/add/model/info_input_model.dart';
 import 'package:plant_plan/add/provider/info_input_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
@@ -28,29 +26,9 @@ class AddFirstScreen extends ConsumerStatefulWidget {
 class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    List<DateTime?> singleDatePickerValueWithDefaultValue = [
-      DateTime.now(),
-    ];
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
     final imageHelper = ImageHelper();
-
-    Future<void> _showDatePicker(InfoKey infoKey) async {
-      final values = await showCalendarDatePicker2Dialog(
-        context: context,
-        config: CalendarDatePicker2WithActionButtonsConfig(),
-        dialogSize: const Size(325, 400),
-        value: singleDatePickerValueWithDefaultValue,
-        borderRadius: BorderRadius.circular(15),
-      );
-      if (values != null) {
-        String value = formatter.format(values[0]!);
-        ref
-            .read(infoInputProvider.notifier)
-            .setInfoInput(key: infoKey, value: value);
-      }
-    }
 
     return SingleChildScrollView(
       child: Padding(
@@ -366,47 +344,27 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               height: 20.h,
             ),
             //물주기 ontap version
-            GestureDetector(
-              onTap: () async {
-                await _showDatePicker(
-                  InfoKey.wateringDay,
-                );
-              },
-              child: const DatePickerWidget(
-                infoKey: InfoKey.wateringDay,
-                hintText: '마지막으로 물 준 날을 선택해주세요',
-                labelText: '물주기',
-              ),
+            const DatePickerWidget(
+              infoKey: InfoKey.wateringDay,
+              hintText: '마지막으로 물 준 날을 선택해주세요',
+              labelText: '물주기',
+            ),
+
+            SizedBox(
+              height: 20.h,
+            ),
+            const DatePickerWidget(
+              infoKey: InfoKey.repottingDay,
+              hintText: '마지막으로 분갈이 한 날을 선택해주세요',
+              labelText: '분갈이',
             ),
             SizedBox(
               height: 20.h,
             ),
-            GestureDetector(
-              onTap: () async {
-                await _showDatePicker(
-                  InfoKey.divisionDay,
-                );
-              },
-              child: const DatePickerWidget(
-                infoKey: InfoKey.divisionDay,
-                hintText: '마지막으로 분갈이 한 날을 선택해주세요',
-                labelText: '분갈이',
-              ),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            GestureDetector(
-              onTap: () async {
-                await _showDatePicker(
-                  InfoKey.nutrientDay,
-                );
-              },
-              child: const DatePickerWidget(
-                infoKey: InfoKey.nutrientDay,
-                hintText: '마지막으로 영양제 준 날을 선택해주세요',
-                labelText: '영양제',
-              ),
+            const DatePickerWidget(
+              infoKey: InfoKey.nutrientDay,
+              hintText: '마지막으로 영양제 준 날을 선택해주세요',
+              labelText: '영양제',
             ),
 
             // ElevatedButton(

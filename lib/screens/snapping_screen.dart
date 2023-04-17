@@ -50,7 +50,7 @@ class SnappingScreen extends StatelessWidget {
                 ),
                 const Row(children: [
                   SnappingContainer(
-                      imageUrl: "assets/images/management/division.png",
+                      imageUrl: "assets/images/management/repotting.png",
                       title: "분갈이",
                       measure: "D-120",
                       explain: "분갈이 시기 확인하세요"),
@@ -68,7 +68,7 @@ class SnappingScreen extends StatelessWidget {
                 ),
                 const Row(children: [
                   SnappingContainer(
-                      imageUrl: "assets/images/management/division.png",
+                      imageUrl: "assets/images/management/repotting.png",
                       title: "분갈이",
                       measure: "D-120",
                       explain: "분갈이 시기 확인하세요"),

@@ -20,7 +20,7 @@ class InfoInputNotifier extends StateNotifier<InfoInputModel> {
       // key에 따라서 적절한 프로퍼티를 업데이트
       alias: key == InfoKey.alias ? value : state.alias,
       wateringDay: key == InfoKey.wateringDay ? value : state.wateringDay,
-      divisionDay: key == InfoKey.divisionDay ? value : state.divisionDay,
+      repottingDay: key == InfoKey.repottingDay ? value : state.repottingDay,
       nutrientDay: key == InfoKey.nutrientDay ? value : state.nutrientDay,
     );
   }

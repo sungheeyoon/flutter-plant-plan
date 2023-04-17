@@ -6,7 +6,7 @@ class AddScreenController extends GetxController {
   File img = File("assets/images/pot.png");
   RxString name = "".obs;
   RxString humid = "".obs;
-  RxString division = "".obs;
+  RxString repotting = "".obs;
   RxString nutrient = "".obs;
 
   void updateImage(File image) {
