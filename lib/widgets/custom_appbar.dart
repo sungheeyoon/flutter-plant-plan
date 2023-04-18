@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.home,
-      this.bgColor = primary2Color})
+      this.bgColor = primaryColor})
       : super(key: key);
 
   @override

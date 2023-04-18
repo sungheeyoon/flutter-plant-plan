@@ -30,7 +30,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(color: sub1Color),
+                            .copyWith(color: grayColor400),
                       ),
                       const SizedBox(
                         height: 32,
@@ -64,7 +64,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                 decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
-                                  color: gray4Color,
+                                  color: grayColor400,
                                 ),
                                 child: Center(
                                   child: Column(
@@ -89,7 +89,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall!
-                                              .copyWith(color: gray2Color))
+                                              .copyWith(color: grayColor200))
                                     ],
                                   ),
                                 ),
@@ -150,12 +150,12 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: point1Color,
+                            color: grayColor200,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
                             border: Border.all(
                               width: 1,
-                              color: point1Color,
+                              color: grayColor200,
                             ),
                           ),
                           child: Center(
@@ -187,7 +187,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     Container(
                         height: 78,
                         decoration: BoxDecoration(
-                            color: gray5Color,
+                            color: grayColor200,
                             borderRadius: BorderRadius.circular(10)),
                         padding: const EdgeInsets.all(16),
                         child: Row(
@@ -201,7 +201,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall!
-                                      .copyWith(color: gray1Color),
+                                      .copyWith(color: grayColor200),
                                 ),
                                 const SizedBox(
                                   height: 2,
@@ -245,12 +245,12 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 9, vertical: 8),
                           decoration: BoxDecoration(
-                            color: sub1Color,
+                            color: grayColor200,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(10)),
                             border: Border.all(
                               width: 1,
-                              color: sub1Color,
+                              color: grayColor200,
                             ),
                           ),
                           child: Center(
@@ -303,7 +303,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             const BorderRadius.all(Radius.circular(10)),
                         border: Border.all(
                           width: 1,
-                          color: sub1Color,
+                          color: grayColor200,
                         ),
                       ),
                       child: Column(
@@ -349,7 +349,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(10),
                         ),
-                        color: gray5Color,
+                        color: grayColor200,
                       ),
                       child: Column(
                         children: [

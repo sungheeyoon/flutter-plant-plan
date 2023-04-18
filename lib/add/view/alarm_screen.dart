@@ -1,13 +1,16 @@
+import 'package:bubble_box/bubble_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:plant_plan/add/provider/date_time_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
-class AlarmScreen extends StatefulWidget {
+class AlarmScreen extends ConsumerStatefulWidget {
   final String title;
   const AlarmScreen({
     super.key,
@@ -15,14 +18,16 @@ class AlarmScreen extends StatefulWidget {
   });
 
   @override
-  State<AlarmScreen> createState() => _AlarmScreenState();
+  ConsumerState<AlarmScreen> createState() => _AlarmScreenState();
 }
 
-class _AlarmScreenState extends State<AlarmScreen> {
+class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late final LocalNotificationService service;
   bool isSwitched = false;
+  bool showBubbleBox = false;
   String? name;
-  DateTime _dateTime = DateTime.now();
+  int focusedButtonIndex = -1;
+  String? nextAlarmText;
 
   @override
   void initState() {
@@ -32,12 +37,18 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final dateTime = ref.watch(dateTimeProvider);
     return DefaultLayout(
       title: '${widget.title} 알림',
       child: SingleChildScrollView(
         child: SafeArea(
-          child: Container(
+          child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,42 +76,61 @@ class _AlarmScreenState extends State<AlarmScreen> {
                           const SizedBox(
                             width: 4,
                           ),
-                          Tooltip(
-                            richMessage: TextSpan(
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(color: Colors.white),
-                              children: const [
-                                TextSpan(text: '이전 정보추가 페이지에서 날짜를'),
-                                WidgetSpan(
-                                  child: SizedBox(
-                                    height: 19.0,
-                                  ), // 간격 조정을 위한 SizedBox 추가
-                                ),
-                                TextSpan(text: '지정한 경우 자동으로 반영돼요'),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 8.h,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showBubbleBox = true;
+                              });
+
+                              Future.delayed(
+                                const Duration(seconds: 3),
+                                () {
+                                  setState(
+                                    () {
+                                      showBubbleBox = false;
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: const CircleAvatar(
+                              radius: 8.0,
                               backgroundColor: pointColor2,
                               child: CircleAvatar(
-                                radius: 7.h,
+                                radius: 7.0,
                                 backgroundColor: Colors.white,
-                                child: Center(
-                                  child: Text(
-                                    '?',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 11.h,
-                                      fontWeight: FontWeight.w600,
-                                      color: pointColor2,
-                                    ),
+                                child: Text(
+                                  '?',
+                                  style: TextStyle(
+                                    fontSize: 11.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: pointColor2,
                                   ),
                                 ),
                               ),
                             ),
                           ),
+                          if (showBubbleBox)
+                            BubbleBox(
+                              maxWidth: 204,
+                              shape: BubbleShapeBorder(
+                                direction: BubbleDirection.left,
+                                radius: const BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                                position: const BubblePosition.start(20),
+                                arrowQuadraticBezierLength: 2,
+                              ),
+                              backgroundColor: grayColor600,
+                              margin: const EdgeInsets.all(4),
+                              child: Text(
+                                '이전 정보추가 페이지에서 날짜를 지정한 경우 자동으로 반영돼요',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
                         ],
                       ),
                       SizedBox(
@@ -197,39 +227,49 @@ class _AlarmScreenState extends State<AlarmScreen> {
                       const SizedBox(
                         height: 12,
                       ),
-                      const Row(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          PeriodCard(
-                            number: 2,
+                          PeriodButton(
+                            flex: 2,
                             text: '매일',
+                            isFocused: focusedButtonIndex == 0,
+                            onTapCallback: () => _updateFocusedButton(0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          PeriodCard(
-                            number: 2,
+                          PeriodButton(
+                            flex: 2,
                             text: '매주',
+                            isFocused: focusedButtonIndex == 1,
+                            onTapCallback: () => _updateFocusedButton(1),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          PeriodCard(
-                            number: 2,
+                          PeriodButton(
+                            flex: 2,
                             text: '매월',
+                            isFocused: focusedButtonIndex == 2,
+                            onTapCallback: () => _updateFocusedButton(2),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          PeriodCard(
-                            number: 3,
+                          PeriodButton(
+                            flex: 3,
                             text: '직접 입력',
+                            isFocused: focusedButtonIndex == 3,
+                            onTapCallback: () => _updateFocusedButton(3),
                           ),
                         ],
                       )
                     ],
                   ),
+                  Text('$nextAlarmText'),
+                  Text('$dateTime'),
                   SizedBox(
                     height: 16.h,
                   ),
@@ -337,11 +377,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
                     onPressed: () async {
                       // await NotificationService().showNotification(
                       //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
-                      debugPrint('Notification Scheduled for $_dateTime');
+                      debugPrint('Notification Scheduled for $dateTime');
                       NotificationService().scheduleNotification(
                           title: 'Scheduled Notification',
-                          body: '$_dateTime',
-                          scheduledNotificationDateTime: _dateTime);
+                          body: '$dateTime',
+                          scheduledNotificationDateTime: dateTime);
                     },
                     child: const Text('Scheduled Notification'),
                   ),
@@ -356,6 +396,65 @@ class _AlarmScreenState extends State<AlarmScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _updateFocusedButton(int index, {int? days}) {
+    final dateTime = ref.watch(dateTimeProvider);
+    DateTime dateTime0 = dateTime;
+    setState(
+      () {
+        if (focusedButtonIndex == index) {
+          // If the same card is tapped again, unfocus it
+          focusedButtonIndex = -1;
+        } else {
+          focusedButtonIndex = index;
+
+          switch (index) {
+            case 0: // '매일' 버튼
+              dateTime0 = dateTime.add(
+                const Duration(days: 1),
+              );
+              break;
+            case 1: // '매주' 버튼
+              dateTime0 = dateTime.add(
+                const Duration(days: 7),
+              );
+              break;
+            case 2: // '매월' 버튼
+              int year = dateTime.year;
+              int month = dateTime.month + 1;
+              int day = dateTime.day;
+              int hour = dateTime.hour;
+              int minute = dateTime.minute;
+              if (month > 12) {
+                year += 1;
+                month = 1;
+              }
+              int lastDayOfMonth = DateTime(year, month + 1, 0).day;
+              day = day <= lastDayOfMonth ? day : lastDayOfMonth;
+              dateTime0 = DateTime(year, month, day, hour, minute);
+              break;
+            case 3: // '직접 입력' 버튼
+              if (days != null) {
+                dateTime0 = dateTime.add(
+                  Duration(days: days),
+                );
+              } else {
+                // days가 null인 경우에는 _dateTime을 업데이트하지 않고 기존 값을 유지함
+              }
+              break;
+          }
+        }
+
+        // 다음 날짜와 시간 포맷
+        // 다음 날짜와 시간 포맷
+        String nextDate = "${dateTime.month}월 ${dateTime.day}일";
+        String nextTime = "${dateTime.hour}시 ${dateTime.minute}분";
+
+        // 다음 알림 텍스트 업데이트
+        nextAlarmText = "다음 알림은 $nextDate $nextTime 입니다.";
+      },
     );
   }
 
@@ -383,7 +482,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
         onTimeChange: (time) {
           setState(
             () {
-              _dateTime = time;
+              ref.read(dateTimeProvider.notifier).setDateTime(time);
             },
           );
         },
@@ -392,39 +491,47 @@ class _AlarmScreenState extends State<AlarmScreen> {
   }
 }
 
-class PeriodCard extends StatelessWidget {
+class PeriodButton extends StatelessWidget {
   final String text;
-  final int number;
-  const PeriodCard({
+  final int flex;
+  final bool isFocused;
+  final VoidCallback onTapCallback;
+  const PeriodButton({
     super.key,
     required this.text,
-    required this.number,
+    required this.flex,
+    required this.isFocused,
+    required this.onTapCallback,
   });
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      flex: number,
+      flex: flex,
       fit: FlexFit.loose,
-      child: Container(
-        height: 36,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+      child: GestureDetector(
+        onTap: onTapCallback,
+        child: Container(
+          height: 36,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8),
+            ),
+            color: isFocused ? pointColor1 : Colors.white,
+            border: Border.all(
+              width: 1,
+              color: isFocused ? pointColor1 : grayColor400,
+            ),
           ),
-          border: Border.all(
-            width: 1,
-            color: grayColor400,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: grayColor500),
-            textAlign: TextAlign.center,
+          child: Center(
+            child: Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: isFocused ? Colors.white : grayColor500),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),
