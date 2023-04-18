@@ -27,12 +27,14 @@ class NotificationService {
 
     InitializationSettings initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await notificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {
-      var a = notificationResponse.id ?? 0;
-      await cancel(a);
-    });
+    await notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {
+        var a = notificationResponse.id ?? 0;
+        await cancel(a);
+      },
+    );
   }
 
   _requestIOSPermission() async {
@@ -55,9 +57,10 @@ class NotificationService {
 
   notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails());
+      android: AndroidNotificationDetails('channelId', 'channelName',
+          importance: Importance.max),
+      iOS: DarwinNotificationDetails(),
+    );
   }
 
   Future showNotification(
@@ -92,9 +95,15 @@ class NotificationService {
     int id = 0,
     String? title,
     String? body,
+    required RepeatInterval repeatInterval,
   }) async {
-    await notificationsPlugin.periodicallyShow(id, title, body,
-        RepeatInterval.everyMinute, await notificationDetails());
+    await notificationsPlugin.periodicallyShow(
+      id,
+      title,
+      body,
+      repeatInterval,
+      await notificationDetails(),
+    );
   }
 
   Future cancel(int id) async {

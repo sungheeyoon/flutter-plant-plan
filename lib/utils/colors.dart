@@ -24,22 +24,3 @@ const primaryColor = Color(0xff1D315B);
 
 const pointColor1 = Color(0xffFF853F);
 const pointColor2 = Color(0xff388CED);
-
-const subColor1 = Color(0xffAAE2F3);
-const subColor2 = Color(0xffFAC87C);
-const subColor3 = Color(0xffF9BABA);
-
-const gray1Color = Color(0xffF9BABA);
-const gray2Color = Color(0xffF9BABA);
-const gray3Color = Color(0xffF9BABA);
-const gray4Color = Color(0xffF9BABA);
-const gray5Color = Color(0xffF9BABA);
-
-const sub1Color = Color(0xffF9BABA);
-const sub2Color = Color(0xffF9BABA);
-const sub3Color = Color(0xffF9BABA);
-
-const primary2Color = Color(0xffF9BABA);
-const point1Color = Color(0xffF9BABA);
-const primary1Color = Color(0xffF9BABA);
-const point2Color = Color(0xffF9BABA);

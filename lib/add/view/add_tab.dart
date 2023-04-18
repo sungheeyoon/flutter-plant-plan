@@ -184,12 +184,12 @@ class SettingCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: point1Color,
+                color: pointColor1,
                 borderRadius: const BorderRadius.horizontal(
                     right: Radius.circular(10), left: Radius.circular(10)),
                 border: Border.all(
                   width: 1,
-                  color: point1Color,
+                  color: pointColor1,
                 ),
               ),
               child: Center(
@@ -223,7 +223,7 @@ class SettingCard extends StatelessWidget {
           child: Container(
               height: 78,
               decoration: BoxDecoration(
-                  color: gray5Color, borderRadius: BorderRadius.circular(10)),
+                  color: grayColor500, borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Text("$title 알람을 설정하세요",
                     style: Theme.of(context)

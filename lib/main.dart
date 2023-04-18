@@ -42,15 +42,6 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp(
-            // localizationsDelegates: const [
-            //   // ... app-specific localization delegate[s] here
-            //   GlobalMaterialLocalizations.delegate,
-            //   GlobalWidgetsLocalizations.delegate,
-            //   GlobalCupertinoLocalizations.delegate,
-            // ],
-            // supportedLocales: const [
-            //   Locale('ko', 'KR'),
-            // ],
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               fontFamily: 'Pretendard',
