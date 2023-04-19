@@ -1,5 +1,6 @@
 import 'package:bubble_box/bubble_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
@@ -28,11 +29,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   String? name;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
+  int? days = 0;
 
   @override
   void initState() {
-    service = LocalNotificationService();
-    service.initialize();
     super.initState();
   }
 
@@ -268,8 +268,102 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       )
                     ],
                   ),
-                  Text('$nextAlarmText'),
-                  Text('$dateTime'),
+                  if (focusedButtonIndex == 3)
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9]'),
+                            ), // Only allow digits
+                            FilteringTextInputFormatter.deny(
+                              RegExp(r'-'),
+                            ), // Deny negative sign
+                          ],
+                          onChanged: (text) {
+                            setState(
+                              () {
+                                int? intValue =
+                                    int.tryParse(text); // String을 int로 변환
+                                if (intValue != null) {
+                                  // intValue가 null이 아닌 경우에만 값을 업데이트
+                                  days = intValue;
+                                  ref
+                                      .read(dateTimeProvider.notifier)
+                                      .updateNextAlarmTime(
+                                          focusedButtonIndex: 3,
+                                          days: intValue);
+                                }
+                              },
+                            );
+                          },
+                          textAlignVertical: TextAlignVertical.center,
+                          textAlign: TextAlign.start,
+                          initialValue: days?.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: grayBlack),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding:
+                                EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  8.0,
+                                ),
+                              ),
+                              borderSide:
+                                  BorderSide(width: 1, color: grayColor400),
+                            ),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  8.0,
+                                ),
+                              ),
+                              borderSide:
+                                  BorderSide(color: grayColor400, width: 1.0),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  8.0,
+                                ),
+                              ),
+                              borderSide:
+                                  BorderSide(color: grayColor400, width: 1.0),
+                            ),
+                            hintText: '나만의 알림 제목을 설정해보세요',
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(color: grayColor400),
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (dateTime[DateTimeKey.calculatedTime] != null &&
+                      focusedButtonIndex != -1)
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          fomattor(dateTime[DateTimeKey.calculatedTime]!),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(color: pointColor1),
+                        )
+                      ],
+                    ),
                   SizedBox(
                     height: 16.h,
                   ),
@@ -381,7 +475,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       NotificationService().scheduleNotification(
                           title: 'Scheduled Notification',
                           body: '$dateTime',
-                          scheduledNotificationDateTime: dateTime);
+                          scheduledNotificationDateTime:
+                              dateTime[DateTimeKey.now]!);
                     },
                     child: const Text('Scheduled Notification'),
                   ),
@@ -399,61 +494,26 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     );
   }
 
-  void _updateFocusedButton(int index, {int? days}) {
-    final dateTime = ref.watch(dateTimeProvider);
-    DateTime dateTime0 = dateTime;
+  String fomattor(DateTime calculatedTime) {
+    String nextDate = "${calculatedTime.month}월 ${calculatedTime.day}일";
+    String nextTime = "${calculatedTime.hour}시 ${calculatedTime.minute}분";
+
+    // 다음 알림 텍스트 업데이트
+    return nextAlarmText = "다음 알림은 $nextDate $nextTime 입니다.";
+  }
+
+  void _updateFocusedButton(int index) {
     setState(
       () {
         if (focusedButtonIndex == index) {
-          // If the same card is tapped again, unfocus it
           focusedButtonIndex = -1;
+          ref.read(dateTimeProvider.notifier).setCalculatedTimeNull();
         } else {
           focusedButtonIndex = index;
-
-          switch (index) {
-            case 0: // '매일' 버튼
-              dateTime0 = dateTime.add(
-                const Duration(days: 1),
-              );
-              break;
-            case 1: // '매주' 버튼
-              dateTime0 = dateTime.add(
-                const Duration(days: 7),
-              );
-              break;
-            case 2: // '매월' 버튼
-              int year = dateTime.year;
-              int month = dateTime.month + 1;
-              int day = dateTime.day;
-              int hour = dateTime.hour;
-              int minute = dateTime.minute;
-              if (month > 12) {
-                year += 1;
-                month = 1;
-              }
-              int lastDayOfMonth = DateTime(year, month + 1, 0).day;
-              day = day <= lastDayOfMonth ? day : lastDayOfMonth;
-              dateTime0 = DateTime(year, month, day, hour, minute);
-              break;
-            case 3: // '직접 입력' 버튼
-              if (days != null) {
-                dateTime0 = dateTime.add(
-                  Duration(days: days),
-                );
-              } else {
-                // days가 null인 경우에는 _dateTime을 업데이트하지 않고 기존 값을 유지함
-              }
-              break;
-          }
+          ref
+              .read(dateTimeProvider.notifier)
+              .updateNextAlarmTime(focusedButtonIndex: focusedButtonIndex);
         }
-
-        // 다음 날짜와 시간 포맷
-        // 다음 날짜와 시간 포맷
-        String nextDate = "${dateTime.month}월 ${dateTime.day}일";
-        String nextTime = "${dateTime.hour}시 ${dateTime.minute}분";
-
-        // 다음 알림 텍스트 업데이트
-        nextAlarmText = "다음 알림은 $nextDate $nextTime 입니다.";
       },
     );
   }
@@ -479,12 +539,15 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
             fontWeight: FontWeight.w700, fontSize: 32.h, color: pointColor2),
         alignment: Alignment.center,
         spacing: 44.w,
-        onTimeChange: (time) {
-          setState(
-            () {
-              ref.read(dateTimeProvider.notifier).setDateTime(time);
-            },
-          );
+        onTimeChange: (time) async {
+          ref
+              .read(dateTimeProvider.notifier)
+              .setDateTime(DateTimeKey.now, time);
+          setState(() {
+            ref
+                .read(dateTimeProvider.notifier)
+                .updateNextAlarmTime(focusedButtonIndex: focusedButtonIndex);
+          });
         },
       ),
     );
