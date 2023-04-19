@@ -99,7 +99,7 @@ class AddSecondScreen extends ConsumerWidget {
                       borderColor: pointColor2.withOpacity(
                         0.5,
                       ),
-                      width: 50.h,
+                      width: 52.h,
                       height: 26.h,
                       textColor: pointColor2,
                       name: '변경',
