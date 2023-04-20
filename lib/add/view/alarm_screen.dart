@@ -196,7 +196,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                               borderSide:
                                   BorderSide(color: grayColor400, width: 1.0),
                             ),
-                            hintText: '나만의 알림 제목을 설정해보세요',
+                            hintText: '날짜를 설정해주세요',
                             hintStyle: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
@@ -339,11 +339,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                               borderSide:
                                   BorderSide(color: grayColor400, width: 1.0),
                             ),
-                            hintText: '나만의 알림 제목을 설정해보세요',
-                            hintStyle: Theme.of(context)
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            suffixText: '일 마다',
+                            suffixStyle: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
-                                .copyWith(color: grayColor400),
+                                .copyWith(color: grayColor600),
                           ),
                         ),
                       ],
