@@ -21,10 +21,10 @@ PlantInformationModel _$PlantInformationModelFromJson(
 
 /// @nodoc
 mixin _$PlantInformationModel {
-  String? get alias => throw _privateConstructorUsedError;
-  PlantInformationKey? get watering => throw _privateConstructorUsedError;
-  PlantInformationKey? get repotting => throw _privateConstructorUsedError;
-  PlantInformationKey? get nutrient => throw _privateConstructorUsedError;
+  String get alias => throw _privateConstructorUsedError;
+  PlantInformationKey get watering => throw _privateConstructorUsedError;
+  PlantInformationKey get repotting => throw _privateConstructorUsedError;
+  PlantInformationKey get nutrient => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,14 +39,14 @@ abstract class $PlantInformationModelCopyWith<$Res> {
       _$PlantInformationModelCopyWithImpl<$Res, PlantInformationModel>;
   @useResult
   $Res call(
-      {String? alias,
-      PlantInformationKey? watering,
-      PlantInformationKey? repotting,
-      PlantInformationKey? nutrient});
+      {String alias,
+      PlantInformationKey watering,
+      PlantInformationKey repotting,
+      PlantInformationKey nutrient});
 
-  $PlantInformationKeyCopyWith<$Res>? get watering;
-  $PlantInformationKeyCopyWith<$Res>? get repotting;
-  $PlantInformationKeyCopyWith<$Res>? get nutrient;
+  $PlantInformationKeyCopyWith<$Res> get watering;
+  $PlantInformationKeyCopyWith<$Res> get repotting;
+  $PlantInformationKeyCopyWith<$Res> get nutrient;
 }
 
 /// @nodoc
@@ -63,63 +63,51 @@ class _$PlantInformationModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? alias = freezed,
-    Object? watering = freezed,
-    Object? repotting = freezed,
-    Object? nutrient = freezed,
+    Object? alias = null,
+    Object? watering = null,
+    Object? repotting = null,
+    Object? nutrient = null,
   }) {
     return _then(_value.copyWith(
-      alias: freezed == alias
+      alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
-              as String?,
-      watering: freezed == watering
+              as String,
+      watering: null == watering
           ? _value.watering
           : watering // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
-      repotting: freezed == repotting
+              as PlantInformationKey,
+      repotting: null == repotting
           ? _value.repotting
           : repotting // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
-      nutrient: freezed == nutrient
+              as PlantInformationKey,
+      nutrient: null == nutrient
           ? _value.nutrient
           : nutrient // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
+              as PlantInformationKey,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res>? get watering {
-    if (_value.watering == null) {
-      return null;
-    }
-
-    return $PlantInformationKeyCopyWith<$Res>(_value.watering!, (value) {
+  $PlantInformationKeyCopyWith<$Res> get watering {
+    return $PlantInformationKeyCopyWith<$Res>(_value.watering, (value) {
       return _then(_value.copyWith(watering: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res>? get repotting {
-    if (_value.repotting == null) {
-      return null;
-    }
-
-    return $PlantInformationKeyCopyWith<$Res>(_value.repotting!, (value) {
+  $PlantInformationKeyCopyWith<$Res> get repotting {
+    return $PlantInformationKeyCopyWith<$Res>(_value.repotting, (value) {
       return _then(_value.copyWith(repotting: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res>? get nutrient {
-    if (_value.nutrient == null) {
-      return null;
-    }
-
-    return $PlantInformationKeyCopyWith<$Res>(_value.nutrient!, (value) {
+  $PlantInformationKeyCopyWith<$Res> get nutrient {
+    return $PlantInformationKeyCopyWith<$Res>(_value.nutrient, (value) {
       return _then(_value.copyWith(nutrient: value) as $Val);
     });
   }
@@ -134,17 +122,17 @@ abstract class _$$_PlantInformationModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? alias,
-      PlantInformationKey? watering,
-      PlantInformationKey? repotting,
-      PlantInformationKey? nutrient});
+      {String alias,
+      PlantInformationKey watering,
+      PlantInformationKey repotting,
+      PlantInformationKey nutrient});
 
   @override
-  $PlantInformationKeyCopyWith<$Res>? get watering;
+  $PlantInformationKeyCopyWith<$Res> get watering;
   @override
-  $PlantInformationKeyCopyWith<$Res>? get repotting;
+  $PlantInformationKeyCopyWith<$Res> get repotting;
   @override
-  $PlantInformationKeyCopyWith<$Res>? get nutrient;
+  $PlantInformationKeyCopyWith<$Res> get nutrient;
 }
 
 /// @nodoc
@@ -158,28 +146,28 @@ class __$$_PlantInformationModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? alias = freezed,
-    Object? watering = freezed,
-    Object? repotting = freezed,
-    Object? nutrient = freezed,
+    Object? alias = null,
+    Object? watering = null,
+    Object? repotting = null,
+    Object? nutrient = null,
   }) {
     return _then(_$_PlantInformationModel(
-      alias: freezed == alias
+      alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
-              as String?,
-      watering: freezed == watering
+              as String,
+      watering: null == watering
           ? _value.watering
           : watering // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
-      repotting: freezed == repotting
+              as PlantInformationKey,
+      repotting: null == repotting
           ? _value.repotting
           : repotting // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
-      nutrient: freezed == nutrient
+              as PlantInformationKey,
+      nutrient: null == nutrient
           ? _value.nutrient
           : nutrient // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey?,
+              as PlantInformationKey,
     ));
   }
 }
@@ -188,19 +176,23 @@ class __$$_PlantInformationModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_PlantInformationModel implements _PlantInformationModel {
   _$_PlantInformationModel(
-      {this.alias, this.watering, this.repotting, this.nutrient});
+      {this.alias = "",
+      required this.watering,
+      required this.repotting,
+      required this.nutrient});
 
   factory _$_PlantInformationModel.fromJson(Map<String, dynamic> json) =>
       _$$_PlantInformationModelFromJson(json);
 
   @override
-  final String? alias;
+  @JsonKey()
+  final String alias;
   @override
-  final PlantInformationKey? watering;
+  final PlantInformationKey watering;
   @override
-  final PlantInformationKey? repotting;
+  final PlantInformationKey repotting;
   @override
-  final PlantInformationKey? nutrient;
+  final PlantInformationKey nutrient;
 
   @override
   String toString() {
@@ -243,22 +235,22 @@ class _$_PlantInformationModel implements _PlantInformationModel {
 
 abstract class _PlantInformationModel implements PlantInformationModel {
   factory _PlantInformationModel(
-      {final String? alias,
-      final PlantInformationKey? watering,
-      final PlantInformationKey? repotting,
-      final PlantInformationKey? nutrient}) = _$_PlantInformationModel;
+      {final String alias,
+      required final PlantInformationKey watering,
+      required final PlantInformationKey repotting,
+      required final PlantInformationKey nutrient}) = _$_PlantInformationModel;
 
   factory _PlantInformationModel.fromJson(Map<String, dynamic> json) =
       _$_PlantInformationModel.fromJson;
 
   @override
-  String? get alias;
+  String get alias;
   @override
-  PlantInformationKey? get watering;
+  PlantInformationKey get watering;
   @override
-  PlantInformationKey? get repotting;
+  PlantInformationKey get repotting;
   @override
-  PlantInformationKey? get nutrient;
+  PlantInformationKey get nutrient;
   @override
   @JsonKey(ignore: true)
   _$$_PlantInformationModelCopyWith<_$_PlantInformationModel> get copyWith =>
@@ -271,8 +263,8 @@ PlantInformationKey _$PlantInformationKeyFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PlantInformationKey {
-  DateTime? get day => throw _privateConstructorUsedError;
-  Alarm? get alarm => throw _privateConstructorUsedError;
+  String get day => throw _privateConstructorUsedError;
+  Alarm get alarm => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -286,9 +278,9 @@ abstract class $PlantInformationKeyCopyWith<$Res> {
           PlantInformationKey value, $Res Function(PlantInformationKey) then) =
       _$PlantInformationKeyCopyWithImpl<$Res, PlantInformationKey>;
   @useResult
-  $Res call({DateTime? day, Alarm? alarm});
+  $Res call({String day, Alarm alarm});
 
-  $AlarmCopyWith<$Res>? get alarm;
+  $AlarmCopyWith<$Res> get alarm;
 }
 
 /// @nodoc
@@ -304,29 +296,25 @@ class _$PlantInformationKeyCopyWithImpl<$Res, $Val extends PlantInformationKey>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? day = freezed,
-    Object? alarm = freezed,
+    Object? day = null,
+    Object? alarm = null,
   }) {
     return _then(_value.copyWith(
-      day: freezed == day
+      day: null == day
           ? _value.day
           : day // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      alarm: freezed == alarm
+              as String,
+      alarm: null == alarm
           ? _value.alarm
           : alarm // ignore: cast_nullable_to_non_nullable
-              as Alarm?,
+              as Alarm,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $AlarmCopyWith<$Res>? get alarm {
-    if (_value.alarm == null) {
-      return null;
-    }
-
-    return $AlarmCopyWith<$Res>(_value.alarm!, (value) {
+  $AlarmCopyWith<$Res> get alarm {
+    return $AlarmCopyWith<$Res>(_value.alarm, (value) {
       return _then(_value.copyWith(alarm: value) as $Val);
     });
   }
@@ -340,10 +328,10 @@ abstract class _$$_PlantInformationKeyCopyWith<$Res>
       __$$_PlantInformationKeyCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime? day, Alarm? alarm});
+  $Res call({String day, Alarm alarm});
 
   @override
-  $AlarmCopyWith<$Res>? get alarm;
+  $AlarmCopyWith<$Res> get alarm;
 }
 
 /// @nodoc
@@ -357,18 +345,18 @@ class __$$_PlantInformationKeyCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? day = freezed,
-    Object? alarm = freezed,
+    Object? day = null,
+    Object? alarm = null,
   }) {
     return _then(_$_PlantInformationKey(
-      day: freezed == day
+      day: null == day
           ? _value.day
           : day // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      alarm: freezed == alarm
+              as String,
+      alarm: null == alarm
           ? _value.alarm
           : alarm // ignore: cast_nullable_to_non_nullable
-              as Alarm?,
+              as Alarm,
     ));
   }
 }
@@ -376,15 +364,16 @@ class __$$_PlantInformationKeyCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PlantInformationKey implements _PlantInformationKey {
-  _$_PlantInformationKey({this.day, this.alarm});
+  _$_PlantInformationKey({this.day = "", required this.alarm});
 
   factory _$_PlantInformationKey.fromJson(Map<String, dynamic> json) =>
       _$$_PlantInformationKeyFromJson(json);
 
   @override
-  final DateTime? day;
+  @JsonKey()
+  final String day;
   @override
-  final Alarm? alarm;
+  final Alarm alarm;
 
   @override
   String toString() {
@@ -420,16 +409,16 @@ class _$_PlantInformationKey implements _PlantInformationKey {
 }
 
 abstract class _PlantInformationKey implements PlantInformationKey {
-  factory _PlantInformationKey({final DateTime? day, final Alarm? alarm}) =
+  factory _PlantInformationKey({final String day, required final Alarm alarm}) =
       _$_PlantInformationKey;
 
   factory _PlantInformationKey.fromJson(Map<String, dynamic> json) =
       _$_PlantInformationKey.fromJson;
 
   @override
-  DateTime? get day;
+  String get day;
   @override
-  Alarm? get alarm;
+  Alarm get alarm;
   @override
   @JsonKey(ignore: true)
   _$$_PlantInformationKeyCopyWith<_$_PlantInformationKey> get copyWith =>
@@ -442,9 +431,9 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
-  DateTime? get startDate => throw _privateConstructorUsedError;
-  int? get repeat => throw _privateConstructorUsedError;
-  String? get title => throw _privateConstructorUsedError;
+  String get startDate => throw _privateConstructorUsedError;
+  int get repeat => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -456,7 +445,7 @@ abstract class $AlarmCopyWith<$Res> {
   factory $AlarmCopyWith(Alarm value, $Res Function(Alarm) then) =
       _$AlarmCopyWithImpl<$Res, Alarm>;
   @useResult
-  $Res call({DateTime? startDate, int? repeat, String? title});
+  $Res call({String startDate, int repeat, String title});
 }
 
 /// @nodoc
@@ -472,23 +461,23 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startDate = freezed,
-    Object? repeat = freezed,
-    Object? title = freezed,
+    Object? startDate = null,
+    Object? repeat = null,
+    Object? title = null,
   }) {
     return _then(_value.copyWith(
-      startDate: freezed == startDate
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      repeat: freezed == repeat
+              as String,
+      repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
-              as int?,
-      title: freezed == title
+              as int,
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ) as $Val);
   }
 }
@@ -499,7 +488,7 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
       __$$_AlarmCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime? startDate, int? repeat, String? title});
+  $Res call({String startDate, int repeat, String title});
 }
 
 /// @nodoc
@@ -511,23 +500,23 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startDate = freezed,
-    Object? repeat = freezed,
-    Object? title = freezed,
+    Object? startDate = null,
+    Object? repeat = null,
+    Object? title = null,
   }) {
     return _then(_$_Alarm(
-      startDate: freezed == startDate
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      repeat: freezed == repeat
+              as String,
+      repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
-              as int?,
-      title: freezed == title
+              as int,
+      title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ));
   }
 }
@@ -535,17 +524,20 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 /// @nodoc
 @JsonSerializable()
 class _$_Alarm implements _Alarm {
-  _$_Alarm({this.startDate, this.repeat, this.title});
+  _$_Alarm({this.startDate = "", this.repeat = 0, this.title = ""});
 
   factory _$_Alarm.fromJson(Map<String, dynamic> json) =>
       _$$_AlarmFromJson(json);
 
   @override
-  final DateTime? startDate;
+  @JsonKey()
+  final String startDate;
   @override
-  final int? repeat;
+  @JsonKey()
+  final int repeat;
   @override
-  final String? title;
+  @JsonKey()
+  final String title;
 
   @override
   String toString() {
@@ -583,18 +575,18 @@ class _$_Alarm implements _Alarm {
 
 abstract class _Alarm implements Alarm {
   factory _Alarm(
-      {final DateTime? startDate,
-      final int? repeat,
-      final String? title}) = _$_Alarm;
+      {final String startDate,
+      final int repeat,
+      final String title}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
   @override
-  DateTime? get startDate;
+  String get startDate;
   @override
-  int? get repeat;
+  int get repeat;
   @override
-  String? get title;
+  String get title;
   @override
   @JsonKey(ignore: true)
   _$$_AlarmCopyWith<_$_Alarm> get copyWith =>
