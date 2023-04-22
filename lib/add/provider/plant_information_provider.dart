@@ -3,7 +3,6 @@ import 'package:plant_plan/add/model/plant_information_model.dart';
 
 enum PlantField {
   watering,
-  alias,
   repotting,
   nutrient,
 }
@@ -29,6 +28,45 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
             ),
           ),
         );
+  void updatePlantField(
+    PlantField field, {
+    String? newDay,
+    int? newRepeat,
+    String? newTitle,
+    String? newStartDate,
+  }) {
+    PlantInformationKey updateKey(PlantInformationKey key) {
+      return key.copyWith(
+        day: newDay ?? key.day,
+        alarm: key.alarm.copyWith(
+          repeat: newRepeat ?? key.alarm.repeat,
+          title: newTitle ?? key.alarm.title,
+          startDate: newStartDate ?? key.alarm.startDate,
+        ),
+      );
+    }
+
+    switch (field) {
+      case PlantField.watering:
+        state = state.copyWith(
+          watering: updateKey(state.watering),
+        );
+        break;
+      case PlantField.repotting:
+        state = state.copyWith(
+          repotting: updateKey(state.repotting),
+        );
+        break;
+      case PlantField.nutrient:
+        state = state.copyWith(
+          nutrient: updateKey(state.nutrient),
+        );
+        break;
+      default:
+        // 예외 처리 혹은 기본 동작
+        break;
+    }
+  }
 
   void reset() {
     state = PlantInformationModel(
