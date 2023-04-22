@@ -286,6 +286,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                       ref
                           .read(infoInputProvider.notifier)
                           .setInfoInput(key: InfoKey.alias, value: text);
+                      ref.read(infoInputProvider.notifier).state = ref
+                          .read(infoInputProvider.notifier)
+                          .state
+                          .copyWith(alias: "New Alias");
                     },
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
