@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:plant_plan/add/model/info_input_model.dart';
-import 'package:plant_plan/add/provider/info_input_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
@@ -284,12 +283,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                   child: TextField(
                     onChanged: (text) {
                       ref
-                          .read(infoInputProvider.notifier)
-                          .setInfoInput(key: InfoKey.alias, value: text);
-                      ref.read(infoInputProvider.notifier).state = ref
-                          .read(infoInputProvider.notifier)
-                          .state
-                          .copyWith(alias: "New Alias");
+                          .read(plantInformationProvider.notifier)
+                          .updateAlias(text);
                     },
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
@@ -349,7 +344,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
             ),
             //물주기 ontap version
             const DatePickerWidget(
-              infoKey: InfoKey.wateringDay,
+              field: PlantField.watering,
               hintText: '마지막으로 물 준 날을 선택해주세요',
               labelText: '물주기',
             ),
@@ -358,7 +353,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               height: 20.h,
             ),
             const DatePickerWidget(
-              infoKey: InfoKey.repottingDay,
+              field: PlantField.repotting,
               hintText: '마지막으로 분갈이 한 날을 선택해주세요',
               labelText: '분갈이',
             ),
@@ -366,7 +361,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               height: 20.h,
             ),
             const DatePickerWidget(
-              infoKey: InfoKey.nutrientDay,
+              field: PlantField.nutrient,
               hintText: '마지막으로 영양제 준 날을 선택해주세요',
               labelText: '영양제',
             ),

@@ -17,6 +17,7 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
   PlantInformationNotifier()
       : super(
           PlantInformationModel(
+            alias: "",
             watering: PlantInformationKey(
               alarm: Alarm(),
             ),
@@ -68,8 +69,13 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     }
   }
 
+  void updateAlias(String newAlias) {
+    state = state.copyWith(alias: newAlias);
+  }
+
   void reset() {
     state = PlantInformationModel(
+      alias: "",
       watering: PlantInformationKey(
         alarm: Alarm(),
       ),

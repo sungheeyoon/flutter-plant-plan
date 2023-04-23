@@ -3,45 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:plant_plan/add/model/info_input_model.dart';
-import 'package:plant_plan/add/provider/info_input_provider.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class DatePickerWidget extends ConsumerWidget {
-  final InfoKey infoKey;
+  final PlantField field;
   final String hintText;
   final String? labelText;
 
   const DatePickerWidget({
     super.key,
-    required this.infoKey,
+    required this.field,
     required this.hintText,
     this.labelText,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedInfo = ref.watch(infoInputProvider);
-    String info = "";
-    switch (infoKey) {
-      case InfoKey.alias:
+    final selectedInfo = ref.watch(plantInformationProvider);
+    final String info;
+    switch (field) {
+      case PlantField.watering:
+        info = selectedInfo.repotting.day;
         break;
-      case InfoKey.wateringDay:
-        info = selectedInfo.wateringDay;
+      case PlantField.repotting:
+        info = selectedInfo.repotting.day;
         break;
-      case InfoKey.repottingDay:
-        info = selectedInfo.repottingDay;
-        break;
-      case InfoKey.nutrientDay:
-        info = selectedInfo.nutrientDay;
+      case PlantField.nutrient:
+        info = selectedInfo.nutrient.day;
         break;
       default:
         info = "Error";
     }
     return GestureDetector(
       onTap: () async {
-        await _showDatePicker(infoKey, ref);
+        await _showDatePicker(field, ref);
       },
       child: Stack(
         children: <Widget>[
@@ -131,7 +128,7 @@ class DatePickerWidget extends ConsumerWidget {
     );
   }
 
-  Future<void> _showDatePicker(InfoKey infoKey, WidgetRef ref) async {
+  Future<void> _showDatePicker(PlantField field, WidgetRef ref) async {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     List<DateTime?> singleDatePickerValueWithDefaultValue = [
       DateTime.now(),
@@ -146,8 +143,8 @@ class DatePickerWidget extends ConsumerWidget {
     if (values != null) {
       String value = formatter.format(values[0]!);
       ref
-          .read(infoInputProvider.notifier)
-          .setInfoInput(key: infoKey, value: value);
+          .read(plantInformationProvider.notifier)
+          .updatePlantField(field, newDay: value);
     }
   }
 }

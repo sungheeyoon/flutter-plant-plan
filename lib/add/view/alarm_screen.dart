@@ -544,11 +544,13 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           ref
               .read(dateTimeProvider.notifier)
               .setDateTime(DateTimeKey.now, time);
-          setState(() {
-            ref
-                .read(dateTimeProvider.notifier)
-                .updateNextAlarmTime(focusedButtonIndex: focusedButtonIndex);
-          });
+          setState(
+            () {
+              ref
+                  .read(dateTimeProvider.notifier)
+                  .updateNextAlarmTime(focusedButtonIndex: focusedButtonIndex);
+            },
+          );
         },
       ),
     );
