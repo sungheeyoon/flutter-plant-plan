@@ -8,7 +8,6 @@ import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
-import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AddTab extends ConsumerStatefulWidget {
@@ -79,7 +78,11 @@ class _AddTabState extends ConsumerState<AddTab>
         name: '다음',
         onPressed: () async {
           if (selectedPlant != null) {
-            return await toNextDialog(context);
+            if (_pageController.page == 0) {
+              _pageController.jumpToPage(1);
+            } else if (_pageController.page == 1) {
+              _pageController.jumpToPage(2);
+            }
           }
         },
       ),
@@ -95,144 +98,75 @@ class _AddTabState extends ConsumerState<AddTab>
     );
   }
 
-  Future<dynamic> toNextDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(
-              height: 32,
-            ),
-            Text('관리 날짜를 지정하지 않은 경우',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayBlack)),
-            Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayBlack)),
-            const SizedBox(
-              height: 32,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: grayColor200,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16)),
-                  child: Text(
-                    '돌아가기',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: primaryColor),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _pageController.jumpToPage(1);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    '다음',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: primaryColor),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SettingCard extends StatelessWidget {
-  final String title;
-  const SettingCard({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: pointColor1,
-                borderRadius: const BorderRadius.horizontal(
-                    right: Radius.circular(10), left: Radius.circular(10)),
-                border: Border.all(
-                  width: 1,
-                  color: pointColor1,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelLarge!
-                      .copyWith(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AlarmScreen(
-                          title: title,
-                        )));
-          },
-          child: Container(
-              height: 78,
-              decoration: BoxDecoration(
-                  color: grayColor500, borderRadius: BorderRadius.circular(10)),
-              child: Center(
-                child: Text("$title 알람을 설정하세요",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: primaryColor)),
-              )),
-        ),
-      ],
-    );
-  }
+  // Future<dynamic> toNextDialog(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (ctx) => Dialog(
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10.0),
+  //       ),
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           const SizedBox(
+  //             height: 32,
+  //           ),
+  //           Text('관리 날짜를 지정하지 않은 경우',
+  //               style: Theme.of(context)
+  //                   .textTheme
+  //                   .bodyMedium!
+  //                   .copyWith(color: grayBlack)),
+  //           Text('현재 식물을 추가한 날짜를 기준으로 적용됩니다',
+  //               style: Theme.of(context)
+  //                   .textTheme
+  //                   .bodyMedium!
+  //                   .copyWith(color: grayBlack)),
+  //           const SizedBox(
+  //             height: 32,
+  //           ),
+  //           Container(
+  //             decoration: BoxDecoration(
+  //               border: Border.all(
+  //                 width: 1,
+  //                 color: grayColor200,
+  //               ),
+  //             ),
+  //           ),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //             children: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 style: TextButton.styleFrom(
+  //                     padding: const EdgeInsets.symmetric(vertical: 16)),
+  //                 child: Text(
+  //                   '돌아가기',
+  //                   style: Theme.of(context)
+  //                       .textTheme
+  //                       .bodyLarge!
+  //                       .copyWith(color: primaryColor),
+  //                 ),
+  //               ),
+  //               TextButton(
+  //                 onPressed: () {
+  //                   _pageController.jumpToPage(1);
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text(
+  //                   '다음',
+  //                   style: Theme.of(context)
+  //                       .textTheme
+  //                       .bodyLarge!
+  //                       .copyWith(color: primaryColor),
+  //                 ),
+  //               )
+  //             ],
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

@@ -174,11 +174,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 ref
                                     .read(selectedPlantProvider.notifier)
                                     .setPlant(document);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const AddTab(),
-                                  ),
-                                );
+                                Navigator.of(context).pop();
                               },
                             ).paddingOnly(bottom: 6.h);
                           }

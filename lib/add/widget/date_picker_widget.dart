@@ -11,11 +11,13 @@ class DatePickerWidget extends ConsumerWidget {
   final PlantField field;
   final String hintText;
   final String? labelText;
+  final bool alarm;
 
   const DatePickerWidget({
     super.key,
     required this.field,
     required this.hintText,
+    this.alarm = false,
     this.labelText,
   });
 
@@ -25,17 +27,24 @@ class DatePickerWidget extends ConsumerWidget {
     final String info;
     switch (field) {
       case PlantField.watering:
-        info = selectedInfo.repotting.day;
+        info = alarm
+            ? selectedInfo.watering.alarm.startDay
+            : selectedInfo.watering.day;
         break;
       case PlantField.repotting:
-        info = selectedInfo.repotting.day;
+        info = alarm
+            ? selectedInfo.repotting.alarm.startDay
+            : selectedInfo.repotting.day;
         break;
       case PlantField.nutrient:
-        info = selectedInfo.nutrient.day;
+        info = alarm
+            ? selectedInfo.nutrient.alarm.startDay
+            : selectedInfo.nutrient.day;
         break;
       default:
         info = "Error";
     }
+
     return GestureDetector(
       onTap: () async {
         await _showDatePicker(field, ref);
@@ -142,9 +151,13 @@ class DatePickerWidget extends ConsumerWidget {
     );
     if (values != null) {
       String value = formatter.format(values[0]!);
-      ref
-          .read(plantInformationProvider.notifier)
-          .updatePlantField(field, newDay: value);
+      alarm
+          ? ref
+              .read(plantInformationProvider.notifier)
+              .updatePlantField(field, startDay: value)
+          : ref
+              .read(plantInformationProvider.notifier)
+              .updatePlantField(field, newDay: value);
     }
   }
 }

@@ -3,13 +3,21 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'plant_information_model.freezed.dart';
 part 'plant_information_model.g.dart';
 
+abstract class PlantInformationModelBase {
+  PlantInformationKey watering;
+  PlantInformationKey repotting;
+  PlantInformationKey nutrient;
+}
+
 @freezed
-class PlantInformationModel with _$PlantInformationModel {
+class PlantInformationModel
+    with _$PlantInformationModel
+    implements PlantInformationModelBase {
   factory PlantInformationModel({
     @Default("") String alias,
-    required PlantInformationKey watering,
-    required PlantInformationKey repotting,
-    required PlantInformationKey nutrient,
+    @Default PlantInformationKey watering,
+    @Default PlantInformationKey repotting,
+    @Default PlantInformationKey nutrient,
   }) = _PlantInformationModel;
 
   factory PlantInformationModel.fromJson(Map<String, dynamic> json) =>
@@ -30,7 +38,8 @@ class PlantInformationKey with _$PlantInformationKey {
 @freezed
 class Alarm with _$Alarm {
   factory Alarm({
-    @Default("") String startDate,
+    @Default("") String startDay,
+    @Default(null) DateTime? startDate,
     @Default(0) int repeat,
     @Default("") String title,
   }) = _Alarm;

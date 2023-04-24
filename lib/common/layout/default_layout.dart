@@ -10,6 +10,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final TextButton? textbutton;
 
   const DefaultLayout({
     required this.child,
@@ -19,6 +20,7 @@ class DefaultLayout extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
+    this.textbutton,
     super.key,
   });
 
@@ -51,6 +53,7 @@ class DefaultLayout extends StatelessWidget {
               .copyWith(color: primaryColor),
         ),
         foregroundColor: primaryColor,
+        actions: [if (textbutton != null) textbutton!],
       );
     }
   }
