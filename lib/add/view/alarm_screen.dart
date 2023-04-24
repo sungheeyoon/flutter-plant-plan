@@ -1,21 +1,23 @@
-import 'package:bubble_box/bubble_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:plant_plan/add/provider/date_time_provider.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/widget/date_picker_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 
 class AlarmScreen extends ConsumerStatefulWidget {
   final String title;
+  final PlantField field;
   const AlarmScreen({
     super.key,
     required this.title,
+    required this.field,
   });
 
   @override
@@ -25,7 +27,7 @@ class AlarmScreen extends ConsumerStatefulWidget {
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late final LocalNotificationService service;
   bool isSwitched = false;
-  bool showBubbleBox = false;
+
   String? name;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
@@ -44,7 +46,32 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     final dateTime = ref.watch(dateTimeProvider);
+    final plantInfo = ref.watch(plantInformationProvider);
     return DefaultLayout(
+      textbutton: TextButton(
+        onPressed: () {
+          if (plantInfo.repotting.alarm.startDay != "") {
+            //버튼활성화
+          } else if (plantInfo.watering.alarm.startDay != "") {
+            //버튼활성화
+          } else if (plantInfo.nutrient.alarm.startDay != "") {
+            //버튼활성화
+          } else {
+            //버튼비활성화
+          }
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.only(right: 5.w),
+          disabledForegroundColor:
+              const Color(0xFF999999).withOpacity(0.38), // 패딩 설정
+        ),
+        child: Text(
+          '완료',
+          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                color: pointColor2,
+              ),
+        ),
+      ),
       title: '${widget.title} 알림',
       child: SingleChildScrollView(
         child: SafeArea(
@@ -60,151 +87,73 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                   SizedBox(
                     height: 28.h,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.field == PlantField.watering
+                            ? '마지막으로 물 준 날'
+                            : widget.field == PlantField.repotting
+                                ? '마지막으로 분갈이 한 날'
+                                : widget.field == PlantField.nutrient
+                                    ? '마지막으로 영양제 준 날'
+                                    : '-',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: primaryColor),
+                      ),
+                      Text(
+                        widget.field == PlantField.watering
+                            ? (plantInfo.watering.day) != ''
+                                ? plantInfo.watering.day
+                                : '-'
+                            : widget.field == PlantField.repotting
+                                ? (plantInfo.repotting.day) != ''
+                                    ? plantInfo.repotting.day
+                                    : '-'
+                                : widget.field == PlantField.nutrient
+                                    ? (plantInfo.nutrient.day) != ''
+                                        ? plantInfo.nutrient.day
+                                        : '-'
+                                    : '-',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: grayBlack),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  const Divider(),
+                  SizedBox(
+                    height: 16.h,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '시작 날짜',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: primaryColor),
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                showBubbleBox = true;
-                              });
-
-                              Future.delayed(
-                                const Duration(seconds: 3),
-                                () {
-                                  setState(
-                                    () {
-                                      showBubbleBox = false;
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            child: const CircleAvatar(
-                              radius: 8.0,
-                              backgroundColor: pointColor2,
-                              child: CircleAvatar(
-                                radius: 7.0,
-                                backgroundColor: Colors.white,
-                                child: Text(
-                                  '?',
-                                  style: TextStyle(
-                                    fontSize: 11.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: pointColor2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          if (showBubbleBox)
-                            BubbleBox(
-                              maxWidth: 204,
-                              shape: BubbleShapeBorder(
-                                direction: BubbleDirection.left,
-                                radius: const BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
-                                position: const BubblePosition.start(20),
-                                arrowQuadraticBezierLength: 2,
-                              ),
-                              backgroundColor: grayColor600,
-                              margin: const EdgeInsets.all(4),
-                              child: Text(
-                                '이전 정보추가 페이지에서 날짜를 지정한 경우 자동으로 반영돼요',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: Colors.white),
-                              ),
-                            ),
-                        ],
+                      Text(
+                        '알림 시작일',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: primaryColor),
+                      ),
+                      const SizedBox(
+                        width: 4,
                       ),
                       SizedBox(
                         height: 8.h,
                       ),
-                      SizedBox(
-                        height: 42.h,
-                        child: TextFormField(
-                          onChanged: (text) {
-                            setState(
-                              () {
-                                name = text;
-                              },
-                            );
-                          },
-                          textAlignVertical: TextAlignVertical.center,
-                          textAlign: TextAlign.start,
-                          initialValue: name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: grayBlack),
-                          decoration: InputDecoration(
-                            suffixIcon: const Padding(
-                              padding: EdgeInsets.only(right: 10.0),
-                              child: ImageBox(
-                                imageUri: 'assets/icons/calendar_box.png',
-                                width: 20,
-                                height: 20,
-                              ),
-                            ),
-                            suffixIconConstraints: BoxConstraints(
-                              minHeight: 20.h,
-                              minWidth: 20.h,
-                            ),
-                            isDense: true,
-                            contentPadding:
-                                EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  8.0,
-                                ),
-                              ),
-                              borderSide:
-                                  BorderSide(width: 1, color: grayColor400),
-                            ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  8.0,
-                                ),
-                              ),
-                              borderSide:
-                                  BorderSide(color: grayColor400, width: 1.0),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  8.0,
-                                ),
-                              ),
-                              borderSide:
-                                  BorderSide(color: grayColor400, width: 1.0),
-                            ),
-                            hintText: '날짜를 설정해주세요',
-                            hintStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: grayColor400),
-                          ),
-                        ),
-                      ),
                     ],
+                  ),
+                  DatePickerWidget(
+                    field: widget.field,
+                    hintText: '날짜를 설정해주세요',
+                    alarm: true,
                   ),
                   SizedBox(
                     height: 16.h,

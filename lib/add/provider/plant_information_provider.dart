@@ -34,7 +34,8 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     String? newDay,
     int? newRepeat,
     String? newTitle,
-    String? newStartDate,
+    DateTime? newStartDate,
+    String? startDay,
   }) {
     PlantInformationKey updateKey(PlantInformationKey key) {
       return key.copyWith(
@@ -42,7 +43,8 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
         alarm: key.alarm.copyWith(
           repeat: newRepeat ?? key.alarm.repeat,
           title: newTitle ?? key.alarm.title,
-          startDate: newStartDate ?? key.alarm.startDate,
+          startDate: newStartDate,
+          startDay: startDay ?? key.alarm.startDay,
         ),
       );
     }

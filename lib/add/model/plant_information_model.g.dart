@@ -42,13 +42,17 @@ Map<String, dynamic> _$$_PlantInformationKeyToJson(
     };
 
 _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
-      startDate: json['startDate'] as String? ?? "",
+      startDay: json['startDay'] as String? ?? "",
+      startDate: json['startDate'] == null
+          ? null
+          : DateTime.parse(json['startDate'] as String),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? "",
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
-      'startDate': instance.startDate,
+      'startDay': instance.startDay,
+      'startDate': instance.startDate?.toIso8601String(),
       'repeat': instance.repeat,
       'title': instance.title,
     };

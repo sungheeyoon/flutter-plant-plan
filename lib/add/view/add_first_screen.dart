@@ -23,12 +23,28 @@ class AddFirstScreen extends ConsumerStatefulWidget {
 }
 
 class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
+  TextEditingController textController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    // TextEditingController 생성
+    textController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TextEditingController 해제
+    textController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
+    final plantInfo = ref.watch(plantInformationProvider);
     final imageHelper = ImageHelper();
-
+    textController.text = plantInfo.alias;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -281,6 +297,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 Container(
                   margin: const EdgeInsets.only(top: 8),
                   child: TextField(
+                    controller: textController,
                     onChanged: (text) {
                       ref
                           .read(plantInformationProvider.notifier)

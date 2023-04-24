@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
@@ -148,23 +149,23 @@ class AddSecondScreen extends ConsumerWidget {
               height: 12.h,
             ),
             const AlarmBox(
-              iconPath: 'assets/images/management/humid.png',
-              title: '물주기',
-            ),
+                iconPath: 'assets/images/management/humid.png',
+                title: '물주기',
+                field: PlantField.watering),
             SizedBox(
               height: 12.h,
             ),
             const AlarmBox(
-              iconPath: 'assets/images/management/repotting.png',
-              title: '분갈이',
-            ),
+                iconPath: 'assets/images/management/repotting.png',
+                title: '분갈이',
+                field: PlantField.repotting),
             SizedBox(
               height: 12.h,
             ),
             const AlarmBox(
-              iconPath: 'assets/images/management/nutrient.png',
-              title: '영양제',
-            ),
+                iconPath: 'assets/images/management/nutrient.png',
+                title: '영양제',
+                field: PlantField.nutrient),
             SizedBox(
               height: 12.h,
             ),
@@ -184,10 +185,12 @@ class AddSecondScreen extends ConsumerWidget {
 class AlarmBox extends StatelessWidget {
   final String iconPath;
   final String title;
+  final PlantField field;
   const AlarmBox({
     super.key,
     required this.iconPath,
     required this.title,
+    required this.field,
   });
 
   @override
@@ -197,7 +200,10 @@ class AlarmBox extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AlarmScreen(title: title),
+            builder: (context) => AlarmScreen(
+              title: title,
+              field: field,
+            ),
           ),
         );
       },
