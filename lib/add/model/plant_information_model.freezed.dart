@@ -431,8 +431,8 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
-  String get startDay => throw _privateConstructorUsedError;
   DateTime? get startDate => throw _privateConstructorUsedError;
+  String get startDay => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
 
@@ -446,7 +446,7 @@ abstract class $AlarmCopyWith<$Res> {
   factory $AlarmCopyWith(Alarm value, $Res Function(Alarm) then) =
       _$AlarmCopyWithImpl<$Res, Alarm>;
   @useResult
-  $Res call({String startDay, DateTime? startDate, int repeat, String title});
+  $Res call({DateTime? startDate, String startDay, int repeat, String title});
 }
 
 /// @nodoc
@@ -462,20 +462,20 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startDay = null,
     Object? startDate = freezed,
+    Object? startDay = null,
     Object? repeat = null,
     Object? title = null,
   }) {
     return _then(_value.copyWith(
-      startDay: null == startDay
-          ? _value.startDay
-          : startDay // ignore: cast_nullable_to_non_nullable
-              as String,
       startDate: freezed == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      startDay: null == startDay
+          ? _value.startDay
+          : startDay // ignore: cast_nullable_to_non_nullable
+              as String,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -494,7 +494,7 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
       __$$_AlarmCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String startDay, DateTime? startDate, int repeat, String title});
+  $Res call({DateTime? startDate, String startDay, int repeat, String title});
 }
 
 /// @nodoc
@@ -506,20 +506,20 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startDay = null,
     Object? startDate = freezed,
+    Object? startDay = null,
     Object? repeat = null,
     Object? title = null,
   }) {
     return _then(_$_Alarm(
-      startDay: null == startDay
-          ? _value.startDay
-          : startDay // ignore: cast_nullable_to_non_nullable
-              as String,
       startDate: freezed == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      startDay: null == startDay
+          ? _value.startDay
+          : startDay // ignore: cast_nullable_to_non_nullable
+              as String,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -536,8 +536,8 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 @JsonSerializable()
 class _$_Alarm implements _Alarm {
   _$_Alarm(
-      {this.startDay = "",
-      this.startDate = null,
+      {this.startDate = null,
+      this.startDay = "",
       this.repeat = 0,
       this.title = ""});
 
@@ -546,10 +546,10 @@ class _$_Alarm implements _Alarm {
 
   @override
   @JsonKey()
-  final String startDay;
+  final DateTime? startDate;
   @override
   @JsonKey()
-  final DateTime? startDate;
+  final String startDay;
   @override
   @JsonKey()
   final int repeat;
@@ -559,7 +559,7 @@ class _$_Alarm implements _Alarm {
 
   @override
   String toString() {
-    return 'Alarm(startDay: $startDay, startDate: $startDate, repeat: $repeat, title: $title)';
+    return 'Alarm(startDate: $startDate, startDay: $startDay, repeat: $repeat, title: $title)';
   }
 
   @override
@@ -567,10 +567,10 @@ class _$_Alarm implements _Alarm {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Alarm &&
-            (identical(other.startDay, startDay) ||
-                other.startDay == startDay) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
+            (identical(other.startDay, startDay) ||
+                other.startDay == startDay) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.title, title) || other.title == title));
   }
@@ -578,7 +578,7 @@ class _$_Alarm implements _Alarm {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, startDay, startDate, repeat, title);
+      Object.hash(runtimeType, startDate, startDay, repeat, title);
 
   @JsonKey(ignore: true)
   @override
@@ -596,17 +596,17 @@ class _$_Alarm implements _Alarm {
 
 abstract class _Alarm implements Alarm {
   factory _Alarm(
-      {final String startDay,
-      final DateTime? startDate,
+      {final DateTime? startDate,
+      final String startDay,
       final int repeat,
       final String title}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
   @override
-  String get startDay;
-  @override
   DateTime? get startDate;
+  @override
+  String get startDay;
   @override
   int get repeat;
   @override
