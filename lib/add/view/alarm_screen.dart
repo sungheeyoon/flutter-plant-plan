@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/date_time_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
@@ -27,7 +28,7 @@ class AlarmScreen extends ConsumerStatefulWidget {
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late final LocalNotificationService service;
   bool isSwitched = false;
-
+  PlantInformationKey? selectedState;
   String? name;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
@@ -46,18 +47,22 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     final dateTime = ref.watch(dateTimeProvider);
-    final plantInfo = ref.watch(plantInformationProvider);
+    final PlantInformationModel plantInfo = ref.watch(plantInformationProvider);
+    late PlantInformationKey selectedState;
+
+    if (widget.field == PlantField.watering) {
+      selectedState = plantInfo.watering;
+    } else if (widget.field == PlantField.repotting) {
+      selectedState = plantInfo.repotting;
+    } else if (widget.field == PlantField.nutrient) {
+      selectedState = plantInfo.nutrient;
+    }
+
     return DefaultLayout(
       textbutton: TextButton(
         onPressed: () {
-          if (plantInfo.repotting.alarm.startDay != "") {
-            //버튼활성화
-          } else if (plantInfo.watering.alarm.startDay != "") {
-            //버튼활성화
-          } else if (plantInfo.nutrient.alarm.startDay != "") {
-            //버튼활성화
-          } else {
-            //버튼비활성화
+          if (selectedState.day == "" || focusedButtonIndex == -1) {
+            return;
           }
         },
         style: TextButton.styleFrom(
@@ -68,7 +73,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         child: Text(
           '완료',
           style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: pointColor2,
+                color: selectedState.alarm.startDay == "" ||
+                        focusedButtonIndex == -1
+                    ? const Color(0xFF999999).withOpacity(0.38)
+                    : pointColor2,
               ),
         ),
       ),
@@ -105,19 +113,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             .copyWith(color: primaryColor),
                       ),
                       Text(
-                        widget.field == PlantField.watering
-                            ? (plantInfo.watering.day) != ''
-                                ? plantInfo.watering.day
-                                : '-'
-                            : widget.field == PlantField.repotting
-                                ? (plantInfo.repotting.day) != ''
-                                    ? plantInfo.repotting.day
-                                    : '-'
-                                : widget.field == PlantField.nutrient
-                                    ? (plantInfo.nutrient.day) != ''
-                                        ? plantInfo.nutrient.day
-                                        : '-'
-                                    : '-',
+                        selectedState.day != '' ? selectedState.day : '-',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -338,11 +334,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                         height: 42.h,
                         child: TextFormField(
                           onChanged: (text) {
-                            setState(
-                              () {
-                                name = text;
-                              },
-                            );
+                            ref
+                                .read(plantInformationProvider.notifier)
+                                .updatePlantField(
+                                  widget.field,
+                                  newTitle: text,
+                                );
                           },
                           textAlignVertical: TextAlignVertical.center,
                           textAlign: TextAlign.start,
@@ -395,6 +392,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                   const SizedBox(
                     height: 40,
                   ),
+                  Text('$selectedState'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

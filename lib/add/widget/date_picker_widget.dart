@@ -154,7 +154,7 @@ class DatePickerWidget extends ConsumerWidget {
       alarm
           ? ref
               .read(plantInformationProvider.notifier)
-              .updatePlantField(field, startDay: value)
+              .updatePlantField(field, newStartDay: value)
           : ref
               .read(plantInformationProvider.notifier)
               .updatePlantField(field, newDay: value);
