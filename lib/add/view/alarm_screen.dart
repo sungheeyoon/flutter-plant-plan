@@ -33,14 +33,18 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   int focusedButtonIndex = -1;
   String? nextAlarmText;
   int? days = 0;
+  TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    textController = TextEditingController();
   }
 
   @override
   void dispose() {
+    // TextEditingController 해제
+    textController.dispose();
     super.dispose();
   }
 
@@ -57,6 +61,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     } else if (widget.field == PlantField.nutrient) {
       selectedState = plantInfo.nutrient;
     }
+    textController.text = selectedState.alarm.title;
 
     return DefaultLayout(
       textbutton: TextButton(
@@ -333,6 +338,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       SizedBox(
                         height: 42.h,
                         child: TextFormField(
+                          controller: textController,
                           onChanged: (text) {
                             ref
                                 .read(plantInformationProvider.notifier)

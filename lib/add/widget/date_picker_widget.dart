@@ -144,7 +144,9 @@ class DatePickerWidget extends ConsumerWidget {
     ];
     final values = await showCalendarDatePicker2Dialog(
       context: ref.context,
-      config: CalendarDatePicker2WithActionButtonsConfig(),
+      config: CalendarDatePicker2WithActionButtonsConfig(
+        firstDate: alarm ? DateTime.now() : DateTime(1),
+      ),
       dialogSize: const Size(325, 400),
       value: singleDatePickerValueWithDefaultValue,
       borderRadius: BorderRadius.circular(15),
