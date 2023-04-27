@@ -263,7 +263,7 @@ PlantInformationKey _$PlantInformationKeyFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PlantInformationKey {
-  String get day => throw _privateConstructorUsedError;
+  DateTime? get lastDay => throw _privateConstructorUsedError;
   Alarm get alarm => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -278,7 +278,7 @@ abstract class $PlantInformationKeyCopyWith<$Res> {
           PlantInformationKey value, $Res Function(PlantInformationKey) then) =
       _$PlantInformationKeyCopyWithImpl<$Res, PlantInformationKey>;
   @useResult
-  $Res call({String day, Alarm alarm});
+  $Res call({DateTime? lastDay, Alarm alarm});
 
   $AlarmCopyWith<$Res> get alarm;
 }
@@ -296,14 +296,14 @@ class _$PlantInformationKeyCopyWithImpl<$Res, $Val extends PlantInformationKey>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? day = null,
+    Object? lastDay = freezed,
     Object? alarm = null,
   }) {
     return _then(_value.copyWith(
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as String,
+      lastDay: freezed == lastDay
+          ? _value.lastDay
+          : lastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       alarm: null == alarm
           ? _value.alarm
           : alarm // ignore: cast_nullable_to_non_nullable
@@ -328,7 +328,7 @@ abstract class _$$_PlantInformationKeyCopyWith<$Res>
       __$$_PlantInformationKeyCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String day, Alarm alarm});
+  $Res call({DateTime? lastDay, Alarm alarm});
 
   @override
   $AlarmCopyWith<$Res> get alarm;
@@ -345,14 +345,14 @@ class __$$_PlantInformationKeyCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? day = null,
+    Object? lastDay = freezed,
     Object? alarm = null,
   }) {
     return _then(_$_PlantInformationKey(
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as String,
+      lastDay: freezed == lastDay
+          ? _value.lastDay
+          : lastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       alarm: null == alarm
           ? _value.alarm
           : alarm // ignore: cast_nullable_to_non_nullable
@@ -364,20 +364,20 @@ class __$$_PlantInformationKeyCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PlantInformationKey implements _PlantInformationKey {
-  _$_PlantInformationKey({this.day = "", required this.alarm});
+  _$_PlantInformationKey({this.lastDay = null, required this.alarm});
 
   factory _$_PlantInformationKey.fromJson(Map<String, dynamic> json) =>
       _$$_PlantInformationKeyFromJson(json);
 
   @override
   @JsonKey()
-  final String day;
+  final DateTime? lastDay;
   @override
   final Alarm alarm;
 
   @override
   String toString() {
-    return 'PlantInformationKey(day: $day, alarm: $alarm)';
+    return 'PlantInformationKey(lastDay: $lastDay, alarm: $alarm)';
   }
 
   @override
@@ -385,13 +385,13 @@ class _$_PlantInformationKey implements _PlantInformationKey {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PlantInformationKey &&
-            (identical(other.day, day) || other.day == day) &&
+            (identical(other.lastDay, lastDay) || other.lastDay == lastDay) &&
             (identical(other.alarm, alarm) || other.alarm == alarm));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, day, alarm);
+  int get hashCode => Object.hash(runtimeType, lastDay, alarm);
 
   @JsonKey(ignore: true)
   @override
@@ -409,14 +409,15 @@ class _$_PlantInformationKey implements _PlantInformationKey {
 }
 
 abstract class _PlantInformationKey implements PlantInformationKey {
-  factory _PlantInformationKey({final String day, required final Alarm alarm}) =
-      _$_PlantInformationKey;
+  factory _PlantInformationKey(
+      {final DateTime? lastDay,
+      required final Alarm alarm}) = _$_PlantInformationKey;
 
   factory _PlantInformationKey.fromJson(Map<String, dynamic> json) =
       _$_PlantInformationKey.fromJson;
 
   @override
-  String get day;
+  DateTime? get lastDay;
   @override
   Alarm get alarm;
   @override
@@ -432,8 +433,8 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Alarm {
   DateTime? get startTime => throw _privateConstructorUsedError;
-  String get nextAlarm => throw _privateConstructorUsedError;
-  String get startDay => throw _privateConstructorUsedError;
+  DateTime? get startDay => throw _privateConstructorUsedError;
+  DateTime? get nextAlarm => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
 
@@ -449,8 +450,8 @@ abstract class $AlarmCopyWith<$Res> {
   @useResult
   $Res call(
       {DateTime? startTime,
-      String nextAlarm,
-      String startDay,
+      DateTime? startDay,
+      DateTime? nextAlarm,
       int repeat,
       String title});
 }
@@ -469,8 +470,8 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   @override
   $Res call({
     Object? startTime = freezed,
-    Object? nextAlarm = null,
-    Object? startDay = null,
+    Object? startDay = freezed,
+    Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
   }) {
@@ -479,14 +480,14 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      nextAlarm: null == nextAlarm
-          ? _value.nextAlarm
-          : nextAlarm // ignore: cast_nullable_to_non_nullable
-              as String,
-      startDay: null == startDay
+      startDay: freezed == startDay
           ? _value.startDay
           : startDay // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime?,
+      nextAlarm: freezed == nextAlarm
+          ? _value.nextAlarm
+          : nextAlarm // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -507,8 +508,8 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   @useResult
   $Res call(
       {DateTime? startTime,
-      String nextAlarm,
-      String startDay,
+      DateTime? startDay,
+      DateTime? nextAlarm,
       int repeat,
       String title});
 }
@@ -523,8 +524,8 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   @override
   $Res call({
     Object? startTime = freezed,
-    Object? nextAlarm = null,
-    Object? startDay = null,
+    Object? startDay = freezed,
+    Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
   }) {
@@ -533,14 +534,14 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      nextAlarm: null == nextAlarm
-          ? _value.nextAlarm
-          : nextAlarm // ignore: cast_nullable_to_non_nullable
-              as String,
-      startDay: null == startDay
+      startDay: freezed == startDay
           ? _value.startDay
           : startDay // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime?,
+      nextAlarm: freezed == nextAlarm
+          ? _value.nextAlarm
+          : nextAlarm // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -558,8 +559,8 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 class _$_Alarm implements _Alarm {
   _$_Alarm(
       {this.startTime = null,
-      this.nextAlarm = "",
-      this.startDay = "",
+      this.startDay = null,
+      this.nextAlarm = null,
       this.repeat = 0,
       this.title = ""});
 
@@ -571,10 +572,10 @@ class _$_Alarm implements _Alarm {
   final DateTime? startTime;
   @override
   @JsonKey()
-  final String nextAlarm;
+  final DateTime? startDay;
   @override
   @JsonKey()
-  final String startDay;
+  final DateTime? nextAlarm;
   @override
   @JsonKey()
   final int repeat;
@@ -584,7 +585,7 @@ class _$_Alarm implements _Alarm {
 
   @override
   String toString() {
-    return 'Alarm(startTime: $startTime, nextAlarm: $nextAlarm, startDay: $startDay, repeat: $repeat, title: $title)';
+    return 'Alarm(startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title)';
   }
 
   @override
@@ -594,10 +595,10 @@ class _$_Alarm implements _Alarm {
             other is _$_Alarm &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
-            (identical(other.nextAlarm, nextAlarm) ||
-                other.nextAlarm == nextAlarm) &&
             (identical(other.startDay, startDay) ||
                 other.startDay == startDay) &&
+            (identical(other.nextAlarm, nextAlarm) ||
+                other.nextAlarm == nextAlarm) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.title, title) || other.title == title));
   }
@@ -605,7 +606,7 @@ class _$_Alarm implements _Alarm {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, startTime, nextAlarm, startDay, repeat, title);
+      Object.hash(runtimeType, startTime, startDay, nextAlarm, repeat, title);
 
   @JsonKey(ignore: true)
   @override
@@ -624,8 +625,8 @@ class _$_Alarm implements _Alarm {
 abstract class _Alarm implements Alarm {
   factory _Alarm(
       {final DateTime? startTime,
-      final String nextAlarm,
-      final String startDay,
+      final DateTime? startDay,
+      final DateTime? nextAlarm,
       final int repeat,
       final String title}) = _$_Alarm;
 
@@ -634,9 +635,9 @@ abstract class _Alarm implements Alarm {
   @override
   DateTime? get startTime;
   @override
-  String get nextAlarm;
+  DateTime? get startDay;
   @override
-  String get startDay;
+  DateTime? get nextAlarm;
   @override
   int get repeat;
   @override

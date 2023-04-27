@@ -1,80 +1,58 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 
-enum DateTimeKey { now, calculatedTime }
-
-final dateTimeProvider =
-    StateNotifierProvider<DateTimeNotifier, Map<DateTimeKey, DateTime?>>((ref) {
+final dateTimeProvider = StateNotifierProvider<DateTimeNotifier, Alarm>((ref) {
   return DateTimeNotifier();
 });
 
-class DateTimeNotifier extends StateNotifier<Map<DateTimeKey, DateTime?>> {
-  DateTimeNotifier()
-      : super({
-          DateTimeKey.now: DateTime.now(),
-          DateTimeKey.calculatedTime: null
-        });
+class DateTimeNotifier extends StateNotifier<Alarm> {
+  DateTimeNotifier() : super(Alarm());
 
-  void setDateTime(DateTimeKey key, DateTime time) {
-    state = {...state, key: time};
+  void setDateTime(
+    String key,
+    DateTime time,
+  ) {
+    state = state.copyWith(
+      startTime: key == 'startTime' ? time : state.startTime,
+      startDay: key == 'startDay' ? time : state.startDay,
+      nextAlarm: key == 'nextAlarm' ? time : state.nextAlarm,
+    );
   }
 
-  void setCalculatedTimeNull() {
-    state = {...state, DateTimeKey.calculatedTime: null};
+  void setDateTimeNull(
+    String key,
+  ) {
+    state = state.copyWith(
+      startTime: key == 'startTime' ? null : state.startTime,
+      startDay: key == 'startDay' ? null : state.startDay,
+      nextAlarm: key == 'nextAlarm' ? null : state.nextAlarm,
+    );
+  }
+
+  void setRepeat(int repeat) {
+    state = state.copyWith(repeat: repeat);
+  }
+
+  void setTitle(String title) {
+    state = state.copyWith(title: title);
+  }
+
+  void setNull(key) {
+    //state = {...state, 바꾸고싶은 key : null}
   }
 
   void updateNextAlarmTime({
-    required int focusedButtonIndex,
-    int? days,
+    required int days,
   }) {
-    final DateTime now = state[DateTimeKey.now]!;
-    switch (focusedButtonIndex) {
-      case 0: // '매일' 버튼
-        setDateTime(
-          DateTimeKey.calculatedTime,
-          now.add(
-            const Duration(days: 1),
-          ),
-        );
-
-        break;
-      case 1: // '매주' 버튼
-        setDateTime(
-          DateTimeKey.calculatedTime,
-          now.add(
-            const Duration(days: 7),
-          ),
-        );
-        break;
-      case 2: // '매월' 버튼
-        int year = now.year;
-        int month = now.month + 1;
-        int day = now.day;
-        int hour = now.hour;
-        int minute = now.minute;
-        if (month > 12) {
-          year += 1;
-          month = 1;
-        }
-        int lastDayOfMonth = DateTime(year, month + 1, 0).day;
-        day = day <= lastDayOfMonth ? day : lastDayOfMonth;
-        setDateTime(
-          DateTimeKey.calculatedTime,
-          DateTime(year, month, day, hour, minute),
-        );
-
-        break;
-      case 3: // '직접 입력' 버튼
-        if (days != null) {
-          setDateTime(
-            DateTimeKey.calculatedTime,
-            now.add(
-              Duration(days: days),
-            ),
-          );
-        } else {
-          // days가 null인 경우에는 _dateTime을 업데이트하지 않고 기존 값을 유지함
-        }
-        break;
+    // 만약에 nextAlarm 이 null 이 아니라면 days 기간을 추가한다
+    final DateTime now = state.startTime!;
+    if (state.nextAlarm != null) {
+      setDateTime(
+        'nextAlarm', // key 값을 문자열로 지정
+        now.add(
+          Duration(days: days),
+        ),
+      );
     }
   }
 }

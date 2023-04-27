@@ -30,14 +30,16 @@ Map<String, dynamic> _$$_PlantInformationModelToJson(
 _$_PlantInformationKey _$$_PlantInformationKeyFromJson(
         Map<String, dynamic> json) =>
     _$_PlantInformationKey(
-      day: json['day'] as String? ?? "",
+      lastDay: json['lastDay'] == null
+          ? null
+          : DateTime.parse(json['lastDay'] as String),
       alarm: Alarm.fromJson(json['alarm'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_PlantInformationKeyToJson(
         _$_PlantInformationKey instance) =>
     <String, dynamic>{
-      'day': instance.day,
+      'lastDay': instance.lastDay?.toIso8601String(),
       'alarm': instance.alarm,
     };
 
@@ -45,16 +47,20 @@ _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
       startTime: json['startTime'] == null
           ? null
           : DateTime.parse(json['startTime'] as String),
-      nextAlarm: json['nextAlarm'] as String? ?? "",
-      startDay: json['startDay'] as String? ?? "",
+      startDay: json['startDay'] == null
+          ? null
+          : DateTime.parse(json['startDay'] as String),
+      nextAlarm: json['nextAlarm'] == null
+          ? null
+          : DateTime.parse(json['nextAlarm'] as String),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? "",
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
       'startTime': instance.startTime?.toIso8601String(),
-      'nextAlarm': instance.nextAlarm,
-      'startDay': instance.startDay,
+      'startDay': instance.startDay?.toIso8601String(),
+      'nextAlarm': instance.nextAlarm?.toIso8601String(),
       'repeat': instance.repeat,
       'title': instance.title,
     };

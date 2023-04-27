@@ -19,7 +19,7 @@ class PlantInformationModel with _$PlantInformationModel {
 @freezed
 class PlantInformationKey with _$PlantInformationKey {
   factory PlantInformationKey({
-    @Default("") String day,
+    @Default(null) DateTime? lastDay,
     required Alarm alarm,
   }) = _PlantInformationKey;
 
@@ -31,8 +31,8 @@ class PlantInformationKey with _$PlantInformationKey {
 class Alarm with _$Alarm {
   factory Alarm({
     @Default(null) DateTime? startTime,
-    @Default("") String nextAlarm,
-    @Default("") String startDay,
+    @Default(null) DateTime? startDay,
+    @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,
     @Default("") String title,
   }) = _Alarm;

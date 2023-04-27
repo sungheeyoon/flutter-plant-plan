@@ -2,8 +2,8 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
@@ -138,7 +138,6 @@ class DatePickerWidget extends ConsumerWidget {
   }
 
   Future<void> _showDatePicker(PlantField field, WidgetRef ref) async {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
     List<DateTime?> singleDatePickerValueWithDefaultValue = [
       DateTime.now(),
     ];
@@ -152,7 +151,7 @@ class DatePickerWidget extends ConsumerWidget {
       borderRadius: BorderRadius.circular(15),
     );
     if (values != null) {
-      String value = formatter.format(values[0]!);
+      String value = dateFormatter(values[0]!);
       alarm
           ? ref
               .read(plantInformationProvider.notifier)

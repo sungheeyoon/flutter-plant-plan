@@ -31,20 +31,20 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
         );
   void updatePlantField(
     PlantField field, {
-    String? newDay,
+    DateTime? lastDay,
     int? newRepeat,
     String? newTitle,
     DateTime? newStartTime,
-    String? newStartDay,
-    String? newNextAlarm,
+    DateTime? newStartDay,
+    DateTime? newNextAlarm,
   }) {
     PlantInformationKey updateKey(PlantInformationKey key) {
       return key.copyWith(
-        day: newDay ?? key.day,
+        lastDay: lastDay ?? key.lastDay,
         alarm: key.alarm.copyWith(
           repeat: newRepeat ?? key.alarm.repeat,
           title: newTitle ?? key.alarm.title,
-          startTime: newStartTime,
+          startTime: newStartTime ?? key.alarm.startDay,
           startDay: newStartDay ?? key.alarm.startDay,
           nextAlarm: newNextAlarm ?? key.alarm.nextAlarm,
         ),
