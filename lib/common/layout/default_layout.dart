@@ -11,6 +11,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final TextButton? textbutton;
+  final VoidCallback? leadingOnPressed;
 
   const DefaultLayout({
     required this.child,
@@ -21,6 +22,7 @@ class DefaultLayout extends StatelessWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.textbutton,
+    this.leadingOnPressed,
     super.key,
   });
 
@@ -33,6 +35,7 @@ class DefaultLayout extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
+      resizeToAvoidBottomInset: true,
     );
   }
 
@@ -54,6 +57,10 @@ class DefaultLayout extends StatelessWidget {
         ),
         foregroundColor: primaryColor,
         actions: [if (textbutton != null) textbutton!],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: leadingOnPressed,
+        ),
       );
     }
   }
