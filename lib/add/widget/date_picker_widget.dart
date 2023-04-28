@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -23,26 +24,21 @@ class DatePickerWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedInfo = ref.watch(plantInformationProvider);
-    final String info;
+    final plantState = ref.watch(plantInformationProvider);
+    final alarmState = ref.watch(alarmProvider);
+    final DateTime? date;
+
     switch (field) {
       case PlantField.watering:
-        info = alarm
-            ? selectedInfo.watering.alarm.startDay
-            : selectedInfo.watering.day;
+        date = alarm ? alarmState.startDay : plantState.watering.lastDay;
         break;
       case PlantField.repotting:
-        info = alarm
-            ? selectedInfo.repotting.alarm.startDay
-            : selectedInfo.repotting.day;
+        date = alarm ? alarmState.startDay : plantState.repotting.lastDay;
+
         break;
       case PlantField.nutrient:
-        info = alarm
-            ? selectedInfo.nutrient.alarm.startDay
-            : selectedInfo.nutrient.day;
+        date = alarm ? alarmState.startDay : plantState.nutrient.lastDay;
         break;
-      default:
-        info = "Error";
     }
 
     return GestureDetector(
@@ -58,9 +54,9 @@ class DatePickerWidget extends ConsumerWidget {
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(left: 16),
-                hintText: info == "" ? hintText : info,
+                hintText: date == null ? hintText : dateFormatter(date),
                 hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: info == "" ? grayColor400 : grayBlack,
+                      color: date == null ? grayColor400 : grayBlack,
                     ),
                 focusedBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
@@ -151,14 +147,13 @@ class DatePickerWidget extends ConsumerWidget {
       borderRadius: BorderRadius.circular(15),
     );
     if (values != null) {
-      String value = dateFormatter(values[0]!);
       alarm
           ? ref
-              .read(plantInformationProvider.notifier)
-              .updatePlantField(field, newStartDay: value)
+              .read(alarmProvider.notifier)
+              .setDateTime(AlarmDateTimeField.startDay, values[0]!)
           : ref
               .read(plantInformationProvider.notifier)
-              .updatePlantField(field, newDay: value);
+              .updatePlantField(field, lastDay: values[0]!);
     }
   }
 }

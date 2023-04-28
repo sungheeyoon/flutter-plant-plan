@@ -4,13 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/provider/date_time_provider.dart';
+import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
-import 'package:plant_plan/services/notifi_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AlarmScreen extends ConsumerStatefulWidget {
@@ -29,17 +28,44 @@ class AlarmScreen extends ConsumerStatefulWidget {
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late final LocalNotificationService service;
   bool isSwitched = false;
-  PlantInformationKey? selectedState;
+  late PlantInformationKey selectedState;
   String? name;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
   int days = 0;
+  late String lastDayText;
   TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    final PlantInformationModel plantState = ref.read(plantInformationProvider);
+
+    if (widget.field == PlantField.watering) {
+      textController.text = plantState.watering.alarm.title;
+      lastDayText = '마지막으로 물 준 날';
+
+      // Delay the modification using Future.delayed
+      Future.delayed(Duration.zero, () {
+        ref.read(alarmProvider.notifier).setAlarm(plantState.watering.alarm);
+      });
+    } else if (widget.field == PlantField.repotting) {
+      textController.text = plantState.repotting.alarm.title;
+      lastDayText = '마지막으로 분갈이 한 날';
+
+      // Delay the modification using Future.delayed
+      Future.delayed(Duration.zero, () {
+        ref.read(alarmProvider.notifier).setAlarm(plantState.repotting.alarm);
+      });
+    } else if (widget.field == PlantField.nutrient) {
+      textController.text = plantState.nutrient.alarm.title;
+      lastDayText = '마지막으로 영양제 준 날';
+
+      // Delay the modification using Future.delayed
+      Future.delayed(Duration.zero, () {
+        ref.read(alarmProvider.notifier).setAlarm(plantState.nutrient.alarm);
+      });
+    }
   }
 
   @override
@@ -51,54 +77,29 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dateTime = ref.watch(dateTimeProvider);
-    final PlantInformationModel plantInfo = ref.watch(plantInformationProvider);
-    late PlantInformationKey selectedState;
+    final PlantInformationModel plantState =
+        ref.watch(plantInformationProvider);
 
+    final Alarm alarmState = ref.watch(alarmProvider);
     if (widget.field == PlantField.watering) {
-      selectedState = plantInfo.watering;
+      selectedState = plantState.watering;
     } else if (widget.field == PlantField.repotting) {
-      selectedState = plantInfo.repotting;
+      selectedState = plantState.repotting;
     } else if (widget.field == PlantField.nutrient) {
-      selectedState = plantInfo.nutrient;
+      selectedState = plantState.nutrient;
     }
-    textController.text = selectedState.alarm.title;
 
     return DefaultLayout(
-      leadingOnPressed: () {
-        Navigator.pop(context);
-      },
       textbutton: TextButton(
         onPressed: () {
-          if (selectedState.alarm.startDay == "" || focusedButtonIndex == -1) {
-            return;
-          } else {
+          if (alarmState.startDay != null) {
             ref
-                .read(
-                  plantInformationProvider.notifier,
-                )
-                .updatePlantField(
-                  widget.field,
-                  newRepeat: days,
-                );
-            ref
-                .read(
-                  plantInformationProvider.notifier,
-                )
-                .updatePlantField(
-                  widget.field,
-                  newNextAlarm:
-                      dateFormatter(dateTime[DateTimeKey.calculatedTime]!),
-                );
-            ref
-                .read(
-                  plantInformationProvider.notifier,
-                )
-                .updatePlantField(
-                  widget.field,
-                  newStartTime: dateTime[DateTimeKey.now]!,
-                );
+                .read(plantInformationProvider.notifier)
+                .updatePlantField(widget.field, alarm: alarmState);
+
             Navigator.pop(context);
+          } else {
+            return;
           }
         },
         style: TextButton.styleFrom(
@@ -109,8 +110,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         child: Text(
           '완료',
           style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: selectedState.alarm.startDay == "" ||
-                        focusedButtonIndex == -1
+                color: alarmState.startDay == null
                     ? const Color(0xFF999999).withOpacity(0.38)
                     : pointColor2,
               ),
@@ -136,20 +136,16 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      widget.field == PlantField.watering
-                          ? '마지막으로 물 준 날'
-                          : widget.field == PlantField.repotting
-                              ? '마지막으로 분갈이 한 날'
-                              : widget.field == PlantField.nutrient
-                                  ? '마지막으로 영양제 준 날'
-                                  : '-',
+                      lastDayText,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
                           .copyWith(color: primaryColor),
                     ),
                     Text(
-                      selectedState.day != '' ? selectedState.day : '-',
+                      selectedState.lastDay != null
+                          ? dateFormatter(selectedState.lastDay!)
+                          : '-',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -220,6 +216,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             setState(
                               () {
                                 days = 1;
+                                ref.read(alarmProvider.notifier).setRepeat(1);
                                 _updateFocusedButton(0);
                               },
                             )
@@ -235,6 +232,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                           onTapCallback: () => {
                             setState(
                               () {
+                                ref.read(alarmProvider.notifier).setRepeat(7);
                                 days = 7;
                                 _updateFocusedButton(1);
                               },
@@ -279,8 +277,11 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                                 // intValue가 null이 아닌 경우에만 값을 업데이트
                                 days = intValue;
                                 ref
-                                    .read(dateTimeProvider.notifier)
+                                    .read(alarmProvider.notifier)
                                     .updateNextAlarmTime(days: intValue);
+                                ref
+                                    .read(alarmProvider.notifier)
+                                    .setRepeat(intValue);
                               }
                             },
                           );
@@ -333,16 +334,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       ),
                     ],
                   ),
-                if (dateTime[DateTimeKey.calculatedTime] != null &&
-                    focusedButtonIndex != -1)
+                if (alarmState.nextAlarm != null && focusedButtonIndex != -1)
                   Column(
                     children: [
                       SizedBox(
                         height: 8.h,
                       ),
                       Text(
-                        nextAlarmFomattor(
-                            dateTime[DateTimeKey.calculatedTime]!),
+                        nextAlarmFomattor(alarmState.nextAlarm!),
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -375,12 +374,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       child: TextFormField(
                         controller: textController,
                         onChanged: (text) {
-                          ref
-                              .read(plantInformationProvider.notifier)
-                              .updatePlantField(
-                                widget.field,
-                                newTitle: text,
-                              );
+                          ref.read(alarmProvider.notifier).setTitle(text);
                         },
                         textAlignVertical: TextAlignVertical.center,
                         textAlign: TextAlign.start,
@@ -433,49 +427,50 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 const SizedBox(
                   height: 40,
                 ),
+                Text('$alarmState'),
                 Text('$selectedState'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '다시 알림',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(color: primaryColor),
-                    ),
-                    Switch(
-                        value: isSwitched,
-                        onChanged: (value) {
-                          setState(() {
-                            isSwitched = value;
-                          });
-                        },
-                        activeTrackColor: primaryColor.withOpacity(0.4),
-                        activeColor: primaryColor),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    // await NotificationService().showNotification(
-                    //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
-                    debugPrint('Notification Scheduled for $dateTime');
-                    NotificationService().scheduleNotification(
-                        title: 'Scheduled Notification',
-                        body: '$dateTime',
-                        scheduledNotificationDateTime:
-                            dateTime[DateTimeKey.now]!);
-                  },
-                  child: const Text('Scheduled Notification'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    debugPrint('cancel Notification Scheduled');
-                    NotificationService().cancel(0);
-                  },
-                  child: const Text('cancel Notification'),
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   children: [
+                //     Text(
+                //       '다시 알림',
+                //       style: Theme.of(context)
+                //           .textTheme
+                //           .labelLarge!
+                //           .copyWith(color: primaryColor),
+                //     ),
+                //     Switch(
+                //         value: isSwitched,
+                //         onChanged: (value) {
+                //           setState(() {
+                //             isSwitched = value;
+                //           });
+                //         },
+                //         activeTrackColor: primaryColor.withOpacity(0.4),
+                //         activeColor: primaryColor),
+                //   ],
+                // ),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     // await NotificationService().showNotification(
+                //     //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
+                //     debugPrint('Notification Scheduled for $dateTime');
+                //     NotificationService().scheduleNotification(
+                //         title: 'Scheduled Notification',
+                //         body: '$dateTime',
+                //         scheduledNotificationDateTime:
+                //             dateTime[DateTimeKey.now]!);
+                //   },
+                //   child: const Text('Scheduled Notification'),
+                // ),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     debugPrint('cancel Notification Scheduled');
+                //     NotificationService().cancel(0);
+                //   },
+                //   child: const Text('cancel Notification'),
+                // ),
               ],
             ),
           ),
@@ -489,10 +484,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
       () {
         if (focusedButtonIndex == index) {
           focusedButtonIndex = -1;
-          ref.read(dateTimeProvider.notifier).setCalculatedTimeNull();
+          ref
+              .read(alarmProvider.notifier)
+              .setDateTimeNull(AlarmDateTimeField.nextAlarm);
         } else {
           focusedButtonIndex = index;
-          ref.read(dateTimeProvider.notifier).updateNextAlarmTime(days: days);
+          ref.read(alarmProvider.notifier).updateNextAlarmTime(days: days);
         }
       },
     );
@@ -510,24 +507,22 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         is24HourMode: false,
         normalTextStyle: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 28.h,
+          fontSize: 28.sp,
           color: pointColor2.withOpacity(0.25),
         ),
         itemWidth: 45,
         isForce2Digits: true,
         highlightedTextStyle: TextStyle(
-            fontWeight: FontWeight.w700, fontSize: 32.h, color: pointColor2),
+            fontWeight: FontWeight.w700, fontSize: 30.sp, color: pointColor2),
         alignment: Alignment.center,
         spacing: 44.w,
         onTimeChange: (time) async {
           ref
-              .read(dateTimeProvider.notifier)
-              .setDateTime(DateTimeKey.now, time);
+              .read(alarmProvider.notifier)
+              .setDateTime(AlarmDateTimeField.startTime, time);
           setState(
             () {
-              ref
-                  .read(dateTimeProvider.notifier)
-                  .updateNextAlarmTime(days: days);
+              ref.read(alarmProvider.notifier).updateNextAlarmTime(days: days);
             },
           );
         },

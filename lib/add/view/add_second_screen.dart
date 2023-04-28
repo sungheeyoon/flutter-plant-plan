@@ -17,6 +17,7 @@ class AddSecondScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
+    final plantState = ref.watch(plantInformationProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -174,7 +175,8 @@ class AddSecondScreen extends ConsumerWidget {
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: grayColor500,
                   ),
-            )
+            ),
+            Text('$plantState')
           ],
         ),
       ),
