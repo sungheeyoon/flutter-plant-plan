@@ -432,7 +432,7 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
-  DateTime? get startTime => throw _privateConstructorUsedError;
+  DateTime get startTime => throw _privateConstructorUsedError;
   DateTime? get startDay => throw _privateConstructorUsedError;
   DateTime? get nextAlarm => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
@@ -449,7 +449,7 @@ abstract class $AlarmCopyWith<$Res> {
       _$AlarmCopyWithImpl<$Res, Alarm>;
   @useResult
   $Res call(
-      {DateTime? startTime,
+      {DateTime startTime,
       DateTime? startDay,
       DateTime? nextAlarm,
       int repeat,
@@ -469,17 +469,17 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? startDay = freezed,
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
   }) {
     return _then(_value.copyWith(
-      startTime: freezed == startTime
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       startDay: freezed == startDay
           ? _value.startDay
           : startDay // ignore: cast_nullable_to_non_nullable
@@ -507,7 +507,7 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {DateTime? startTime,
+      {DateTime startTime,
       DateTime? startDay,
       DateTime? nextAlarm,
       int repeat,
@@ -523,17 +523,17 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? startTime = freezed,
+    Object? startTime = null,
     Object? startDay = freezed,
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
   }) {
     return _then(_$_Alarm(
-      startTime: freezed == startTime
+      startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       startDay: freezed == startDay
           ? _value.startDay
           : startDay // ignore: cast_nullable_to_non_nullable
@@ -558,7 +558,7 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 @JsonSerializable()
 class _$_Alarm implements _Alarm {
   _$_Alarm(
-      {this.startTime = null,
+      {required this.startTime,
       this.startDay = null,
       this.nextAlarm = null,
       this.repeat = 0,
@@ -568,8 +568,7 @@ class _$_Alarm implements _Alarm {
       _$$_AlarmFromJson(json);
 
   @override
-  @JsonKey()
-  final DateTime? startTime;
+  final DateTime startTime;
   @override
   @JsonKey()
   final DateTime? startDay;
@@ -624,7 +623,7 @@ class _$_Alarm implements _Alarm {
 
 abstract class _Alarm implements Alarm {
   factory _Alarm(
-      {final DateTime? startTime,
+      {required final DateTime startTime,
       final DateTime? startDay,
       final DateTime? nextAlarm,
       final int repeat,
@@ -633,7 +632,7 @@ abstract class _Alarm implements Alarm {
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
   @override
-  DateTime? get startTime;
+  DateTime get startTime;
   @override
   DateTime? get startDay;
   @override

@@ -30,7 +30,7 @@ class PlantInformationKey with _$PlantInformationKey {
 @freezed
 class Alarm with _$Alarm {
   factory Alarm({
-    @Default(null) DateTime? startTime,
+    required DateTime startTime,
     @Default(null) DateTime? startDay,
     @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,

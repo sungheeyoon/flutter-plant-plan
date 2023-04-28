@@ -19,35 +19,31 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
           PlantInformationModel(
             alias: "",
             watering: PlantInformationKey(
-              alarm: Alarm(),
+              alarm: Alarm(
+                startTime: DateTime.now(),
+              ),
             ),
             repotting: PlantInformationKey(
-              alarm: Alarm(),
+              alarm: Alarm(
+                startTime: DateTime.now(),
+              ),
             ),
             nutrient: PlantInformationKey(
-              alarm: Alarm(),
+              alarm: Alarm(
+                startTime: DateTime.now(),
+              ),
             ),
           ),
         );
   void updatePlantField(
     PlantField field, {
     DateTime? lastDay,
-    int? newRepeat,
-    String? newTitle,
-    DateTime? newStartTime,
-    DateTime? newStartDay,
-    DateTime? newNextAlarm,
+    Alarm? alarm,
   }) {
     PlantInformationKey updateKey(PlantInformationKey key) {
       return key.copyWith(
         lastDay: lastDay ?? key.lastDay,
-        alarm: key.alarm.copyWith(
-          repeat: newRepeat ?? key.alarm.repeat,
-          title: newTitle ?? key.alarm.title,
-          startTime: newStartTime ?? key.alarm.startDay,
-          startDay: newStartDay ?? key.alarm.startDay,
-          nextAlarm: newNextAlarm ?? key.alarm.nextAlarm,
-        ),
+        alarm: alarm ?? key.alarm,
       );
     }
 
@@ -81,13 +77,19 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = PlantInformationModel(
       alias: "",
       watering: PlantInformationKey(
-        alarm: Alarm(),
+        alarm: Alarm(
+          startTime: DateTime.now(),
+        ),
       ),
       repotting: PlantInformationKey(
-        alarm: Alarm(),
+        alarm: Alarm(
+          startTime: DateTime.now(),
+        ),
       ),
       nutrient: PlantInformationKey(
-        alarm: Alarm(),
+        alarm: Alarm(
+          startTime: DateTime.now(),
+        ),
       ),
     );
   }
