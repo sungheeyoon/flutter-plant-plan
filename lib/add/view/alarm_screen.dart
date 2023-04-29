@@ -243,7 +243,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                           width: 8,
                         ),
                         PeriodButton(
-                          flex: 3,
+                          flex: 2,
                           text: '직접 입력',
                           isFocused: focusedButtonIndex == 3,
                           onTapCallback: () => _updateFocusedButton(3),
