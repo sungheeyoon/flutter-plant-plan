@@ -188,6 +188,7 @@ class AlarmBox extends StatelessWidget {
   final String iconPath;
   final String title;
   final PlantField field;
+
   const AlarmBox({
     super.key,
     required this.iconPath,
