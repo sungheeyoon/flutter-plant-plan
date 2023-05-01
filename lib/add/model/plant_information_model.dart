@@ -35,6 +35,7 @@ class Alarm with _$Alarm {
     @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,
     @Default("") String title,
+    @Default(true) bool isOn,
   }) = _Alarm;
 
   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);

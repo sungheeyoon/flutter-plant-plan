@@ -41,7 +41,6 @@ class AlarmNotifier extends StateNotifier<Alarm> {
   }
 
   void setRepeat(int repeat) {
-    print('setRepeat is called');
     state = state.copyWith(repeat: repeat);
   }
 

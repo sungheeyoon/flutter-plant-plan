@@ -53,6 +53,7 @@ _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
           : DateTime.parse(json['nextAlarm'] as String),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? "",
+      isOn: json['isOn'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
@@ -61,4 +62,5 @@ Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
       'nextAlarm': instance.nextAlarm?.toIso8601String(),
       'repeat': instance.repeat,
       'title': instance.title,
+      'isOn': instance.isOn,
     };
