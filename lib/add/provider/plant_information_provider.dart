@@ -38,12 +38,17 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
   void updatePlantField(
     PlantField field, {
     DateTime? lastDay,
+    bool? toggleIsOn,
     Alarm? alarm,
   }) {
     PlantInformationKey updateKey(PlantInformationKey key) {
+      Alarm updatedAlarm = alarm ?? key.alarm;
+      if (toggleIsOn != null && toggleIsOn) {
+        updatedAlarm = updatedAlarm.copyWith(isOn: !updatedAlarm.isOn);
+      }
       return key.copyWith(
         lastDay: lastDay ?? key.lastDay,
-        alarm: alarm ?? key.alarm,
+        alarm: updatedAlarm,
       );
     }
 

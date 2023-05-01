@@ -366,8 +366,12 @@ class AlarmBox extends ConsumerWidget {
                             ],
                           ),
                           Switch(
-                            value: true,
-                            onChanged: (value) {},
+                            value: alarmState.isOn,
+                            onChanged: (value) {
+                              ref
+                                  .read(plantInformationProvider.notifier)
+                                  .updatePlantField(field, toggleIsOn: true);
+                            },
                             activeTrackColor: primaryColor.withOpacity(0.4),
                             activeColor: primaryColor,
                           ),

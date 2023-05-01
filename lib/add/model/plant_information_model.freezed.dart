@@ -437,6 +437,7 @@ mixin _$Alarm {
   DateTime? get nextAlarm => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  bool get isOn => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -453,7 +454,8 @@ abstract class $AlarmCopyWith<$Res> {
       DateTime? startDay,
       DateTime? nextAlarm,
       int repeat,
-      String title});
+      String title,
+      bool isOn});
 }
 
 /// @nodoc
@@ -474,6 +476,7 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
+    Object? isOn = null,
   }) {
     return _then(_value.copyWith(
       startTime: null == startTime
@@ -496,6 +499,10 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      isOn: null == isOn
+          ? _value.isOn
+          : isOn // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -511,7 +518,8 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
       DateTime? startDay,
       DateTime? nextAlarm,
       int repeat,
-      String title});
+      String title,
+      bool isOn});
 }
 
 /// @nodoc
@@ -528,6 +536,7 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
+    Object? isOn = null,
   }) {
     return _then(_$_Alarm(
       startTime: null == startTime
@@ -550,6 +559,10 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
+      isOn: null == isOn
+          ? _value.isOn
+          : isOn // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -562,7 +575,8 @@ class _$_Alarm implements _Alarm {
       this.startDay = null,
       this.nextAlarm = null,
       this.repeat = 0,
-      this.title = ""});
+      this.title = "",
+      this.isOn = true});
 
   factory _$_Alarm.fromJson(Map<String, dynamic> json) =>
       _$$_AlarmFromJson(json);
@@ -581,10 +595,13 @@ class _$_Alarm implements _Alarm {
   @override
   @JsonKey()
   final String title;
+  @override
+  @JsonKey()
+  final bool isOn;
 
   @override
   String toString() {
-    return 'Alarm(startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title)';
+    return 'Alarm(startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title, isOn: $isOn)';
   }
 
   @override
@@ -599,13 +616,14 @@ class _$_Alarm implements _Alarm {
             (identical(other.nextAlarm, nextAlarm) ||
                 other.nextAlarm == nextAlarm) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
-            (identical(other.title, title) || other.title == title));
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.isOn, isOn) || other.isOn == isOn));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, startTime, startDay, nextAlarm, repeat, title);
+  int get hashCode => Object.hash(
+      runtimeType, startTime, startDay, nextAlarm, repeat, title, isOn);
 
   @JsonKey(ignore: true)
   @override
@@ -627,7 +645,8 @@ abstract class _Alarm implements Alarm {
       final DateTime? startDay,
       final DateTime? nextAlarm,
       final int repeat,
-      final String title}) = _$_Alarm;
+      final String title,
+      final bool isOn}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
@@ -641,6 +660,8 @@ abstract class _Alarm implements Alarm {
   int get repeat;
   @override
   String get title;
+  @override
+  bool get isOn;
   @override
   @JsonKey(ignore: true)
   _$$_AlarmCopyWith<_$_Alarm> get copyWith =>
