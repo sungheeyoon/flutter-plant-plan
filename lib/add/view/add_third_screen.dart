@@ -24,14 +24,14 @@ class AddThirdScreen extends ConsumerWidget {
           horizontal: 24.0,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 8.0,
+            SizedBox(
+              height: 8.h,
             ),
             const ProgressBar(pageIndex: 2),
-            const SizedBox(
-              height: 20.0,
+            SizedBox(
+              height: 32.h,
             ),
             Center(
               child: Container(
@@ -48,52 +48,58 @@ class AddThirdScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (selectedPhoto != null) //찍은애
-                          Stack(children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: CircleAvatar(
-                                radius: 18.h, // Image radius
-                                backgroundImage: FileImage(selectedPhoto),
-                              ),
-                            ),
-                          ])
-                        else if (selectedPlant != null) //안찍었는데 깟다왓어
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: CircleAvatar(
-                              radius: 18.h, // Image radius
-                              backgroundImage:
-                                  NetworkImage(selectedPlant.image),
-                            ),
-                          )
-                        else
-                          ImageBox(
-                            imageUri: 'assets/images/pot.png',
-                            width: 36.h,
-                            height: 36.h,
+                    if (selectedPhoto != null) //찍은애
+                      Stack(children: [
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: CircleAvatar(
+                            radius: 30.h, // Image radius
+                            backgroundImage: FileImage(selectedPhoto),
                           ),
-                        SizedBox(
-                          width: 12.h,
                         ),
-                        if (selectedPlant != null)
-                          Text(
+                      ])
+                    else if (selectedPlant != null) //안찍었는데 깟다왓어
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: CircleAvatar(
+                          radius: 30.h, // Image radius
+                          backgroundImage: NetworkImage(selectedPlant.image),
+                        ),
+                      )
+                    else
+                      ImageBox(
+                        imageUri: 'assets/images/pot.png',
+                        width: 60.h,
+                        height: 60.h,
+                      ),
+                    SizedBox(
+                      height: 12.h,
+                    ),
+                    if (selectedPlant != null)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.h,
+                          vertical: 2.h,
+                        ),
+                        color: keyColor100,
+                        child: Center(
+                          child: Text(
                             selectedPlant.name,
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyMedium!
+                                .labelMedium!
                                 .copyWith(
-                                  color: grayBlack,
+                                  color: keyColor700,
                                 ),
                           ),
-                      ],
+                        ),
+                      ),
+                    SizedBox(
+                      height: 16.h,
                     ),
                   ],
                 ),
