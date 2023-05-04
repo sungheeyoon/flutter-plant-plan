@@ -155,7 +155,6 @@ class AddSecondScreen extends ConsumerWidget {
               iconPath: 'assets/images/management/humid.png',
               title: '물주기',
               field: PlantField.watering,
-              alarm: false,
             ),
             SizedBox(
               height: 12.h,
@@ -164,7 +163,6 @@ class AddSecondScreen extends ConsumerWidget {
               iconPath: 'assets/images/management/repotting.png',
               title: '분갈이',
               field: PlantField.repotting,
-              alarm: false,
             ),
             SizedBox(
               height: 12.h,
@@ -173,7 +171,6 @@ class AddSecondScreen extends ConsumerWidget {
               iconPath: 'assets/images/management/nutrient.png',
               title: '영양제',
               field: PlantField.nutrient,
-              alarm: false,
             ),
             SizedBox(
               height: 12.h,
@@ -196,14 +193,12 @@ class AlarmBox extends ConsumerWidget {
   final String iconPath;
   final String title;
   final PlantField field;
-  final bool alarm;
 
   const AlarmBox({
     super.key,
     required this.iconPath,
     required this.title,
     required this.field,
-    required this.alarm,
   });
 
   @override
