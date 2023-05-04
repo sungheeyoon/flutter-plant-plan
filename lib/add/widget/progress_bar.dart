@@ -172,8 +172,8 @@ class ProgressBar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 4,
+          SizedBox(
+            height: 4.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,9 +219,9 @@ class ProgressBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 34,
+                width: 34.h,
                 child: CircleAvatar(
-                  radius: 12,
+                  radius: 12.h,
                   backgroundColor: keyColor300,
                   child: Text(
                     '1',
@@ -231,18 +231,18 @@ class ProgressBar extends StatelessWidget {
                   ),
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: Divider(
                   indent: 6.0,
                   endIndent: 6.0,
-                  thickness: 1,
+                  thickness: 1.h,
                   color: keyColor500,
                 ),
               ),
               SizedBox(
                 width: 34,
                 child: CircleAvatar(
-                  radius: 12,
+                  radius: 12.h,
                   backgroundColor: keyColor300,
                   child: Text(
                     '2',
@@ -252,18 +252,18 @@ class ProgressBar extends StatelessWidget {
                   ),
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: Divider(
                   indent: 6.0,
                   endIndent: 6.0,
-                  thickness: 1,
+                  thickness: 1.h,
                   color: keyColor500,
                 ),
               ),
               SizedBox(
-                width: 34,
+                width: 34.h,
                 child: CircleAvatar(
-                  radius: 12,
+                  radius: 12.h,
                   backgroundColor: keyColor500,
                   child: Text(
                     '3',
@@ -275,14 +275,14 @@ class ProgressBar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 4,
+          SizedBox(
+            height: 4.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 34,
+                width: 34.h,
                 child: Text(
                   '정보추가',
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
@@ -292,7 +292,7 @@ class ProgressBar extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 34,
+                width: 34.h,
                 child: Text(
                   '알림추가',
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
@@ -302,7 +302,7 @@ class ProgressBar extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 34,
+                width: 34.h,
                 child: Text(
                   '추가완료',
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
