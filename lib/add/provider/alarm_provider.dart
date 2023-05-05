@@ -53,10 +53,18 @@ class AlarmNotifier extends StateNotifier<Alarm> {
   }) {
     // 만약에 nextAlarm 이 null 이 아니라면 days 기간을 추가한다
     final DateTime now = state.startTime;
+    final DateTime? startDay = state.startDay;
+    DateTime result = DateTime(
+        startDay?.year ?? now.year,
+        startDay?.month ?? now.month,
+        startDay?.day ?? now.day,
+        now.hour,
+        now.minute,
+        now.second);
 
     setDateTime(
       AlarmDateTimeField.nextAlarm, // key 값을 문자열로 지정
-      now.add(
+      result.add(
         Duration(days: days),
       ),
     );

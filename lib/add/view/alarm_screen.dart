@@ -504,6 +504,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: TimePickerSpinner(
+        time: selectedState.alarm.startTime,
         is24HourMode: false,
         normalTextStyle: TextStyle(
           fontWeight: FontWeight.w400,
