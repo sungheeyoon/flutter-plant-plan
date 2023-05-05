@@ -19,7 +19,6 @@ class AddThirdScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
-    final plantState = ref.watch(plantInformationProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
