@@ -19,7 +19,7 @@ class AddSecondScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
-    final plantState = ref.watch(plantInformationProvider);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -181,7 +181,6 @@ class AddSecondScreen extends ConsumerWidget {
                     color: grayColor500,
                   ),
             ),
-            Text('$plantState')
           ],
         ),
       ),
@@ -303,17 +302,16 @@ class AlarmBox extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 4.h,
-                                  vertical: 2.h,
-                                ),
-                                color: pointColor1.withOpacity(0.1),
-                                child: Center(
-                                  child: alarmState.repeat == 0
-                                      ? const SizedBox
-                                          .shrink() // repeat이 null이면 보여주지 않음
-                                      : Text(
+                              alarmState.repeat == 0
+                                  ? const SizedBox.shrink()
+                                  : Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.h,
+                                        vertical: 2.h,
+                                      ),
+                                      color: pointColor1.withOpacity(0.1),
+                                      child: Center(
+                                        child: Text(
                                           alarmState.repeat == 1
                                               ? '매일'
                                               : alarmState.repeat == 7
@@ -326,8 +324,8 @@ class AlarmBox extends ConsumerWidget {
                                                 color: pointColor1,
                                               ),
                                         ),
-                                ),
-                              ),
+                                      ),
+                                    ),
                               if (alarmState.repeat != 0)
                                 SizedBox(
                                   height: 8.h,
