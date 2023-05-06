@@ -256,7 +256,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           Text(
                             currentState.lastDay != null
                                 ? dateFormatter(
-                                    plantState.watering.lastDay as DateTime)
+                                    currentState.lastDay as DateTime)
                                 : '-',
                             style: Theme.of(context)
                                 .textTheme
@@ -319,8 +319,8 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           ),
                           Text(
                             currentState.alarm.startDay != null
-                                ? dateFormatter(plantState
-                                    .watering.alarm.startDay as DateTime)
+                                ? dateFormatter(
+                                    currentState.alarm.startDay as DateTime)
                                 : '-',
                             style: Theme.of(context)
                                 .textTheme
