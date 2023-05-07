@@ -19,6 +19,7 @@ class AddThirdScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
+    final plantState = ref.watch(plantInformationProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -106,6 +107,17 @@ class AddThirdScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                      ),
+                    if (plantState.alias != "")
+                      SizedBox(
+                        height: 4.h,
+                      ),
+                    if (plantState.alias != "")
+                      Text(
+                        plantState.alias,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: grayBlack,
+                            ),
                       ),
                     SizedBox(
                       height: 16.h,
@@ -237,6 +249,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,31 +300,61 @@ class ImmutableAlarmBox extends ConsumerWidget {
                               // if (plantState.watering.alarm
                               //         .startDay !=
                               //     null)
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 4.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: pointColor2.withOpacity(0.1),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(4),
+                              currentState.alarm.repeat == 0
+                                  ? const SizedBox.shrink()
+                                  : Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: pointColor1.withOpacity(
+                                          0.1,
+                                        ),
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(4),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          currentState.alarm.repeat == 1
+                                              ? '매일'
+                                              : currentState.alarm.repeat == 7
+                                                  ? '매주'
+                                                  : '${currentState.alarm.repeat}일 마다',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall!
+                                              .copyWith(
+                                                color: pointColor1,
+                                              ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'D-1 변경예정',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .copyWith(
-                                            color: pointColor2,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // FittedBox(
+                              //   fit: BoxFit.scaleDown,
+                              //   child: Container(
+                              //     padding: EdgeInsets.symmetric(
+                              //       horizontal: 4.h,
+                              //     ),
+                              //     decoration: BoxDecoration(
+                              //       color: pointColor2.withOpacity(0.1),
+                              //       borderRadius: const BorderRadius.all(
+                              //         Radius.circular(4),
+                              //       ),
+                              //     ),
+                              //     child: Center(
+                              //       child: Text(
+                              //         'D-1 변경예정',
+                              //         style: Theme.of(context)
+                              //             .textTheme
+                              //             .labelSmall!
+                              //             .copyWith(
+                              //               color: pointColor2,
+                              //             ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                           SizedBox(
@@ -321,7 +364,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                             currentState.alarm.startDay != null
                                 ? dateFormatter(
                                     currentState.alarm.startDay as DateTime)
-                                : '-',
+                                : '0000-00-00',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
