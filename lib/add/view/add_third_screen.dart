@@ -230,7 +230,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                   width: 360.w,
                   padding: EdgeInsets.symmetric(
                     vertical: 10.h,
-                    horizontal: 16.h,
+                    horizontal: 20.h,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -360,18 +360,37 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           SizedBox(
                             height: 6.h,
                           ),
-                          Text(
-                            currentState.alarm.startDay != null
-                                ? dateFormatter(
-                                    currentState.alarm.startDay as DateTime)
-                                : '0000-00-00',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: grayBlack,
-                                ),
-                          ),
+                          if (currentState.alarm.startDay != null)
+                            Text(
+                              dateFormatter(
+                                  currentState.alarm.startDay as DateTime),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: grayBlack,
+                                  ),
+                            ),
+                          if (currentState.alarm.startDay == null)
+                            RichText(
+                              text: TextSpan(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: grayBlack,
+                                    ),
+                                children: const [
+                                  TextSpan(text: '-'),
+                                  TextSpan(
+                                    text: '333-33-33',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     ],
