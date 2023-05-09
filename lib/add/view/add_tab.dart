@@ -22,7 +22,8 @@ class AddTab extends ConsumerStatefulWidget {
 
 class _AddTabState extends ConsumerState<AddTab>
     with SingleTickerProviderStateMixin {
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(initialPage: 0);
+  int _currentPageIndex = 0;
 
   // Future uploadFile() async {
   //   String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
@@ -75,15 +76,18 @@ class _AddTabState extends ConsumerState<AddTab>
         width: 328.w,
         height: 44.h,
         textColor: Colors.white,
-        name: '다음',
+        name: _currentPageIndex == 2 ? '식물 추가 완료' : '다음',
         onPressed: () async {
           if (selectedPlant != null) {
             if (_pageController.page == 0) {
               _pageController.jumpToPage(1);
+              _currentPageIndex = 1;
             } else if (_pageController.page == 1) {
               _pageController.jumpToPage(2);
+              _currentPageIndex = 2;
             }
           }
+          setState(() {});
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

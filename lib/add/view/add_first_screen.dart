@@ -90,7 +90,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                 FittedBox(
                                   fit: BoxFit.contain,
                                   child: CircleAvatar(
-                                    radius: 40, // Image radius
+                                    radius: 40.h, // Image radius
                                     backgroundImage: FileImage(selectedPhoto),
                                   ),
                                 ),
@@ -334,7 +334,6 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                         ),
                       ),
                     ),
-                    keyboardType: TextInputType.name,
                   ),
                 ),
                 Positioned(
