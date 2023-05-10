@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:plant_plan/add/view/add_tab.dart';
 import 'package:plant_plan/common/const/data.dart';
+import 'package:plant_plan/common/view/home_screen.dart';
+
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -118,7 +119,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: const AddTab()
+            home: const HomeScreen()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
@@ -27,8 +28,9 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
   @override
   void initState() {
     super.initState();
+    final PlantInformationModel plantState = ref.read(plantInformationProvider);
+    textController.text = plantState.alias;
     // TextEditingController 생성
-    textController = TextEditingController();
   }
 
   @override
@@ -42,9 +44,8 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
   Widget build(BuildContext context) {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
-    final plantInfo = ref.watch(plantInformationProvider);
     final imageHelper = ImageHelper();
-    textController.text = plantInfo.alias;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -293,10 +294,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
             ),
             //별칭
             Stack(
-              children: <Widget>[
+              children: [
                 Container(
                   margin: const EdgeInsets.only(top: 8),
-                  child: TextField(
+                  child: TextFormField(
                     controller: textController,
                     onChanged: (text) {
                       ref
@@ -304,6 +305,11 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                           .updateAlias(text);
                     },
                     textAlignVertical: TextAlignVertical.center,
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: grayBlack),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.only(left: 16),
                       hintText: '내 식물의 별칭을 입력해주세요',
@@ -345,16 +351,18 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                       padding: const EdgeInsets.symmetric(
                         horizontal: 4.0,
                       ),
-                      child: Text('별칭',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: grayColor600,
-                                  )),
+                      child: Text(
+                        '별칭',
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: grayColor600,
+                            ),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
+
             SizedBox(
               height: 20.h,
             ),
