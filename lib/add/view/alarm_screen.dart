@@ -30,7 +30,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late final LocalNotificationService service;
   bool isSwitched = false;
   late PlantInformationKey selectedState;
-  String? name;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
   late String lastDayText;
@@ -379,7 +378,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                         },
                         textAlignVertical: TextAlignVertical.center,
                         textAlign: TextAlign.start,
-                        initialValue: name,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
