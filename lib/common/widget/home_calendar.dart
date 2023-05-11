@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_plan/utils/colors.dart';
 
 class MyCalendar extends StatefulWidget {
   const MyCalendar({Key? key}) : super(key: key);
@@ -45,36 +47,84 @@ class _MyCalendarState extends State<MyCalendar> {
         ),
       ),
     );
+
+    final isSameDay = date.year == _selectedDate.year &&
+        date.month == _selectedDate.month &&
+        date.day == _selectedDate.day;
+
+    double width = 46.h;
+    double height = 74.h;
+    if (isSameDay) {
+      width = 54.h;
+      height = 90.h;
+    }
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: isSelected ? 90 : 80,
-      height: isSelected ? 100 : 80,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
-        color: isSelected ? Colors.grey.shade200 : null,
-        borderRadius: BorderRadius.circular(8),
+        color: (isSameDay && isSelected)
+            ? Colors.white
+            : (isSameDay && !isSelected)
+                ? pointColor2
+                : (!isSameDay && isSelected)
+                    ? Colors.white
+                    : pointColor2,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(27.h),
+          bottom: Radius.circular(27.h),
+        ),
+        border: isSameDay ? Border.all(color: Colors.white, width: 2) : null,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             dayName,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.grey.shade600 : null,
-            ),
+            style: (isSameDay && isSelected)
+                ? Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: grayColor500)
+                : (isSameDay && !isSelected)
+                    ? Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: Colors.white)
+                    : (!isSameDay && isSelected)
+                        ? Theme.of(context)
+                            .textTheme
+                            .labelSmall!
+                            .copyWith(color: grayColor500)
+                        : Theme.of(context).textTheme.labelSmall!.copyWith(
+                              color: Colors.white.withOpacity(0.5),
+                            ),
           ),
-          const SizedBox(height: 4),
+          if (isSameDay) SizedBox(height: 2.h),
           Text(
             dayNumber,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.black : null,
-            ),
+            style: (isSameDay && isSelected)
+                ? Theme.of(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(color: primaryColor)
+                : (isSameDay && !isSelected)
+                    ? Theme.of(context)
+                        .textTheme
+                        .displayLarge!
+                        .copyWith(color: Colors.white)
+                    : (!isSameDay && isSelected)
+                        ? Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(color: primaryColor)
+                        : Theme.of(context).textTheme.displayMedium!.copyWith(
+                              color: Colors.white.withOpacity(0.5),
+                            ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: isSameDay ? 8.h : 2.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: dots,
@@ -86,31 +136,38 @@ class _MyCalendarState extends State<MyCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const SizedBox(height: 16),
-        Text(
-          DateFormat.yMMM().format(_selectedDate),
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+    return Container(
+      color: pointColor2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 18.h),
+          Text(
+            DateFormat.yMMM().format(_selectedDate),
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium!
+                .copyWith(color: Colors.white),
           ),
-        ),
-        const SizedBox(height: 16),
-        Expanded(
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: 1000,
-            itemBuilder: (BuildContext context, int index) {
-              final now = DateTime.now().add(Duration(days: index - 500));
-              final isFocused = index == 500;
-              return _buildDateContainer(now, isFocused);
-            },
+          SizedBox(height: 30.h),
+          SizedBox(
+            height: 90.h,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: 1000,
+              itemBuilder: (BuildContext context, int index) {
+                final now = DateTime.now().add(
+                  Duration(days: index - 500),
+                );
+                final isFocused = index == 500;
+                return _buildDateContainer(now, isFocused);
+              },
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: 32.h),
+        ],
+      ),
     );
   }
 }
