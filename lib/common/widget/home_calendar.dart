@@ -31,7 +31,7 @@ class _MyCalendarState extends State<MyCalendar> {
           });
   }
 
-  Widget _buildDateContainer(DateTime date, bool isSelected) {
+  Widget _buildDateContainer(DateTime date, bool isToday, bool isSelectedDay) {
     final dayName = DateFormat.E().format(date);
     final dayNumber = DateFormat.d().format(date);
     const alarmCount = 3; // TODO: replace this with actual alarm count
@@ -48,16 +48,14 @@ class _MyCalendarState extends State<MyCalendar> {
       ),
     );
 
-    final isSameDay = date.year == _selectedDate.year &&
-        date.month == _selectedDate.month &&
-        date.day == _selectedDate.day;
+    // final isSelectedDay = date.year == _selectedDate.year &&
+    //     date.month == _selectedDate.month &&
+    //     date.day == _selectedDate.day;
 
-    double width = 46.h;
-    double height = 74.h;
-    if (isSameDay) {
-      width = 54.h;
-      height = 90.h;
-    }
+    double width =
+        isSelectedDay ? MediaQuery.of(context).size.width * 0.8 : 46.h;
+    double height =
+        isSelectedDay ? MediaQuery.of(context).size.height * 0.8 : 74.h;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -65,35 +63,36 @@ class _MyCalendarState extends State<MyCalendar> {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: (isSameDay && isSelected)
+        color: (isSelectedDay && isToday)
             ? Colors.white
-            : (isSameDay && !isSelected)
+            : (isSelectedDay && !isToday)
                 ? pointColor2
-                : (!isSameDay && isSelected)
+                : (!isSelectedDay && isToday)
                     ? Colors.white
                     : pointColor2,
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(27.h),
           bottom: Radius.circular(27.h),
         ),
-        border: isSameDay ? Border.all(color: Colors.white, width: 2) : null,
+        border:
+            isSelectedDay ? Border.all(color: Colors.white, width: 2) : null,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             dayName,
-            style: (isSameDay && isSelected)
+            style: (isSelectedDay && isToday)
                 ? Theme.of(context)
                     .textTheme
                     .bodySmall!
                     .copyWith(color: grayColor500)
-                : (isSameDay && !isSelected)
+                : (isSelectedDay && !isToday)
                     ? Theme.of(context)
                         .textTheme
                         .bodySmall!
                         .copyWith(color: Colors.white)
-                    : (!isSameDay && isSelected)
+                    : (!isSelectedDay && isToday)
                         ? Theme.of(context)
                             .textTheme
                             .labelSmall!
@@ -102,20 +101,20 @@ class _MyCalendarState extends State<MyCalendar> {
                               color: Colors.white.withOpacity(0.5),
                             ),
           ),
-          if (isSameDay) SizedBox(height: 2.h),
+          if (isSelectedDay) SizedBox(height: 2.h),
           Text(
             dayNumber,
-            style: (isSameDay && isSelected)
+            style: (isSelectedDay && isToday)
                 ? Theme.of(context)
                     .textTheme
                     .displayLarge!
                     .copyWith(color: primaryColor)
-                : (isSameDay && !isSelected)
+                : (isSelectedDay && !isToday)
                     ? Theme.of(context)
                         .textTheme
                         .displayLarge!
                         .copyWith(color: Colors.white)
-                    : (!isSameDay && isSelected)
+                    : (!isSelectedDay && isToday)
                         ? Theme.of(context)
                             .textTheme
                             .displayMedium!
@@ -124,7 +123,7 @@ class _MyCalendarState extends State<MyCalendar> {
                               color: Colors.white.withOpacity(0.5),
                             ),
           ),
-          SizedBox(height: isSameDay ? 8.h : 2.h),
+          SizedBox(height: isSelectedDay ? 8.h : 2.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: dots,
@@ -160,8 +159,11 @@ class _MyCalendarState extends State<MyCalendar> {
                 final now = DateTime.now().add(
                   Duration(days: index - 500),
                 );
-                final isFocused = index == 500;
-                return _buildDateContainer(now, isFocused);
+                final isSelectedDay = now.year == _selectedDate.year &&
+                    now.month == _selectedDate.month &&
+                    now.day == _selectedDate.day;
+                final isToday = index == 500;
+                return _buildDateContainer(now, isToday, isSelectedDay);
               },
             ),
           ),
