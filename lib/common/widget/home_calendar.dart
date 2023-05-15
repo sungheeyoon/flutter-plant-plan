@@ -141,13 +141,35 @@ class _MyCalendarState extends State<MyCalendar> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 18.h),
-          Text(
-            DateFormat.yMMM().format(_selectedDate),
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headlineMedium!
-                .copyWith(color: Colors.white),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 20.h,
+                ),
+                Text(
+                  DateFormat.yMMM().format(_selectedDate),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium!
+                      .copyWith(color: Colors.white),
+                ),
+                InkWell(
+                  onTap: () {
+                    // 클릭 이벤트 처리
+                  },
+                  child: Image.asset(
+                    'assets/icons/home/statistical_chart.png',
+                    width: 24.h,
+                    height: 24.h,
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 30.h),
           SizedBox(
@@ -167,7 +189,6 @@ class _MyCalendarState extends State<MyCalendar> {
               },
             ),
           ),
-          SizedBox(height: 32.h),
         ],
       ),
     );
