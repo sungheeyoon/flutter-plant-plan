@@ -142,6 +142,9 @@ flutter:
     - assets/icons/bookmark_outline.png
     - assets/icons/pot_add.png
 
+    - assets/icons/home/change_view.png
+    - assets/icons/home/statistical_chart.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
