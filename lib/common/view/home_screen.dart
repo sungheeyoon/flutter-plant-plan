@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 22.h,
+                        height: 16.h,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 10.h,
+                        height: 6.h,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -385,6 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const Divider(
                         thickness: 1,
+                        color: grayColor200,
+                      ),
+                      SizedBox(
+                        height: 4.h,
                       ),
                       SizedBox(
                         height: 400.h,
@@ -416,95 +421,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(
                                       height: 8.h,
                                     ),
-                                    Container(
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            offset: Offset(2, 2),
-                                            blurRadius: 8,
-                                            color: Color.fromRGBO(0, 0, 0, 0.1),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          Container(
-                                            width: 8.h,
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xFF72CBE7),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(8),
-                                                bottomLeft: Radius.circular(8),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      16, 16, 12, 16),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 36,
-                                                        height: 36,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(14),
-                                                          child: Image.network(
-                                                              'https://via.placeholder.com/36'),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8.h),
-                                                      Text(
-                                                        '안시리움',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .copyWith(
-                                                              color: grayBlack,
-                                                            ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        '12:00 PM',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headlineSmall!
-                                                            .copyWith(
-                                                              color:
-                                                                  primaryColor,
-                                                            ),
-                                                      ),
-                                                      SizedBox(width: 8.h),
-                                                      const Icon(
-                                                          Icons
-                                                              .check_circle_outline,
-                                                          color: Color(
-                                                              0xFF72CBE7)),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
+                                    const AlarmCard(
+                                        field: PlantField.nutrient,
+                                        isDone: true,
+                                        name: "앗싸라말라잌",
+                                        time: "12:00 PM",
+                                        imgUrl:
+                                            'assets/icons/home/change_view.png')
                                   ],
                                 ),
                               ),
@@ -521,6 +444,143 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AlarmCard extends StatefulWidget {
+  final PlantField field;
+  final bool isDone;
+  final String name;
+  final String time;
+  final String imgUrl;
+
+  const AlarmCard({
+    Key? key,
+    required this.field,
+    required this.isDone,
+    required this.name,
+    required this.time,
+    required this.imgUrl,
+  }) : super(key: key);
+
+  @override
+  _AlarmCardState createState() => _AlarmCardState();
+}
+
+class _AlarmCardState extends State<AlarmCard> {
+  late bool isDone;
+
+  @override
+  void initState() {
+    isDone = widget.isDone;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color fieldColor;
+
+    switch (widget.field) {
+      case PlantField.watering:
+        fieldColor = const Color(0xFF72CBE7);
+        break;
+      case PlantField.repotting:
+        fieldColor = subColor2; // 다른 색상 지정
+        break;
+      case PlantField.nutrient:
+        fieldColor = keyColor400; // 다른 색상 지정
+        break;
+      default:
+        fieldColor = Colors.transparent;
+    }
+
+    return Container(
+      height: 60.h,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(2, 2),
+            blurRadius: 8,
+            color: Color.fromRGBO(0, 0, 0, 0.1),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 8.h,
+            decoration: BoxDecoration(
+              color: fieldColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                bottomLeft: Radius.circular(8),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 36.h,
+                        height: 36.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14.h),
+                          image: DecorationImage(
+                            image: AssetImage(widget.imgUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8.h),
+                      Text(
+                        widget.name,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: grayBlack,
+                            ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.time,
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  color: primaryColor,
+                                ),
+                      ),
+                      SizedBox(width: 8.h),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isDone = !isDone;
+                          });
+                        },
+                        child: Icon(
+                          isDone
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline,
+                          size: 28.h,
+                          color: fieldColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

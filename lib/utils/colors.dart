@@ -24,3 +24,8 @@ const primaryColor = Color(0xff1D315B);
 
 const pointColor1 = Color(0xffFF853F);
 const pointColor2 = Color(0xff388CED);
+
+const subColor1 = Color(0xffAAE2F3);
+const subColor2 = Color(0xffF9BABA);
+
+const errorColor = Color(0xffF84040);
