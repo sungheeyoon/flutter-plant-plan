@@ -228,7 +228,7 @@ class OnboardingContent extends StatelessWidget {
 
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
+                            builder: (context) => LoginScreen(),
                           ),
                         );
                       },

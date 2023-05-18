@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final onboardingProvider = StateNotifierProvider<onboardingState, int>((ref) {
-  return onboardingState();
+final onboardingProvider = StateNotifierProvider<OnboardingState, int>((ref) {
+  return OnboardingState();
 });
 
-class onboardingState extends StateNotifier<int> {
-  onboardingState() : super(0);
+class OnboardingState extends StateNotifier<int> {
+  OnboardingState() : super(0);
 
   void changePage(int i) => state = i;
 }
