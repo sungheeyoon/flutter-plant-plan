@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:plant_plan/common/const/data.dart';
-import 'package:plant_plan/common/view/sign_up_form.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            home: SignUpForm()
+            home: LoginScreen()
             //showHome ? SnappingAbove() : const OnboardingScreen(),
             );
       },

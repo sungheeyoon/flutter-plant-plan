@@ -119,6 +119,7 @@ flutter:
     - assets/images/login/kakao.png
     - assets/images/login/naver.png
     - assets/images/login/google.png
+    - assets/images/login/logo.png
 
     - assets/icons/favorite_outline.png
     - assets/icons/favorite.png
