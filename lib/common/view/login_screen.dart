@@ -17,15 +17,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormBuilderState> _loginKey = GlobalKey<FormBuilderState>();
   String _errorText = '';
 
-  Future<void> _login(BuildContext context) async {
+  void _login(BuildContext context) async {
     if (_loginKey.currentState!.saveAndValidate()) {
       final formData = _loginKey.currentState!.value;
+      setState(() {
+        _errorText = ''; // 초기화
+      });
+
+      if (formData['email'] == null || formData['email'].isEmpty) {
+        setState(() {
+          _errorText = '이메일을 입력해주세요.';
+        });
+        return;
+      }
+
+      if (formData['password'] == null || formData['password'].isEmpty) {
+        setState(() {
+          _errorText = '비밀번호를 입력해주세요.';
+        });
+        return;
+      }
+
       try {
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: formData['email'],
           password: formData['password'],
         );
+
         // 로그인 성공
         // 추가적인 작업 수행 또는 홈 화면으로 이동
         print('로그인 성공: ${userCredential.user!.uid}');
@@ -33,12 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
         // 로그인 실패
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
           setState(() {
-            _errorText = '이메일혹은 비밀번호가 잘못되었습니다.';
+            _errorText = '이메일 혹은 비밀번호가 잘못되었습니다.';
           });
           print('로그인 실패: ${e.code}');
         } else {
           setState(() {
-            _errorText = '이메일혹은 비밀번호가 잘못되었습니다.';
+            _errorText = '이메일 혹은 비밀번호가 잘못되었습니다.';
           });
           print('로그인 실패: ${e.message}');
         }
@@ -83,28 +102,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    InputBox(
+                    const InputBox(
                       name: 'email',
                       title: '이메일',
                       hintText: '이메일을 입력해주세요',
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return '이메일을 입력해주세요.';
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: 12.0.h),
-                    InputBox(
+                    const InputBox(
                       name: 'password',
                       title: '비밀번호',
                       hintText: '비밀번호를 입력해주세요',
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return '비밀번호를 입력해주세요.';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 8.0),
                     Text(
