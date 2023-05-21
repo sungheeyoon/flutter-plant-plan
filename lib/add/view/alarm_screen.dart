@@ -13,6 +13,7 @@ import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AlarmScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'addAlarm';
   final String title;
   final PlantField field;
 

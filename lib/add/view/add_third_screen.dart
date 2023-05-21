@@ -11,6 +11,7 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddThirdScreen extends ConsumerWidget {
+  static String get routeName => 'addThird';
   const AddThirdScreen({
     super.key,
   });

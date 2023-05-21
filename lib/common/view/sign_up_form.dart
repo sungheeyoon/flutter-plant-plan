@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 
 class SignUpForm extends StatelessWidget {
+  static String get routeName => 'signUp';
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   SignUpForm({super.key});

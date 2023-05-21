@@ -4,6 +4,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
+  static String get routeName => 'splash';
   const SplashScreen({super.key});
 
   @override
