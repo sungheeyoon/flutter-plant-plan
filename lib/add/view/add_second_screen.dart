@@ -13,6 +13,7 @@ import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 
 class AddSecondScreen extends ConsumerWidget {
+  static String get routeName => 'addSecond';
   const AddSecondScreen({super.key});
 
   @override

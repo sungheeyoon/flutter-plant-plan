@@ -13,6 +13,7 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'addSearch';
   const SearchScreen({Key? key}) : super(key: key);
 
   @override

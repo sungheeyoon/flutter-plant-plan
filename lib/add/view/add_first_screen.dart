@@ -15,6 +15,7 @@ import 'package:plant_plan/utils/image_helper.dart';
 import 'package:plant_plan/widgets/image_box.dart';
 
 class AddFirstScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'addFirst';
   const AddFirstScreen({
     super.key,
   });

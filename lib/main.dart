@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:plant_plan/common/const/data.dart';
-import 'package:plant_plan/common/view/login_screen.dart';
+import 'package:plant_plan/routes/router.dart';
 
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,86 +42,87 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 760),
       builder: (context, child) {
-        return MaterialApp(
-            theme: ThemeData(
-              scaffoldBackgroundColor: Colors.white,
-              fontFamily: 'Pretendard',
-              textTheme: TextTheme(
-                displayLarge: TextStyle(
-                  fontSize: 28.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                displayMedium: TextStyle(
-                  fontSize: 24.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -1.h,
-                ),
-                displaySmall: TextStyle(
-                  fontSize: 22.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                headlineLarge: TextStyle(
-                  fontSize: 20.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                headlineMedium: TextStyle(
-                  fontSize: 20.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.8.h,
-                ),
-                headlineSmall: TextStyle(
-                  fontSize: 18.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.7.h,
-                ),
-                titleLarge: TextStyle(
-                  fontSize: 18.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.7.h,
-                ),
-                titleMedium: TextStyle(
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.h,
-                ),
-                bodyLarge: TextStyle(
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.h,
-                ),
-                bodyMedium: TextStyle(
-                  fontSize: 14.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.h,
-                ),
-                bodySmall: TextStyle(
-                  fontSize: 12.0.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5.h,
-                ),
-                labelLarge: TextStyle(
-                  fontSize: 14.0.sp,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.h,
-                ),
-                labelMedium: TextStyle(
-                  fontSize: 12.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5.h,
-                ),
-                labelSmall: TextStyle(
-                  fontSize: 10.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.4.h,
-                ),
+        return MaterialApp.router(
+          routerConfig: router,
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            fontFamily: 'Pretendard',
+            textTheme: TextTheme(
+              displayLarge: TextStyle(
+                fontSize: 28.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
+              ),
+              displayMedium: TextStyle(
+                fontSize: 24.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -1.h,
+              ),
+              displaySmall: TextStyle(
+                fontSize: 22.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
+              ),
+              headlineLarge: TextStyle(
+                fontSize: 20.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
+              ),
+              headlineMedium: TextStyle(
+                fontSize: 20.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.8.h,
+              ),
+              headlineSmall: TextStyle(
+                fontSize: 18.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.7.h,
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.7.h,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.6.h,
+              ),
+              bodyLarge: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.6.h,
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 14.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.6.h,
+              ),
+              bodySmall: TextStyle(
+                fontSize: 12.0.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.5.h,
+              ),
+              labelLarge: TextStyle(
+                fontSize: 14.0.sp,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.6.h,
+              ),
+              labelMedium: TextStyle(
+                fontSize: 12.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5.h,
+              ),
+              labelSmall: TextStyle(
+                fontSize: 10.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.4.h,
               ),
             ),
-            home: LoginScreen()
-            //showHome ? SnappingAbove() : const OnboardingScreen(),
-            );
+          ),
+
+          //showHome ? SnappingAbove() : const OnboardingScreen(),
+        );
       },
     );
   }

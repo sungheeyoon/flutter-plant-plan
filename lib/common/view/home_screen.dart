@@ -6,6 +6,7 @@ import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
+  static String get routeName => 'home';
   const HomeScreen({super.key});
 
   @override

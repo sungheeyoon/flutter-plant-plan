@@ -7,6 +7,7 @@ import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class LoginScreen extends StatefulWidget {
+  static String get routeName => 'login';
   const LoginScreen({super.key});
 
   @override

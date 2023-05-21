@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  static String get routeName => 'onboarding';
   const OnboardingScreen({super.key});
 
   @override
@@ -225,12 +226,9 @@ class OnboardingContent extends StatelessWidget {
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
                         prefs.setBool('showHome', true);
-
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
+                        if (context.mounted) {
+                          GoRouter.of(context).go('/login');
+                        }
                       },
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
