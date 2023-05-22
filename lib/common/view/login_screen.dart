@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -219,6 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(width: 8.h),
                   GestureDetector(
                     onTap: () {
+                      GoRouter.of(context).go('/login/signUp');
+
                       // 회원가입 버튼을 눌렀을 때 수행할 동작
                     },
                     child: Text(
