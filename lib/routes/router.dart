@@ -7,6 +7,7 @@ import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/view/onboarding_screen.dart';
+import 'package:plant_plan/common/view/sign_up_form.dart';
 import 'package:plant_plan/common/view/splash_screen.dart';
 
 GoRouter router = GoRouter(
@@ -67,6 +68,13 @@ GoRouter router = GoRouter(
       path: '/login',
       name: LoginScreen.routeName,
       builder: (context, state) => const LoginScreen(),
+      routes: [
+        GoRoute(
+          path: 'signUp',
+          name: SignUpForm.routeName,
+          builder: (context, state) => SignUpForm(),
+        ),
+      ],
     ),
     GoRoute(
       path: '/onBording',
