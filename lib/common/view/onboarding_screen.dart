@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -227,7 +227,8 @@ class OnboardingContent extends StatelessWidget {
                         final prefs = await SharedPreferences.getInstance();
                         prefs.setBool('showHome', true);
                         if (context.mounted) {
-                          GoRouter.of(context).go('/login');
+                          Navigator.pushReplacementNamed(
+                              context, LoginScreen.routeName);
                         }
                       },
                       style: OutlinedButton.styleFrom(

@@ -50,23 +50,28 @@ class SignUpForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: "회원가입",
-      floatingActionButton: ElevatedButton(
-        onPressed: () => _signUp(context),
-        style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all(Size(312.h, 42)), // 최대 너비 설정
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: ElevatedButton(
+          onPressed: () => _signUp(context),
+          style: ButtonStyle(
+            minimumSize:
+                MaterialStateProperty.all(Size(312.h, 42.h)), // 최대 너비 설정
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
-        ),
-        child: Text(
-          '회원가입하기',
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                color: Colors.white,
-              ),
+          child: Text(
+            '회원가입하기',
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Colors.white,
+                ),
+          ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: FormBuilder(
