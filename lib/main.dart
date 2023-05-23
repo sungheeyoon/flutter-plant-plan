@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:plant_plan/common/const/data.dart';
-import 'package:plant_plan/routes/router.dart';
+
+import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
+import 'package:plant_plan/common/view/onboarding_screen.dart';
+import 'package:plant_plan/common/view/splash_screen.dart';
 
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,24 +20,21 @@ Future main() async {
   await Firebase.initializeApp();
 
   final prefs = await SharedPreferences.getInstance();
-  final showHome = prefs.getBool('showHome') ?? false;
-  KakaoSdk.init(nativeAppKey: NATIVE_APP_KEY);
-  //해시 키
-  //final origin = await KakaoSdk.origin;
+  final showLogin = prefs.getBool('showLogin') ?? false;
 
   runApp(
     ProviderScope(
-      child: MyApp(showHome: showHome),
+      child: MyApp(showLogin: showLogin),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final bool showHome;
+  final bool showLogin;
 
   const MyApp({
     Key? key,
-    required this.showHome,
+    required this.showLogin,
   }) : super(key: key);
 
   @override
@@ -42,8 +42,8 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 760),
       builder: (context, child) {
-        return MaterialApp.router(
-          routerConfig: router,
+        return MaterialApp(
+          routes: {LoginScreen.routeName: (context) => const LoginScreen()},
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
             fontFamily: 'Pretendard',
@@ -120,10 +120,38 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-
-          //showHome ? SnappingAbove() : const OnboardingScreen(),
+          home: FutureBuilder<bool>(
+            future: _showSplashScreen(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SplashScreen();
+              } else if (snapshot.hasData) {
+                return StreamBuilder<User?>(
+                  stream: FirebaseAuth.instance.authStateChanges(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return const HomeScreen();
+                    }
+                    if (showLogin) {
+                      return const LoginScreen();
+                    } else {
+                      return const OnboardingScreen();
+                    }
+                  },
+                );
+              } else {
+                return const Text('Error');
+              }
+            },
+          ),
         );
       },
     );
+  }
+
+  Future<bool> _showSplashScreen() async {
+    await Future.delayed(const Duration(
+        milliseconds: 1200)); // Display splash screen for 2 seconds
+    return true; // Return true to indicate that splash screen should be skipped
   }
 }

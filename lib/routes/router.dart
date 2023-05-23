@@ -11,7 +11,6 @@ import 'package:plant_plan/common/view/sign_up_form.dart';
 import 'package:plant_plan/common/view/splash_screen.dart';
 
 GoRouter router = GoRouter(
-  initialLocation: '/onBording',
   routes: [
     GoRoute(
       path: '/',
