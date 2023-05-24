@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/view/onboarding_screen.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/view/splash_screen.dart';
 
 import 'package:plant_plan/services/notifi_service.dart';
@@ -43,7 +44,11 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp(
-          routes: {LoginScreen.routeName: (context) => const LoginScreen()},
+          routes: {
+            LoginScreen.routeName: (context) => const LoginScreen(),
+            HomeScreen.routeName: (context) => const HomeScreen(),
+            RootTab.routeName: (context) => const RootTab(),
+          },
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
             fontFamily: 'Pretendard',
@@ -130,7 +135,7 @@ class MyApp extends StatelessWidget {
                   stream: FirebaseAuth.instance.authStateChanges(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return const HomeScreen();
+                      return const RootTab();
                     }
                     if (showLogin) {
                       return const LoginScreen();

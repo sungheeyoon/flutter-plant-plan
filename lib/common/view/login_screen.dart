@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -49,6 +50,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
         // 로그인 성공
         // 추가적인 작업 수행 또는 홈 화면으로 이동
+        if (context.mounted) {
+          Navigator.pushNamed(context, RootTab.routeName);
+        }
         print('로그인 성공: ${userCredential.user!.uid}');
       } on FirebaseAuthException catch (e) {
         // 로그인 실패
