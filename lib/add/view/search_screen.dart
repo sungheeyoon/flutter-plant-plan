@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
-import 'package:plant_plan/add/view/add_tab.dart';
+import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
@@ -119,11 +119,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ref
                                   .read(selectedPlantProvider.notifier)
                                   .setPlant(document);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AddTab(),
-                                ),
-                              );
+                              Navigator.pop(context);
                             },
                           ).paddingOnly(bottom: 6.h);
                         } else {
@@ -175,7 +171,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 ref
                                     .read(selectedPlantProvider.notifier)
                                     .setPlant(document);
-                                Navigator.of(context).pop();
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    AddFirstScreen.routeName, (route) => false,
+                                    arguments: {"update": true});
                               },
                             ).paddingOnly(bottom: 6.h);
                           }

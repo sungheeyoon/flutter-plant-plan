@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -47,8 +48,16 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         unselectedItemColor: Colors.black12,
         selectedFontSize: 10,
         unselectedFontSize: 10,
-        onTap: (int index) {
-          controller.animateTo(index);
+        onTap: (int tappedIndex) {
+          if (tappedIndex == 2) {
+            // Icon(Icons.add)를 눌렀을 때
+            Navigator.pushNamed(context, AddFirstScreen.routeName);
+          } else {
+            setState(() {
+              index = tappedIndex;
+              controller.animateTo(tappedIndex);
+            });
+          }
         },
         currentIndex: index,
         type: BottomNavigationBarType.fixed,
@@ -68,12 +77,12 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/navbar/post.png',
+              'assets/icons/navbar/pot.png',
               width: 30,
               height: 30,
             ),
             activeIcon: Image.asset(
-              'assets/icons/navbar/post_active.png',
+              'assets/icons/navbar/pot_active.png',
               width: 30,
               height: 30,
             ),
@@ -85,12 +94,12 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/navbar/calendar.png',
+              'assets/icons/navbar/post.png',
               width: 30,
               height: 30,
             ),
             activeIcon: Image.asset(
-              'assets/icons/navbar/calendar_active.png',
+              'assets/icons/navbar/post_active.png',
               width: 30,
               height: 30,
             ),
