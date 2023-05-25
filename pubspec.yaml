@@ -138,6 +138,8 @@ flutter:
     - assets/icons/navbar/post_active.png
     - assets/icons/navbar/calendar_active.png
     - assets/icons/navbar/mypage_active.png
+    - assets/icons/navbar/pot.png
+    - assets/icons/navbar/pot_active.png
 
     - assets/icons/emoji/smile.png
     - assets/icons/emoji/crying.png
