@@ -11,6 +11,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final TextButton? textbutton;
+  final Widget? leading;
 
   const DefaultLayout({
     required this.child,
@@ -21,8 +22,9 @@ class DefaultLayout extends StatelessWidget {
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.textbutton,
-    super.key,
-  });
+    this.leading,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class DefaultLayout extends StatelessWidget {
     );
   }
 
-  AppBar? renderAppBar(context) {
+  AppBar? renderAppBar(BuildContext context) {
     if (title == null) {
       return null;
     } else {
@@ -57,6 +59,7 @@ class DefaultLayout extends StatelessWidget {
         actions: [
           if (textbutton != null) textbutton!,
         ],
+        leading: leading, // 추가: leading 위젯 설정
       );
     }
   }
