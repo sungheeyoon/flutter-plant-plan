@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
@@ -51,6 +52,16 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
 
     return DefaultLayout(
       title: '식물추가',
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          ref.read(selectedPlantProvider.notifier).reset();
+          ref.read(photoProvider.notifier).reset();
+          ref.read(alarmProvider.notifier).reset();
+          ref.read(plantInformationProvider.notifier).reset();
+          Navigator.pop(context);
+        },
+      ),
       floatingActionButton: RoundedButton(
         font: Theme.of(context).textTheme.bodyLarge,
         backgroundColor: selectedPlant != null ? pointColor2 : grayColor300,
