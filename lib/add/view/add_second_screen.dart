@@ -6,6 +6,7 @@ import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
+import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
@@ -131,6 +132,8 @@ class AddSecondScreen extends ConsumerWidget {
                         height: 26.h,
                         textColor: pointColor2,
                         name: '변경',
+                        onPressed: () => Navigator.pushNamed(
+                            context, AddFirstScreen.routeName),
                       )
                     ],
                   ),
