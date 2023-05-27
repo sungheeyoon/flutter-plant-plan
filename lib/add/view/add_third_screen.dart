@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,9 +21,28 @@ class AddThirdScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
     final plantState = ref.watch(plantInformationProvider);
+
+    void insertNewPlant() async {
+      final plantInformation = ref.read(plantInformationProvider);
+      final selectedPhoto = ref.read(photoProvider);
+      final selectedPlant = ref.watch(selectedPlantProvider);
+
+      final user = auth.currentUser;
+
+      if (user != null) {
+        final uid = user.uid;
+        // await FirebaseFirestore.instance
+        //     .collection('users')
+        //     .doc(uid)
+        //     .collection('plants')
+        //     .add();
+      }
+    }
+
     return DefaultLayout(
       title: '식물추가',
       floatingActionButton: RoundedButton(
