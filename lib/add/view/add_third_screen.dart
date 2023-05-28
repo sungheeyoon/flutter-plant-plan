@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +16,7 @@ import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
+import 'package:path/path.dart' as path;
 
 class AddThirdScreen extends ConsumerWidget {
   static String get routeName => 'addThird';
@@ -25,6 +30,21 @@ class AddThirdScreen extends ConsumerWidget {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
     final plantState = ref.watch(plantInformationProvider);
+    final FirebaseStorage storage = FirebaseStorage.instance;
+
+    Future<String> uploadPhoto(File? photo, String uid) async {
+      if (photo != File) {
+        return '';
+      }
+      String fileName = path.basename(photo!.path);
+      Reference storageRef = storage.ref().child('users/$uid/$fileName');
+      UploadTask uploadTask = storageRef.putFile(photo);
+
+      TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    }
 
     void insertNewPlant() async {
       final plantInformation = ref.read(plantInformationProvider);
@@ -35,11 +55,104 @@ class AddThirdScreen extends ConsumerWidget {
 
       if (user != null) {
         final uid = user.uid;
-        // await FirebaseFirestore.instance
-        //     .collection('users')
-        //     .doc(uid)
-        //     .collection('plants')
-        //     .add();
+
+        if (selectedPhoto != null) {
+          String photoUrl = await uploadPhoto(selectedPhoto, uid);
+          // 업로드된 사진의 다운로드 URL을 사용하여 Firestore에 데이터를 저장하는 작업을 수행합니다.
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('plants')
+              .add({
+            'selectedPhotoUrl': photoUrl,
+            'plantInformation': {
+              'alias': plantInformation.alias,
+              'watering': {
+                'lastDay': plantInformation.watering.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.watering.alarm.startTime,
+                  'startDay': plantInformation.watering.alarm.startDay,
+                  'nextAlarm': plantInformation.watering.alarm.nextAlarm,
+                  'repeat': plantInformation.watering.alarm.repeat,
+                  'title': plantInformation.watering.alarm.title,
+                  'isOn': plantInformation.watering.alarm.isOn,
+                },
+              },
+              'repotting': {
+                'lastDay': plantInformation.repotting.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.repotting.alarm.startTime,
+                  'startDay': plantInformation.repotting.alarm.startDay,
+                  'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
+                  'repeat': plantInformation.repotting.alarm.repeat,
+                  'title': plantInformation.repotting.alarm.title,
+                  'isOn': plantInformation.repotting.alarm.isOn,
+                },
+              },
+              'nutrient': {
+                'lastDay': plantInformation.nutrient.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.nutrient.alarm.startTime,
+                  'startDay': plantInformation.nutrient.alarm.startDay,
+                  'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
+                  'repeat': plantInformation.nutrient.alarm.repeat,
+                  'title': plantInformation.nutrient.alarm.title,
+                  'isOn': plantInformation.nutrient.alarm.isOn,
+                },
+              },
+            },
+            'id': selectedPlant!.id,
+            'imageUrl': selectedPlant.image,
+            'name': selectedPlant.name,
+          });
+        } else {
+          // 선택된 사진이 없을 경우에 대한 처리
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('plants')
+              .add({
+            'plantInformation': {
+              'alias': plantInformation.alias,
+              'watering': {
+                'lastDay': plantInformation.watering.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.watering.alarm.startTime,
+                  'startDay': plantInformation.watering.alarm.startDay,
+                  'nextAlarm': plantInformation.watering.alarm.nextAlarm,
+                  'repeat': plantInformation.watering.alarm.repeat,
+                  'title': plantInformation.watering.alarm.title,
+                  'isOn': plantInformation.watering.alarm.isOn,
+                },
+              },
+              'repotting': {
+                'lastDay': plantInformation.repotting.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.repotting.alarm.startTime,
+                  'startDay': plantInformation.repotting.alarm.startDay,
+                  'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
+                  'repeat': plantInformation.repotting.alarm.repeat,
+                  'title': plantInformation.repotting.alarm.title,
+                  'isOn': plantInformation.repotting.alarm.isOn,
+                },
+              },
+              'nutrient': {
+                'lastDay': plantInformation.nutrient.lastDay,
+                'alarm': {
+                  'startTime': plantInformation.nutrient.alarm.startTime,
+                  'startDay': plantInformation.nutrient.alarm.startDay,
+                  'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
+                  'repeat': plantInformation.nutrient.alarm.repeat,
+                  'title': plantInformation.nutrient.alarm.title,
+                  'isOn': plantInformation.nutrient.alarm.isOn,
+                },
+              },
+            },
+            'id': selectedPlant!.id,
+            'imageUrl': selectedPlant.image,
+            'name': selectedPlant.name,
+          });
+        }
       }
     }
 
@@ -59,6 +172,7 @@ class AddThirdScreen extends ConsumerWidget {
         name: '식물 추가 완료',
         onPressed: () async {
           if (selectedPlant != null) {
+            insertNewPlant();
             //유저 uid 경로에 데이터 저장
             //식물리스트 페이지로이동
             // Navigator.pushNamed(context, AddThirdScreen.routeName);
