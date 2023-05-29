@@ -33,10 +33,10 @@ class AddThirdScreen extends ConsumerWidget {
     final FirebaseStorage storage = FirebaseStorage.instance;
 
     Future<String> uploadPhoto(File? photo, String uid) async {
-      if (photo != File) {
+      if (photo == null) {
         return '';
       }
-      String fileName = path.basename(photo!.path);
+      String fileName = path.basename(photo.path);
       Reference storageRef = storage.ref().child('users/$uid/$fileName');
       UploadTask uploadTask = storageRef.putFile(photo);
 
