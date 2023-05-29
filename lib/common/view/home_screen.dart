@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
@@ -16,11 +18,42 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchUserData();
+  }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void fetchUserData() async {
+    final user = auth.currentUser;
+    if (user != null) {
+      final uid = user.uid;
+      final userDataSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .get();
+
+      // userDataSnapshot로부터 데이터 추출
+      final userData = userDataSnapshot.docs.map((doc) => doc.data()).toList();
+
+      // 데이터 활용 예시: 출력
+      for (var data in userData) {
+        print('Plant Information: ${data['plantInformation']}');
+        print('ID: ${data['id']}');
+        print('Image URL: ${data['imageUrl']}');
+        print('Name: ${data['name']}');
+        print('---');
+      }
+    }
   }
 
   @override
