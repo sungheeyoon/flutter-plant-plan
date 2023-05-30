@@ -456,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: 8.h,
                                     ),
                                     const AlarmCard(
-                                        field: PlantField.nutrient,
+                                        field: PlantField.watering,
                                         isDone: true,
                                         name: "앗싸라말라잌",
                                         time: "12:00 PM",
@@ -466,7 +466,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            Container(color: Colors.green),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 28,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '5개의 일정이 있어요',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: const Color(0xFF72CBE7),
+                                          ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    const AlarmCard(
+                                        field: PlantField.repotting,
+                                        isDone: true,
+                                        name: "앗싸라말라잌",
+                                        time: "12:00 PM",
+                                        imgUrl:
+                                            'assets/icons/home/change_view.png')
+                                  ],
+                                ),
+                              ),
+                            ),
                             Container(color: Colors.red),
                           ],
                         ),
@@ -521,10 +551,10 @@ class _AlarmCardState extends State<AlarmCard> {
         fieldColor = const Color(0xFF72CBE7);
         break;
       case PlantField.repotting:
-        fieldColor = subColor2; // 다른 색상 지정
+        fieldColor = subColor2;
         break;
       case PlantField.nutrient:
-        fieldColor = keyColor400; // 다른 색상 지정
+        fieldColor = keyColor400;
         break;
       default:
         fieldColor = Colors.transparent;

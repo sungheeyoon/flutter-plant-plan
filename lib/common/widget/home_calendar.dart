@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class MyCalendar extends StatefulWidget {
@@ -31,22 +32,60 @@ class _MyCalendarState extends State<MyCalendar> {
           });
   }
 
-  Widget _buildDateContainer(DateTime date, bool isToday, bool isSelectedDay) {
+  Widget _buildDateContainer({
+    required DateTime date,
+    required bool isToday,
+    required bool isSelectedDay,
+    PlantField? watering,
+    PlantField? repotting,
+    PlantField? nutrient,
+  }) {
     final dayName = DateFormat.E().format(date);
     final dayNumber = DateFormat.d().format(date);
-    const alarmCount = 3; // TODO: replace this with actual alarm count
-    final dots = List<Widget>.generate(
-      alarmCount,
-      (_) => Container(
-        margin: const EdgeInsets.only(left: 2),
-        width: 4,
-        height: 4,
-        decoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.circular(2),
+
+    List<Widget> dots = [];
+
+    if (watering != null) {
+      dots.add(
+        Container(
+          margin: const EdgeInsets.only(left: 2),
+          width: 4,
+          height: 4,
+          decoration: BoxDecoration(
+            color: subColor1,
+            borderRadius: BorderRadius.circular(2),
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    if (repotting != null) {
+      dots.add(
+        Container(
+          margin: const EdgeInsets.only(left: 2),
+          width: 4,
+          height: 4,
+          decoration: BoxDecoration(
+            color: subColor2,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      );
+    }
+
+    if (nutrient != null) {
+      dots.add(
+        Container(
+          margin: const EdgeInsets.only(left: 2),
+          width: 4,
+          height: 4,
+          decoration: BoxDecoration(
+            color: keyColor400,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      );
+    }
 
     // final isSelectedDay = date.year == _selectedDate.year &&
     //     date.month == _selectedDate.month &&
@@ -185,7 +224,14 @@ class _MyCalendarState extends State<MyCalendar> {
                     now.month == _selectedDate.month &&
                     now.day == _selectedDate.day;
                 final isToday = index == 500;
-                return _buildDateContainer(now, isToday, isSelectedDay);
+                return _buildDateContainer(
+                  date: now,
+                  isToday: isToday,
+                  isSelectedDay: isSelectedDay,
+                  watering: PlantField.watering,
+                  repotting: PlantField.repotting,
+                  nutrient: PlantField.nutrient,
+                );
               },
             ),
           ),
