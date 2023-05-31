@@ -111,47 +111,49 @@ class AddThirdScreen extends ConsumerWidget {
               .collection('users')
               .doc(uid)
               .collection('plants')
-              .add({
-            'plantInformation': {
-              'alias': plantInformation.alias,
-              'watering': {
-                'lastDay': plantInformation.watering.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.watering.alarm.startTime,
-                  'startDay': plantInformation.watering.alarm.startDay,
-                  'nextAlarm': plantInformation.watering.alarm.nextAlarm,
-                  'repeat': plantInformation.watering.alarm.repeat,
-                  'title': plantInformation.watering.alarm.title,
-                  'isOn': plantInformation.watering.alarm.isOn,
+              .add(
+            {
+              'plantInformation': {
+                'alias': plantInformation.alias,
+                'watering': {
+                  'lastDay': plantInformation.watering.lastDay,
+                  'alarm': {
+                    'startTime': plantInformation.watering.alarm.startTime,
+                    'startDay': plantInformation.watering.alarm.startDay,
+                    'nextAlarm': plantInformation.watering.alarm.nextAlarm,
+                    'repeat': plantInformation.watering.alarm.repeat,
+                    'title': plantInformation.watering.alarm.title,
+                    'isOn': plantInformation.watering.alarm.isOn,
+                  },
+                },
+                'repotting': {
+                  'lastDay': plantInformation.repotting.lastDay,
+                  'alarm': {
+                    'startTime': plantInformation.repotting.alarm.startTime,
+                    'startDay': plantInformation.repotting.alarm.startDay,
+                    'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
+                    'repeat': plantInformation.repotting.alarm.repeat,
+                    'title': plantInformation.repotting.alarm.title,
+                    'isOn': plantInformation.repotting.alarm.isOn,
+                  },
+                },
+                'nutrient': {
+                  'lastDay': plantInformation.nutrient.lastDay,
+                  'alarm': {
+                    'startTime': plantInformation.nutrient.alarm.startTime,
+                    'startDay': plantInformation.nutrient.alarm.startDay,
+                    'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
+                    'repeat': plantInformation.nutrient.alarm.repeat,
+                    'title': plantInformation.nutrient.alarm.title,
+                    'isOn': plantInformation.nutrient.alarm.isOn,
+                  },
                 },
               },
-              'repotting': {
-                'lastDay': plantInformation.repotting.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.repotting.alarm.startTime,
-                  'startDay': plantInformation.repotting.alarm.startDay,
-                  'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
-                  'repeat': plantInformation.repotting.alarm.repeat,
-                  'title': plantInformation.repotting.alarm.title,
-                  'isOn': plantInformation.repotting.alarm.isOn,
-                },
-              },
-              'nutrient': {
-                'lastDay': plantInformation.nutrient.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.nutrient.alarm.startTime,
-                  'startDay': plantInformation.nutrient.alarm.startDay,
-                  'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
-                  'repeat': plantInformation.nutrient.alarm.repeat,
-                  'title': plantInformation.nutrient.alarm.title,
-                  'isOn': plantInformation.nutrient.alarm.isOn,
-                },
-              },
+              'id': selectedPlant!.id,
+              'imageUrl': selectedPlant.image,
+              'name': selectedPlant.name,
             },
-            'id': selectedPlant!.id,
-            'imageUrl': selectedPlant.image,
-            'name': selectedPlant.name,
-          });
+          );
         }
       }
     }
