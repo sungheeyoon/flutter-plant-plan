@@ -80,9 +80,19 @@ class _MyCalendarState extends State<MyCalendar> {
           width: 4,
           height: 4,
           decoration: BoxDecoration(
-            color: keyColor400,
+            color: keyColor500,
             borderRadius: BorderRadius.circular(2),
           ),
+        ),
+      );
+    }
+
+    if (watering == null && repotting == null && nutrient == null) {
+      dots.add(
+        Container(
+          margin: const EdgeInsets.only(left: 2),
+          width: 4,
+          height: 4,
         ),
       );
     }
