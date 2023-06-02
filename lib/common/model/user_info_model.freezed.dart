@@ -20,8 +20,9 @@ UserInfoModel _$UserInfoModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserInfoModel {
-  PlantInformationModel get plantInfo => throw _privateConstructorUsedError;
+  PlantInformationModel get info => throw _privateConstructorUsedError;
   PlantModel get plant => throw _privateConstructorUsedError;
+  String get selectedPhotoUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,9 +36,10 @@ abstract class $UserInfoModelCopyWith<$Res> {
           UserInfoModel value, $Res Function(UserInfoModel) then) =
       _$UserInfoModelCopyWithImpl<$Res, UserInfoModel>;
   @useResult
-  $Res call({PlantInformationModel plantInfo, PlantModel plant});
+  $Res call(
+      {PlantInformationModel info, PlantModel plant, String selectedPhotoUrl});
 
-  $PlantInformationModelCopyWith<$Res> get plantInfo;
+  $PlantInformationModelCopyWith<$Res> get info;
 }
 
 /// @nodoc
@@ -53,26 +55,31 @@ class _$UserInfoModelCopyWithImpl<$Res, $Val extends UserInfoModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? plantInfo = null,
+    Object? info = null,
     Object? plant = null,
+    Object? selectedPhotoUrl = null,
   }) {
     return _then(_value.copyWith(
-      plantInfo: null == plantInfo
-          ? _value.plantInfo
-          : plantInfo // ignore: cast_nullable_to_non_nullable
+      info: null == info
+          ? _value.info
+          : info // ignore: cast_nullable_to_non_nullable
               as PlantInformationModel,
       plant: null == plant
           ? _value.plant
           : plant // ignore: cast_nullable_to_non_nullable
               as PlantModel,
+      selectedPhotoUrl: null == selectedPhotoUrl
+          ? _value.selectedPhotoUrl
+          : selectedPhotoUrl // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $PlantInformationModelCopyWith<$Res> get plantInfo {
-    return $PlantInformationModelCopyWith<$Res>(_value.plantInfo, (value) {
-      return _then(_value.copyWith(plantInfo: value) as $Val);
+  $PlantInformationModelCopyWith<$Res> get info {
+    return $PlantInformationModelCopyWith<$Res>(_value.info, (value) {
+      return _then(_value.copyWith(info: value) as $Val);
     });
   }
 }
@@ -85,10 +92,11 @@ abstract class _$$_UserInfoModelCopyWith<$Res>
       __$$_UserInfoModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({PlantInformationModel plantInfo, PlantModel plant});
+  $Res call(
+      {PlantInformationModel info, PlantModel plant, String selectedPhotoUrl});
 
   @override
-  $PlantInformationModelCopyWith<$Res> get plantInfo;
+  $PlantInformationModelCopyWith<$Res> get info;
 }
 
 /// @nodoc
@@ -102,18 +110,23 @@ class __$$_UserInfoModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? plantInfo = null,
+    Object? info = null,
     Object? plant = null,
+    Object? selectedPhotoUrl = null,
   }) {
     return _then(_$_UserInfoModel(
-      plantInfo: null == plantInfo
-          ? _value.plantInfo
-          : plantInfo // ignore: cast_nullable_to_non_nullable
+      info: null == info
+          ? _value.info
+          : info // ignore: cast_nullable_to_non_nullable
               as PlantInformationModel,
       plant: null == plant
           ? _value.plant
           : plant // ignore: cast_nullable_to_non_nullable
               as PlantModel,
+      selectedPhotoUrl: null == selectedPhotoUrl
+          ? _value.selectedPhotoUrl
+          : selectedPhotoUrl // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -121,19 +134,24 @@ class __$$_UserInfoModelCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_UserInfoModel implements _UserInfoModel {
-  _$_UserInfoModel({required this.plantInfo, required this.plant});
+  _$_UserInfoModel(
+      {required this.info,
+      required this.plant,
+      required this.selectedPhotoUrl});
 
   factory _$_UserInfoModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserInfoModelFromJson(json);
 
   @override
-  final PlantInformationModel plantInfo;
+  final PlantInformationModel info;
   @override
   final PlantModel plant;
+  @override
+  final String selectedPhotoUrl;
 
   @override
   String toString() {
-    return 'UserInfoModel(plantInfo: $plantInfo, plant: $plant)';
+    return 'UserInfoModel(info: $info, plant: $plant, selectedPhotoUrl: $selectedPhotoUrl)';
   }
 
   @override
@@ -141,14 +159,15 @@ class _$_UserInfoModel implements _UserInfoModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UserInfoModel &&
-            (identical(other.plantInfo, plantInfo) ||
-                other.plantInfo == plantInfo) &&
-            (identical(other.plant, plant) || other.plant == plant));
+            (identical(other.info, info) || other.info == info) &&
+            (identical(other.plant, plant) || other.plant == plant) &&
+            (identical(other.selectedPhotoUrl, selectedPhotoUrl) ||
+                other.selectedPhotoUrl == selectedPhotoUrl));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, plantInfo, plant);
+  int get hashCode => Object.hash(runtimeType, info, plant, selectedPhotoUrl);
 
   @JsonKey(ignore: true)
   @override
@@ -166,16 +185,19 @@ class _$_UserInfoModel implements _UserInfoModel {
 
 abstract class _UserInfoModel implements UserInfoModel {
   factory _UserInfoModel(
-      {required final PlantInformationModel plantInfo,
-      required final PlantModel plant}) = _$_UserInfoModel;
+      {required final PlantInformationModel info,
+      required final PlantModel plant,
+      required final String selectedPhotoUrl}) = _$_UserInfoModel;
 
   factory _UserInfoModel.fromJson(Map<String, dynamic> json) =
       _$_UserInfoModel.fromJson;
 
   @override
-  PlantInformationModel get plantInfo;
+  PlantInformationModel get info;
   @override
   PlantModel get plant;
+  @override
+  String get selectedPhotoUrl;
   @override
   @JsonKey(ignore: true)
   _$$_UserInfoModelCopyWith<_$_UserInfoModel> get copyWith =>

@@ -113,6 +113,7 @@ class AddThirdScreen extends ConsumerWidget {
               .collection('plants')
               .add(
             {
+              'selectedPhotoUrl': "",
               'plantInformation': {
                 'alias': plantInformation.alias,
                 'watering': {

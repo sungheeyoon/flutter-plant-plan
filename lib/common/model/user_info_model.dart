@@ -8,8 +8,9 @@ part 'user_info_model.g.dart';
 @freezed
 class UserInfoModel with _$UserInfoModel {
   factory UserInfoModel({
-    required PlantInformationModel plantInfo,
+    required PlantInformationModel info,
     required PlantModel plant,
+    required String selectedPhotoUrl,
   }) = _UserInfoModel;
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) =>

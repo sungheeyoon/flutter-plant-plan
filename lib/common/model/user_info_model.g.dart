@@ -8,13 +8,15 @@ part of 'user_info_model.dart';
 
 _$_UserInfoModel _$$_UserInfoModelFromJson(Map<String, dynamic> json) =>
     _$_UserInfoModel(
-      plantInfo: PlantInformationModel.fromJson(
-          json['plantInfo'] as Map<String, dynamic>),
+      info:
+          PlantInformationModel.fromJson(json['info'] as Map<String, dynamic>),
       plant: PlantModel.fromJson(json['plant'] as Map<String, dynamic>),
+      selectedPhotoUrl: json['selectedPhotoUrl'] as String,
     );
 
 Map<String, dynamic> _$$_UserInfoModelToJson(_$_UserInfoModel instance) =>
     <String, dynamic>{
-      'plantInfo': instance.plantInfo,
+      'info': instance.info,
       'plant': instance.plant,
+      'selectedPhotoUrl': instance.selectedPhotoUrl,
     };
