@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -34,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchUserData() async {
     final user = auth.currentUser;
+    final List<UserInfoModel> datas = [];
     if (user != null) {
       final uid = user.uid;
       final userDataSnapshot = await FirebaseFirestore.instance
@@ -45,15 +49,29 @@ class _HomeScreenState extends State<HomeScreen> {
       // userDataSnapshot로부터 데이터 추출
       final userData = userDataSnapshot.docs.map((doc) => doc.data()).toList();
 
-      // 데이터 활용 예시: 출력
       for (var data in userData) {
-        print('Plant Information: ${data['plantInformation']}');
-        print('ID: ${data['id']}');
-        print('Image URL: ${data['imageUrl']}');
-        print('Name: ${data['name']}');
-        print('---');
+        final info = PlantInformationModel.fromJson(
+          data['plantInformation'],
+        );
+        final plant = PlantModel.fromJson(
+          {
+            'id': data['id'],
+            'imageUrl': data['imageUrl'],
+            'name': data['name'],
+          },
+        );
+        datas.add(
+          UserInfoModel.fromJson(
+            {
+              'info': info,
+              'plant': plant,
+              'selectedPhotoUrl': data['selectedPhotoUrl'],
+            },
+          ),
+        );
       }
     }
+    print(datas);
   }
 
   @override
