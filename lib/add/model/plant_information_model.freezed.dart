@@ -263,6 +263,7 @@ PlantInformationKey _$PlantInformationKeyFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PlantInformationKey {
+  @TimestampSerializer()
   DateTime? get lastDay => throw _privateConstructorUsedError;
   Alarm get alarm => throw _privateConstructorUsedError;
 
@@ -278,7 +279,7 @@ abstract class $PlantInformationKeyCopyWith<$Res> {
           PlantInformationKey value, $Res Function(PlantInformationKey) then) =
       _$PlantInformationKeyCopyWithImpl<$Res, PlantInformationKey>;
   @useResult
-  $Res call({DateTime? lastDay, Alarm alarm});
+  $Res call({@TimestampSerializer() DateTime? lastDay, Alarm alarm});
 
   $AlarmCopyWith<$Res> get alarm;
 }
@@ -328,7 +329,7 @@ abstract class _$$_PlantInformationKeyCopyWith<$Res>
       __$$_PlantInformationKeyCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime? lastDay, Alarm alarm});
+  $Res call({@TimestampSerializer() DateTime? lastDay, Alarm alarm});
 
   @override
   $AlarmCopyWith<$Res> get alarm;
@@ -364,13 +365,15 @@ class __$$_PlantInformationKeyCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PlantInformationKey implements _PlantInformationKey {
-  _$_PlantInformationKey({this.lastDay = null, required this.alarm});
+  _$_PlantInformationKey(
+      {@TimestampSerializer() this.lastDay = null, required this.alarm});
 
   factory _$_PlantInformationKey.fromJson(Map<String, dynamic> json) =>
       _$$_PlantInformationKeyFromJson(json);
 
   @override
   @JsonKey()
+  @TimestampSerializer()
   final DateTime? lastDay;
   @override
   final Alarm alarm;
@@ -410,13 +413,14 @@ class _$_PlantInformationKey implements _PlantInformationKey {
 
 abstract class _PlantInformationKey implements PlantInformationKey {
   factory _PlantInformationKey(
-      {final DateTime? lastDay,
+      {@TimestampSerializer() final DateTime? lastDay,
       required final Alarm alarm}) = _$_PlantInformationKey;
 
   factory _PlantInformationKey.fromJson(Map<String, dynamic> json) =
       _$_PlantInformationKey.fromJson;
 
   @override
+  @TimestampSerializer()
   DateTime? get lastDay;
   @override
   Alarm get alarm;
@@ -432,8 +436,11 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
+  @TimestampSerializer()
   DateTime get startTime => throw _privateConstructorUsedError;
+  @TimestampSerializer()
   DateTime? get startDay => throw _privateConstructorUsedError;
+  @TimestampSerializer()
   DateTime? get nextAlarm => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
@@ -450,9 +457,9 @@ abstract class $AlarmCopyWith<$Res> {
       _$AlarmCopyWithImpl<$Res, Alarm>;
   @useResult
   $Res call(
-      {DateTime startTime,
-      DateTime? startDay,
-      DateTime? nextAlarm,
+      {@TimestampSerializer() DateTime startTime,
+      @TimestampSerializer() DateTime? startDay,
+      @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
       bool isOn});
@@ -514,9 +521,9 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {DateTime startTime,
-      DateTime? startDay,
-      DateTime? nextAlarm,
+      {@TimestampSerializer() DateTime startTime,
+      @TimestampSerializer() DateTime? startDay,
+      @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
       bool isOn});
@@ -571,9 +578,9 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 @JsonSerializable()
 class _$_Alarm implements _Alarm {
   _$_Alarm(
-      {required this.startTime,
-      this.startDay = null,
-      this.nextAlarm = null,
+      {@TimestampSerializer() required this.startTime,
+      @TimestampSerializer() this.startDay = null,
+      @TimestampSerializer() this.nextAlarm = null,
       this.repeat = 0,
       this.title = "",
       this.isOn = true});
@@ -582,12 +589,15 @@ class _$_Alarm implements _Alarm {
       _$$_AlarmFromJson(json);
 
   @override
+  @TimestampSerializer()
   final DateTime startTime;
   @override
   @JsonKey()
+  @TimestampSerializer()
   final DateTime? startDay;
   @override
   @JsonKey()
+  @TimestampSerializer()
   final DateTime? nextAlarm;
   @override
   @JsonKey()
@@ -641,9 +651,9 @@ class _$_Alarm implements _Alarm {
 
 abstract class _Alarm implements Alarm {
   factory _Alarm(
-      {required final DateTime startTime,
-      final DateTime? startDay,
-      final DateTime? nextAlarm,
+      {@TimestampSerializer() required final DateTime startTime,
+      @TimestampSerializer() final DateTime? startDay,
+      @TimestampSerializer() final DateTime? nextAlarm,
       final int repeat,
       final String title,
       final bool isOn}) = _$_Alarm;
@@ -651,10 +661,13 @@ abstract class _Alarm implements Alarm {
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
   @override
+  @TimestampSerializer()
   DateTime get startTime;
   @override
+  @TimestampSerializer()
   DateTime? get startDay;
   @override
+  @TimestampSerializer()
   DateTime? get nextAlarm;
   @override
   int get repeat;

@@ -32,34 +32,43 @@ _$_PlantInformationKey _$$_PlantInformationKeyFromJson(
     _$_PlantInformationKey(
       lastDay: json['lastDay'] == null
           ? null
-          : DateTime.parse(json['lastDay'] as String),
+          : const TimestampSerializer().fromJson(json['lastDay']),
       alarm: Alarm.fromJson(json['alarm'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_PlantInformationKeyToJson(
         _$_PlantInformationKey instance) =>
     <String, dynamic>{
-      'lastDay': instance.lastDay?.toIso8601String(),
+      'lastDay': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.lastDay, const TimestampSerializer().toJson),
       'alarm': instance.alarm,
     };
 
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);
+
 _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
-      startTime: DateTime.parse(json['startTime'] as String),
+      startTime: const TimestampSerializer().fromJson(json['startTime']),
       startDay: json['startDay'] == null
           ? null
-          : DateTime.parse(json['startDay'] as String),
+          : const TimestampSerializer().fromJson(json['startDay']),
       nextAlarm: json['nextAlarm'] == null
           ? null
-          : DateTime.parse(json['nextAlarm'] as String),
+          : const TimestampSerializer().fromJson(json['nextAlarm']),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? "",
       isOn: json['isOn'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
-      'startTime': instance.startTime.toIso8601String(),
-      'startDay': instance.startDay?.toIso8601String(),
-      'nextAlarm': instance.nextAlarm?.toIso8601String(),
+      'startTime': const TimestampSerializer().toJson(instance.startTime),
+      'startDay': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.startDay, const TimestampSerializer().toJson),
+      'nextAlarm': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.nextAlarm, const TimestampSerializer().toJson),
       'repeat': instance.repeat,
       'title': instance.title,
       'isOn': instance.isOn,

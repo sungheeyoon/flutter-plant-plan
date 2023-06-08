@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 part 'plant_information_model.freezed.dart';
 part 'plant_information_model.g.dart';
 
@@ -19,7 +19,7 @@ class PlantInformationModel with _$PlantInformationModel {
 @freezed
 class PlantInformationKey with _$PlantInformationKey {
   factory PlantInformationKey({
-    @Default(null) DateTime? lastDay,
+    @TimestampSerializer() @Default(null) DateTime? lastDay,
     required Alarm alarm,
   }) = _PlantInformationKey;
 
@@ -30,13 +30,23 @@ class PlantInformationKey with _$PlantInformationKey {
 @freezed
 class Alarm with _$Alarm {
   factory Alarm({
-    required DateTime startTime,
-    @Default(null) DateTime? startDay,
-    @Default(null) DateTime? nextAlarm,
+    @TimestampSerializer() required DateTime startTime,
+    @TimestampSerializer() @Default(null) DateTime? startDay,
+    @TimestampSerializer() @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,
     @Default("") String title,
     @Default(true) bool isOn,
   }) = _Alarm;
 
   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
+}
+
+class TimestampSerializer implements JsonConverter<DateTime, dynamic> {
+  const TimestampSerializer();
+
+  @override
+  DateTime fromJson(dynamic timestamp) => timestamp.toDate();
+
+  @override
+  Timestamp toJson(DateTime date) => Timestamp.fromDate(date);
 }
