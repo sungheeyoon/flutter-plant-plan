@@ -13,6 +13,7 @@ import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
+import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/image_box.dart';
@@ -102,7 +103,7 @@ class AddThirdScreen extends ConsumerWidget {
               },
             },
             'id': selectedPlant!.id,
-            'imageUrl': selectedPlant.image,
+            'image': selectedPlant.image,
             'name': selectedPlant.name,
           });
         } else {
@@ -151,7 +152,7 @@ class AddThirdScreen extends ConsumerWidget {
                 },
               },
               'id': selectedPlant!.id,
-              'imageUrl': selectedPlant.image,
+              'image': selectedPlant.image,
               'name': selectedPlant.name,
             },
           );
@@ -178,7 +179,7 @@ class AddThirdScreen extends ConsumerWidget {
             insertNewPlant();
             //유저 uid 경로에 데이터 저장
             //식물리스트 페이지로이동
-            // Navigator.pushNamed(context, AddThirdScreen.routeName);
+            Navigator.pushNamed(context, HomeScreen.routeName);
           }
         },
       ),

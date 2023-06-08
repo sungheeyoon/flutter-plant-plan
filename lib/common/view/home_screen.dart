@@ -56,22 +56,20 @@ class _HomeScreenState extends State<HomeScreen> {
         final plant = PlantModel.fromJson(
           {
             'id': data['id'],
-            'imageUrl': data['imageUrl'],
+            'image': data['image'],
             'name': data['name'],
           },
         );
+
         datas.add(
-          UserInfoModel.fromJson(
-            {
-              'info': info,
-              'plant': plant,
-              'selectedPhotoUrl': data['selectedPhotoUrl'],
-            },
-          ),
+          UserInfoModel(
+              info: info,
+              plant: plant,
+              selectedPhotoUrl: data['selectedPhotoUrl']),
         );
       }
     }
-    print(datas);
+    print('datas:$datas');
   }
 
   @override
