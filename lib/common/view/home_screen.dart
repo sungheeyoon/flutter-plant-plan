@@ -1,32 +1,29 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
+import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   static String get routeName => 'home';
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;
   final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchUserData();
+    ref.read(userInfoProvider.notifier).fetchUserData();
   }
 
   @override
@@ -35,45 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void fetchUserData() async {
-    final user = auth.currentUser;
-    final List<UserInfoModel> datas = [];
-    if (user != null) {
-      final uid = user.uid;
-      final userDataSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('plants')
-          .get();
-
-      // userDataSnapshot로부터 데이터 추출
-      final userData = userDataSnapshot.docs.map((doc) => doc.data()).toList();
-
-      for (var data in userData) {
-        final info = PlantInformationModel.fromJson(
-          data['plantInformation'],
-        );
-        final plant = PlantModel.fromJson(
-          {
-            'id': data['id'],
-            'image': data['image'],
-            'name': data['name'],
-          },
-        );
-
-        datas.add(
-          UserInfoModel(
-              info: info,
-              plant: plant,
-              selectedPhotoUrl: data['selectedPhotoUrl']),
-        );
-      }
-    }
-    print('datas:$datas');
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userInfo = ref.watch(userInfoProvider);
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -513,7 +474,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            Container(color: Colors.red),
+                            Container(
+                              child: Text('$userInfo'),
+                            ),
                           ],
                         ),
                       ),

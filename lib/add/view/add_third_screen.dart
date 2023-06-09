@@ -31,6 +31,7 @@ class AddThirdScreen extends ConsumerWidget {
     final selectedPlant = ref.watch(selectedPlantProvider);
     final selectedPhoto = ref.watch(photoProvider);
     final plantState = ref.watch(plantInformationProvider);
+
     final FirebaseStorage storage = FirebaseStorage.instance;
 
     Future<String> uploadPhoto(File? photo, String uid) async {
@@ -177,8 +178,6 @@ class AddThirdScreen extends ConsumerWidget {
         onPressed: () async {
           if (selectedPlant != null) {
             insertNewPlant();
-            //유저 uid 경로에 데이터 저장
-            //식물리스트 페이지로이동
             Navigator.pushNamed(context, HomeScreen.routeName);
           }
         },
