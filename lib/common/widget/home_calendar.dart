@@ -97,10 +97,6 @@ class _MyCalendarState extends State<MyCalendar> {
       );
     }
 
-    // final isSelectedDay = date.year == _selectedDate.year &&
-    //     date.month == _selectedDate.month &&
-    //     date.day == _selectedDate.day;
-
     double width =
         isSelectedDay ? MediaQuery.of(context).size.width * 0.8 : 46.h;
     double height =
