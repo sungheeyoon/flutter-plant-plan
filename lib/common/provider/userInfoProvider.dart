@@ -50,4 +50,41 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
     }
     state = datas;
   }
+
+  void fetchUserDataForSelectedDay(DateTime selectedDay) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+    final List<UserInfoModel> datas = [];
+
+    if (user != null) {
+      final uid = user.uid;
+      final userDataSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .where('isSelectedDay', isEqualTo: selectedDay)
+          .get();
+
+      final userData = userDataSnapshot.docs.map((doc) => doc.data()).toList();
+
+      for (var data in userData) {
+        final info = PlantInformationModel.fromJson(data['plantInformation']);
+        final plant = PlantModel.fromJson({
+          'id': data['id'],
+          'image': data['image'],
+          'name': data['name'],
+        });
+
+        datas.add(
+          UserInfoModel(
+            info: info,
+            plant: plant,
+            selectedPhotoUrl: data['selectedPhotoUrl'],
+          ),
+        );
+      }
+    }
+
+    state = datas;
+  }
 }
