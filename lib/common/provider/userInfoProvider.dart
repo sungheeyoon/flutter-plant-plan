@@ -87,4 +87,16 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
 
     state = datas;
   }
+//   _getSelectedSnaps(from, to) {
+//   DateTime startDate = from;
+//   DateTime endDate = to;
+//   List<DateTime> filteredSnapshot = [];
+//   for(int i = 0; i < snapshot.length; i++){
+//     DateTime snapshotDate = timestampToDateTime(snapshot[i]['capture_date']);
+//     if(snapshotDate.isAfter(startDate) && snapshotDate.isBefore(endDate)){
+//       filteredSnapshot.add(snapshotDate);
+//     }
+//   }
+//   return filteredSnapshot;
+// }
 }
