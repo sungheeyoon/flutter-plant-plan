@@ -230,13 +230,22 @@ class _MyCalendarState extends State<MyCalendar> {
                     now.month == _selectedDate.month &&
                     now.day == _selectedDate.day;
                 final isToday = index == 500;
+                //userInfo 에서 nextTime 의 index를 찾는다
+                //repeat에따라 숫자를 달리하여 랜더링한다
+                //여러개일때를 생각해야댐
+                PlantField? watering =
+                    (index % 7 == 0) ? PlantField.watering : null;
+                PlantField? repotting =
+                    (index % 2 == 0) ? PlantField.watering : null;
+                PlantField? nutrient =
+                    (index % 3 == 0) ? PlantField.watering : null;
                 return _buildDateContainer(
                   date: now,
                   isToday: isToday,
                   isSelectedDay: isSelectedDay,
-                  watering: PlantField.watering,
-                  repotting: PlantField.repotting,
-                  nutrient: PlantField.nutrient,
+                  watering: watering,
+                  repotting: repotting,
+                  nutrient: nutrient,
                 );
               },
             ),
