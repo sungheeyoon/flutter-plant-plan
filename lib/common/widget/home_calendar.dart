@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class MyCalendar extends StatefulWidget {
+class MyCalendar extends ConsumerStatefulWidget {
   const MyCalendar({Key? key}) : super(key: key);
 
   @override
-  _MyCalendarState createState() => _MyCalendarState();
+  ConsumerState<MyCalendar> createState() => _MyCalendarState();
 }
 
-class _MyCalendarState extends State<MyCalendar> {
+class _MyCalendarState extends ConsumerState<MyCalendar> {
   late DateTime _selectedDate;
   late PageController _pageController;
   late int _currentPage;
@@ -23,13 +25,17 @@ class _MyCalendarState extends State<MyCalendar> {
     _currentPage = 500;
     _pageController =
         PageController(initialPage: _currentPage, viewportFraction: 0.165)
-          ..addListener(() {
-            setState(() {
-              _currentPage = _pageController.page?.round() ?? 0;
-              _selectedDate =
-                  DateTime.now().add(Duration(days: _currentPage - 500));
-            });
-          });
+          ..addListener(
+            () {
+              setState(
+                () {
+                  _currentPage = _pageController.page?.round() ?? 0;
+                  _selectedDate =
+                      DateTime.now().add(Duration(days: _currentPage - 500));
+                },
+              );
+            },
+          );
   }
 
   Widget _buildDateContainer({
@@ -180,6 +186,8 @@ class _MyCalendarState extends State<MyCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    final userInfoList = ref.watch(userInfoProvider);
+    print(userInfoList);
     return Container(
       color: pointColor2,
       child: Column(
@@ -230,15 +238,48 @@ class _MyCalendarState extends State<MyCalendar> {
                     now.month == _selectedDate.month &&
                     now.day == _selectedDate.day;
                 final isToday = index == 500;
-                //userInfo 에서 nextTime 의 index를 찾는다
-                //repeat에따라 숫자를 달리하여 랜더링한다
-                //여러개일때를 생각해야댐
-                PlantField? watering =
-                    (index % 7 == 0) ? PlantField.watering : null;
-                PlantField? repotting =
-                    (index % 2 == 0) ? PlantField.watering : null;
-                PlantField? nutrient =
-                    (index % 3 == 0) ? PlantField.watering : null;
+                //userInfo 에서 nextAlarm 이후부터 넣는다.
+                //repeat에따라 주기를반복한다 repeat이 1이면 매일 repeat이7 이면 7일마다
+
+                PlantField? watering;
+                PlantField? repotting;
+                PlantField? nutrient;
+
+                for (final userInfo in userInfoList) {
+                  final nutrientAlarm = userInfo.info.nutrient.alarm;
+                  if (nutrientAlarm.isOn &&
+                      nutrientAlarm.nextAlarm != null &&
+                      nutrientAlarm.repeat != 0 && // 0으로 나누기 예외 방지
+                      now.isAfter(nutrientAlarm.nextAlarm!) &&
+                      now.difference(nutrientAlarm.nextAlarm!).inDays %
+                              nutrientAlarm.repeat ==
+                          0) {
+                    nutrient = PlantField.nutrient;
+                  }
+
+                  final wateringAlarm = userInfo.info.watering.alarm;
+                  if (wateringAlarm.isOn &&
+                      wateringAlarm.nextAlarm != null &&
+                      wateringAlarm.repeat != 0 && // 0으로 나누기 예외 방지
+                      now.isAfter(wateringAlarm.nextAlarm!) &&
+                      now.difference(wateringAlarm.nextAlarm!).inDays %
+                              wateringAlarm.repeat ==
+                          0) {
+                    watering = PlantField.watering;
+                  }
+
+                  final repottingAlarm = userInfo.info.repotting.alarm;
+                  if (repottingAlarm.isOn &&
+                      repottingAlarm.nextAlarm != null &&
+                      repottingAlarm.repeat != 0 && // 0으로 나누기 예외 방지
+                      now.isAfter(repottingAlarm.nextAlarm!) &&
+                      now.difference(repottingAlarm.nextAlarm!).inDays %
+                              repottingAlarm.repeat ==
+                          0) {
+                    repotting = PlantField.repotting;
+                  }
+                }
+
                 return _buildDateContainer(
                   date: now,
                   isToday: isToday,
