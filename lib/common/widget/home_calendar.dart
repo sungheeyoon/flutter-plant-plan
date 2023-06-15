@@ -248,34 +248,37 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 for (final userInfo in userInfoList) {
                   final nutrientAlarm = userInfo.info.nutrient.alarm;
                   if (nutrientAlarm.isOn &&
-                      nutrientAlarm.nextAlarm != null &&
-                      nutrientAlarm.repeat != 0 && // 0으로 나누기 예외 방지
-                      now.isAfter(nutrientAlarm.nextAlarm!) &&
-                      now.difference(nutrientAlarm.nextAlarm!).inDays %
-                              nutrientAlarm.repeat ==
-                          0) {
+                      nutrientAlarm.startDay != null &&
+                      nutrientAlarm.repeat != 0 &&
+                      (now.isAtSameMomentAs(nutrientAlarm.startDay!) ||
+                          (now.isAfter(nutrientAlarm.startDay!) &&
+                              now.difference(nutrientAlarm.startDay!).inDays %
+                                      nutrientAlarm.repeat ==
+                                  0))) {
                     nutrient = PlantField.nutrient;
                   }
 
                   final wateringAlarm = userInfo.info.watering.alarm;
                   if (wateringAlarm.isOn &&
-                      wateringAlarm.nextAlarm != null &&
-                      wateringAlarm.repeat != 0 && // 0으로 나누기 예외 방지
-                      now.isAfter(wateringAlarm.nextAlarm!) &&
-                      now.difference(wateringAlarm.nextAlarm!).inDays %
-                              wateringAlarm.repeat ==
-                          0) {
+                      wateringAlarm.startDay != null &&
+                      wateringAlarm.repeat != 0 &&
+                      (now.isAtSameMomentAs(wateringAlarm.startDay!) ||
+                          (now.isAfter(wateringAlarm.startDay!) &&
+                              now.difference(wateringAlarm.startDay!).inDays %
+                                      wateringAlarm.repeat ==
+                                  0))) {
                     watering = PlantField.watering;
                   }
 
                   final repottingAlarm = userInfo.info.repotting.alarm;
                   if (repottingAlarm.isOn &&
-                      repottingAlarm.nextAlarm != null &&
-                      repottingAlarm.repeat != 0 && // 0으로 나누기 예외 방지
-                      now.isAfter(repottingAlarm.nextAlarm!) &&
-                      now.difference(repottingAlarm.nextAlarm!).inDays %
-                              repottingAlarm.repeat ==
-                          0) {
+                      repottingAlarm.startDay != null &&
+                      repottingAlarm.repeat != 0 &&
+                      (now.isAtSameMomentAs(repottingAlarm.startDay!) ||
+                          (now.isAfter(repottingAlarm.startDay!) &&
+                              now.difference(repottingAlarm.startDay!).inDays %
+                                      repottingAlarm.repeat ==
+                                  0))) {
                     repotting = PlantField.repotting;
                   }
                 }
