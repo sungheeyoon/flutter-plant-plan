@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
+import 'package:plant_plan/common/provider/selectedDateProvider.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -14,14 +16,13 @@ class MyCalendar extends ConsumerStatefulWidget {
 }
 
 class _MyCalendarState extends ConsumerState<MyCalendar> {
-  late DateTime _selectedDate;
   late PageController _pageController;
   late int _currentPage;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
+
     _currentPage = 500;
     _pageController =
         PageController(initialPage: _currentPage, viewportFraction: 0.165)
@@ -30,8 +31,8 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
               setState(
                 () {
                   _currentPage = _pageController.page?.round() ?? 0;
-                  _selectedDate =
-                      DateTime.now().add(Duration(days: _currentPage - 500));
+                  ref.read(selectedDateProvider.notifier).updateDateTime(
+                      DateTime.now().add(Duration(days: _currentPage - 500)));
                 },
               );
             },
@@ -186,7 +187,8 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfoList = ref.watch(userInfoProvider);
+    final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
+    final DateTime selectedDategState = ref.watch(selectedDateProvider);
     print(userInfoList);
     return Container(
       color: pointColor2,
@@ -204,7 +206,7 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                   width: 20.h,
                 ),
                 Text(
-                  DateFormat.yMMM().format(_selectedDate),
+                  DateFormat.yMMM().format(selectedDategState),
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -234,9 +236,9 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 final now = DateTime.now().add(
                   Duration(days: index - 500),
                 );
-                final isSelectedDay = now.year == _selectedDate.year &&
-                    now.month == _selectedDate.month &&
-                    now.day == _selectedDate.day;
+                final isSelectedDay = now.year == selectedDategState.year &&
+                    now.month == selectedDategState.month &&
+                    now.day == selectedDategState.day;
                 final isToday = index == 500;
                 //userInfo 에서 nextAlarm 이후부터 넣는다.
                 //repeat에따라 주기를반복한다 repeat이 1이면 매일 repeat이7 이면 7일마다
