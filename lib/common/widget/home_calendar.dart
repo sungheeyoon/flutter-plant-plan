@@ -188,8 +188,7 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
   @override
   Widget build(BuildContext context) {
     final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
-    final DateTime selectedDategState = ref.watch(selectedDateProvider);
-    print(userInfoList);
+    final DateTime selectedDateState = ref.watch(selectedDateProvider);
     return Container(
       color: pointColor2,
       child: Column(
@@ -206,7 +205,7 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                   width: 20.h,
                 ),
                 Text(
-                  DateFormat.yMMM().format(selectedDategState),
+                  DateFormat.yMMM().format(selectedDateState),
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -236,9 +235,9 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 final now = DateTime.now().add(
                   Duration(days: index - 500),
                 );
-                final isSelectedDay = now.year == selectedDategState.year &&
-                    now.month == selectedDategState.month &&
-                    now.day == selectedDategState.day;
+                final isSelectedDay = now.year == selectedDateState.year &&
+                    now.month == selectedDateState.month &&
+                    now.day == selectedDateState.day;
                 final isToday = index == 500;
                 //userInfo 에서 nextAlarm 이후부터 넣는다.
                 //repeat에따라 주기를반복한다 repeat이 1이면 매일 repeat이7 이면 7일마다
