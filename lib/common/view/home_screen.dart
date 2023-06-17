@@ -2,8 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
+import 'package:plant_plan/common/provider/selectedDateProvider.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -34,7 +37,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = ref.watch(userInfoProvider);
+    final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
+    final DateTime selectedDateState = ref.watch(selectedDateProvider);
+    List<Alarm> selectedDateWateringAlarms = [];
+    List<Alarm> selectedDateNutrientAlarms = [];
+    List<Alarm> selectedDateRepottingAlarms = [];
+
+    for (final userInfo in userInfoList) {
+      final nutrientAlarm = userInfo.info.nutrient.alarm;
+      if (nutrientAlarm.isOn &&
+          nutrientAlarm.startDay != null &&
+          nutrientAlarm.repeat != 0 &&
+          (selectedDateState.isAtSameMomentAs(nutrientAlarm.startDay!) ||
+              (selectedDateState.isAfter(nutrientAlarm.startDay!) &&
+                  selectedDateState.difference(nutrientAlarm.startDay!).inDays %
+                          nutrientAlarm.repeat ==
+                      0))) {
+        // nutrient 알람 정보 가져오기
+        selectedDateNutrientAlarms.add(nutrientAlarm);
+      }
+
+      final wateringAlarm = userInfo.info.watering.alarm;
+      if (wateringAlarm.isOn &&
+          wateringAlarm.startDay != null &&
+          wateringAlarm.repeat != 0 &&
+          (selectedDateState.isAtSameMomentAs(wateringAlarm.startDay!) ||
+              (selectedDateState.isAfter(wateringAlarm.startDay!) &&
+                  selectedDateState.difference(wateringAlarm.startDay!).inDays %
+                          wateringAlarm.repeat ==
+                      0))) {
+        // watering 알람 정보 가져오기
+        selectedDateWateringAlarms.add(wateringAlarm);
+      }
+
+      final repottingAlarm = userInfo.info.repotting.alarm;
+      if (repottingAlarm.isOn &&
+          repottingAlarm.startDay != null &&
+          repottingAlarm.repeat != 0 &&
+          (selectedDateState.isAtSameMomentAs(repottingAlarm.startDay!) ||
+              (selectedDateState.isAfter(repottingAlarm.startDay!) &&
+                  selectedDateState
+                              .difference(repottingAlarm.startDay!)
+                              .inDays %
+                          repottingAlarm.repeat ==
+                      0))) {
+        // repotting 알람 정보 가져오기
+        selectedDateRepottingAlarms.add(repottingAlarm);
+      }
+    }
+    print(selectedDateWateringAlarms);
+
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -46,14 +98,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: const MyCalendar(),
               ),
               ClipRRect(
-                borderRadius: BorderRadius.circular(30), // 모서리 모양 변경
+                borderRadius: BorderRadius.circular(30),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(30), // ClipRRect와 동일하게 설정
+                    borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
                   child: Column(
@@ -64,7 +115,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(
                               32.h,
-                            ), // ClipRRect와 동일하게 설정
+                            ),
                             color: grayColor100,
                           ),
                           height: 54.h,
@@ -85,7 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '15',
+                                    '15', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -112,7 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '15',
+                                    '15', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn 갯수를 파악해서 넣는다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -139,7 +190,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '100%',
+                                    '100%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -412,6 +463,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             });
                           },
                           children: [
+                            //selectedDateState 날짜와 일치하는 userInfoList watring Alarm 을 찾는다
                             SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -421,7 +473,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '5개의 일정이 있어요',
+                                      '5개의 일정이 있어요', //watring Alarm 알람갯수를 '5' 인부분에 넣는다
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
@@ -432,6 +484,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     SizedBox(
                                       height: 8.h,
                                     ),
+                                    //watring Alarm 데이터를 리스트로 AlarmCard 에넣는다
                                     const AlarmCard(
                                         field: PlantField.watering,
                                         isDone: true,
@@ -457,12 +510,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           .textTheme
                                           .bodyMedium!
                                           .copyWith(
-                                            color: const Color(0xFF72CBE7),
+                                            color: subColor2,
                                           ),
                                     ),
                                     SizedBox(
                                       height: 8.h,
                                     ),
+                                    //
                                     const AlarmCard(
                                         field: PlantField.repotting,
                                         isDone: true,
@@ -474,8 +528,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              child: Text('$userInfo'),
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 28,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '5개의 일정이 있어요',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: keyColor400,
+                                          ),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    const AlarmCard(
+                                        field: PlantField.nutrient,
+                                        isDone: true,
+                                        name: "앗싸라말라잌",
+                                        time: "12:00 PM",
+                                        imgUrl:
+                                            'assets/icons/home/change_view.png')
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -509,7 +591,7 @@ class AlarmCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AlarmCardState createState() => _AlarmCardState();
+  State<AlarmCard> createState() => _AlarmCardState();
 }
 
 class _AlarmCardState extends State<AlarmCard> {
