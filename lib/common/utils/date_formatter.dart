@@ -12,3 +12,11 @@ String nextAlarmFomattor(DateTime time) {
   // 다음 알림 텍스트 업데이트
   return "다음 알림은 $nextDate $nextTime 입니다.";
 }
+
+String formatTime(DateTime dateTime) {
+  String period = dateTime.hour < 12 ? 'AM' : 'PM';
+  int hour = dateTime.hour % 12;
+  if (hour == 0) hour = 12;
+  String minute = dateTime.minute.toString().padLeft(2, '0');
+  return '$hour:$minute $period';
+}

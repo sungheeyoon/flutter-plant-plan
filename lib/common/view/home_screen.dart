@@ -8,6 +8,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/provider/selectedDateProvider.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
+import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -463,98 +464,115 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             });
                           },
                           children: [
-                            //selectedDateState 날짜와 일치하는 userInfoList watring Alarm 을 찾는다
                             SingleChildScrollView(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 28),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '5개의 일정이 있어요', //watring Alarm 알람갯수를 '5' 인부분에 넣는다
+                                      '${selectedDateWateringAlarms.length}개의 일정이 있어요',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .copyWith(
-                                            color: const Color(0xFF72CBE7),
-                                          ),
+                                              color: const Color(0xFF72CBE7)),
                                     ),
-                                    SizedBox(
-                                      height: 8.h,
+                                    SizedBox(height: 8.h),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          selectedDateWateringAlarms.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final alarm =
+                                            selectedDateWateringAlarms[index];
+                                        return AlarmCard(
+                                          field: PlantField.watering,
+                                          isDone: false,
+                                          name: alarm.title,
+                                          time: formatTime(alarm.startDay!),
+                                          imgUrl:
+                                              'assets/icons/home/change_view.png',
+                                        );
+                                      },
                                     ),
-                                    //watring Alarm 데이터를 리스트로 AlarmCard 에넣는다
-                                    const AlarmCard(
-                                        field: PlantField.watering,
-                                        isDone: true,
-                                        name: "앗싸라말라잌",
-                                        time: "12:00 PM",
-                                        imgUrl:
-                                            'assets/icons/home/change_view.png')
                                   ],
                                 ),
                               ),
                             ),
                             SingleChildScrollView(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 28),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '5개의 일정이 있어요',
+                                      '${selectedDateRepottingAlarms.length}개의 일정이 있어요',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
-                                          .copyWith(
-                                            color: subColor2,
-                                          ),
+                                          .copyWith(color: subColor2),
                                     ),
-                                    SizedBox(
-                                      height: 8.h,
+                                    SizedBox(height: 8.h),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          selectedDateRepottingAlarms.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final alarm =
+                                            selectedDateRepottingAlarms[index];
+                                        return AlarmCard(
+                                          field: PlantField.repotting,
+                                          isDone: false,
+                                          name: alarm.title,
+                                          time: formatTime(alarm.startDay!),
+                                          imgUrl:
+                                              'assets/icons/home/change_view.png',
+                                        );
+                                      },
                                     ),
-                                    //
-                                    const AlarmCard(
-                                        field: PlantField.repotting,
-                                        isDone: true,
-                                        name: "앗싸라말라잌",
-                                        time: "12:00 PM",
-                                        imgUrl:
-                                            'assets/icons/home/change_view.png')
                                   ],
                                 ),
                               ),
                             ),
                             SingleChildScrollView(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 28,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 28),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '5개의 일정이 있어요',
+                                      '${selectedDateNutrientAlarms.length}개의 일정이 있어요',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium!
                                           .copyWith(
-                                            color: keyColor400,
-                                          ),
+                                              color: const Color(0xFF72CBE7)),
                                     ),
-                                    SizedBox(
-                                      height: 8.h,
+                                    SizedBox(height: 8.h),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          selectedDateNutrientAlarms.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final alarm =
+                                            selectedDateNutrientAlarms[index];
+                                        return AlarmCard(
+                                          field: PlantField.nutrient,
+                                          isDone: false,
+                                          name: alarm.title,
+                                          time: formatTime(alarm.startDay!),
+                                          imgUrl:
+                                              'assets/icons/home/change_view.png',
+                                        );
+                                      },
                                     ),
-                                    const AlarmCard(
-                                        field: PlantField.nutrient,
-                                        isDone: true,
-                                        name: "앗싸라말라잌",
-                                        time: "12:00 PM",
-                                        imgUrl:
-                                            'assets/icons/home/change_view.png')
                                   ],
                                 ),
                               ),
