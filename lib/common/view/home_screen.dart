@@ -86,7 +86,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         selectedDateRepottingAlarms.add(repottingAlarm);
       }
     }
-    print(selectedDateWateringAlarms);
 
     return DefaultLayout(
       backgroundColor: pointColor2,
@@ -464,119 +463,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             });
                           },
                           children: [
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 28),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${selectedDateWateringAlarms.length}개의 일정이 있어요',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              color: const Color(0xFF72CBE7)),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount:
-                                          selectedDateWateringAlarms.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final alarm =
-                                            selectedDateWateringAlarms[index];
-                                        return AlarmCard(
-                                          field: PlantField.watering,
-                                          isDone: false,
-                                          name: alarm.title,
-                                          time: formatTime(alarm.startDay!),
-                                          imgUrl:
-                                              'assets/icons/home/change_view.png',
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 28),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${selectedDateRepottingAlarms.length}개의 일정이 있어요',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: subColor2),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount:
-                                          selectedDateRepottingAlarms.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final alarm =
-                                            selectedDateRepottingAlarms[index];
-                                        return AlarmCard(
-                                          field: PlantField.repotting,
-                                          isDone: false,
-                                          name: alarm.title,
-                                          time: formatTime(alarm.startDay!),
-                                          imgUrl:
-                                              'assets/icons/home/change_view.png',
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 28),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${selectedDateNutrientAlarms.length}개의 일정이 있어요',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              color: const Color(0xFF72CBE7)),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount:
-                                          selectedDateNutrientAlarms.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final alarm =
-                                            selectedDateNutrientAlarms[index];
-                                        return AlarmCard(
-                                          field: PlantField.nutrient,
-                                          isDone: false,
-                                          name: alarm.title,
-                                          time: formatTime(alarm.startDay!),
-                                          imgUrl:
-                                              'assets/icons/home/change_view.png',
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            TodoTap(
+                                selectedDateAlarms: selectedDateWateringAlarms,
+                                field: PlantField.watering),
+                            TodoTap(
+                                selectedDateAlarms: selectedDateRepottingAlarms,
+                                field: PlantField.repotting),
+                            TodoTap(
+                                selectedDateAlarms: selectedDateNutrientAlarms,
+                                field: PlantField.nutrient),
                           ],
                         ),
                       ),
@@ -586,6 +481,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TodoTap extends StatelessWidget {
+  const TodoTap({
+    super.key,
+    required this.selectedDateAlarms,
+    required this.field,
+  });
+
+  final List<Alarm> selectedDateAlarms;
+  final PlantField field;
+
+  @override
+  Widget build(BuildContext context) {
+    Color fieldColor;
+
+    switch (field) {
+      case PlantField.watering:
+        fieldColor = const Color(0xFF72CBE7);
+        break;
+      case PlantField.repotting:
+        fieldColor = subColor2;
+        break;
+      case PlantField.nutrient:
+        fieldColor = keyColor400;
+        break;
+      default:
+        fieldColor = Colors.transparent;
+    }
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${selectedDateAlarms.length}개의 일정이 있어요',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: fieldColor),
+            ),
+            SizedBox(height: 8.h),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: selectedDateAlarms.length,
+              itemBuilder: (BuildContext context, int index) {
+                final alarm = selectedDateAlarms[index];
+                return AlarmCard(
+                  field: field,
+                  isDone: false,
+                  name: alarm.title,
+                  time: formatTime(alarm.startDay!),
+                  imgUrl: 'assets/icons/home/change_view.png',
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
