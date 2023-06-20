@@ -534,12 +534,15 @@ class TodoTap extends StatelessWidget {
               itemCount: selectedDateAlarms.length,
               itemBuilder: (BuildContext context, int index) {
                 final alarm = selectedDateAlarms[index];
-                return AlarmCard(
-                  field: field,
-                  isDone: false,
-                  name: alarm.title,
-                  time: formatTime(alarm.startDay!),
-                  imgUrl: 'assets/icons/home/change_view.png',
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6.h),
+                  child: AlarmCard(
+                    field: field,
+                    isDone: alarm.isOn,
+                    name: alarm.title,
+                    time: formatTime(alarm.startDay!),
+                    imgUrl: 'assets/icons/home/change_view.png',
+                  ),
                 );
               },
             ),

@@ -107,8 +107,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         },
         style: TextButton.styleFrom(
           padding: EdgeInsets.only(right: 5.w),
-          disabledForegroundColor:
-              const Color(0xFF999999).withOpacity(0.38), // 패딩 설정
+          disabledForegroundColor: const Color(0xFF999999).withOpacity(0.38),
         ),
         child: Text(
           '완료',
