@@ -63,10 +63,8 @@ class AlarmNotifier extends StateNotifier<Alarm> {
         now.second);
 
     setDateTime(
-      AlarmDateTimeField.nextAlarm, // key 값을 문자열로 지정
-      result.add(
-        Duration(days: days),
-      ),
+      AlarmDateTimeField.startDay, // key 값을 문자열로 지정
+      result,
     );
   }
 
