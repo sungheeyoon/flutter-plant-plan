@@ -40,52 +40,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
-    List<Alarm> selectedDateWateringAlarms = [];
-    List<Alarm> selectedDateNutrientAlarms = [];
-    List<Alarm> selectedDateRepottingAlarms = [];
 
-    for (final userInfo in userInfoList) {
-      final nutrientAlarm = userInfo.info.nutrient.alarm;
-      if (nutrientAlarm.isOn &&
-          nutrientAlarm.startDay != null &&
-          nutrientAlarm.repeat != 0 &&
-          (selectedDateState.isAtSameMomentAs(nutrientAlarm.startDay!) ||
-              (selectedDateState.isAfter(nutrientAlarm.startDay!) &&
-                  selectedDateState.difference(nutrientAlarm.startDay!).inDays %
-                          nutrientAlarm.repeat ==
-                      0))) {
-        // nutrient 알람 정보 가져오기
-        selectedDateNutrientAlarms.add(nutrientAlarm);
+    List<Alarm> getSelectedDateList(PlantField field) {
+      List<Alarm> results = [];
+
+      for (final userInfo in userInfoList) {
+        Alarm alarm;
+
+        if (field == PlantField.watering) {
+          alarm = userInfo.info.watering.alarm;
+        } else if (field == PlantField.repotting) {
+          alarm = userInfo.info.repotting.alarm;
+        } else {
+          alarm = userInfo.info.nutrient.alarm;
+        }
+
+        // 알람이 켜져 있고 시작일이 지정되어 있으며 반복 주기가 0이 아니고 선택한 날짜와 일치하는 경우
+        if (alarm.isOn &&
+            alarm.startDay != null &&
+            alarm.repeat != 0 &&
+            (selectedDateState.isAtSameMomentAs(alarm.startDay!) ||
+                (selectedDateState.isAfter(alarm.startDay!) &&
+                    selectedDateState.difference(alarm.startDay!).inDays %
+                            alarm.repeat ==
+                        0))) {
+          results.add(alarm); // 결과 리스트에 알람을 추가
+        }
       }
 
-      final wateringAlarm = userInfo.info.watering.alarm;
-      if (wateringAlarm.isOn &&
-          wateringAlarm.startDay != null &&
-          wateringAlarm.repeat != 0 &&
-          (selectedDateState.isAtSameMomentAs(wateringAlarm.startDay!) ||
-              (selectedDateState.isAfter(wateringAlarm.startDay!) &&
-                  selectedDateState.difference(wateringAlarm.startDay!).inDays %
-                          wateringAlarm.repeat ==
-                      0))) {
-        // watering 알람 정보 가져오기
-        selectedDateWateringAlarms.add(wateringAlarm);
-      }
-
-      final repottingAlarm = userInfo.info.repotting.alarm;
-      if (repottingAlarm.isOn &&
-          repottingAlarm.startDay != null &&
-          repottingAlarm.repeat != 0 &&
-          (selectedDateState.isAtSameMomentAs(repottingAlarm.startDay!) ||
-              (selectedDateState.isAfter(repottingAlarm.startDay!) &&
-                  selectedDateState
-                              .difference(repottingAlarm.startDay!)
-                              .inDays %
-                          repottingAlarm.repeat ==
-                      0))) {
-        // repotting 알람 정보 가져오기
-        selectedDateRepottingAlarms.add(repottingAlarm);
-      }
+      return results;
     }
+
+    List<Alarm> selectedDateWateringAlarms =
+        getSelectedDateList(PlantField.watering);
+    List<Alarm> selectedDateRepottingAlarms =
+        getSelectedDateList(PlantField.repotting);
+    List<Alarm> selectedDateNutrientAlarms =
+        getSelectedDateList(PlantField.nutrient);
 
     return DefaultLayout(
       backgroundColor: pointColor2,
