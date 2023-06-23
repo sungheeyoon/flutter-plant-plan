@@ -54,26 +54,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           alarm = userInfo.info.nutrient.alarm;
         }
 
-        // 알람이 켜져 있고 시작일이 지정되어 있으며 반복 주기가 0이 아니고 선택한 날짜와 일치하는 경우
+        // 알람이 켜져 있고 시작일이 지정되어 있으며 반복 주기가 0이고 선택한 날짜와 일치하는 경우
         if (alarm.isOn &&
             alarm.startDay != null &&
             alarm.repeat == 0 &&
-            (selectedDateState.year == alarm.startDay!.year &&
-                selectedDateState.month == alarm.startDay!.month &&
-                selectedDateState.day == alarm.startDay!.day)) {
+            alarm.startDay!.year == selectedDateState.year &&
+            alarm.startDay!.month == selectedDateState.month &&
+            alarm.startDay!.day == selectedDateState.day) {
           results.add(alarm); // 결과 리스트에 알람을 추가합니다.
         }
 
         // 반복 주기에 따라 알람을 추가합니다.
-        if (alarm.repeat != 0) {
-          DateTime currentDate = selectedDateState;
-          DateTime startDate = alarm.startDay!;
-          int difference = currentDate.difference(startDate).inDays;
-
-          if (alarm.isOn &&
-              alarm.startDay != null &&
-              difference >= 0 &&
-              difference % alarm.repeat == 0) {
+        if (alarm.isOn &&
+            alarm.startDay != null &&
+            alarm.repeat != 0 &&
+            selectedDateState.isAfter(alarm.startDay!)) {
+          int difference = selectedDateState.difference(alarm.startDay!).inDays;
+          if (difference % alarm.repeat == 0) {
             results.add(alarm); // 결과 리스트에 알람을 추가합니다.
           }
         }
