@@ -247,27 +247,25 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 PlantField? nutrient;
 
                 for (final userInfo in userInfoList) {
-                  final nutrientAlarm = userInfo.info.nutrient.alarm;
-                  if (nutrientAlarm.isOn &&
-                      nutrientAlarm.startDay != null &&
-                      nutrientAlarm.repeat != 0 &&
-                      (now.isAtSameMomentAs(nutrientAlarm.startDay!) ||
-                          (now.isAfter(nutrientAlarm.startDay!) &&
-                              now.difference(nutrientAlarm.startDay!).inDays %
-                                      nutrientAlarm.repeat ==
-                                  0))) {
-                    nutrient = PlantField.nutrient;
-                  }
-
                   final wateringAlarm = userInfo.info.watering.alarm;
                   if (wateringAlarm.isOn &&
                       wateringAlarm.startDay != null &&
                       wateringAlarm.repeat != 0 &&
-                      (now.isAtSameMomentAs(wateringAlarm.startDay!) ||
+                      (now.year == wateringAlarm.startDay!.year &&
+                              now.month == wateringAlarm.startDay!.month &&
+                              now.day == wateringAlarm.startDay!.day ||
                           (now.isAfter(wateringAlarm.startDay!) &&
                               now.difference(wateringAlarm.startDay!).inDays %
                                       wateringAlarm.repeat ==
                                   0))) {
+                    watering = PlantField.watering;
+                  }
+                  if (wateringAlarm.isOn &&
+                      wateringAlarm.startDay != null &&
+                      wateringAlarm.repeat == 0 &&
+                      wateringAlarm.startDay!.year == now.year &&
+                      wateringAlarm.startDay!.month == now.month &&
+                      wateringAlarm.startDay!.day == now.day) {
                     watering = PlantField.watering;
                   }
 
@@ -275,12 +273,43 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                   if (repottingAlarm.isOn &&
                       repottingAlarm.startDay != null &&
                       repottingAlarm.repeat != 0 &&
-                      (now.isAtSameMomentAs(repottingAlarm.startDay!) ||
+                      (now.year == repottingAlarm.startDay!.year &&
+                              now.month == repottingAlarm.startDay!.month &&
+                              now.day == repottingAlarm.startDay!.day ||
                           (now.isAfter(repottingAlarm.startDay!) &&
                               now.difference(repottingAlarm.startDay!).inDays %
                                       repottingAlarm.repeat ==
                                   0))) {
                     repotting = PlantField.repotting;
+                  }
+                  if (repottingAlarm.isOn &&
+                      repottingAlarm.startDay != null &&
+                      repottingAlarm.repeat == 0 &&
+                      repottingAlarm.startDay!.year == now.year &&
+                      repottingAlarm.startDay!.month == now.month &&
+                      repottingAlarm.startDay!.day == now.day) {
+                    repotting = PlantField.repotting;
+                  }
+                  final nutrientAlarm = userInfo.info.nutrient.alarm;
+                  if (nutrientAlarm.isOn &&
+                      nutrientAlarm.startDay != null &&
+                      nutrientAlarm.repeat != 0 &&
+                      (now.year == nutrientAlarm.startDay!.year &&
+                              now.month == nutrientAlarm.startDay!.month &&
+                              now.day == nutrientAlarm.startDay!.day ||
+                          (now.isAfter(nutrientAlarm.startDay!) &&
+                              now.difference(nutrientAlarm.startDay!).inDays %
+                                      nutrientAlarm.repeat ==
+                                  0))) {
+                    nutrient = PlantField.nutrient;
+                  }
+                  if (nutrientAlarm.isOn &&
+                      nutrientAlarm.startDay != null &&
+                      nutrientAlarm.repeat == 0 &&
+                      nutrientAlarm.startDay!.year == now.year &&
+                      nutrientAlarm.startDay!.month == now.month &&
+                      nutrientAlarm.startDay!.day == now.day) {
+                    nutrient = PlantField.nutrient;
                   }
                 }
 
