@@ -56,8 +56,8 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
       dots.add(
         Container(
           margin: const EdgeInsets.only(left: 2),
-          width: 4,
-          height: 4,
+          width: 4.h,
+          height: 4.h,
           decoration: BoxDecoration(
             color: subColor1,
             borderRadius: BorderRadius.circular(2),
@@ -69,9 +69,9 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (repotting != null) {
       dots.add(
         Container(
-          margin: const EdgeInsets.only(left: 2),
-          width: 4,
-          height: 4,
+          margin: EdgeInsets.only(left: 4.h),
+          width: 4.h,
+          height: 4.h,
           decoration: BoxDecoration(
             color: subColor2,
             borderRadius: BorderRadius.circular(2),
@@ -83,11 +83,11 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (nutrient != null) {
       dots.add(
         Container(
-          margin: const EdgeInsets.only(left: 2),
-          width: 4,
-          height: 4,
+          margin: EdgeInsets.only(left: 4.h),
+          width: 4.h,
+          height: 4.h,
           decoration: BoxDecoration(
-            color: keyColor500,
+            color: const Color.fromRGBO(76, 237, 0, 1),
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -97,9 +97,9 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (watering == null && repotting == null && nutrient == null) {
       dots.add(
         Container(
-          margin: const EdgeInsets.only(left: 2),
-          width: 4,
-          height: 4,
+          margin: EdgeInsets.only(left: 4.h),
+          width: 4.h,
+          height: 4.h,
         ),
       );
     }
