@@ -79,12 +79,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return results;
     }
 
-    List<Alarm> selectedDateWateringAlarms =
+    final List<Alarm> selectedDateWateringAlarms =
         getSelectedDateList(PlantField.watering);
-    List<Alarm> selectedDateRepottingAlarms =
+    final List<Alarm> selectedDateRepottingAlarms =
         getSelectedDateList(PlantField.repotting);
-    List<Alarm> selectedDateNutrientAlarms =
+    final List<Alarm> selectedDateNutrientAlarms =
         getSelectedDateList(PlantField.nutrient);
+    final int listCount = selectedDateWateringAlarms.length +
+        selectedDateRepottingAlarms.length +
+        selectedDateNutrientAlarms.length;
 
     return DefaultLayout(
       backgroundColor: pointColor2,
@@ -135,7 +138,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '15', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
+                                    '$listCount', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
