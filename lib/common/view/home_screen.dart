@@ -54,24 +54,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           alarm = userInfo.info.nutrient.alarm;
         }
 
-        // 알람이 켜져 있고 시작일이 지정되어 있으며 반복 주기가 0이고 선택한 날짜와 일치하는 경우
-        if (alarm.isOn &&
-            alarm.startDay != null &&
-            alarm.repeat == 0 &&
-            alarm.startDay!.year == selectedDateState.year &&
-            alarm.startDay!.month == selectedDateState.month &&
-            alarm.startDay!.day == selectedDateState.day) {
-          results.add(alarm); // 결과 리스트에 알람을 추가합니다.
-        }
-
-        // 반복 주기에 따라 알람을 추가합니다.
-        if (alarm.isOn &&
-            alarm.startDay != null &&
-            alarm.repeat != 0 &&
-            selectedDateState.isAfter(alarm.startDay!)) {
+        if (alarm.isOn && alarm.startDay != null) {
+          // 알람의 시작 날짜와 선택한 날짜를 비교
           int difference = selectedDateState.difference(alarm.startDay!).inDays;
-          if (difference % alarm.repeat == 0) {
-            results.add(alarm); // 결과 리스트에 알람을 추가합니다.
+
+          if (difference >= 0) {
+            if (alarm.repeat == 0) {
+              // 반복 주기가 0인 경우 selectedDateState과 alarm.startDay의 년, 월, 일이 같으면 추가
+              if (alarm.startDay!.year == selectedDateState.year &&
+                  alarm.startDay!.month == selectedDateState.month &&
+                  alarm.startDay!.day == selectedDateState.day) {
+                results.add(alarm);
+              }
+            } else {
+              // 반복 주기가 0보다 큰 경우 주기에 맞게 데이터를 추가할 뿐만 아니라 selectedDateState과 alarm.startDay의 년, 월, 일이 같은 날도 추가
+              if (difference % alarm.repeat == 0 ||
+                  (difference >= alarm.repeat &&
+                      selectedDateState ==
+                          alarm.startDay!.add(
+                              Duration(days: difference % alarm.repeat)))) {
+                results.add(alarm);
+              }
+            }
           }
         }
       }
@@ -88,7 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final int listCount = selectedDateWateringAlarms.length +
         selectedDateRepottingAlarms.length +
         selectedDateNutrientAlarms.length;
-
+    print(selectedDateNutrientAlarms);
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
