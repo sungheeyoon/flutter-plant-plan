@@ -60,19 +60,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
           if (difference >= 0) {
             if (alarm.repeat == 0) {
-              // 반복 주기가 0인 경우 selectedDateState과 alarm.startDay의 년, 월, 일이 같으면 추가
-              if (alarm.startDay!.year == selectedDateState.year &&
-                  alarm.startDay!.month == selectedDateState.month &&
-                  alarm.startDay!.day == selectedDateState.day) {
+              // 반복 주기가 0인 경우 선택한 날짜와 알람의 시작 날짜가 같으면 결과에 추가
+              if (difference == 0) {
                 results.add(alarm);
               }
             } else {
-              // 반복 주기가 0보다 큰 경우 주기에 맞게 데이터를 추가할 뿐만 아니라 selectedDateState과 alarm.startDay의 년, 월, 일이 같은 날도 추가
-              if (difference % alarm.repeat == 0 ||
-                  (difference >= alarm.repeat &&
-                      selectedDateState ==
-                          alarm.startDay!.add(
-                              Duration(days: difference % alarm.repeat)))) {
+              // 반복 주기가 0보다 큰 경우 주기에 맞게 데이터를 추가
+              if (difference % alarm.repeat == 0) {
                 results.add(alarm);
               }
             }
@@ -92,7 +86,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final int listCount = selectedDateWateringAlarms.length +
         selectedDateRepottingAlarms.length +
         selectedDateNutrientAlarms.length;
-    print(selectedDateNutrientAlarms);
+
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -539,6 +533,18 @@ class TodoTap extends StatelessWidget {
               shrinkWrap: true,
               itemCount: selectedDateAlarms.length,
               itemBuilder: (BuildContext context, int index) {
+                selectedDateAlarms.sort((a, b) {
+                  if (a.isOn && !b.isOn) {
+                    return -1; // a가 true이고 b가 false인 경우 a를 더 앞에 배치
+                  } else if (!a.isOn && b.isOn) {
+                    return 1; // a가 false이고 b가 true인 경우 b를 더 앞에 배치
+                  } else {
+                    return 0; // a와 b의 isOn 값이 동일한 경우 순서 변경 없음
+                  }
+                });
+
+                selectedDateAlarms
+                    .sort((a, b) => b.startDay!.compareTo(a.startDay!));
                 final alarm = selectedDateAlarms[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 6.h),
