@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/alarm_with_userinfo.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/provider/selectedDateProvider.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
@@ -40,34 +42,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
-    List<Alarm> getSelectedDateList(PlantField field) {
-      List<Alarm> results = [];
+
+    List<AlarmWithUserInfo> getSelectedDateList(PlantField field) {
+      List<AlarmWithUserInfo> results = [];
 
       for (final userInfo in userInfoList) {
         Alarm alarm;
+        String alias;
+        PlantModel plant;
+        String selectedPhotoUrl;
 
         if (field == PlantField.watering) {
           alarm = userInfo.info.watering.alarm;
+          alias = userInfo.info.alias;
+          plant = userInfo.plant;
+          selectedPhotoUrl = userInfo.selectedPhotoUrl;
         } else if (field == PlantField.repotting) {
           alarm = userInfo.info.repotting.alarm;
+          alias = userInfo.info.alias;
+          plant = userInfo.plant;
+          selectedPhotoUrl = userInfo.selectedPhotoUrl;
         } else {
           alarm = userInfo.info.nutrient.alarm;
+          alias = userInfo.info.alias;
+          plant = userInfo.plant;
+          selectedPhotoUrl = userInfo.selectedPhotoUrl;
         }
 
         if (alarm.isOn && alarm.startDay != null) {
-          // 알람의 시작 날짜와 선택한 날짜를 비교
           int difference = selectedDateState.difference(alarm.startDay!).inDays;
 
           if (difference >= 0) {
             if (alarm.repeat == 0) {
-              // 반복 주기가 0인 경우 선택한 날짜와 알람의 시작 날짜가 같으면 결과에 추가
               if (difference == 0) {
-                results.add(alarm);
+                results.add(AlarmWithUserInfo(
+                  alarm: alarm,
+                  alias: alias,
+                  plant: plant,
+                  selectedPhotoUrl: selectedPhotoUrl,
+                ));
               }
             } else {
-              // 반복 주기가 0보다 큰 경우 주기에 맞게 데이터를 추가
               if (difference % alarm.repeat == 0) {
-                results.add(alarm);
+                results.add(AlarmWithUserInfo(
+                  alarm: alarm,
+                  alias: alias,
+                  plant: plant,
+                  selectedPhotoUrl: selectedPhotoUrl,
+                ));
               }
             }
           }
@@ -77,11 +99,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return results;
     }
 
-    final List<Alarm> selectedDateWateringAlarms =
+    final List<AlarmWithUserInfo> selectedDateWateringAlarms =
         getSelectedDateList(PlantField.watering);
-    final List<Alarm> selectedDateRepottingAlarms =
+    final List<AlarmWithUserInfo> selectedDateRepottingAlarms =
         getSelectedDateList(PlantField.repotting);
-    final List<Alarm> selectedDateNutrientAlarms =
+    final List<AlarmWithUserInfo> selectedDateNutrientAlarms =
         getSelectedDateList(PlantField.nutrient);
     final int listCount = selectedDateWateringAlarms.length +
         selectedDateRepottingAlarms.length +
@@ -494,7 +516,7 @@ class TodoTap extends StatelessWidget {
     required this.field,
   });
 
-  final List<Alarm> selectedDateAlarms;
+  final List<AlarmWithUserInfo> selectedDateAlarms;
   final PlantField field;
 
   @override
@@ -534,25 +556,27 @@ class TodoTap extends StatelessWidget {
               itemCount: selectedDateAlarms.length,
               itemBuilder: (BuildContext context, int index) {
                 selectedDateAlarms.sort((a, b) {
-                  if (a.isOn && !b.isOn) {
+                  if (a.alarm.isOn && !b.alarm.isOn) {
                     return -1; // a가 true이고 b가 false인 경우 a를 더 앞에 배치
-                  } else if (!a.isOn && b.isOn) {
+                  } else if (!a.alarm.isOn && b.alarm.isOn) {
                     return 1; // a가 false이고 b가 true인 경우 b를 더 앞에 배치
                   } else {
                     return 0; // a와 b의 isOn 값이 동일한 경우 순서 변경 없음
                   }
                 });
 
-                selectedDateAlarms
-                    .sort((a, b) => b.startDay!.compareTo(a.startDay!));
-                final alarm = selectedDateAlarms[index];
+                selectedDateAlarms.sort(
+                    (a, b) => b.alarm.startDay!.compareTo(a.alarm.startDay!));
+                final info = selectedDateAlarms[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 6.h),
                   child: AlarmCard(
                     field: field,
-                    isDone: alarm.isOn,
-                    name: alarm.title,
-                    time: formatTime(alarm.startDay!),
+                    isDone: info.alarm.isOn,
+                    name: info.alarm.title.isNotEmpty
+                        ? info.alarm.title
+                        : info.alias,
+                    time: formatTime(info.alarm.startDay!),
                     imgUrl: 'assets/icons/home/change_view.png',
                   ),
                 );
