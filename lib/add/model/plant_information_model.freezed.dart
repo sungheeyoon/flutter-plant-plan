@@ -436,6 +436,7 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
+  String get id => throw _privateConstructorUsedError; // ID 필드 추가
   @TimestampSerializer()
   DateTime get startTime => throw _privateConstructorUsedError;
   @TimestampSerializer()
@@ -445,6 +446,7 @@ mixin _$Alarm {
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   bool get isOn => throw _privateConstructorUsedError;
+  List<DateTime> get offDates => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -457,12 +459,14 @@ abstract class $AlarmCopyWith<$Res> {
       _$AlarmCopyWithImpl<$Res, Alarm>;
   @useResult
   $Res call(
-      {@TimestampSerializer() DateTime startTime,
+      {String id,
+      @TimestampSerializer() DateTime startTime,
       @TimestampSerializer() DateTime? startDay,
       @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
-      bool isOn});
+      bool isOn,
+      List<DateTime> offDates});
 }
 
 /// @nodoc
@@ -478,14 +482,20 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? startTime = null,
     Object? startDay = freezed,
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
     Object? isOn = null,
+    Object? offDates = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -510,6 +520,10 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.isOn
           : isOn // ignore: cast_nullable_to_non_nullable
               as bool,
+      offDates: null == offDates
+          ? _value.offDates
+          : offDates // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
     ) as $Val);
   }
 }
@@ -521,12 +535,14 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {@TimestampSerializer() DateTime startTime,
+      {String id,
+      @TimestampSerializer() DateTime startTime,
       @TimestampSerializer() DateTime? startDay,
       @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
-      bool isOn});
+      bool isOn,
+      List<DateTime> offDates});
 }
 
 /// @nodoc
@@ -538,14 +554,20 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? startTime = null,
     Object? startDay = freezed,
     Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
     Object? isOn = null,
+    Object? offDates = null,
   }) {
     return _then(_$_Alarm(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -570,6 +592,10 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value.isOn
           : isOn // ignore: cast_nullable_to_non_nullable
               as bool,
+      offDates: null == offDates
+          ? _value._offDates
+          : offDates // ignore: cast_nullable_to_non_nullable
+              as List<DateTime>,
     ));
   }
 }
@@ -578,16 +604,23 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
 @JsonSerializable()
 class _$_Alarm implements _Alarm {
   _$_Alarm(
-      {@TimestampSerializer() required this.startTime,
+      {this.id = '',
+      @TimestampSerializer() required this.startTime,
       @TimestampSerializer() this.startDay = null,
       @TimestampSerializer() this.nextAlarm = null,
       this.repeat = 0,
-      this.title = "",
-      this.isOn = true});
+      this.title = '',
+      this.isOn = true,
+      final List<DateTime> offDates = const []})
+      : _offDates = offDates;
 
   factory _$_Alarm.fromJson(Map<String, dynamic> json) =>
       _$$_AlarmFromJson(json);
 
+  @override
+  @JsonKey()
+  final String id;
+// ID 필드 추가
   @override
   @TimestampSerializer()
   final DateTime startTime;
@@ -608,10 +641,18 @@ class _$_Alarm implements _Alarm {
   @override
   @JsonKey()
   final bool isOn;
+  final List<DateTime> _offDates;
+  @override
+  @JsonKey()
+  List<DateTime> get offDates {
+    if (_offDates is EqualUnmodifiableListView) return _offDates;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_offDates);
+  }
 
   @override
   String toString() {
-    return 'Alarm(startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title, isOn: $isOn)';
+    return 'Alarm(id: $id, startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title, isOn: $isOn, offDates: $offDates)';
   }
 
   @override
@@ -619,6 +660,7 @@ class _$_Alarm implements _Alarm {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Alarm &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.startDay, startDay) ||
@@ -627,13 +669,22 @@ class _$_Alarm implements _Alarm {
                 other.nextAlarm == nextAlarm) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.isOn, isOn) || other.isOn == isOn));
+            (identical(other.isOn, isOn) || other.isOn == isOn) &&
+            const DeepCollectionEquality().equals(other._offDates, _offDates));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, startTime, startDay, nextAlarm, repeat, title, isOn);
+      runtimeType,
+      id,
+      startTime,
+      startDay,
+      nextAlarm,
+      repeat,
+      title,
+      isOn,
+      const DeepCollectionEquality().hash(_offDates));
 
   @JsonKey(ignore: true)
   @override
@@ -651,16 +702,20 @@ class _$_Alarm implements _Alarm {
 
 abstract class _Alarm implements Alarm {
   factory _Alarm(
-      {@TimestampSerializer() required final DateTime startTime,
+      {final String id,
+      @TimestampSerializer() required final DateTime startTime,
       @TimestampSerializer() final DateTime? startDay,
       @TimestampSerializer() final DateTime? nextAlarm,
       final int repeat,
       final String title,
-      final bool isOn}) = _$_Alarm;
+      final bool isOn,
+      final List<DateTime> offDates}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
   @override
+  String get id;
+  @override // ID 필드 추가
   @TimestampSerializer()
   DateTime get startTime;
   @override
@@ -675,6 +730,8 @@ abstract class _Alarm implements Alarm {
   String get title;
   @override
   bool get isOn;
+  @override
+  List<DateTime> get offDates;
   @override
   @JsonKey(ignore: true)
   _$$_AlarmCopyWith<_$_Alarm> get copyWith =>

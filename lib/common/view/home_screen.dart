@@ -72,26 +72,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (alarm.isOn && alarm.startDay != null) {
           int difference = selectedDateState.difference(alarm.startDay!).inDays;
 
-          if (difference >= 0) {
-            if (alarm.repeat == 0) {
-              if (difference == 0) {
-                results.add(AlarmWithUserInfo(
-                  alarm: alarm,
-                  alias: alias,
-                  plant: plant,
-                  selectedPhotoUrl: selectedPhotoUrl,
-                ));
-              }
-            } else {
-              if (difference % alarm.repeat == 0) {
-                results.add(AlarmWithUserInfo(
-                  alarm: alarm,
-                  alias: alias,
-                  plant: plant,
-                  selectedPhotoUrl: selectedPhotoUrl,
-                ));
-              }
-            }
+          if (difference == 0 && alarm.repeat == 0) {
+            results.add(
+              AlarmWithUserInfo(
+                alarm: alarm,
+                alias: alias,
+                plant: plant,
+                selectedPhotoUrl: selectedPhotoUrl,
+              ),
+            );
+          }
+
+          if (alarm.repeat > 0 &&
+              difference >= 0 &&
+              difference % alarm.repeat == 0) {
+            results.add(
+              AlarmWithUserInfo(
+                alarm: alarm,
+                alias: alias,
+                plant: plant,
+                selectedPhotoUrl: selectedPhotoUrl,
+              ),
+            );
           }
         }
       }
