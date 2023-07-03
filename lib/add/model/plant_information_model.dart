@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 part 'plant_information_model.freezed.dart';
 part 'plant_information_model.g.dart';
 
@@ -30,15 +31,38 @@ class PlantInformationKey with _$PlantInformationKey {
 @freezed
 class Alarm with _$Alarm {
   factory Alarm({
+    @Default('') String id,
     @TimestampSerializer() required DateTime startTime,
     @TimestampSerializer() @Default(null) DateTime? startDay,
     @TimestampSerializer() @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,
-    @Default("") String title,
+    @Default('') String title,
     @Default(true) bool isOn,
+    @Default([]) List<DateTime> offDates,
   }) = _Alarm;
 
   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
+
+  factory Alarm.newAlarm({
+    required DateTime startTime,
+    DateTime? startDay,
+    DateTime? nextAlarm,
+    int repeat = 0,
+    String title = '',
+    bool isOn = true,
+    List<DateTime> offDates = const [],
+  }) {
+    return Alarm(
+      id: const Uuid().v4(),
+      startTime: startTime,
+      startDay: startDay,
+      nextAlarm: nextAlarm,
+      repeat: repeat,
+      title: title,
+      isOn: isOn,
+      offDates: offDates,
+    );
+  }
 }
 
 class TimestampSerializer implements JsonConverter<DateTime, dynamic> {
