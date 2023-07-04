@@ -53,12 +53,6 @@ Json? _$JsonConverterToJson<Json, Value>(
 _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
       id: json['id'] as String? ?? '',
       startTime: const TimestampSerializer().fromJson(json['startTime']),
-      startDay: json['startDay'] == null
-          ? null
-          : const TimestampSerializer().fromJson(json['startDay']),
-      nextAlarm: json['nextAlarm'] == null
-          ? null
-          : const TimestampSerializer().fromJson(json['nextAlarm']),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? '',
       isOn: json['isOn'] as bool? ?? true,
@@ -71,10 +65,6 @@ _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
       'id': instance.id,
       'startTime': const TimestampSerializer().toJson(instance.startTime),
-      'startDay': _$JsonConverterToJson<dynamic, DateTime>(
-          instance.startDay, const TimestampSerializer().toJson),
-      'nextAlarm': _$JsonConverterToJson<dynamic, DateTime>(
-          instance.nextAlarm, const TimestampSerializer().toJson),
       'repeat': instance.repeat,
       'title': instance.title,
       'isOn': instance.isOn,

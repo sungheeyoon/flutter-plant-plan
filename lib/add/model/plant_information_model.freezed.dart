@@ -436,13 +436,9 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Alarm {
-  String get id => throw _privateConstructorUsedError; // ID 필드 추가
+  String get id => throw _privateConstructorUsedError;
   @TimestampSerializer()
   DateTime get startTime => throw _privateConstructorUsedError;
-  @TimestampSerializer()
-  DateTime? get startDay => throw _privateConstructorUsedError;
-  @TimestampSerializer()
-  DateTime? get nextAlarm => throw _privateConstructorUsedError;
   int get repeat => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   bool get isOn => throw _privateConstructorUsedError;
@@ -461,8 +457,6 @@ abstract class $AlarmCopyWith<$Res> {
   $Res call(
       {String id,
       @TimestampSerializer() DateTime startTime,
-      @TimestampSerializer() DateTime? startDay,
-      @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
       bool isOn,
@@ -484,8 +478,6 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
   $Res call({
     Object? id = null,
     Object? startTime = null,
-    Object? startDay = freezed,
-    Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
     Object? isOn = null,
@@ -500,14 +492,6 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      startDay: freezed == startDay
-          ? _value.startDay
-          : startDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      nextAlarm: freezed == nextAlarm
-          ? _value.nextAlarm
-          : nextAlarm // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -537,8 +521,6 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
   $Res call(
       {String id,
       @TimestampSerializer() DateTime startTime,
-      @TimestampSerializer() DateTime? startDay,
-      @TimestampSerializer() DateTime? nextAlarm,
       int repeat,
       String title,
       bool isOn,
@@ -556,8 +538,6 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
   $Res call({
     Object? id = null,
     Object? startTime = null,
-    Object? startDay = freezed,
-    Object? nextAlarm = freezed,
     Object? repeat = null,
     Object? title = null,
     Object? isOn = null,
@@ -572,14 +552,6 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      startDay: freezed == startDay
-          ? _value.startDay
-          : startDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      nextAlarm: freezed == nextAlarm
-          ? _value.nextAlarm
-          : nextAlarm // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       repeat: null == repeat
           ? _value.repeat
           : repeat // ignore: cast_nullable_to_non_nullable
@@ -606,8 +578,6 @@ class _$_Alarm implements _Alarm {
   _$_Alarm(
       {this.id = '',
       @TimestampSerializer() required this.startTime,
-      @TimestampSerializer() this.startDay = null,
-      @TimestampSerializer() this.nextAlarm = null,
       this.repeat = 0,
       this.title = '',
       this.isOn = true,
@@ -620,18 +590,9 @@ class _$_Alarm implements _Alarm {
   @override
   @JsonKey()
   final String id;
-// ID 필드 추가
   @override
   @TimestampSerializer()
   final DateTime startTime;
-  @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? startDay;
-  @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? nextAlarm;
   @override
   @JsonKey()
   final int repeat;
@@ -652,7 +613,7 @@ class _$_Alarm implements _Alarm {
 
   @override
   String toString() {
-    return 'Alarm(id: $id, startTime: $startTime, startDay: $startDay, nextAlarm: $nextAlarm, repeat: $repeat, title: $title, isOn: $isOn, offDates: $offDates)';
+    return 'Alarm(id: $id, startTime: $startTime, repeat: $repeat, title: $title, isOn: $isOn, offDates: $offDates)';
   }
 
   @override
@@ -663,10 +624,6 @@ class _$_Alarm implements _Alarm {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
-            (identical(other.startDay, startDay) ||
-                other.startDay == startDay) &&
-            (identical(other.nextAlarm, nextAlarm) ||
-                other.nextAlarm == nextAlarm) &&
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.isOn, isOn) || other.isOn == isOn) &&
@@ -675,16 +632,8 @@ class _$_Alarm implements _Alarm {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      startTime,
-      startDay,
-      nextAlarm,
-      repeat,
-      title,
-      isOn,
-      const DeepCollectionEquality().hash(_offDates));
+  int get hashCode => Object.hash(runtimeType, id, startTime, repeat, title,
+      isOn, const DeepCollectionEquality().hash(_offDates));
 
   @JsonKey(ignore: true)
   @override
@@ -704,8 +653,6 @@ abstract class _Alarm implements Alarm {
   factory _Alarm(
       {final String id,
       @TimestampSerializer() required final DateTime startTime,
-      @TimestampSerializer() final DateTime? startDay,
-      @TimestampSerializer() final DateTime? nextAlarm,
       final int repeat,
       final String title,
       final bool isOn,
@@ -715,15 +662,9 @@ abstract class _Alarm implements Alarm {
 
   @override
   String get id;
-  @override // ID 필드 추가
+  @override
   @TimestampSerializer()
   DateTime get startTime;
-  @override
-  @TimestampSerializer()
-  DateTime? get startDay;
-  @override
-  @TimestampSerializer()
-  DateTime? get nextAlarm;
   @override
   int get repeat;
   @override

@@ -301,7 +301,7 @@ class AlarmBox extends ConsumerWidget {
                   )
                 ],
               ),
-              if (alarmState.startDay != null)
+              if (alarmState.isOn)
                 Column(
                   children: [
                     SizedBox(
@@ -386,16 +386,16 @@ class AlarmBox extends ConsumerWidget {
                               )
                             ],
                           ),
-                          Switch(
-                            value: alarmState.isOn,
-                            onChanged: (value) {
-                              ref
-                                  .read(plantInformationProvider.notifier)
-                                  .updatePlantField(field, toggleIsOn: true);
-                            },
-                            activeTrackColor: primaryColor.withOpacity(0.4),
-                            activeColor: primaryColor,
-                          ),
+                          // Switch(
+                          //   value: alarmState.isOn,
+                          //   onChanged: (value) {
+                          //     ref
+                          //         .read(plantInformationProvider.notifier)
+                          //         .updatePlantField(field, toggleIsOn: true);
+                          //   },
+                          //   activeTrackColor: primaryColor.withOpacity(0.4),
+                          //   activeColor: primaryColor,
+                          // ),
                         ],
                       ),
                     )

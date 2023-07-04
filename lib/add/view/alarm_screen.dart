@@ -95,7 +95,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     return DefaultLayout(
       textbutton: TextButton(
         onPressed: () {
-          if (alarmState.startDay != null) {
+          if (alarmState.isOn) {
             ref
                 .read(plantInformationProvider.notifier)
                 .updatePlantField(widget.field, alarm: alarmState);
@@ -112,7 +112,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         child: Text(
           '완료',
           style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: alarmState.startDay == null
+                color: !alarmState.isOn
                     ? const Color(0xFF999999).withOpacity(0.38)
                     : pointColor2,
               ),
@@ -276,9 +276,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                                   int.tryParse(text); // String을 int로 변환
                               if (intValue != null) {
                                 // intValue가 null이 아닌 경우에만 값을 업데이트
-                                ref
-                                    .read(alarmProvider.notifier)
-                                    .updateNextAlarmTime(days: intValue);
+
+                                //updateNextAlarmTime(days: intValue); 추가예정
                                 ref
                                     .read(alarmProvider.notifier)
                                     .setRepeat(intValue);
@@ -334,21 +333,22 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       ),
                     ],
                   ),
-                if (alarmState.nextAlarm != null && focusedButtonIndex != -1)
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 8.h,
-                      ),
-                      Text(
-                        nextAlarmFomattor(alarmState.nextAlarm!),
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(color: pointColor1),
-                      )
-                    ],
-                  ),
+                //다음날짜 계산추가예정
+                // if (alarmState.nextAlarm != null && focusedButtonIndex != -1)
+                //   Column(
+                //     children: [
+                //       SizedBox(
+                //         height: 8.h,
+                //       ),
+                //       Text(
+                //         nextAlarmFomattor(alarmState.nextAlarm!),
+                //         style: Theme.of(context)
+                //             .textTheme
+                //             .labelMedium!
+                //             .copyWith(color: pointColor1),
+                //       )
+                //     ],
+                //   ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -478,26 +478,26 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   }
 
   void _updateFocusedButton(int index) {
-    final Alarm alarmState = ref.watch(alarmProvider);
+    // final Alarm alarmState = ref.watch(alarmProvider);
     setState(
       () {
         if (focusedButtonIndex == index) {
           focusedButtonIndex = -1;
-          ref
-              .read(alarmProvider.notifier)
-              .setDateTimeNull(AlarmDateTimeField.nextAlarm);
+          // ref
+          //     .read(alarmProvider.notifier)
+          //     .setDateTimeNull(AlarmDateTimeField.nextAlarm);
         } else {
           focusedButtonIndex = index;
-          ref
-              .read(alarmProvider.notifier)
-              .updateNextAlarmTime(days: alarmState.repeat);
+          // ref
+          //     .read(alarmProvider.notifier)
+          //     .updateNextAlarmTime(days: alarmState.repeat);
         }
       },
     );
   }
 
   Widget hourMinute12H() {
-    final Alarm alarmState = ref.watch(alarmProvider);
+    // final Alarm alarmState = ref.watch(alarmProvider);
     return Container(
       width: 360.w,
       height: 194.h,
@@ -506,7 +506,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: TimePickerSpinner(
-        time: selectedState.alarm.startDay != null
+        time: selectedState.alarm.isOn
             ? selectedState.alarm.startTime
             : DateTime.now(),
         is24HourMode: false,
@@ -524,14 +524,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         onTimeChange: (time) async {
           ref
               .read(alarmProvider.notifier)
-              .setDateTime(AlarmDateTimeField.startTime, time);
-          setState(
-            () {
-              ref
-                  .read(alarmProvider.notifier)
-                  .updateNextAlarmTime(days: alarmState.repeat);
-            },
-          );
+              .setStartTime(StartTimeOption.time, time);
+          // setState(
+          //   () {
+          //     ref
+          //         .read(alarmProvider.notifier)
+          //         .updateNextAlarmTime(days: alarmState.repeat);
+          //   },
+          // );
         },
       ),
     );

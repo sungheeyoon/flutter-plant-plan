@@ -30,14 +30,14 @@ class DatePickerWidget extends ConsumerWidget {
 
     switch (field) {
       case PlantField.watering:
-        date = alarm ? alarmState.startDay : plantState.watering.lastDay;
+        date = alarm ? alarmState.startTime : plantState.watering.lastDay;
         break;
       case PlantField.repotting:
-        date = alarm ? alarmState.startDay : plantState.repotting.lastDay;
+        date = alarm ? alarmState.startTime : plantState.repotting.lastDay;
 
         break;
       case PlantField.nutrient:
-        date = alarm ? alarmState.startDay : plantState.nutrient.lastDay;
+        date = alarm ? alarmState.startTime : plantState.nutrient.lastDay;
         break;
     }
 
@@ -134,7 +134,6 @@ class DatePickerWidget extends ConsumerWidget {
   }
 
   Future<void> _showDatePicker(PlantField field, WidgetRef ref) async {
-    final alarmState = ref.watch(alarmProvider);
     List<DateTime?> singleDatePickerValueWithDefaultValue = [
       DateTime.now(),
     ];
@@ -151,10 +150,10 @@ class DatePickerWidget extends ConsumerWidget {
       if (alarm) {
         ref
             .read(alarmProvider.notifier)
-            .setDateTime(AlarmDateTimeField.startDay, values[0]!);
-        ref
-            .read(alarmProvider.notifier)
-            .updateNextAlarmTime(days: alarmState.repeat);
+            .setStartTime(StartTimeOption.day, values[0]!);
+        // ref
+        //     .read(alarmProvider.notifier)
+        //     .updateNextAlarmTime(days: alarmState.repeat);
       } else {
         ref
             .read(plantInformationProvider.notifier)

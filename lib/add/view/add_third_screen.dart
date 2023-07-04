@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
@@ -60,7 +61,7 @@ class AddThirdScreen extends ConsumerWidget {
 
         if (selectedPhoto != null) {
           String photoUrl = await uploadPhoto(selectedPhoto, uid);
-          // 업로드된 사진의 다운로드 URL을 사용하여 Firestore에 데이터를 저장하는 작업을 수행합니다.
+          // 업로드된 사진의 다운로드 URL을 사용하여 Firestore에 데이터를 저장하는 작업을 수행
           await FirebaseFirestore.instance
               .collection('users')
               .doc(uid)
@@ -71,36 +72,15 @@ class AddThirdScreen extends ConsumerWidget {
               'alias': plantInformation.alias,
               'watering': {
                 'lastDay': plantInformation.watering.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.watering.alarm.startTime,
-                  'startDay': plantInformation.watering.alarm.startDay,
-                  'nextAlarm': plantInformation.watering.alarm.nextAlarm,
-                  'repeat': plantInformation.watering.alarm.repeat,
-                  'title': plantInformation.watering.alarm.title,
-                  'isOn': plantInformation.watering.alarm.isOn,
-                },
+                'alarm': plantInformation.watering.alarm.toJson()
               },
               'repotting': {
                 'lastDay': plantInformation.repotting.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.repotting.alarm.startTime,
-                  'startDay': plantInformation.repotting.alarm.startDay,
-                  'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
-                  'repeat': plantInformation.repotting.alarm.repeat,
-                  'title': plantInformation.repotting.alarm.title,
-                  'isOn': plantInformation.repotting.alarm.isOn,
-                },
+                'alarm': plantInformation.repotting.alarm.toJson()
               },
               'nutrient': {
                 'lastDay': plantInformation.nutrient.lastDay,
-                'alarm': {
-                  'startTime': plantInformation.nutrient.alarm.startTime,
-                  'startDay': plantInformation.nutrient.alarm.startDay,
-                  'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
-                  'repeat': plantInformation.nutrient.alarm.repeat,
-                  'title': plantInformation.nutrient.alarm.title,
-                  'isOn': plantInformation.nutrient.alarm.isOn,
-                },
+                'alarm': plantInformation.nutrient.alarm.toJson()
               },
             },
             'id': selectedPlant!.id,
@@ -120,36 +100,15 @@ class AddThirdScreen extends ConsumerWidget {
                 'alias': plantInformation.alias,
                 'watering': {
                   'lastDay': plantInformation.watering.lastDay,
-                  'alarm': {
-                    'startTime': plantInformation.watering.alarm.startTime,
-                    'startDay': plantInformation.watering.alarm.startDay,
-                    'nextAlarm': plantInformation.watering.alarm.nextAlarm,
-                    'repeat': plantInformation.watering.alarm.repeat,
-                    'title': plantInformation.watering.alarm.title,
-                    'isOn': plantInformation.watering.alarm.isOn,
-                  },
+                  'alarm': plantInformation.watering.alarm.toJson()
                 },
                 'repotting': {
                   'lastDay': plantInformation.repotting.lastDay,
-                  'alarm': {
-                    'startTime': plantInformation.repotting.alarm.startTime,
-                    'startDay': plantInformation.repotting.alarm.startDay,
-                    'nextAlarm': plantInformation.repotting.alarm.nextAlarm,
-                    'repeat': plantInformation.repotting.alarm.repeat,
-                    'title': plantInformation.repotting.alarm.title,
-                    'isOn': plantInformation.repotting.alarm.isOn,
-                  },
+                  'alarm': plantInformation.repotting.alarm.toJson()
                 },
                 'nutrient': {
                   'lastDay': plantInformation.nutrient.lastDay,
-                  'alarm': {
-                    'startTime': plantInformation.nutrient.alarm.startTime,
-                    'startDay': plantInformation.nutrient.alarm.startDay,
-                    'nextAlarm': plantInformation.nutrient.alarm.nextAlarm,
-                    'repeat': plantInformation.nutrient.alarm.repeat,
-                    'title': plantInformation.nutrient.alarm.title,
-                    'isOn': plantInformation.nutrient.alarm.isOn,
-                  },
+                  'alarm': plantInformation.nutrient.alarm.toJson()
                 },
               },
               'id': selectedPlant!.id,
@@ -159,6 +118,10 @@ class AddThirdScreen extends ConsumerWidget {
           );
         }
       }
+      ref.read(selectedPlantProvider.notifier).reset();
+      ref.read(photoProvider.notifier).reset();
+      ref.read(alarmProvider.notifier).reset();
+      ref.read(plantInformationProvider.notifier).reset();
     }
 
     return DefaultLayout(
@@ -525,10 +488,9 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           SizedBox(
                             height: 6.h,
                           ),
-                          if (currentState.alarm.startDay != null)
+                          if (currentState.alarm.isOn)
                             Text(
-                              dateFormatter(
-                                  currentState.alarm.startDay as DateTime),
+                              dateFormatter(currentState.alarm.startTime),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -536,7 +498,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                                     color: grayBlack,
                                   ),
                             ),
-                          if (currentState.alarm.startDay == null)
+                          if (currentState.alarm.isOn)
                             RichText(
                               text: TextSpan(
                                 style: Theme.of(context)
