@@ -69,8 +69,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           selectedPhotoUrl = userInfo.selectedPhotoUrl;
         }
 
-        if (alarm.isOn && alarm.startDay != null) {
-          int difference = selectedDateState.difference(alarm.startDay!).inDays;
+        if (alarm.isOn) {
+          int difference = selectedDateState.difference(alarm.startTime).inDays;
 
           if (difference == 0 && alarm.repeat == 0) {
             results.add(
@@ -568,7 +568,7 @@ class TodoTap extends StatelessWidget {
                 });
 
                 selectedDateAlarms.sort(
-                    (a, b) => b.alarm.startDay!.compareTo(a.alarm.startDay!));
+                    (a, b) => b.alarm.startTime.compareTo(a.alarm.startTime));
                 final info = selectedDateAlarms[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -578,7 +578,7 @@ class TodoTap extends StatelessWidget {
                     name: info.alarm.title.isNotEmpty
                         ? info.alarm.title
                         : info.alias,
-                    time: formatTime(info.alarm.startDay!),
+                    time: formatTime(info.alarm.startTime),
                     imgUrl: 'assets/icons/home/change_view.png',
                   ),
                 );

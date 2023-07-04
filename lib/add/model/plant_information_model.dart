@@ -33,11 +33,9 @@ class Alarm with _$Alarm {
   factory Alarm({
     @Default('') String id,
     @TimestampSerializer() required DateTime startTime,
-    @TimestampSerializer() @Default(null) DateTime? startDay,
-    @TimestampSerializer() @Default(null) DateTime? nextAlarm,
     @Default(0) int repeat,
     @Default('') String title,
-    @Default(true) bool isOn,
+    @Default(false) bool isOn,
     @Default([]) List<DateTime> offDates,
   }) = _Alarm;
 
@@ -45,18 +43,14 @@ class Alarm with _$Alarm {
 
   factory Alarm.newAlarm({
     required DateTime startTime,
-    DateTime? startDay,
-    DateTime? nextAlarm,
     int repeat = 0,
     String title = '',
-    bool isOn = true,
+    bool isOn = false,
     List<DateTime> offDates = const [],
   }) {
     return Alarm(
       id: const Uuid().v4(),
       startTime: startTime,
-      startDay: startDay,
-      nextAlarm: nextAlarm,
       repeat: repeat,
       title: title,
       isOn: isOn,

@@ -19,17 +19,17 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
           PlantInformationModel(
             alias: "",
             watering: PlantInformationKey(
-              alarm: Alarm(
+              alarm: Alarm.newAlarm(
                 startTime: DateTime.now(),
               ),
             ),
             repotting: PlantInformationKey(
-              alarm: Alarm(
+              alarm: Alarm.newAlarm(
                 startTime: DateTime.now(),
               ),
             ),
             nutrient: PlantInformationKey(
-              alarm: Alarm(
+              alarm: Alarm.newAlarm(
                 startTime: DateTime.now(),
               ),
             ),
@@ -82,17 +82,17 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = PlantInformationModel(
       alias: "",
       watering: PlantInformationKey(
-        alarm: Alarm(
+        alarm: Alarm.newAlarm(
           startTime: DateTime.now(),
         ),
       ),
       repotting: PlantInformationKey(
-        alarm: Alarm(
+        alarm: Alarm.newAlarm(
           startTime: DateTime.now(),
         ),
       ),
       nutrient: PlantInformationKey(
-        alarm: Alarm(
+        alarm: Alarm.newAlarm(
           startTime: DateTime.now(),
         ),
       ),
