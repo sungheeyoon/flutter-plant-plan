@@ -70,22 +70,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         }
 
         if (alarm.isOn) {
-          int difference = selectedDateState.difference(alarm.startTime).inDays;
+          DateTime zeroSelectedDate = DateTime(
+            selectedDateState.year,
+            selectedDateState.month,
+            selectedDateState.day,
+          );
+          DateTime zeroStartTime = DateTime(
+            alarm.startTime.year,
+            alarm.startTime.month,
+            alarm.startTime.day,
+          );
 
-          if (difference == 0 && alarm.repeat == 0) {
-            results.add(
-              AlarmWithUserInfo(
-                alarm: alarm,
-                alias: alias,
-                plant: plant,
-                selectedPhotoUrl: selectedPhotoUrl,
-              ),
-            );
-          }
+          int difference = zeroSelectedDate.difference(zeroStartTime).inDays;
 
-          if (alarm.repeat > 0 &&
-              difference >= 0 &&
-              difference % alarm.repeat == 0) {
+          if ((difference == 0 && alarm.repeat == 0) ||
+              (alarm.repeat > 0 &&
+                  difference > -1 && // 수정: difference가 -1보다 커야 함
+                  difference % alarm.repeat == 0)) {
             results.add(
               AlarmWithUserInfo(
                 alarm: alarm,
@@ -110,7 +111,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final int listCount = selectedDateWateringAlarms.length +
         selectedDateRepottingAlarms.length +
         selectedDateNutrientAlarms.length;
-
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -579,7 +579,9 @@ class TodoTap extends StatelessWidget {
                         ? info.alarm.title
                         : info.alias,
                     time: formatTime(info.alarm.startTime),
-                    imgUrl: 'assets/icons/home/change_view.png',
+                    imgUrl: info.selectedPhotoUrl == ""
+                        ? info.plant.image
+                        : info.selectedPhotoUrl,
                   ),
                 );
               },
@@ -678,7 +680,7 @@ class _AlarmCardState extends State<AlarmCard> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14.h),
                           image: DecorationImage(
-                            image: AssetImage(widget.imgUrl),
+                            image: NetworkImage(widget.imgUrl),
                             fit: BoxFit.cover,
                           ),
                         ),

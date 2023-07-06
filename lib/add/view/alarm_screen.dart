@@ -91,7 +91,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     final Alarm alarmState = ref.watch(alarmProvider);
-
+    DateTime nextAlarmDate =
+        alarmState.startTime.add(Duration(days: alarmState.repeat));
     return DefaultLayout(
       textbutton: TextButton(
         onPressed: () {
@@ -119,8 +120,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         ),
       ),
       title: '${widget.title} 알림',
-      child: SingleChildScrollView(
-        child: SafeArea(
+      child: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -277,7 +278,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                               if (intValue != null) {
                                 // intValue가 null이 아닌 경우에만 값을 업데이트
 
-                                //updateNextAlarmTime(days: intValue); 추가예정
                                 ref
                                     .read(alarmProvider.notifier)
                                     .setRepeat(intValue);
@@ -333,22 +333,24 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       ),
                     ],
                   ),
-                //다음날짜 계산추가예정
-                // if (alarmState.nextAlarm != null && focusedButtonIndex != -1)
-                //   Column(
-                //     children: [
-                //       SizedBox(
-                //         height: 8.h,
-                //       ),
-                //       Text(
-                //         nextAlarmFomattor(alarmState.nextAlarm!),
-                //         style: Theme.of(context)
-                //             .textTheme
-                //             .labelMedium!
-                //             .copyWith(color: pointColor1),
-                //       )
-                //     ],
-                //   ),
+
+                if (alarmState.isOn && focusedButtonIndex != -1)
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          nextAlarmFomattor(nextAlarmDate),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(color: pointColor1),
+                        )
+                      ],
+                    ),
+                  ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -371,54 +373,58 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                     ),
                     SizedBox(
                       height: 42.h,
-                      child: TextFormField(
-                        controller: textController,
-                        onChanged: (text) {
-                          ref.read(alarmProvider.notifier).setTitle(text);
-                        },
-                        textAlignVertical: TextAlignVertical.center,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: grayBlack),
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding:
-                              EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                8.0,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: textController,
+                            onChanged: (text) {
+                              ref.read(alarmProvider.notifier).setTitle(text);
+                            },
+                            textAlignVertical: TextAlignVertical.center,
+                            textAlign: TextAlign.start,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(color: grayBlack),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
+                              enabledBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    8.0,
+                                  ),
+                                ),
+                                borderSide:
+                                    BorderSide(width: 1, color: grayColor400),
                               ),
-                            ),
-                            borderSide:
-                                BorderSide(width: 1, color: grayColor400),
-                          ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                8.0,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    8.0,
+                                  ),
+                                ),
+                                borderSide:
+                                    BorderSide(color: grayColor400, width: 1.0),
                               ),
-                            ),
-                            borderSide:
-                                BorderSide(color: grayColor400, width: 1.0),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                8.0,
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    8.0,
+                                  ),
+                                ),
+                                borderSide:
+                                    BorderSide(color: grayColor400, width: 1.0),
                               ),
+                              hintText: '나만의 알림 제목을 설정해보세요',
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: grayColor400),
                             ),
-                            borderSide:
-                                BorderSide(color: grayColor400, width: 1.0),
                           ),
-                          hintText: '나만의 알림 제목을 설정해보세요',
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: grayColor400),
-                        ),
+                        ],
                       ),
                     ),
                   ],

@@ -78,6 +78,43 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = state.copyWith(alias: newAlias);
   }
 
+  void fieldReset(PlantField field) {
+    if (field == PlantField.watering) {
+      state = PlantInformationModel(
+        alias: "",
+        watering: PlantInformationKey(
+          alarm: Alarm.newAlarm(
+            startTime: DateTime.now(),
+          ),
+        ),
+        repotting: state.repotting,
+        nutrient: state.nutrient,
+      );
+    } else if (field == PlantField.repotting) {
+      state = PlantInformationModel(
+        alias: "",
+        watering: state.watering,
+        repotting: PlantInformationKey(
+          alarm: Alarm.newAlarm(
+            startTime: DateTime.now(),
+          ),
+        ),
+        nutrient: state.nutrient,
+      );
+    } else if (field == PlantField.nutrient) {
+      state = PlantInformationModel(
+        alias: "",
+        watering: state.watering,
+        repotting: state.repotting,
+        nutrient: PlantInformationKey(
+          alarm: Alarm.newAlarm(
+            startTime: DateTime.now(),
+          ),
+        ),
+      );
+    }
+  }
+
   void reset() {
     state = PlantInformationModel(
       alias: "",
