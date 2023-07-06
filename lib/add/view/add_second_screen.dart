@@ -208,6 +208,9 @@ class AddSecondScreen extends ConsumerWidget {
                       color: grayColor500,
                     ),
               ),
+              SizedBox(
+                height: 128.h,
+              ),
             ],
           ),
         ),
@@ -290,15 +293,16 @@ class AlarmBox extends ConsumerWidget {
                       )
                     ],
                   ),
-                  CircleAvatar(
-                    radius: 8.h,
-                    backgroundColor: pointColor2,
-                    child: Icon(
-                      Icons.add, // 플러스 아이콘
-                      size: 16.h, // 아이콘 크기 설정
-                      color: Colors.white, // 아이콘 색상 설정
-                    ),
-                  )
+                  if (!alarmState.isOn)
+                    CircleAvatar(
+                      radius: 8.h,
+                      backgroundColor: pointColor2,
+                      child: Icon(
+                        Icons.add, // 플러스 아이콘
+                        size: 16.h, // 아이콘 크기 설정
+                        color: Colors.white, // 아이콘 색상 설정
+                      ),
+                    )
                 ],
               ),
               if (alarmState.isOn)
@@ -337,7 +341,11 @@ class AlarmBox extends ConsumerWidget {
                                         horizontal: 4.h,
                                         vertical: 2.h,
                                       ),
-                                      color: pointColor1.withOpacity(0.1),
+                                      decoration: BoxDecoration(
+                                        color: pointColor1.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(
+                                            4), // border radius 설정
+                                      ),
                                       child: Center(
                                         child: Text(
                                           alarmState.repeat == 1
@@ -386,6 +394,19 @@ class AlarmBox extends ConsumerWidget {
                               )
                             ],
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(plantInformationProvider.notifier)
+                                  .fieldReset(field);
+                            },
+                            child: Image.asset(
+                              'assets/icons/trash.png',
+                              width: 18.h,
+                              height: 18.h,
+                            ),
+                          )
+                          //스위치버튼 추가예정
                           // Switch(
                           //   value: alarmState.isOn,
                           //   onChanged: (value) {
