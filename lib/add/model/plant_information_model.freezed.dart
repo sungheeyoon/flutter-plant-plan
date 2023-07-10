@@ -22,9 +22,13 @@ PlantInformationModel _$PlantInformationModelFromJson(
 /// @nodoc
 mixin _$PlantInformationModel {
   String get alias => throw _privateConstructorUsedError;
-  PlantInformationKey get watering => throw _privateConstructorUsedError;
-  PlantInformationKey get repotting => throw _privateConstructorUsedError;
-  PlantInformationKey get nutrient => throw _privateConstructorUsedError;
+  @TimestampSerializer()
+  DateTime? get watringLastDay => throw _privateConstructorUsedError;
+  @TimestampSerializer()
+  DateTime? get repottingLastDay => throw _privateConstructorUsedError;
+  @TimestampSerializer()
+  DateTime? get nutrientLastDay => throw _privateConstructorUsedError;
+  List<Alarm> get alarms => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,13 +44,10 @@ abstract class $PlantInformationModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String alias,
-      PlantInformationKey watering,
-      PlantInformationKey repotting,
-      PlantInformationKey nutrient});
-
-  $PlantInformationKeyCopyWith<$Res> get watering;
-  $PlantInformationKeyCopyWith<$Res> get repotting;
-  $PlantInformationKeyCopyWith<$Res> get nutrient;
+      @TimestampSerializer() DateTime? watringLastDay,
+      @TimestampSerializer() DateTime? repottingLastDay,
+      @TimestampSerializer() DateTime? nutrientLastDay,
+      List<Alarm> alarms});
 }
 
 /// @nodoc
@@ -64,52 +65,33 @@ class _$PlantInformationModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? alias = null,
-    Object? watering = null,
-    Object? repotting = null,
-    Object? nutrient = null,
+    Object? watringLastDay = freezed,
+    Object? repottingLastDay = freezed,
+    Object? nutrientLastDay = freezed,
+    Object? alarms = null,
   }) {
     return _then(_value.copyWith(
       alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
               as String,
-      watering: null == watering
-          ? _value.watering
-          : watering // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
-      repotting: null == repotting
-          ? _value.repotting
-          : repotting // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
-      nutrient: null == nutrient
-          ? _value.nutrient
-          : nutrient // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
+      watringLastDay: freezed == watringLastDay
+          ? _value.watringLastDay
+          : watringLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      repottingLastDay: freezed == repottingLastDay
+          ? _value.repottingLastDay
+          : repottingLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      nutrientLastDay: freezed == nutrientLastDay
+          ? _value.nutrientLastDay
+          : nutrientLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      alarms: null == alarms
+          ? _value.alarms
+          : alarms // ignore: cast_nullable_to_non_nullable
+              as List<Alarm>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res> get watering {
-    return $PlantInformationKeyCopyWith<$Res>(_value.watering, (value) {
-      return _then(_value.copyWith(watering: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res> get repotting {
-    return $PlantInformationKeyCopyWith<$Res>(_value.repotting, (value) {
-      return _then(_value.copyWith(repotting: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PlantInformationKeyCopyWith<$Res> get nutrient {
-    return $PlantInformationKeyCopyWith<$Res>(_value.nutrient, (value) {
-      return _then(_value.copyWith(nutrient: value) as $Val);
-    });
   }
 }
 
@@ -123,16 +105,10 @@ abstract class _$$_PlantInformationModelCopyWith<$Res>
   @useResult
   $Res call(
       {String alias,
-      PlantInformationKey watering,
-      PlantInformationKey repotting,
-      PlantInformationKey nutrient});
-
-  @override
-  $PlantInformationKeyCopyWith<$Res> get watering;
-  @override
-  $PlantInformationKeyCopyWith<$Res> get repotting;
-  @override
-  $PlantInformationKeyCopyWith<$Res> get nutrient;
+      @TimestampSerializer() DateTime? watringLastDay,
+      @TimestampSerializer() DateTime? repottingLastDay,
+      @TimestampSerializer() DateTime? nutrientLastDay,
+      List<Alarm> alarms});
 }
 
 /// @nodoc
@@ -147,27 +123,32 @@ class __$$_PlantInformationModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? alias = null,
-    Object? watering = null,
-    Object? repotting = null,
-    Object? nutrient = null,
+    Object? watringLastDay = freezed,
+    Object? repottingLastDay = freezed,
+    Object? nutrientLastDay = freezed,
+    Object? alarms = null,
   }) {
     return _then(_$_PlantInformationModel(
       alias: null == alias
           ? _value.alias
           : alias // ignore: cast_nullable_to_non_nullable
               as String,
-      watering: null == watering
-          ? _value.watering
-          : watering // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
-      repotting: null == repotting
-          ? _value.repotting
-          : repotting // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
-      nutrient: null == nutrient
-          ? _value.nutrient
-          : nutrient // ignore: cast_nullable_to_non_nullable
-              as PlantInformationKey,
+      watringLastDay: freezed == watringLastDay
+          ? _value.watringLastDay
+          : watringLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      repottingLastDay: freezed == repottingLastDay
+          ? _value.repottingLastDay
+          : repottingLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      nutrientLastDay: freezed == nutrientLastDay
+          ? _value.nutrientLastDay
+          : nutrientLastDay // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      alarms: null == alarms
+          ? _value._alarms
+          : alarms // ignore: cast_nullable_to_non_nullable
+              as List<Alarm>,
     ));
   }
 }
@@ -177,9 +158,11 @@ class __$$_PlantInformationModelCopyWithImpl<$Res>
 class _$_PlantInformationModel implements _PlantInformationModel {
   _$_PlantInformationModel(
       {this.alias = "",
-      required this.watering,
-      required this.repotting,
-      required this.nutrient});
+      @TimestampSerializer() this.watringLastDay = null,
+      @TimestampSerializer() this.repottingLastDay = null,
+      @TimestampSerializer() this.nutrientLastDay = null,
+      final List<Alarm> alarms = const []})
+      : _alarms = alarms;
 
   factory _$_PlantInformationModel.fromJson(Map<String, dynamic> json) =>
       _$$_PlantInformationModelFromJson(json);
@@ -188,15 +171,29 @@ class _$_PlantInformationModel implements _PlantInformationModel {
   @JsonKey()
   final String alias;
   @override
-  final PlantInformationKey watering;
+  @JsonKey()
+  @TimestampSerializer()
+  final DateTime? watringLastDay;
   @override
-  final PlantInformationKey repotting;
+  @JsonKey()
+  @TimestampSerializer()
+  final DateTime? repottingLastDay;
   @override
-  final PlantInformationKey nutrient;
+  @JsonKey()
+  @TimestampSerializer()
+  final DateTime? nutrientLastDay;
+  final List<Alarm> _alarms;
+  @override
+  @JsonKey()
+  List<Alarm> get alarms {
+    if (_alarms is EqualUnmodifiableListView) return _alarms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_alarms);
+  }
 
   @override
   String toString() {
-    return 'PlantInformationModel(alias: $alias, watering: $watering, repotting: $repotting, nutrient: $nutrient)';
+    return 'PlantInformationModel(alias: $alias, watringLastDay: $watringLastDay, repottingLastDay: $repottingLastDay, nutrientLastDay: $nutrientLastDay, alarms: $alarms)';
   }
 
   @override
@@ -205,18 +202,24 @@ class _$_PlantInformationModel implements _PlantInformationModel {
         (other.runtimeType == runtimeType &&
             other is _$_PlantInformationModel &&
             (identical(other.alias, alias) || other.alias == alias) &&
-            (identical(other.watering, watering) ||
-                other.watering == watering) &&
-            (identical(other.repotting, repotting) ||
-                other.repotting == repotting) &&
-            (identical(other.nutrient, nutrient) ||
-                other.nutrient == nutrient));
+            (identical(other.watringLastDay, watringLastDay) ||
+                other.watringLastDay == watringLastDay) &&
+            (identical(other.repottingLastDay, repottingLastDay) ||
+                other.repottingLastDay == repottingLastDay) &&
+            (identical(other.nutrientLastDay, nutrientLastDay) ||
+                other.nutrientLastDay == nutrientLastDay) &&
+            const DeepCollectionEquality().equals(other._alarms, _alarms));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, alias, watering, repotting, nutrient);
+  int get hashCode => Object.hash(
+      runtimeType,
+      alias,
+      watringLastDay,
+      repottingLastDay,
+      nutrientLastDay,
+      const DeepCollectionEquality().hash(_alarms));
 
   @JsonKey(ignore: true)
   @override
@@ -236,9 +239,10 @@ class _$_PlantInformationModel implements _PlantInformationModel {
 abstract class _PlantInformationModel implements PlantInformationModel {
   factory _PlantInformationModel(
       {final String alias,
-      required final PlantInformationKey watering,
-      required final PlantInformationKey repotting,
-      required final PlantInformationKey nutrient}) = _$_PlantInformationModel;
+      @TimestampSerializer() final DateTime? watringLastDay,
+      @TimestampSerializer() final DateTime? repottingLastDay,
+      @TimestampSerializer() final DateTime? nutrientLastDay,
+      final List<Alarm> alarms}) = _$_PlantInformationModel;
 
   factory _PlantInformationModel.fromJson(Map<String, dynamic> json) =
       _$_PlantInformationModel.fromJson;
@@ -246,187 +250,19 @@ abstract class _PlantInformationModel implements PlantInformationModel {
   @override
   String get alias;
   @override
-  PlantInformationKey get watering;
+  @TimestampSerializer()
+  DateTime? get watringLastDay;
   @override
-  PlantInformationKey get repotting;
+  @TimestampSerializer()
+  DateTime? get repottingLastDay;
   @override
-  PlantInformationKey get nutrient;
+  @TimestampSerializer()
+  DateTime? get nutrientLastDay;
+  @override
+  List<Alarm> get alarms;
   @override
   @JsonKey(ignore: true)
   _$$_PlantInformationModelCopyWith<_$_PlantInformationModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-PlantInformationKey _$PlantInformationKeyFromJson(Map<String, dynamic> json) {
-  return _PlantInformationKey.fromJson(json);
-}
-
-/// @nodoc
-mixin _$PlantInformationKey {
-  @TimestampSerializer()
-  DateTime? get lastDay => throw _privateConstructorUsedError;
-  Alarm get alarm => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $PlantInformationKeyCopyWith<PlantInformationKey> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PlantInformationKeyCopyWith<$Res> {
-  factory $PlantInformationKeyCopyWith(
-          PlantInformationKey value, $Res Function(PlantInformationKey) then) =
-      _$PlantInformationKeyCopyWithImpl<$Res, PlantInformationKey>;
-  @useResult
-  $Res call({@TimestampSerializer() DateTime? lastDay, Alarm alarm});
-
-  $AlarmCopyWith<$Res> get alarm;
-}
-
-/// @nodoc
-class _$PlantInformationKeyCopyWithImpl<$Res, $Val extends PlantInformationKey>
-    implements $PlantInformationKeyCopyWith<$Res> {
-  _$PlantInformationKeyCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lastDay = freezed,
-    Object? alarm = null,
-  }) {
-    return _then(_value.copyWith(
-      lastDay: freezed == lastDay
-          ? _value.lastDay
-          : lastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      alarm: null == alarm
-          ? _value.alarm
-          : alarm // ignore: cast_nullable_to_non_nullable
-              as Alarm,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $AlarmCopyWith<$Res> get alarm {
-    return $AlarmCopyWith<$Res>(_value.alarm, (value) {
-      return _then(_value.copyWith(alarm: value) as $Val);
-    });
-  }
-}
-
-/// @nodoc
-abstract class _$$_PlantInformationKeyCopyWith<$Res>
-    implements $PlantInformationKeyCopyWith<$Res> {
-  factory _$$_PlantInformationKeyCopyWith(_$_PlantInformationKey value,
-          $Res Function(_$_PlantInformationKey) then) =
-      __$$_PlantInformationKeyCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({@TimestampSerializer() DateTime? lastDay, Alarm alarm});
-
-  @override
-  $AlarmCopyWith<$Res> get alarm;
-}
-
-/// @nodoc
-class __$$_PlantInformationKeyCopyWithImpl<$Res>
-    extends _$PlantInformationKeyCopyWithImpl<$Res, _$_PlantInformationKey>
-    implements _$$_PlantInformationKeyCopyWith<$Res> {
-  __$$_PlantInformationKeyCopyWithImpl(_$_PlantInformationKey _value,
-      $Res Function(_$_PlantInformationKey) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lastDay = freezed,
-    Object? alarm = null,
-  }) {
-    return _then(_$_PlantInformationKey(
-      lastDay: freezed == lastDay
-          ? _value.lastDay
-          : lastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      alarm: null == alarm
-          ? _value.alarm
-          : alarm // ignore: cast_nullable_to_non_nullable
-              as Alarm,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_PlantInformationKey implements _PlantInformationKey {
-  _$_PlantInformationKey(
-      {@TimestampSerializer() this.lastDay = null, required this.alarm});
-
-  factory _$_PlantInformationKey.fromJson(Map<String, dynamic> json) =>
-      _$$_PlantInformationKeyFromJson(json);
-
-  @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? lastDay;
-  @override
-  final Alarm alarm;
-
-  @override
-  String toString() {
-    return 'PlantInformationKey(lastDay: $lastDay, alarm: $alarm)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_PlantInformationKey &&
-            (identical(other.lastDay, lastDay) || other.lastDay == lastDay) &&
-            (identical(other.alarm, alarm) || other.alarm == alarm));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, lastDay, alarm);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_PlantInformationKeyCopyWith<_$_PlantInformationKey> get copyWith =>
-      __$$_PlantInformationKeyCopyWithImpl<_$_PlantInformationKey>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_PlantInformationKeyToJson(
-      this,
-    );
-  }
-}
-
-abstract class _PlantInformationKey implements PlantInformationKey {
-  factory _PlantInformationKey(
-      {@TimestampSerializer() final DateTime? lastDay,
-      required final Alarm alarm}) = _$_PlantInformationKey;
-
-  factory _PlantInformationKey.fromJson(Map<String, dynamic> json) =
-      _$_PlantInformationKey.fromJson;
-
-  @override
-  @TimestampSerializer()
-  DateTime? get lastDay;
-  @override
-  Alarm get alarm;
-  @override
-  @JsonKey(ignore: true)
-  _$$_PlantInformationKeyCopyWith<_$_PlantInformationKey> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -443,6 +279,7 @@ mixin _$Alarm {
   String get title => throw _privateConstructorUsedError;
   bool get isOn => throw _privateConstructorUsedError;
   List<DateTime> get offDates => throw _privateConstructorUsedError;
+  PlantField get field => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -460,7 +297,8 @@ abstract class $AlarmCopyWith<$Res> {
       int repeat,
       String title,
       bool isOn,
-      List<DateTime> offDates});
+      List<DateTime> offDates,
+      PlantField field});
 }
 
 /// @nodoc
@@ -482,6 +320,7 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
     Object? title = null,
     Object? isOn = null,
     Object? offDates = null,
+    Object? field = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -508,6 +347,10 @@ class _$AlarmCopyWithImpl<$Res, $Val extends Alarm>
           ? _value.offDates
           : offDates // ignore: cast_nullable_to_non_nullable
               as List<DateTime>,
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as PlantField,
     ) as $Val);
   }
 }
@@ -524,7 +367,8 @@ abstract class _$$_AlarmCopyWith<$Res> implements $AlarmCopyWith<$Res> {
       int repeat,
       String title,
       bool isOn,
-      List<DateTime> offDates});
+      List<DateTime> offDates,
+      PlantField field});
 }
 
 /// @nodoc
@@ -542,6 +386,7 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
     Object? title = null,
     Object? isOn = null,
     Object? offDates = null,
+    Object? field = null,
   }) {
     return _then(_$_Alarm(
       id: null == id
@@ -568,6 +413,10 @@ class __$$_AlarmCopyWithImpl<$Res> extends _$AlarmCopyWithImpl<$Res, _$_Alarm>
           ? _value._offDates
           : offDates // ignore: cast_nullable_to_non_nullable
               as List<DateTime>,
+      field: null == field
+          ? _value.field
+          : field // ignore: cast_nullable_to_non_nullable
+              as PlantField,
     ));
   }
 }
@@ -580,8 +429,9 @@ class _$_Alarm implements _Alarm {
       @TimestampSerializer() required this.startTime,
       this.repeat = 0,
       this.title = '',
-      this.isOn = true,
-      final List<DateTime> offDates = const []})
+      this.isOn = false,
+      final List<DateTime> offDates = const [],
+      required this.field})
       : _offDates = offDates;
 
   factory _$_Alarm.fromJson(Map<String, dynamic> json) =>
@@ -612,8 +462,11 @@ class _$_Alarm implements _Alarm {
   }
 
   @override
+  final PlantField field;
+
+  @override
   String toString() {
-    return 'Alarm(id: $id, startTime: $startTime, repeat: $repeat, title: $title, isOn: $isOn, offDates: $offDates)';
+    return 'Alarm(id: $id, startTime: $startTime, repeat: $repeat, title: $title, isOn: $isOn, offDates: $offDates, field: $field)';
   }
 
   @override
@@ -627,13 +480,14 @@ class _$_Alarm implements _Alarm {
             (identical(other.repeat, repeat) || other.repeat == repeat) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.isOn, isOn) || other.isOn == isOn) &&
-            const DeepCollectionEquality().equals(other._offDates, _offDates));
+            const DeepCollectionEquality().equals(other._offDates, _offDates) &&
+            (identical(other.field, field) || other.field == field));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, startTime, repeat, title,
-      isOn, const DeepCollectionEquality().hash(_offDates));
+      isOn, const DeepCollectionEquality().hash(_offDates), field);
 
   @JsonKey(ignore: true)
   @override
@@ -656,7 +510,8 @@ abstract class _Alarm implements Alarm {
       final int repeat,
       final String title,
       final bool isOn,
-      final List<DateTime> offDates}) = _$_Alarm;
+      final List<DateTime> offDates,
+      required final PlantField field}) = _$_Alarm;
 
   factory _Alarm.fromJson(Map<String, dynamic> json) = _$_Alarm.fromJson;
 
@@ -673,6 +528,8 @@ abstract class _Alarm implements Alarm {
   bool get isOn;
   @override
   List<DateTime> get offDates;
+  @override
+  PlantField get field;
   @override
   @JsonKey(ignore: true)
   _$$_AlarmCopyWith<_$_Alarm> get copyWith =>

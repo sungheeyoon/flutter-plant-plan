@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 
 enum StartTimeOption { day, time }
 
@@ -10,7 +11,7 @@ final alarmProvider = StateNotifierProvider<AlarmNotifier, Alarm>((ref) {
 class AlarmNotifier extends StateNotifier<Alarm> {
   AlarmNotifier()
       : super(
-          Alarm.newAlarm(startTime: DateTime.now()),
+          Alarm.newAlarm(startTime: DateTime.now(), field: PlantField.none),
         );
 
   void setStartTime(
@@ -55,25 +56,9 @@ class AlarmNotifier extends StateNotifier<Alarm> {
     state = state.copyWith(title: title);
   }
 
-  // void updateNextAlarmTime({
-  //   required int days,
-  // }) {
-  //   // 만약에 nextAlarm 이 null 이 아니라면 days 기간을 추가한다
-  //   final DateTime now = state.startTime;
-  //   final DateTime? startDay = state.startDay;
-  //   DateTime result = DateTime(
-  //       startDay?.year ?? now.year,
-  //       startDay?.month ?? now.month,
-  //       startDay?.day ?? now.day,
-  //       now.hour,
-  //       now.minute,
-  //       now.second);
-
-  //   setDateTime(
-  //     AlarmDateTimeField.startDay, // key 값을 문자열로 지정
-  //     result,
-  //   );
-  // }
+  void setField(PlantField field) {
+    state = state.copyWith(field: field);
+  }
 
   void setAlarm(Alarm? alarm) {
     if (alarm == null) {
@@ -84,6 +69,6 @@ class AlarmNotifier extends StateNotifier<Alarm> {
   }
 
   void reset() {
-    state = Alarm.newAlarm(startTime: DateTime.now());
+    state = Alarm.newAlarm(startTime: DateTime.now(), field: PlantField.none);
   }
 }

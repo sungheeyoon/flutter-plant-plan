@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
@@ -235,15 +236,10 @@ class AlarmBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantInformationModel plantState =
         ref.watch(plantInformationProvider);
-    late Alarm alarmState;
 
-    if (field == PlantField.watering) {
-      alarmState = plantState.watering.alarm;
-    } else if (field == PlantField.repotting) {
-      alarmState = plantState.repotting.alarm;
-    } else if (field == PlantField.nutrient) {
-      alarmState = plantState.nutrient.alarm;
-    }
+    final Alarm? alarmState =
+        plantState.alarms.firstWhereOrNull((alarm) => alarm.field == field);
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -252,6 +248,7 @@ class AlarmBox extends ConsumerWidget {
             builder: (context) => AlarmScreen(
               title: title,
               field: field,
+              alarm: alarmState,
             ),
           ),
         );
@@ -293,7 +290,7 @@ class AlarmBox extends ConsumerWidget {
                       )
                     ],
                   ),
-                  if (!alarmState.isOn)
+                  if (alarmState == null)
                     CircleAvatar(
                       radius: 8.h,
                       backgroundColor: pointColor2,
@@ -305,7 +302,7 @@ class AlarmBox extends ConsumerWidget {
                     )
                 ],
               ),
-              if (alarmState.isOn)
+              if (alarmState != null && alarmState.isOn)
                 Column(
                   children: [
                     SizedBox(
@@ -398,7 +395,7 @@ class AlarmBox extends ConsumerWidget {
                             onTap: () {
                               ref
                                   .read(plantInformationProvider.notifier)
-                                  .fieldReset(field);
+                                  .alarmDelete(alarmState.id);
                             },
                             child: Image.asset(
                               'assets/icons/trash.png',

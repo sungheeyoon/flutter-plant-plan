@@ -98,7 +98,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           }
         }
       }
-
       return results;
     }
 
@@ -573,15 +572,8 @@ class TodoTap extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 6.h),
                   child: AlarmCard(
+                    info: info,
                     field: field,
-                    isDone: info.alarm.isOn,
-                    name: info.alarm.title.isNotEmpty
-                        ? info.alarm.title
-                        : info.alias,
-                    time: formatTime(info.alarm.startTime),
-                    imgUrl: info.selectedPhotoUrl == ""
-                        ? info.plant.image
-                        : info.selectedPhotoUrl,
                   ),
                 );
               },
@@ -594,19 +586,13 @@ class TodoTap extends StatelessWidget {
 }
 
 class AlarmCard extends StatefulWidget {
+  final AlarmWithUserInfo info;
   final PlantField field;
-  final bool isDone;
-  final String name;
-  final String time;
-  final String imgUrl;
 
   const AlarmCard({
     Key? key,
+    required this.info,
     required this.field,
-    required this.isDone,
-    required this.name,
-    required this.time,
-    required this.imgUrl,
   }) : super(key: key);
 
   @override
@@ -618,7 +604,7 @@ class _AlarmCardState extends State<AlarmCard> {
 
   @override
   void initState() {
-    isDone = widget.isDone;
+    isDone = widget.info.alarm.isOn;
     super.initState();
   }
 
@@ -680,14 +666,20 @@ class _AlarmCardState extends State<AlarmCard> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14.h),
                           image: DecorationImage(
-                            image: NetworkImage(widget.imgUrl),
+                            image: NetworkImage(
+                              widget.info.selectedPhotoUrl == ""
+                                  ? widget.info.plant.image
+                                  : widget.info.selectedPhotoUrl,
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       SizedBox(width: 8.h),
                       Text(
-                        widget.name,
+                        widget.info.alarm.title.isNotEmpty
+                            ? widget.info.alarm.title
+                            : widget.info.alias,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: grayBlack,
                             ),
@@ -697,7 +689,7 @@ class _AlarmCardState extends State<AlarmCard> {
                   Row(
                     children: [
                       Text(
-                        widget.time,
+                        formatTime(widget.info.alarm.startTime),
                         style:
                             Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   color: primaryColor,

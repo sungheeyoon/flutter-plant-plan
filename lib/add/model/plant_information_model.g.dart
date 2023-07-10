@@ -10,38 +10,32 @@ _$_PlantInformationModel _$$_PlantInformationModelFromJson(
         Map<String, dynamic> json) =>
     _$_PlantInformationModel(
       alias: json['alias'] as String? ?? "",
-      watering: PlantInformationKey.fromJson(
-          json['watering'] as Map<String, dynamic>),
-      repotting: PlantInformationKey.fromJson(
-          json['repotting'] as Map<String, dynamic>),
-      nutrient: PlantInformationKey.fromJson(
-          json['nutrient'] as Map<String, dynamic>),
+      watringLastDay: json['watringLastDay'] == null
+          ? null
+          : const TimestampSerializer().fromJson(json['watringLastDay']),
+      repottingLastDay: json['repottingLastDay'] == null
+          ? null
+          : const TimestampSerializer().fromJson(json['repottingLastDay']),
+      nutrientLastDay: json['nutrientLastDay'] == null
+          ? null
+          : const TimestampSerializer().fromJson(json['nutrientLastDay']),
+      alarms: (json['alarms'] as List<dynamic>?)
+              ?.map((e) => Alarm.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_PlantInformationModelToJson(
         _$_PlantInformationModel instance) =>
     <String, dynamic>{
       'alias': instance.alias,
-      'watering': instance.watering,
-      'repotting': instance.repotting,
-      'nutrient': instance.nutrient,
-    };
-
-_$_PlantInformationKey _$$_PlantInformationKeyFromJson(
-        Map<String, dynamic> json) =>
-    _$_PlantInformationKey(
-      lastDay: json['lastDay'] == null
-          ? null
-          : const TimestampSerializer().fromJson(json['lastDay']),
-      alarm: Alarm.fromJson(json['alarm'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$$_PlantInformationKeyToJson(
-        _$_PlantInformationKey instance) =>
-    <String, dynamic>{
-      'lastDay': _$JsonConverterToJson<dynamic, DateTime>(
-          instance.lastDay, const TimestampSerializer().toJson),
-      'alarm': instance.alarm,
+      'watringLastDay': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.watringLastDay, const TimestampSerializer().toJson),
+      'repottingLastDay': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.repottingLastDay, const TimestampSerializer().toJson),
+      'nutrientLastDay': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.nutrientLastDay, const TimestampSerializer().toJson),
+      'alarms': instance.alarms,
     };
 
 Json? _$JsonConverterToJson<Json, Value>(
@@ -55,11 +49,12 @@ _$_Alarm _$$_AlarmFromJson(Map<String, dynamic> json) => _$_Alarm(
       startTime: const TimestampSerializer().fromJson(json['startTime']),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? '',
-      isOn: json['isOn'] as bool? ?? true,
+      isOn: json['isOn'] as bool? ?? false,
       offDates: (json['offDates'] as List<dynamic>?)
               ?.map((e) => DateTime.parse(e as String))
               .toList() ??
           const [],
+      field: $enumDecode(_$PlantFieldEnumMap, json['field']),
     );
 
 Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
@@ -69,4 +64,11 @@ Map<String, dynamic> _$$_AlarmToJson(_$_Alarm instance) => <String, dynamic>{
       'title': instance.title,
       'isOn': instance.isOn,
       'offDates': instance.offDates.map((e) => e.toIso8601String()).toList(),
+      'field': _$PlantFieldEnumMap[instance.field]!,
     };
+
+const _$PlantFieldEnumMap = {
+  PlantField.watering: 'watering',
+  PlantField.repotting: 'repotting',
+  PlantField.nutrient: 'nutrient',
+};
