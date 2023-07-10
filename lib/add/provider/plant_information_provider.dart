@@ -5,71 +5,37 @@ enum PlantField {
   watering,
   repotting,
   nutrient,
+  none,
 }
 
 final plantInformationProvider =
     StateNotifierProvider<PlantInformationNotifier, PlantInformationModel>(
-        (ref) {
-  return PlantInformationNotifier();
-});
+  (ref) {
+    return PlantInformationNotifier();
+  },
+);
 
 class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
   PlantInformationNotifier()
       : super(
-          PlantInformationModel(
-            alias: "",
-            watering: PlantInformationKey(
-              alarm: Alarm.newAlarm(
-                startTime: DateTime.now(),
-              ),
-            ),
-            repotting: PlantInformationKey(
-              alarm: Alarm.newAlarm(
-                startTime: DateTime.now(),
-              ),
-            ),
-            nutrient: PlantInformationKey(
-              alarm: Alarm.newAlarm(
-                startTime: DateTime.now(),
-              ),
-            ),
-          ),
+          PlantInformationModel(),
         );
-  void updatePlantField(
-    PlantField field, {
-    DateTime? lastDay,
-    bool? toggleIsOn,
-    Alarm? alarm,
-  }) {
-    PlantInformationKey updateKey(PlantInformationKey key) {
-      Alarm updatedAlarm = alarm ?? key.alarm;
-      if (toggleIsOn != null && toggleIsOn) {
-        updatedAlarm = updatedAlarm.copyWith(isOn: !updatedAlarm.isOn);
-      }
-      return key.copyWith(
-        lastDay: lastDay ?? key.lastDay,
-        alarm: updatedAlarm,
-      );
-    }
 
+  void updateLastDay(
+    PlantField field,
+    DateTime lastDay,
+  ) {
     switch (field) {
       case PlantField.watering:
-        state = state.copyWith(
-          watering: updateKey(state.watering),
-        );
+        state = state.copyWith(watringLastDay: lastDay);
         break;
       case PlantField.repotting:
-        state = state.copyWith(
-          repotting: updateKey(state.repotting),
-        );
+        state = state.copyWith(repottingLastDay: lastDay);
         break;
       case PlantField.nutrient:
-        state = state.copyWith(
-          nutrient: updateKey(state.nutrient),
-        );
+        state = state.copyWith(nutrientLastDay: lastDay);
         break;
       default:
-        // 예외 처리 혹은 기본 동작
         break;
     }
   }
@@ -78,61 +44,53 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = state.copyWith(alias: newAlias);
   }
 
-  void fieldReset(PlantField field) {
-    if (field == PlantField.watering) {
-      state = PlantInformationModel(
-        alias: "",
-        watering: PlantInformationKey(
-          alarm: Alarm.newAlarm(
-            startTime: DateTime.now(),
-          ),
-        ),
-        repotting: state.repotting,
-        nutrient: state.nutrient,
-      );
-    } else if (field == PlantField.repotting) {
-      state = PlantInformationModel(
-        alias: "",
-        watering: state.watering,
-        repotting: PlantInformationKey(
-          alarm: Alarm.newAlarm(
-            startTime: DateTime.now(),
-          ),
-        ),
-        nutrient: state.nutrient,
-      );
-    } else if (field == PlantField.nutrient) {
-      state = PlantInformationModel(
-        alias: "",
-        watering: state.watering,
-        repotting: state.repotting,
-        nutrient: PlantInformationKey(
-          alarm: Alarm.newAlarm(
-            startTime: DateTime.now(),
-          ),
-        ),
-      );
+  void updateIsOn(String id) {
+    final updatedAlarms = List<Alarm>.from(state.alarms);
+    for (int i = 0; i < updatedAlarms.length; i++) {
+      if (updatedAlarms[i].id == id) {
+        updatedAlarms[i] =
+            updatedAlarms[i].copyWith(isOn: !updatedAlarms[i].isOn);
+        break;
+      }
     }
+    state = state.copyWith(alarms: updatedAlarms);
+  }
+
+  void updateAlarm(String id, Alarm newAlarm) {
+    final updatedAlarms = List<Alarm>.from(state.alarms);
+    bool found = false;
+
+    for (int i = 0; i < updatedAlarms.length; i++) {
+      if (updatedAlarms[i].id == id) {
+        updatedAlarms[i] = newAlarm;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      updatedAlarms.add(newAlarm);
+    }
+
+    state = state.copyWith(alarms: updatedAlarms);
+  }
+
+  void alarmDelete(String id) {
+    final updatedAlarms = List<Alarm>.from(state.alarms);
+    for (int i = 0; i < updatedAlarms.length; i++) {
+      if (updatedAlarms[i].id == id) {
+        updatedAlarms.removeAt(i);
+        break;
+      }
+    }
+    state = state.copyWith(alarms: updatedAlarms);
+  }
+
+  void alarmAdd(Alarm alarm) {
+    state.alarms.add(alarm);
   }
 
   void reset() {
-    state = PlantInformationModel(
-      alias: "",
-      watering: PlantInformationKey(
-        alarm: Alarm.newAlarm(
-          startTime: DateTime.now(),
-        ),
-      ),
-      repotting: PlantInformationKey(
-        alarm: Alarm.newAlarm(
-          startTime: DateTime.now(),
-        ),
-      ),
-      nutrient: PlantInformationKey(
-        alarm: Alarm.newAlarm(
-          startTime: DateTime.now(),
-        ),
-      ),
-    );
+    state = PlantInformationModel();
   }
 }

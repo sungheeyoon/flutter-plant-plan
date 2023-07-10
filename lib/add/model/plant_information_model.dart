@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:uuid/uuid.dart';
 part 'plant_information_model.freezed.dart';
 part 'plant_information_model.g.dart';
@@ -8,24 +9,14 @@ part 'plant_information_model.g.dart';
 class PlantInformationModel with _$PlantInformationModel {
   factory PlantInformationModel({
     @Default("") String alias,
-    required PlantInformationKey watering,
-    required PlantInformationKey repotting,
-    required PlantInformationKey nutrient,
+    @TimestampSerializer() @Default(null) DateTime? watringLastDay,
+    @TimestampSerializer() @Default(null) DateTime? repottingLastDay,
+    @TimestampSerializer() @Default(null) DateTime? nutrientLastDay,
+    @Default([]) List<Alarm> alarms,
   }) = _PlantInformationModel;
 
   factory PlantInformationModel.fromJson(Map<String, dynamic> json) =>
       _$PlantInformationModelFromJson(json);
-}
-
-@freezed
-class PlantInformationKey with _$PlantInformationKey {
-  factory PlantInformationKey({
-    @TimestampSerializer() @Default(null) DateTime? lastDay,
-    required Alarm alarm,
-  }) = _PlantInformationKey;
-
-  factory PlantInformationKey.fromJson(Map<String, dynamic> json) =>
-      _$PlantInformationKeyFromJson(json);
 }
 
 @freezed
@@ -37,6 +28,7 @@ class Alarm with _$Alarm {
     @Default('') String title,
     @Default(false) bool isOn,
     @Default([]) List<DateTime> offDates,
+    required PlantField field, // nutrient, watering, repotting 중 하나의 필드
   }) = _Alarm;
 
   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
@@ -47,6 +39,7 @@ class Alarm with _$Alarm {
     String title = '',
     bool isOn = false,
     List<DateTime> offDates = const [],
+    required PlantField field, // nutrient, watering, repotting 중 하나의 필드
   }) {
     return Alarm(
       id: const Uuid().v4(),
@@ -55,6 +48,7 @@ class Alarm with _$Alarm {
       title: title,
       isOn: isOn,
       offDates: offDates,
+      field: field,
     );
   }
 }
