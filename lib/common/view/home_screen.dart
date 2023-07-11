@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
@@ -43,73 +42,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
 
-    List<AlarmWithUserInfo> getSelectedDateList(PlantField field) {
+    List<AlarmWithUserInfo> getSelectedDateList([PlantField? field]) {
       List<AlarmWithUserInfo> results = [];
 
       for (final userInfo in userInfoList) {
-        Alarm alarm;
-        String alias;
-        PlantModel plant;
-        String selectedPhotoUrl;
+        String alias = userInfo.info.alias;
+        PlantModel plant = userInfo.plant;
+        String selectedPhotoUrl = userInfo.selectedPhotoUrl;
 
-        if (field == PlantField.watering) {
-          alarm = userInfo.info.watering.alarm;
-          alias = userInfo.info.alias;
-          plant = userInfo.plant;
-          selectedPhotoUrl = userInfo.selectedPhotoUrl;
-        } else if (field == PlantField.repotting) {
-          alarm = userInfo.info.repotting.alarm;
-          alias = userInfo.info.alias;
-          plant = userInfo.plant;
-          selectedPhotoUrl = userInfo.selectedPhotoUrl;
-        } else {
-          alarm = userInfo.info.nutrient.alarm;
-          alias = userInfo.info.alias;
-          plant = userInfo.plant;
-          selectedPhotoUrl = userInfo.selectedPhotoUrl;
-        }
-
-        if (alarm.isOn) {
-          DateTime zeroSelectedDate = DateTime(
-            selectedDateState.year,
-            selectedDateState.month,
-            selectedDateState.day,
-          );
-          DateTime zeroStartTime = DateTime(
-            alarm.startTime.year,
-            alarm.startTime.month,
-            alarm.startTime.day,
-          );
-
-          int difference = zeroSelectedDate.difference(zeroStartTime).inDays;
-
-          if ((difference == 0 && alarm.repeat == 0) ||
-              (alarm.repeat > 0 &&
-                  difference > -1 && // 수정: difference가 -1보다 커야 함
-                  difference % alarm.repeat == 0)) {
-            results.add(
-              AlarmWithUserInfo(
-                alarm: alarm,
-                alias: alias,
-                plant: plant,
-                selectedPhotoUrl: selectedPhotoUrl,
-              ),
+        for (final alarm in userInfo.info.alarms) {
+          if (alarm.isOn) {
+            DateTime zeroSelectedDate = DateTime(
+              selectedDateState.year,
+              selectedDateState.month,
+              selectedDateState.day,
             );
+            DateTime zeroStartTime = DateTime(
+              alarm.startTime.year,
+              alarm.startTime.month,
+              alarm.startTime.day,
+            );
+
+            int difference = zeroSelectedDate.difference(zeroStartTime).inDays;
+
+            if ((difference == 0 && alarm.repeat == 0) ||
+                (alarm.repeat > 0 &&
+                    difference > -1 && // 수정: difference가 -1보다 커야 함
+                    difference % alarm.repeat == 0)) {
+              results.add(
+                AlarmWithUserInfo(
+                  alarm: alarm,
+                  alias: alias,
+                  plant: plant,
+                  selectedPhotoUrl: selectedPhotoUrl,
+                ),
+              );
+            }
           }
         }
       }
+
+      if (field != null) {
+        results = results.where((alarm) => alarm.alarm.field == field).toList();
+      }
+
       return results;
     }
 
-    final List<AlarmWithUserInfo> selectedDateWateringAlarms =
+    final List<AlarmWithUserInfo> selectedDateAlarms = getSelectedDateList();
+    final List<AlarmWithUserInfo> wateringAlarms =
         getSelectedDateList(PlantField.watering);
-    final List<AlarmWithUserInfo> selectedDateRepottingAlarms =
+    final List<AlarmWithUserInfo> repottingAlarms =
         getSelectedDateList(PlantField.repotting);
-    final List<AlarmWithUserInfo> selectedDateNutrientAlarms =
+    final List<AlarmWithUserInfo> nutrientAlarms =
         getSelectedDateList(PlantField.nutrient);
-    final int listCount = selectedDateWateringAlarms.length +
-        selectedDateRepottingAlarms.length +
-        selectedDateNutrientAlarms.length;
+
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -159,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '$listCount', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
+                                    '${selectedDateAlarms.length}', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -487,13 +474,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           children: [
                             TodoTap(
-                                selectedDateAlarms: selectedDateWateringAlarms,
+                                selectedDateAlarms: wateringAlarms,
                                 field: PlantField.watering),
                             TodoTap(
-                                selectedDateAlarms: selectedDateRepottingAlarms,
+                                selectedDateAlarms: repottingAlarms,
                                 field: PlantField.repotting),
                             TodoTap(
-                                selectedDateAlarms: selectedDateNutrientAlarms,
+                                selectedDateAlarms: nutrientAlarms,
                                 field: PlantField.nutrient),
                           ],
                         ),
@@ -677,9 +664,9 @@ class _AlarmCardState extends State<AlarmCard> {
                       ),
                       SizedBox(width: 8.h),
                       Text(
-                        widget.info.alarm.title.isNotEmpty
-                            ? widget.info.alarm.title
-                            : widget.info.alias,
+                        widget.info.alias.isNotEmpty
+                            ? widget.info.alias
+                            : widget.info.plant.name,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: grayBlack,
                             ),

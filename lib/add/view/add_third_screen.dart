@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
@@ -70,18 +71,12 @@ class AddThirdScreen extends ConsumerWidget {
             'selectedPhotoUrl': photoUrl,
             'plantInformation': {
               'alias': plantInformation.alias,
-              'watering': {
-                'lastDay': plantInformation.watering.lastDay,
-                'alarm': plantInformation.watering.alarm.toJson()
-              },
-              'repotting': {
-                'lastDay': plantInformation.repotting.lastDay,
-                'alarm': plantInformation.repotting.alarm.toJson()
-              },
-              'nutrient': {
-                'lastDay': plantInformation.nutrient.lastDay,
-                'alarm': plantInformation.nutrient.alarm.toJson()
-              },
+              'watringLastDay': plantInformation.watringLastDay,
+              'repottingLastDay': plantInformation.repottingLastDay,
+              'nutrientLastDay': plantInformation.nutrientLastDay,
+              'alarms': plantInformation.alarms
+                  .map((alarm) => alarm.toJson())
+                  .toList(),
             },
             'id': selectedPlant!.id,
             'image': selectedPlant.image,
@@ -98,18 +93,12 @@ class AddThirdScreen extends ConsumerWidget {
               'selectedPhotoUrl': "",
               'plantInformation': {
                 'alias': plantInformation.alias,
-                'watering': {
-                  'lastDay': plantInformation.watering.lastDay,
-                  'alarm': plantInformation.watering.alarm.toJson()
-                },
-                'repotting': {
-                  'lastDay': plantInformation.repotting.lastDay,
-                  'alarm': plantInformation.repotting.alarm.toJson()
-                },
-                'nutrient': {
-                  'lastDay': plantInformation.nutrient.lastDay,
-                  'alarm': plantInformation.nutrient.alarm.toJson()
-                },
+                'watringLastDay': plantInformation.watringLastDay,
+                'repottingLastDay': plantInformation.repottingLastDay,
+                'nutrientLastDay': plantInformation.nutrientLastDay,
+                'alarms': plantInformation.alarms
+                    .map((alarm) => alarm.toJson())
+                    .toList(),
               },
               'id': selectedPlant!.id,
               'image': selectedPlant.image,
@@ -298,14 +287,16 @@ class ImmutableAlarmBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantInformationModel plantState =
         ref.watch(plantInformationProvider);
-    late PlantInformationKey currentState;
 
+    late DateTime? lastDay;
+    final Alarm? alarmState =
+        plantState.alarms.firstWhereOrNull((alarm) => alarm.field == field);
     if (field == PlantField.watering) {
-      currentState = plantState.watering;
+      lastDay = plantState.watringLastDay;
     } else if (field == PlantField.repotting) {
-      currentState = plantState.repotting;
+      lastDay = plantState.repottingLastDay;
     } else if (field == PlantField.nutrient) {
-      currentState = plantState.nutrient;
+      lastDay = plantState.nutrientLastDay;
     }
     return Center(
       child: Container(
@@ -395,10 +386,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                             height: 6.h,
                           ),
                           Text(
-                            currentState.lastDay != null
-                                ? dateFormatter(
-                                    currentState.lastDay as DateTime)
-                                : '-',
+                            lastDay != null ? dateFormatter(lastDay) : '-',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
@@ -428,27 +416,23 @@ class ImmutableAlarmBox extends ConsumerWidget {
                               // if (plantState.watering.alarm
                               //         .startDay !=
                               //     null)
-                              currentState.alarm.repeat == 0
+                              alarmState == null || alarmState.repeat == 0
                                   ? const SizedBox.shrink()
                                   : Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 2.h,
-                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2.h),
                                       decoration: BoxDecoration(
-                                        color: pointColor1.withOpacity(
-                                          0.1,
-                                        ),
+                                        color: pointColor1.withOpacity(0.1),
                                         borderRadius: const BorderRadius.all(
-                                          Radius.circular(4),
-                                        ),
+                                            Radius.circular(4)),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          currentState.alarm.repeat == 1
+                                          alarmState.repeat == 1
                                               ? '매일'
-                                              : currentState.alarm.repeat == 7
+                                              : alarmState.repeat == 7
                                                   ? '매주'
-                                                  : '${currentState.alarm.repeat}일 마다',
+                                                  : '${alarmState.repeat}일 마다',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall!
@@ -458,39 +442,14 @@ class ImmutableAlarmBox extends ConsumerWidget {
                                         ),
                                       ),
                                     ),
-                              // FittedBox(
-                              //   fit: BoxFit.scaleDown,
-                              //   child: Container(
-                              //     padding: EdgeInsets.symmetric(
-                              //       horizontal: 4.h,
-                              //     ),
-                              //     decoration: BoxDecoration(
-                              //       color: pointColor2.withOpacity(0.1),
-                              //       borderRadius: const BorderRadius.all(
-                              //         Radius.circular(4),
-                              //       ),
-                              //     ),
-                              //     child: Center(
-                              //       child: Text(
-                              //         'D-1 변경예정',
-                              //         style: Theme.of(context)
-                              //             .textTheme
-                              //             .labelSmall!
-                              //             .copyWith(
-                              //               color: pointColor2,
-                              //             ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                           SizedBox(
                             height: 6.h,
                           ),
-                          if (currentState.alarm.isOn)
+                          if (alarmState != null && alarmState.isOn)
                             Text(
-                              dateFormatter(currentState.alarm.startTime),
+                              dateFormatter(alarmState.startTime),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -498,7 +457,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                                     color: grayBlack,
                                   ),
                             ),
-                          if (currentState.alarm.isOn)
+                          if (alarmState == null)
                             RichText(
                               text: TextSpan(
                                 style: Theme.of(context)

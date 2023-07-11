@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/provider/selectedDateProvider.dart';
@@ -239,71 +240,36 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                     now.month == selectedDateState.month &&
                     now.day == selectedDateState.day;
                 final isToday = index == 500;
-                //userInfo 에서 nextAlarm 이후부터 넣는다.
-                //repeat에따라 주기를반복한다 repeat이 1이면 매일 repeat이7 이면 7일마다
 
                 PlantField? watering;
                 PlantField? repotting;
                 PlantField? nutrient;
 
-                for (final userInfo in userInfoList) {
-                  final wateringAlarm = userInfo.info.watering.alarm;
-                  if (wateringAlarm.isOn &&
-                      wateringAlarm.repeat != 0 &&
-                      (now.year == wateringAlarm.startTime.year &&
-                              now.month == wateringAlarm.startTime.month &&
-                              now.day == wateringAlarm.startTime.day ||
-                          (now.isAfter(wateringAlarm.startTime) &&
-                              now.difference(wateringAlarm.startTime).inDays %
-                                      wateringAlarm.repeat ==
-                                  0))) {
-                    watering = PlantField.watering;
-                  }
-                  if (wateringAlarm.isOn &&
-                      wateringAlarm.repeat == 0 &&
-                      wateringAlarm.startTime.year == now.year &&
-                      wateringAlarm.startTime.month == now.month &&
-                      wateringAlarm.startTime.day == now.day) {
-                    watering = PlantField.watering;
-                  }
+                for (final UserInfoModel userInfo in userInfoList) {
+                  final PlantInformationModel plantInfo = userInfo.info;
+                  final List<Alarm> alarms = plantInfo.alarms;
 
-                  final repottingAlarm = userInfo.info.repotting.alarm;
-                  if (repottingAlarm.isOn &&
-                      repottingAlarm.repeat != 0 &&
-                      (now.year == repottingAlarm.startTime.year &&
-                              now.month == repottingAlarm.startTime.month &&
-                              now.day == repottingAlarm.startTime.day ||
-                          (now.isAfter(repottingAlarm.startTime) &&
-                              now.difference(repottingAlarm.startTime).inDays %
-                                      repottingAlarm.repeat ==
-                                  0))) {
-                    repotting = PlantField.repotting;
-                  }
-                  if (repottingAlarm.isOn &&
-                      repottingAlarm.repeat == 0 &&
-                      repottingAlarm.startTime.year == now.year &&
-                      repottingAlarm.startTime.month == now.month &&
-                      repottingAlarm.startTime.day == now.day) {
-                    repotting = PlantField.repotting;
-                  }
-                  final nutrientAlarm = userInfo.info.nutrient.alarm;
-                  if (nutrientAlarm.isOn &&
-                      nutrientAlarm.repeat != 0 &&
-                      (now.year == nutrientAlarm.startTime.year &&
-                              now.month == nutrientAlarm.startTime.month &&
-                              now.day == nutrientAlarm.startTime.day ||
-                          (now.isAfter(nutrientAlarm.startTime) &&
-                              now.difference(nutrientAlarm.startTime).inDays %
-                                      nutrientAlarm.repeat ==
-                                  0))) {
-                    nutrient = PlantField.nutrient;
-                  }
-                  if (nutrientAlarm.isOn &&
-                      nutrientAlarm.repeat == 0 &&
-                      nutrientAlarm.startTime.year == now.year &&
-                      nutrientAlarm.startTime.month == now.month &&
-                      nutrientAlarm.startTime.day == now.day) {
-                    nutrient = PlantField.nutrient;
+                  for (final Alarm alarm in alarms) {
+                    // 알람의 반복 주기와 현재 날짜를 비교하여 표시 여부를 결정합니다.
+                    if (alarm.isOn &&
+                            (alarm.repeat != 0 &&
+                                (now.isAfter(alarm.startTime) &&
+                                    now.difference(alarm.startTime).inDays %
+                                            alarm.repeat ==
+                                        0)) ||
+                        (alarm.repeat == 0 &&
+                            now.year == alarm.startTime.year &&
+                            now.month == alarm.startTime.month &&
+                            now.day == alarm.startTime.day)) {
+                      // 알람의 필드에 따라 해당 필드 변수에 할당합니다.
+                      if (alarm.field == PlantField.watering) {
+                        watering = PlantField.watering;
+                      } else if (alarm.field == PlantField.repotting) {
+                        repotting = PlantField.repotting;
+                      } else if (alarm.field == PlantField.nutrient) {
+                        nutrient = PlantField.nutrient;
+                      }
+                    }
                   }
                 }
 
