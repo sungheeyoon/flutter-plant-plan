@@ -56,8 +56,8 @@ class AlarmNotifier extends StateNotifier<Alarm> {
     state = state.copyWith(title: title);
   }
 
-  void setField(PlantField field) {
-    state = state.copyWith(field: field);
+  void setFieldAndReset(PlantField field) {
+    state = Alarm.newAlarm(startTime: DateTime.now(), field: field);
   }
 
   void setAlarm(Alarm? alarm) {
