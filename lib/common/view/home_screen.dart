@@ -146,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '${selectedDateAlarms.length}', //selectedDateState 날짜에 매치된 userInfoList Alarm 갯수를 파악해서 넣는다
+                                    '${selectedDateAlarms.length}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -560,7 +560,6 @@ class TodoTap extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 6.h),
                   child: AlarmCard(
                     info: info,
-                    field: field,
                   ),
                 );
               },
@@ -572,45 +571,60 @@ class TodoTap extends StatelessWidget {
   }
 }
 
-class AlarmCard extends StatefulWidget {
+class AlarmCard extends ConsumerStatefulWidget {
   final AlarmWithUserInfo info;
-  final PlantField field;
 
   const AlarmCard({
     Key? key,
     required this.info,
-    required this.field,
   }) : super(key: key);
 
   @override
-  State<AlarmCard> createState() => _AlarmCardState();
+  ConsumerState<AlarmCard> createState() => _AlarmCardState();
 }
 
-class _AlarmCardState extends State<AlarmCard> {
+class _AlarmCardState extends ConsumerState<AlarmCard> {
   late bool isDone;
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      final DateTime selectedDateState = ref.watch(selectedDateProvider);
+      DateTime zeroSelectedDate = DateTime(
+        selectedDateState.year,
+        selectedDateState.month,
+        selectedDateState.day,
+      );
+      if (widget.info.alarm.offDates.contains(zeroSelectedDate)) {
+        isDone = true;
+      } else {
+        isDone = false;
+      }
+    });
+
     isDone = widget.info.alarm.isOn;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final DateTime selectedDateState = ref.watch(selectedDateProvider);
+
+    DateTime zeroSelectedDate = DateTime(
+      selectedDateState.year,
+      selectedDateState.month,
+      selectedDateState.day,
+    );
     Color fieldColor;
 
-    switch (widget.field) {
-      case PlantField.watering:
-        fieldColor = const Color(0xFF72CBE7);
-        break;
-      case PlantField.repotting:
-        fieldColor = subColor2;
-        break;
-      case PlantField.nutrient:
-        fieldColor = keyColor400;
-        break;
-      default:
-        fieldColor = Colors.transparent;
+    if (widget.info.alarm.field == PlantField.watering) {
+      fieldColor = const Color(0xFF72CBE7);
+    } else if (widget.info.alarm.field == PlantField.repotting) {
+      fieldColor = subColor2;
+    } else if (widget.info.alarm.field == PlantField.nutrient) {
+      fieldColor = keyColor400;
+    } else {
+      fieldColor = Colors.transparent;
     }
 
     return Container(
@@ -687,6 +701,8 @@ class _AlarmCardState extends State<AlarmCard> {
                         onTap: () {
                           setState(() {
                             isDone = !isDone;
+                            ref.read(userInfoProvider.notifier).toggleAlarmDate(
+                                widget.info.alarm.id, zeroSelectedDate);
                           });
                         },
                         child: Icon(

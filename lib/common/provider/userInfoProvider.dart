@@ -87,16 +87,25 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
 
     state = datas;
   }
-//   _getSelectedSnaps(from, to) {
-//   DateTime startDate = from;
-//   DateTime endDate = to;
-//   List<DateTime> filteredSnapshot = [];
-//   for(int i = 0; i < snapshot.length; i++){
-//     DateTime snapshotDate = timestampToDateTime(snapshot[i]['capture_date']);
-//     if(snapshotDate.isAfter(startDate) && snapshotDate.isBefore(endDate)){
-//       filteredSnapshot.add(snapshotDate);
-//     }
-//   }
-//   return filteredSnapshot;
-// }
+
+  void toggleAlarmDate(String id, DateTime time) {
+    state.map((userInfo) {
+      final List<Alarm> updatedAlarms = userInfo.info.alarms.map((alarm) {
+        if (alarm.id == id) {
+          final List<DateTime> updatedOffDates = List.from(alarm.offDates);
+          if (updatedOffDates.contains(time)) {
+            updatedOffDates.remove(time);
+          } else {
+            updatedOffDates.add(time);
+          }
+          return alarm.copyWith(offDates: updatedOffDates);
+        } else {
+          return alarm;
+        }
+      }).toList();
+
+      return userInfo.copyWith(
+          info: userInfo.info.copyWith(alarms: updatedAlarms));
+    }).toList();
+  }
 }
