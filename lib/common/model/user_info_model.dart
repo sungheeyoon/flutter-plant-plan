@@ -11,6 +11,7 @@ class UserInfoModel with _$UserInfoModel {
     required PlantInformationModel info,
     required PlantModel plant,
     required String selectedPhotoUrl,
+    required String docId,
   }) = _UserInfoModel;
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) =>

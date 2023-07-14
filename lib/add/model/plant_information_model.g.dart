@@ -71,4 +71,5 @@ const _$PlantFieldEnumMap = {
   PlantField.watering: 'watering',
   PlantField.repotting: 'repotting',
   PlantField.nutrient: 'nutrient',
+  PlantField.none: 'none',
 };

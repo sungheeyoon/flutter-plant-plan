@@ -23,6 +23,7 @@ mixin _$UserInfoModel {
   PlantInformationModel get info => throw _privateConstructorUsedError;
   PlantModel get plant => throw _privateConstructorUsedError;
   String get selectedPhotoUrl => throw _privateConstructorUsedError;
+  String get docId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +38,10 @@ abstract class $UserInfoModelCopyWith<$Res> {
       _$UserInfoModelCopyWithImpl<$Res, UserInfoModel>;
   @useResult
   $Res call(
-      {PlantInformationModel info, PlantModel plant, String selectedPhotoUrl});
+      {PlantInformationModel info,
+      PlantModel plant,
+      String selectedPhotoUrl,
+      String docId});
 
   $PlantInformationModelCopyWith<$Res> get info;
 }
@@ -58,6 +62,7 @@ class _$UserInfoModelCopyWithImpl<$Res, $Val extends UserInfoModel>
     Object? info = null,
     Object? plant = null,
     Object? selectedPhotoUrl = null,
+    Object? docId = null,
   }) {
     return _then(_value.copyWith(
       info: null == info
@@ -71,6 +76,10 @@ class _$UserInfoModelCopyWithImpl<$Res, $Val extends UserInfoModel>
       selectedPhotoUrl: null == selectedPhotoUrl
           ? _value.selectedPhotoUrl
           : selectedPhotoUrl // ignore: cast_nullable_to_non_nullable
+              as String,
+      docId: null == docId
+          ? _value.docId
+          : docId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -93,7 +102,10 @@ abstract class _$$_UserInfoModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {PlantInformationModel info, PlantModel plant, String selectedPhotoUrl});
+      {PlantInformationModel info,
+      PlantModel plant,
+      String selectedPhotoUrl,
+      String docId});
 
   @override
   $PlantInformationModelCopyWith<$Res> get info;
@@ -113,6 +125,7 @@ class __$$_UserInfoModelCopyWithImpl<$Res>
     Object? info = null,
     Object? plant = null,
     Object? selectedPhotoUrl = null,
+    Object? docId = null,
   }) {
     return _then(_$_UserInfoModel(
       info: null == info
@@ -127,6 +140,10 @@ class __$$_UserInfoModelCopyWithImpl<$Res>
           ? _value.selectedPhotoUrl
           : selectedPhotoUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      docId: null == docId
+          ? _value.docId
+          : docId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -137,7 +154,8 @@ class _$_UserInfoModel implements _UserInfoModel {
   _$_UserInfoModel(
       {required this.info,
       required this.plant,
-      required this.selectedPhotoUrl});
+      required this.selectedPhotoUrl,
+      required this.docId});
 
   factory _$_UserInfoModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserInfoModelFromJson(json);
@@ -148,10 +166,12 @@ class _$_UserInfoModel implements _UserInfoModel {
   final PlantModel plant;
   @override
   final String selectedPhotoUrl;
+  @override
+  final String docId;
 
   @override
   String toString() {
-    return 'UserInfoModel(info: $info, plant: $plant, selectedPhotoUrl: $selectedPhotoUrl)';
+    return 'UserInfoModel(info: $info, plant: $plant, selectedPhotoUrl: $selectedPhotoUrl, docId: $docId)';
   }
 
   @override
@@ -162,12 +182,14 @@ class _$_UserInfoModel implements _UserInfoModel {
             (identical(other.info, info) || other.info == info) &&
             (identical(other.plant, plant) || other.plant == plant) &&
             (identical(other.selectedPhotoUrl, selectedPhotoUrl) ||
-                other.selectedPhotoUrl == selectedPhotoUrl));
+                other.selectedPhotoUrl == selectedPhotoUrl) &&
+            (identical(other.docId, docId) || other.docId == docId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, info, plant, selectedPhotoUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, info, plant, selectedPhotoUrl, docId);
 
   @JsonKey(ignore: true)
   @override
@@ -187,7 +209,8 @@ abstract class _UserInfoModel implements UserInfoModel {
   factory _UserInfoModel(
       {required final PlantInformationModel info,
       required final PlantModel plant,
-      required final String selectedPhotoUrl}) = _$_UserInfoModel;
+      required final String selectedPhotoUrl,
+      required final String docId}) = _$_UserInfoModel;
 
   factory _UserInfoModel.fromJson(Map<String, dynamic> json) =
       _$_UserInfoModel.fromJson;
@@ -198,6 +221,8 @@ abstract class _UserInfoModel implements UserInfoModel {
   PlantModel get plant;
   @override
   String get selectedPhotoUrl;
+  @override
+  String get docId;
   @override
   @JsonKey(ignore: true)
   _$$_UserInfoModelCopyWith<_$_UserInfoModel> get copyWith =>

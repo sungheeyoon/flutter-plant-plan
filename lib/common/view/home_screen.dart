@@ -49,8 +49,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         String alias = userInfo.info.alias;
         PlantModel plant = userInfo.plant;
         String selectedPhotoUrl = userInfo.selectedPhotoUrl;
+        String docId = userInfo.docId;
 
         for (final alarm in userInfo.info.alarms) {
+          print(alarm);
           if (alarm.isOn) {
             DateTime zeroSelectedDate = DateTime(
               selectedDateState.year,
@@ -75,6 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   alias: alias,
                   plant: plant,
                   selectedPhotoUrl: selectedPhotoUrl,
+                  docId: docId,
                 ),
               );
             }
@@ -584,37 +587,26 @@ class AlarmCard extends ConsumerStatefulWidget {
 }
 
 class _AlarmCardState extends ConsumerState<AlarmCard> {
-  late bool isDone;
-
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      final DateTime selectedDateState = ref.watch(selectedDateProvider);
-      DateTime zeroSelectedDate = DateTime(
-        selectedDateState.year,
-        selectedDateState.month,
-        selectedDateState.day,
-      );
-      if (widget.info.alarm.offDates.contains(zeroSelectedDate)) {
-        isDone = true;
-      } else {
-        isDone = false;
-      }
-    });
-
-    isDone = widget.info.alarm.isOn;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
+    bool isDone;
 
     DateTime zeroSelectedDate = DateTime(
       selectedDateState.year,
       selectedDateState.month,
       selectedDateState.day,
     );
+    if (widget.info.alarm.offDates.contains(zeroSelectedDate)) {
+      isDone = true;
+    } else {
+      isDone = false;
+    }
     Color fieldColor;
 
     if (widget.info.alarm.field == PlantField.watering) {
@@ -701,8 +693,10 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                         onTap: () {
                           setState(() {
                             isDone = !isDone;
-                            ref.read(userInfoProvider.notifier).toggleAlarmDate(
-                                widget.info.alarm.id, zeroSelectedDate);
+                            ref
+                                .read(userInfoProvider.notifier)
+                                .toggleAlarmDateTime(widget.info.alarm.id,
+                                    widget.info.docId, zeroSelectedDate);
                           });
                         },
                         child: Icon(

@@ -42,9 +42,11 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
 
         datas.add(
           UserInfoModel(
-              info: info,
-              plant: plant,
-              selectedPhotoUrl: data['selectedPhotoUrl']),
+            info: info,
+            plant: plant,
+            selectedPhotoUrl: data['selectedPhotoUrl'],
+            docId: data['docId'],
+          ),
         );
       }
     }
@@ -80,6 +82,7 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
             info: info,
             plant: plant,
             selectedPhotoUrl: data['selectedPhotoUrl'],
+            docId: data['docId'],
           ),
         );
       }
@@ -88,24 +91,60 @@ class UserInfoNotifier extends StateNotifier<List<UserInfoModel>> {
     state = datas;
   }
 
-  void toggleAlarmDate(String id, DateTime time) {
-    state.map((userInfo) {
-      final List<Alarm> updatedAlarms = userInfo.info.alarms.map((alarm) {
+  void toggleAlarmDateTime(String id, String docId, DateTime time) async {
+    final updatedData = List<UserInfoModel>.from(state);
+
+    for (var userInfo in updatedData) {
+      final updatedAlarms = List<Alarm>.from(userInfo.info.alarms);
+
+      for (var alarm in updatedAlarms) {
         if (alarm.id == id) {
-          final List<DateTime> updatedOffDates = List.from(alarm.offDates);
+          final updatedOffDates = List<DateTime>.from(alarm.offDates);
+
           if (updatedOffDates.contains(time)) {
             updatedOffDates.remove(time);
           } else {
             updatedOffDates.add(time);
           }
-          return alarm.copyWith(offDates: updatedOffDates);
-        } else {
-          return alarm;
-        }
-      }).toList();
 
-      return userInfo.copyWith(
-          info: userInfo.info.copyWith(alarms: updatedAlarms));
-    }).toList();
+          final updatedAlarm = alarm.copyWith(offDates: updatedOffDates);
+
+          final index = updatedAlarms.indexOf(alarm);
+          updatedAlarms[index] = updatedAlarm;
+
+          break;
+        }
+      }
+
+      final updatedInfo = userInfo.info.copyWith(alarms: updatedAlarms);
+
+      final index = updatedData.indexOf(userInfo);
+      updatedData[index] = userInfo.copyWith(info: updatedInfo);
+    }
+
+    state = updatedData;
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+
+    if (user != null) {
+      final uid = user.uid;
+
+      final plantData = {
+        'alarms': updatedData
+            .firstWhere((userInfo) => userInfo.docId == docId)
+            .info
+            .alarms
+            .map((alarm) => alarm.toJson())
+            .toList(),
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId)
+          .update(plantData);
+    }
   }
 }
