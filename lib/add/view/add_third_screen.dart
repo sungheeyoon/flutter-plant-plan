@@ -57,56 +57,37 @@ class AddThirdScreen extends ConsumerWidget {
 
       final user = auth.currentUser;
 
-      if (user != null) {
-        final uid = user.uid;
+      if (user == null) return;
 
-        if (selectedPhoto != null) {
-          String photoUrl = await uploadPhoto(selectedPhoto, uid);
-          // 업로드된 사진의 다운로드 URL을 사용하여 Firestore에 데이터를 저장하는 작업을 수행
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .collection('plants')
-              .add({
-            'selectedPhotoUrl': photoUrl,
-            'plantInformation': {
-              'alias': plantInformation.alias,
-              'watringLastDay': plantInformation.watringLastDay,
-              'repottingLastDay': plantInformation.repottingLastDay,
-              'nutrientLastDay': plantInformation.nutrientLastDay,
-              'alarms': plantInformation.alarms
-                  .map((alarm) => alarm.toJson())
-                  .toList(),
-            },
-            'id': selectedPlant!.id,
-            'image': selectedPlant.image,
-            'name': selectedPlant.name,
-          });
-        } else {
-          // 선택된 사진이 없을 경우에 대한 처리
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .collection('plants')
-              .add(
-            {
-              'selectedPhotoUrl': "",
-              'plantInformation': {
-                'alias': plantInformation.alias,
-                'watringLastDay': plantInformation.watringLastDay,
-                'repottingLastDay': plantInformation.repottingLastDay,
-                'nutrientLastDay': plantInformation.nutrientLastDay,
-                'alarms': plantInformation.alarms
-                    .map((alarm) => alarm.toJson())
-                    .toList(),
-              },
-              'id': selectedPlant!.id,
-              'image': selectedPlant.image,
-              'name': selectedPlant.name,
-            },
-          );
-        }
-      }
+      final uid = user.uid;
+
+      final DocumentReference docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc();
+
+      final String docId = docRef.id;
+
+      final Map<String, dynamic> plantData = {
+        'selectedPhotoUrl':
+            selectedPhoto != null ? await uploadPhoto(selectedPhoto, uid) : "",
+        'plantInformation': {
+          'alias': plantInformation.alias,
+          'watringLastDay': plantInformation.watringLastDay,
+          'repottingLastDay': plantInformation.repottingLastDay,
+          'nutrientLastDay': plantInformation.nutrientLastDay,
+          'alarms':
+              plantInformation.alarms.map((alarm) => alarm.toJson()).toList(),
+        },
+        'docId': docId,
+        'id': selectedPlant?.id,
+        'image': selectedPlant?.image,
+        'name': selectedPlant?.name,
+      };
+
+      await docRef.set(plantData);
+
       ref.read(selectedPlantProvider.notifier).reset();
       ref.read(photoProvider.notifier).reset();
       ref.read(alarmProvider.notifier).reset();

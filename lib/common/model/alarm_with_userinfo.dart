@@ -6,11 +6,13 @@ class AlarmWithUserInfo {
   final String alias;
   final PlantModel plant;
   final String selectedPhotoUrl;
+  final String docId;
 
   AlarmWithUserInfo({
     required this.alarm,
     required this.alias,
     required this.plant,
     required this.selectedPhotoUrl,
+    required this.docId,
   });
 }

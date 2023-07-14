@@ -12,6 +12,7 @@ _$_UserInfoModel _$$_UserInfoModelFromJson(Map<String, dynamic> json) =>
           PlantInformationModel.fromJson(json['info'] as Map<String, dynamic>),
       plant: PlantModel.fromJson(json['plant'] as Map<String, dynamic>),
       selectedPhotoUrl: json['selectedPhotoUrl'] as String,
+      docId: json['docId'] as String,
     );
 
 Map<String, dynamic> _$$_UserInfoModelToJson(_$_UserInfoModel instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$$_UserInfoModelToJson(_$_UserInfoModel instance) =>
       'info': instance.info,
       'plant': instance.plant,
       'selectedPhotoUrl': instance.selectedPhotoUrl,
+      'docId': instance.docId,
     };
