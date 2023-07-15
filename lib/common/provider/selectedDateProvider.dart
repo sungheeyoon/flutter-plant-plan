@@ -6,9 +6,20 @@ final selectedDateProvider =
 });
 
 class SelectedDategState extends StateNotifier<DateTime> {
-  SelectedDategState() : super(DateTime.now());
+  SelectedDategState()
+      : super(
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
+        );
 
   void updateDateTime(DateTime newDateTime) {
-    state = newDateTime;
+    state = DateTime(
+      newDateTime.year,
+      newDateTime.month,
+      newDateTime.day,
+    );
   }
 }
