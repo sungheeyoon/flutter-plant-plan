@@ -52,20 +52,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         String docId = userInfo.docId;
 
         for (final alarm in userInfo.info.alarms) {
-          print(alarm);
           if (alarm.isOn) {
-            DateTime zeroSelectedDate = DateTime(
-              selectedDateState.year,
-              selectedDateState.month,
-              selectedDateState.day,
-            );
             DateTime zeroStartTime = DateTime(
               alarm.startTime.year,
               alarm.startTime.month,
               alarm.startTime.day,
             );
 
-            int difference = zeroSelectedDate.difference(zeroStartTime).inDays;
+            int difference = selectedDateState.difference(zeroStartTime).inDays;
 
             if ((difference == 0 && alarm.repeat == 0) ||
                 (alarm.repeat > 0 &&
@@ -93,6 +87,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     final List<AlarmWithUserInfo> selectedDateAlarms = getSelectedDateList();
+    int completeCount = 0;
+    for (final AlarmWithUserInfo info in selectedDateAlarms) {
+      if (info.alarm.offDates.contains(selectedDateState)) {
+        completeCount++;
+      }
+    }
     final List<AlarmWithUserInfo> wateringAlarms =
         getSelectedDateList(PlantField.watering);
     final List<AlarmWithUserInfo> repottingAlarms =
@@ -176,7 +176,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '15', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn 갯수를 파악해서 넣는다
+                                    '$completeCount', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn 갯수를 파악해서 넣는다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -203,7 +203,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     height: 4.h,
                                   ),
                                   Text(
-                                    '100%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
+                                    '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall!
@@ -500,7 +500,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-class TodoTap extends StatelessWidget {
+class TodoTap extends ConsumerWidget {
   const TodoTap({
     super.key,
     required this.selectedDateAlarms,
@@ -511,7 +511,8 @@ class TodoTap extends StatelessWidget {
   final PlantField field;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DateTime selectedDateState = ref.watch(selectedDateProvider);
     Color fieldColor;
 
     switch (field) {
@@ -547,17 +548,20 @@ class TodoTap extends StatelessWidget {
               itemCount: selectedDateAlarms.length,
               itemBuilder: (BuildContext context, int index) {
                 selectedDateAlarms.sort((a, b) {
-                  if (a.alarm.isOn && !b.alarm.isOn) {
-                    return -1; // a가 true이고 b가 false인 경우 a를 더 앞에 배치
-                  } else if (!a.alarm.isOn && b.alarm.isOn) {
-                    return 1; // a가 false이고 b가 true인 경우 b를 더 앞에 배치
+                  final aHasOffDate =
+                      a.alarm.offDates.contains(selectedDateState);
+                  final bHasOffDate =
+                      b.alarm.offDates.contains(selectedDateState);
+
+                  if (aHasOffDate && !bHasOffDate) {
+                    return 1; // a가 offDates를 가지고 있고 b가 가지고 있지 않은 경우 b를 더 앞에 배치
+                  } else if (!aHasOffDate && bHasOffDate) {
+                    return -1; // a가 offDates를 가지고 있지 않고 b가 가지고 있는 경우 a를 더 앞에 배치
                   } else {
-                    return 0; // a와 b의 isOn 값이 동일한 경우 순서 변경 없음
+                    return b.alarm.startTime.compareTo(a.alarm
+                        .startTime); // offDates가 동일한 경우 startTime을 기준으로 정렬 (시간 순서를 반대로)
                   }
                 });
-
-                selectedDateAlarms.sort(
-                    (a, b) => b.alarm.startTime.compareTo(a.alarm.startTime));
                 final info = selectedDateAlarms[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -597,12 +601,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
     bool isDone;
 
-    DateTime zeroSelectedDate = DateTime(
-      selectedDateState.year,
-      selectedDateState.month,
-      selectedDateState.day,
-    );
-    if (widget.info.alarm.offDates.contains(zeroSelectedDate)) {
+    if (widget.info.alarm.offDates.contains(selectedDateState)) {
       isDone = true;
     } else {
       isDone = false;
@@ -696,7 +695,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                             ref
                                 .read(userInfoProvider.notifier)
                                 .toggleAlarmDateTime(widget.info.alarm.id,
-                                    widget.info.docId, zeroSelectedDate);
+                                    widget.info.docId, selectedDateState);
                           });
                         },
                         child: Icon(

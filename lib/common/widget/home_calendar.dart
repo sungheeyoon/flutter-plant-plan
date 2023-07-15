@@ -250,18 +250,20 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                   final List<Alarm> alarms = plantInfo.alarms;
 
                   for (final Alarm alarm in alarms) {
-                    // 알람의 반복 주기와 현재 날짜를 비교하여 표시 여부를 결정합니다.
+                    DateTime zeroStartTime = DateTime(
+                      alarm.startTime.year,
+                      alarm.startTime.month,
+                      alarm.startTime.day,
+                    );
+
                     if (alarm.isOn &&
                             (alarm.repeat != 0 &&
-                                (now.isAfter(alarm.startTime) &&
-                                    now.difference(alarm.startTime).inDays %
+                                (now.isAfter(zeroStartTime) &&
+                                    now.difference(zeroStartTime).inDays %
                                             alarm.repeat ==
                                         0)) ||
                         (alarm.repeat == 0 &&
-                            now.year == alarm.startTime.year &&
-                            now.month == alarm.startTime.month &&
-                            now.day == alarm.startTime.day)) {
-                      // 알람의 필드에 따라 해당 필드 변수에 할당합니다.
+                            selectedDateState == zeroStartTime)) {
                       if (alarm.field == PlantField.watering) {
                         watering = PlantField.watering;
                       } else if (alarm.field == PlantField.repotting) {
