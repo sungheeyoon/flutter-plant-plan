@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/list/view/list_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class RootTab extends StatefulWidget {
@@ -126,7 +127,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         controller: controller,
         children: const [
           HomeScreen(),
-          Text('asd'),
+          ListScreen(),
           Text('asd'),
           Text('asdasd'),
           Text('asdasdsad'),
