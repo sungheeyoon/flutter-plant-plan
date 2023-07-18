@@ -8,6 +8,7 @@ part of 'list_card_model.dart';
 
 _$_ListCardModel _$$_ListCardModelFromJson(Map<String, dynamic> json) =>
     _$_ListCardModel(
+      id: json['id'] as String,
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
       dDay: json['dDay'] as int,
@@ -18,6 +19,7 @@ _$_ListCardModel _$$_ListCardModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'imageUrl': instance.imageUrl,
       'dDay': instance.dDay,
