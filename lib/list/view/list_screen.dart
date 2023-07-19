@@ -41,6 +41,8 @@ class _ListScreenState extends ConsumerState<ListScreen> {
         String imageUrl = userInfo.selectedPhotoUrl == ""
             ? userInfo.plant.image
             : userInfo.selectedPhotoUrl;
+        int dDay = -1;
+        List<PlantField> fields = [];
 
         DateTime today = DateTime(
           DateTime.now().year,
@@ -51,35 +53,101 @@ class _ListScreenState extends ConsumerState<ListScreen> {
         List<Alarm> alarms = userInfo.info.alarms;
         if (alarms.isNotEmpty) {
           List<Alarm> closestAlarms = [];
-          int minDifference = -1;
 
           for (Alarm alarm in alarms) {
-            DateTime zeroStartTime = DateTime(
+            DateTime alarmDay = DateTime(
               alarm.startTime.year,
               alarm.startTime.month,
               alarm.startTime.day,
             );
 
-            while (alarm.repeat != 0 && zeroStartTime.isBefore(today)) {
-              zeroStartTime = zeroStartTime.add(Duration(days: alarm.repeat));
+            while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
+              alarmDay = alarmDay.add(Duration(days: alarm.repeat));
             }
 
-            int difference = today.difference(zeroStartTime).inDays.abs();
+            int difference = today.difference(alarmDay).inDays.abs();
 
-            if (minDifference == -1 || difference < minDifference) {
+            if (dDay == -1 || difference < dDay) {
               closestAlarms = [alarm];
-              minDifference = difference;
-            } else if (difference == minDifference) {
+              dDay = difference;
+            } else if (difference == dDay) {
               closestAlarms.add(alarm);
             }
           }
+          if (closestAlarms != []) {
+            for (Alarm closestAlarm in closestAlarms) {
+              if (closestAlarm.field == PlantField.watering) {
+                if (fields.contains(PlantField.watering)) {
+                  continue;
+                } else {
+                  fields.add(PlantField.watering);
+                }
+              }
+              if (closestAlarm.field == PlantField.repotting) {
+                if (fields.contains(PlantField.repotting)) {
+                  continue;
+                } else {
+                  fields.add(PlantField.repotting);
+                }
+              }
+              if (closestAlarm.field == PlantField.nutrient) {
+                if (fields.contains(PlantField.nutrient)) {
+                  continue;
+                } else {
+                  fields.add(PlantField.nutrient);
+                }
+              }
+            }
+          }
         }
+        results.add(
+          ListCardModel(
+              id: id,
+              title: title,
+              imageUrl: imageUrl,
+              dDay: dDay,
+              fields: fields),
+        );
       }
 
       return results;
     }
 
-    List<ListCardModel> plantData = getCardList();
+    List<ListCardModel> cardList = getCardList();
+    //alphabeticalOrdercardList 는 cardList 의 card.title 문자순서대로 정렬되며 순서는 한글순,영어순,숫자순,특수문자순으로정렬한다.
+    List<ListCardModel> alphabeticalOrdercardList = [];
+    //notificationOrdercardList 는 cardList 의 card.dDay 오름차순으로 정렬되며 card.dDay 가 -1 이면 맨뒤로가게정렬한다.
+    List<ListCardModel> notificationOrdercardList = [];
+
+    // cardList를 이름 순서로 정렬하는 함수
+    int compareByTitle(ListCardModel a, ListCardModel b) {
+      // 한글, 영어, 숫자, 특수문자 순서로 비교하여 정렬
+      return a.title.compareTo(b.title);
+    }
+
+    // cardList를 D-Day 오름차순으로 정렬하는 함수
+    int compareByDDay(ListCardModel a, ListCardModel b) {
+      if (a.dDay == -1) return 1; // -1인 항목은 맨 뒤로 보내기
+      if (b.dDay == -1) return -1; // -1인 항목은 맨 뒤로 보내기
+      return a.dDay.compareTo(b.dDay);
+    }
+
+    // 이름 순서대로 정렬하여 alphabeticalOrdercardList에 추가
+    alphabeticalOrdercardList.addAll(cardList);
+    alphabeticalOrdercardList.sort(compareByTitle);
+
+    // D-Day 오름차순으로 정렬하여 notificationOrdercardList에 추가
+    notificationOrdercardList.addAll(cardList);
+    notificationOrdercardList.sort(compareByDDay);
+
+    List<ListCardModel> selectedCardList;
+    if (_selectedIndex == 1) {
+      selectedCardList = alphabeticalOrdercardList;
+    } else if (_selectedIndex == 2) {
+      selectedCardList = notificationOrdercardList;
+    } else {
+      selectedCardList = cardList;
+    }
 
     return DefaultLayout(
       backgroundColor: const Color(0xFFF8F8F8),
@@ -111,10 +179,10 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: plantData.length,
+              itemCount: selectedCardList.length,
               itemBuilder: (context, index) {
-                final plant = plantData[index];
-                return PlantListCard(data: plant);
+                final card = selectedCardList[index];
+                return PlantListCard(data: card);
               },
             ),
           ],
