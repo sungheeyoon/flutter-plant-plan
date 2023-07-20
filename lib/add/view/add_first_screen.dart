@@ -15,7 +15,6 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/image_helper.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 
 class AddFirstScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addFirst';
@@ -135,17 +134,17 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                     right: 1,
                                     top: 1,
                                     child: GestureDetector(
-                                      onTap: () {
-                                        ref
-                                            .read(photoProvider.notifier)
-                                            .reset();
-                                      },
-                                      child: ImageBox(
-                                        imageUri: 'assets/icons/x.png',
-                                        width: 20.h,
-                                        height: 20.h,
-                                      ),
-                                    ),
+                                        onTap: () {
+                                          ref
+                                              .read(photoProvider.notifier)
+                                              .reset();
+                                        },
+                                        child: Image(
+                                          image: const AssetImage(
+                                              'assets/icons/x.png'),
+                                          width: 20.h,
+                                          height: 20.h,
+                                        )),
                                   ),
                                 ])
                               else if (selectedPlant != null) //안찍었는데 깟다왓어
@@ -158,11 +157,12 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                   ),
                                 )
                               else
-                                ImageBox(
-                                  imageUri: 'assets/images/pot.png',
+                                Image(
+                                  image:
+                                      const AssetImage('assets/images/pot.png'),
                                   width: 80.h,
                                   height: 80.h,
-                                ),
+                                )
                             ],
                           ),
                         ],

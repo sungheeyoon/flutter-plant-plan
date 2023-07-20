@@ -8,6 +8,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
+import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
@@ -151,7 +152,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
     return DefaultLayout(
       backgroundColor: const Color(0xFFF8F8F8),
-      title: '내 식물리스트',
+      title: '나의 식물',
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(24.h, 20.h, 24.h, 12.h),
         child: Column(
@@ -232,108 +233,118 @@ class PlantListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150.h,
-      height: 160.h,
-      padding: EdgeInsets.all(10.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(12.h),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0x1A000000),
-            offset: Offset(0, 8.h),
-            blurRadius: 8.h,
-            spreadRadius: 0,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DetailScreen(),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            width: 68.h,
-            height: 68.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28.h),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(data.imageUrl),
+        );
+      },
+      child: Container(
+        width: 150.h,
+        height: 160.h,
+        padding: EdgeInsets.all(10.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(12.h),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0x1A000000),
+              offset: Offset(0, 8.h),
+              blurRadius: 8.h,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 68.h,
+              height: 68.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28.h),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(data.imageUrl),
+                ),
               ),
             ),
-          ),
-          Text(
-            data.title,
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: grayBlack,
-                ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.h),
-              border: Border.all(width: 1.h, color: const Color(0xFFEDEDED)),
+            Text(
+              data.title,
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: grayBlack,
+                  ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.h),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (data.fields.isEmpty)
-                  Image.asset(
-                    'assets/icons/alarm_none.png',
-                    width: 16.h,
-                    height: 16.h,
-                  ),
-                if (data.fields.isEmpty) SizedBox(width: 4.h),
-                if (data.fields.isNotEmpty &&
-                    data.fields.length >
-                        1) // Add condition to have SizedBox only if there are multiple images
-                  SizedBox(width: 2.h), // Spacing between images
-                if (data.fields.contains(PlantField.watering))
-                  Image.asset(
-                    'assets/images/management/humid.png',
-                    width: 16.h,
-                    height: 16.h,
-                  ),
-                if (data.fields.contains(PlantField.repotting)) ...[
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.h),
+                border: Border.all(width: 1.h, color: const Color(0xFFEDEDED)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (data.fields.isEmpty)
+                    Image.asset(
+                      'assets/icons/alarm_none.png',
+                      width: 16.h,
+                      height: 16.h,
+                    ),
+                  if (data.fields.isEmpty) SizedBox(width: 4.h),
+                  if (data.fields.isNotEmpty &&
+                      data.fields.length >
+                          1) // Add condition to have SizedBox only if there are multiple images
+                    SizedBox(width: 2.h), // Spacing between images
                   if (data.fields.contains(PlantField.watering))
-                    SizedBox(width: 2.h), // Spacing between images
-                  Image.asset(
-                    'assets/images/management/repotting.png',
-                    width: 16.h,
-                    height: 16.h,
+                    Image.asset(
+                      'assets/images/management/humid.png',
+                      width: 16.h,
+                      height: 16.h,
+                    ),
+                  if (data.fields.contains(PlantField.repotting)) ...[
+                    if (data.fields.contains(PlantField.watering))
+                      SizedBox(width: 2.h), // Spacing between images
+                    Image.asset(
+                      'assets/images/management/repotting.png',
+                      width: 16.h,
+                      height: 16.h,
+                    ),
+                  ],
+                  if (data.fields.contains(PlantField.nutrient)) ...[
+                    if (data.fields.contains(PlantField.watering) ||
+                        data.fields.contains(PlantField.repotting))
+                      SizedBox(width: 2.h), // Spacing between images
+                    Image.asset(
+                      'assets/images/management/nutrient.png',
+                      width: 16.h,
+                      height: 16.h,
+                    ),
+                  ],
+                  if (data.fields
+                      .isNotEmpty) // Add condition to have SizedBox only if there are multiple images
+                    SizedBox(width: 8.h), // Space between images and text
+                  Text(
+                    data.fields.isEmpty
+                        ? '알림 없음'
+                        : data.dDay == 0
+                            ? 'TODAY'
+                            : 'D-${data.dDay}',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: data.fields.isEmpty
+                              ? const Color(0xFFDEDEDE)
+                              : grayColor700,
+                        ),
                   ),
                 ],
-                if (data.fields.contains(PlantField.nutrient)) ...[
-                  if (data.fields.contains(PlantField.watering) ||
-                      data.fields.contains(PlantField.repotting))
-                    SizedBox(width: 2.h), // Spacing between images
-                  Image.asset(
-                    'assets/images/management/nutrient.png',
-                    width: 16.h,
-                    height: 16.h,
-                  ),
-                ],
-                if (data.fields
-                    .isNotEmpty) // Add condition to have SizedBox only if there are multiple images
-                  SizedBox(width: 8.h), // Space between images and text
-                Text(
-                  data.fields.isEmpty
-                      ? '알림 없음'
-                      : data.dDay == 0
-                          ? 'TODAY'
-                          : 'D-${data.dDay}',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: data.fields.isEmpty
-                            ? const Color(0xFFDEDEDE)
-                            : grayColor700,
-                      ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
