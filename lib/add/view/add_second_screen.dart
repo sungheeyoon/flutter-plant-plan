@@ -13,7 +13,6 @@ import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 
 class AddSecondScreen extends ConsumerWidget {
@@ -103,8 +102,8 @@ class AddSecondScreen extends ConsumerWidget {
                               ),
                             )
                           else
-                            ImageBox(
-                              imageUri: 'assets/images/pot.png',
+                            Image(
+                              image: const AssetImage('assets/images/pot.png'),
                               width: 36.h,
                               height: 36.h,
                             ),

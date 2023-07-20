@@ -6,7 +6,6 @@ import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 
 class DatePickerWidget extends ConsumerWidget {
   final PlantField field;
@@ -123,8 +122,8 @@ class DatePickerWidget extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 4.0,
                 ),
-                child: ImageBox(
-                  imageUri: 'assets/icons/calendar_box.png',
+                child: Image(
+                  image: const AssetImage('assets/icons/calendar_box.png'),
                   width: 20.h,
                   height: 20.h,
                 ),

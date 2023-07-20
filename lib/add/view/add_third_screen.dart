@@ -18,7 +18,6 @@ import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/image_box.dart';
 import 'package:path/path.dart' as path;
 
 class AddThirdScreen extends ConsumerWidget {
@@ -169,8 +168,8 @@ class AddThirdScreen extends ConsumerWidget {
                           ),
                         )
                       else
-                        ImageBox(
-                          imageUri: 'assets/images/pot.png',
+                        Image(
+                          image: const AssetImage('assets/images/pot.png'),
                           width: 60.h,
                           height: 60.h,
                         ),
