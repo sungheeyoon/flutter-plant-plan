@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/list/view/info_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -101,11 +102,11 @@ class _DetailScreenState extends State<DetailScreen>
               ],
             ),
             SizedBox(
-              height: 200.h,
+              height: 400.h,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
-                  Center(child: Text('Tab 1 content')),
+                  InfoTab(),
                   Center(child: Text('Tab 2 content')),
                 ],
               ),
