@@ -1,12 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/list/view/info_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key});
+  final String id;
+  const DetailScreen({
+    super.key,
+    required this.id,
+  });
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -16,6 +25,7 @@ class _DetailScreenState extends State<DetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  late Future<UserInfoModel> info;
 
   @override
   void initState() {
@@ -26,10 +36,52 @@ class _DetailScreenState extends State<DetailScreen>
         _selectedIndex = _tabController.index;
       });
     });
+    info = fetchDetailData(widget.id);
+  }
+
+  Future<UserInfoModel> fetchDetailData(String id) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+    late UserInfoModel result;
+
+    if (user != null) {
+      final uid = user.uid;
+      final userDataSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(id)
+          .get();
+
+      final userData = userDataSnapshot.data();
+
+      if (userData != null) {
+        final info =
+            PlantInformationModel.fromJson(userData['plantInformation']);
+        final plant = PlantModel.fromJson({
+          'id': userData['id'],
+          'image': userData['image'],
+          'name': userData['name'],
+        });
+
+        result = UserInfoModel(
+          info: info,
+          plant: plant,
+          selectedPhotoUrl: userData['selectedPhotoUrl'],
+          docId: userData['docId'],
+        );
+      } else {
+        throw Exception('Data not found'); // 데이터를 찾지 못한 경우 예외 처리
+      }
+    } else {
+      throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외 처리
+    }
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.info.plant.name);
     return DefaultLayout(
       title: '내 식물',
       child: SingleChildScrollView(
@@ -102,7 +154,7 @@ class _DetailScreenState extends State<DetailScreen>
               ],
             ),
             SizedBox(
-              height: 400.h,
+              height: 800.h,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
