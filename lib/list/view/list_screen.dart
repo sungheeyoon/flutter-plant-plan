@@ -8,6 +8,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/common/provider/userInfoProvider.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -223,7 +224,7 @@ class VerticalLine extends StatelessWidget {
   }
 }
 
-class PlantListCard extends StatelessWidget {
+class PlantListCard extends ConsumerWidget {
   final ListCardModel data;
 
   const PlantListCard({
@@ -232,9 +233,10 @@ class PlantListCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        ref.read(detailProvider.notifier).patchDetail(data.id);
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,16 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/user_info_model.dart';
-import 'package:plant_plan/list/view/info_tab.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
+import 'package:plant_plan/list/view/detail_info_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class DetailScreen extends StatefulWidget {
+class DetailScreen extends ConsumerStatefulWidget {
   final String id;
   const DetailScreen({
     super.key,
@@ -18,10 +16,10 @@ class DetailScreen extends StatefulWidget {
   });
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  ConsumerState<DetailScreen> createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen>
+class _DetailScreenState extends ConsumerState<DetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
@@ -36,52 +34,10 @@ class _DetailScreenState extends State<DetailScreen>
         _selectedIndex = _tabController.index;
       });
     });
-    info = fetchDetailData(widget.id);
-  }
-
-  Future<UserInfoModel> fetchDetailData(String id) async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final user = auth.currentUser;
-    late UserInfoModel result;
-
-    if (user != null) {
-      final uid = user.uid;
-      final userDataSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('plants')
-          .doc(id)
-          .get();
-
-      final userData = userDataSnapshot.data();
-
-      if (userData != null) {
-        final info =
-            PlantInformationModel.fromJson(userData['plantInformation']);
-        final plant = PlantModel.fromJson({
-          'id': userData['id'],
-          'image': userData['image'],
-          'name': userData['name'],
-        });
-
-        result = UserInfoModel(
-          info: info,
-          plant: plant,
-          selectedPhotoUrl: userData['selectedPhotoUrl'],
-          docId: userData['docId'],
-        );
-      } else {
-        throw Exception('Data not found'); // 데이터를 찾지 못한 경우 예외 처리
-      }
-    } else {
-      throw Exception('User not logged in'); // 사용자가 로그인하지 않은 경우 예외 처리
-    }
-    return result;
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.info.plant.name);
     return DefaultLayout(
       title: '내 식물',
       child: SingleChildScrollView(
@@ -158,7 +114,7 @@ class _DetailScreenState extends State<DetailScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: const [
-                  InfoTab(),
+                  DetailInfoTab(),
                   Center(child: Text('Tab 2 content')),
                 ],
               ),
@@ -170,19 +126,20 @@ class _DetailScreenState extends State<DetailScreen>
   }
 }
 
-class PlantDetailCard extends StatefulWidget {
+class PlantDetailCard extends ConsumerStatefulWidget {
   const PlantDetailCard({
     super.key,
   });
 
   @override
-  State<PlantDetailCard> createState() => _PlantDetailCardState();
+  ConsumerState<PlantDetailCard> createState() => _PlantDetailCardState();
 }
 
-class _PlantDetailCardState extends State<PlantDetailCard> {
+class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
   bool isFavorited = false;
   @override
   Widget build(BuildContext context) {
+    final UserInfoModel? data = ref.watch(detailProvider);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -207,12 +164,17 @@ class _PlantDetailCardState extends State<PlantDetailCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(24.h),
-                child: Image(
-                  image: const AssetImage('assets/images/pot.png'),
-                  width: 60.h,
-                  height: 60.h,
+              Container(
+                width: 60.h,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24.h),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(data?.selectedPhotoUrl == ""
+                        ? data?.plant.image ?? ''
+                        : data?.selectedPhotoUrl ?? ''),
+                  ),
                 ),
               ),
               SizedBox(
@@ -220,18 +182,21 @@ class _PlantDetailCardState extends State<PlantDetailCard> {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (data?.info.alias != null && data?.info.alias != "")
+                    Text(
+                      data?.info.alias ?? '',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: keyColor700,
+                          ),
+                    ),
+                  if (data?.info.alias != null && data?.info.alias != "")
+                    SizedBox(
+                      height: 6.h,
+                    ),
                   Text(
-                    "테스트안시려",
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: keyColor700,
-                        ),
-                  ),
-                  SizedBox(
-                    height: 6.h,
-                  ),
-                  Text(
-                    "테스트안시려",
+                    data?.plant.name ?? '',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: grayBlack,
                         ),

@@ -293,9 +293,9 @@ class AlarmBox extends ConsumerWidget {
                     CircleAvatar(
                       radius: 8.h,
                       backgroundColor: pointColor2,
-                      child: Icon(
+                      child: const Icon(
                         Icons.add, // 플러스 아이콘
-                        size: 16.h, // 아이콘 크기 설정
+                        size: 16, // 아이콘 크기 설정
                         color: Colors.white, // 아이콘 색상 설정
                       ),
                     )
