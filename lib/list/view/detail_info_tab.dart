@@ -5,14 +5,14 @@ import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/list/wideget/infoTipButton.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class InfoTab extends StatefulWidget {
-  const InfoTab({super.key});
+class DetailInfoTab extends StatefulWidget {
+  const DetailInfoTab({super.key});
 
   @override
-  State<InfoTab> createState() => _InfoTabState();
+  State<DetailInfoTab> createState() => _InfoTabState();
 }
 
-class _InfoTabState extends State<InfoTab> {
+class _InfoTabState extends State<DetailInfoTab> {
   @override
   Widget build(BuildContext context) {
     return Column(
