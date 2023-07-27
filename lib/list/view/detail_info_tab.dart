@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/model/plant_information_model.dart';
 import 'package:plant_plan/add/provider/plant_information_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/wideget/infoTipButton.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -86,13 +90,46 @@ class SettingAlarm extends StatelessWidget {
   }
 }
 
-class UpcomingAlarm extends StatelessWidget {
+class UpcomingAlarm extends ConsumerWidget {
   const UpcomingAlarm({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserInfoModel? userInfo = ref.watch(detailProvider);
+    String watering = "";
+    String repotting = "";
+    String nutrient = "";
+    List<Alarm> alarms = [];
+    if (userInfo != null) {
+      DateTime today = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      );
+      alarms = userInfo.info.alarms;
+      for (final alarm in alarms) {
+        DateTime alarmDay = DateTime(
+          alarm.startTime.year,
+          alarm.startTime.month,
+          alarm.startTime.day,
+        );
+        while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
+          alarmDay = alarmDay.add(Duration(days: alarm.repeat));
+        }
+
+        int difference = today.difference(alarmDay).inDays.abs();
+        if (alarm.field == PlantField.watering) {
+          watering = difference == 0 ? 'TODAY' : 'D-$difference';
+        } else if (alarm.field == PlantField.repotting) {
+          repotting = difference == 0 ? 'TODAY' : 'D-$difference';
+        } else if (alarm.field == PlantField.nutrient) {
+          nutrient = difference == 0 ? 'TODAY' : 'D-$difference';
+        }
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,9 +174,10 @@ class UpcomingAlarm extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    "TODAY",
+                    watering == "" ? '알림 없음' : watering,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: grayBlack,
+                          color: watering == "" ? grayColor400 : grayBlack,
+                          fontSize: 16,
                         ),
                   ),
                 ],
@@ -172,9 +210,10 @@ class UpcomingAlarm extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    "D-60",
+                    repotting == "" ? '알림 없음' : repotting,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: grayBlack,
+                          color: repotting == "" ? grayColor400 : grayBlack,
+                          fontSize: 16,
                         ),
                   ),
                 ],
@@ -207,9 +246,10 @@ class UpcomingAlarm extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    "TODAY",
+                    nutrient == "" ? '알림 없음' : nutrient,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: grayBlack,
+                          color: nutrient == "" ? grayColor400 : grayBlack,
+                          fontSize: 16,
                         ),
                   ),
                 ],

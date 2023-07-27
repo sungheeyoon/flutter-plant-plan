@@ -177,7 +177,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12.h,
                 mainAxisSpacing: 12.h,
-                childAspectRatio: 150 / 160,
+                childAspectRatio: 150.w / 160.h,
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -289,6 +289,7 @@ class PlantListCard extends ConsumerWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.h),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (data.fields.isEmpty)
@@ -297,39 +298,30 @@ class PlantListCard extends ConsumerWidget {
                       width: 16.h,
                       height: 16.h,
                     ),
-                  if (data.fields.isEmpty) SizedBox(width: 4.h),
-                  if (data.fields.isNotEmpty &&
-                      data.fields.length >
-                          1) // Add condition to have SizedBox only if there are multiple images
-                    SizedBox(width: 2.h), // Spacing between images
                   if (data.fields.contains(PlantField.watering))
                     Image.asset(
                       'assets/images/management/humid.png',
-                      width: 16.h,
-                      height: 16.h,
+                      width: 14.h,
+                      height: 14.h,
+                      fit: BoxFit.contain,
                     ),
-                  if (data.fields.contains(PlantField.repotting)) ...[
-                    if (data.fields.contains(PlantField.watering))
-                      SizedBox(width: 2.h), // Spacing between images
+                  if (data.fields.contains(PlantField.repotting))
                     Image.asset(
                       'assets/images/management/repotting.png',
-                      width: 16.h,
-                      height: 16.h,
+                      width: 14.h,
+                      height: 14.h,
+                      fit: BoxFit.contain,
                     ),
-                  ],
-                  if (data.fields.contains(PlantField.nutrient)) ...[
-                    if (data.fields.contains(PlantField.watering) ||
-                        data.fields.contains(PlantField.repotting))
-                      SizedBox(width: 2.h), // Spacing between images
+                  if (data.fields.contains(PlantField.nutrient))
                     Image.asset(
                       'assets/images/management/nutrient.png',
-                      width: 16.h,
-                      height: 16.h,
+                      width: 14.h,
+                      height: 14.h,
+                      fit: BoxFit.contain,
                     ),
-                  ],
-                  if (data.fields
-                      .isNotEmpty) // Add condition to have SizedBox only if there are multiple images
-                    SizedBox(width: 8.h), // Space between images and text
+                  SizedBox(
+                    width: 6.h,
+                  ),
                   Text(
                     data.fields.isEmpty
                         ? '알림 없음'
