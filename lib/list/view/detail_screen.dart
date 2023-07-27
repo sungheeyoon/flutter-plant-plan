@@ -110,7 +110,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               ],
             ),
             SizedBox(
-              height: 800.h,
+              height: 820.h,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
