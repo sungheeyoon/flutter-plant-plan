@@ -12,6 +12,8 @@ import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/user_info_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 
@@ -182,6 +184,7 @@ class AddSecondScreen extends ConsumerWidget {
                 iconPath: 'assets/images/management/humid.png',
                 title: '물주기',
                 field: PlantField.watering,
+                isDetail: false,
               ),
               SizedBox(
                 height: 12.h,
@@ -190,6 +193,7 @@ class AddSecondScreen extends ConsumerWidget {
                 iconPath: 'assets/images/management/repotting.png',
                 title: '분갈이',
                 field: PlantField.repotting,
+                isDetail: false,
               ),
               SizedBox(
                 height: 12.h,
@@ -198,6 +202,7 @@ class AddSecondScreen extends ConsumerWidget {
                 iconPath: 'assets/images/management/nutrient.png',
                 title: '영양제',
                 field: PlantField.nutrient,
+                isDetail: false,
               ),
               SizedBox(
                 height: 12.h,
@@ -223,21 +228,27 @@ class AlarmBox extends ConsumerWidget {
   final String iconPath;
   final String title;
   final PlantField field;
+  final bool isDetail;
 
   const AlarmBox({
     super.key,
     required this.iconPath,
     required this.title,
     required this.field,
+    required this.isDetail,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantInformationModel plantState =
         ref.watch(plantInformationProvider);
+    final UserInfoModel? datailState = ref.watch(detailProvider);
+
+    final List<Alarm>? alarms =
+        isDetail ? datailState?.info.alarms : plantState.alarms;
 
     final Alarm? alarmState =
-        plantState.alarms.firstWhereOrNull((alarm) => alarm.field == field);
+        alarms?.firstWhereOrNull((alarm) => alarm.field == field);
 
     return GestureDetector(
       onTap: () {
@@ -255,7 +266,7 @@ class AlarmBox extends ConsumerWidget {
       child: Center(
         child: Container(
           width: 360.w,
-          padding: EdgeInsets.all(16.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.h),
           decoration: BoxDecoration(
             color: grayColor100,
             borderRadius: BorderRadius.circular(16.h),
@@ -268,6 +279,7 @@ class AlarmBox extends ConsumerWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -279,7 +291,7 @@ class AlarmBox extends ConsumerWidget {
                         height: 20.h,
                       ),
                       SizedBox(
-                        height: 4.h,
+                        width: 4.h,
                       ),
                       Text(
                         title,
@@ -298,7 +310,19 @@ class AlarmBox extends ConsumerWidget {
                         size: 16, // 아이콘 크기 설정
                         color: Colors.white, // 아이콘 색상 설정
                       ),
-                    )
+                    ),
+                  if (alarmState != null && isDetail)
+                    SizedBox(
+                      width: 50,
+                      height: 20,
+                      child: Switch(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        value: alarmState.isOn,
+                        onChanged: (value) {},
+                        activeTrackColor: primaryColor.withOpacity(0.4),
+                        activeColor: primaryColor,
+                      ),
+                    ),
                 ],
               ),
               if (alarmState != null && alarmState.isOn)
@@ -401,18 +425,7 @@ class AlarmBox extends ConsumerWidget {
                               width: 18.h,
                               height: 18.h,
                             ),
-                          )
-                          //스위치버튼 추가예정
-                          // Switch(
-                          //   value: alarmState.isOn,
-                          //   onChanged: (value) {
-                          //     ref
-                          //         .read(plantInformationProvider.notifier)
-                          //         .updatePlantField(field, toggleIsOn: true);
-                          //   },
-                          //   activeTrackColor: primaryColor.withOpacity(0.4),
-                          //   activeColor: primaryColor,
-                          // ),
+                          ),
                         ],
                       ),
                     )
