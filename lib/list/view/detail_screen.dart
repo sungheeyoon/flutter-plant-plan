@@ -26,6 +26,12 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
   late Future<UserInfoModel> info;
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
@@ -109,15 +115,15 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                 ),
               ],
             ),
-            SizedBox(
-              height: 820.h,
-              child: TabBarView(
-                controller: _tabController,
-                children: const [
-                  DetailInfoTab(),
-                  Center(child: Text('Tab 2 content')),
-                ],
-              ),
+            IndexedStack(
+              index: _selectedIndex,
+              children: [
+                Visibility(
+                  visible: _selectedIndex == 0,
+                  child: const DetailInfoTab(),
+                ),
+                const Center(child: Text('Tab 2 content')),
+              ],
             ),
           ],
         ),

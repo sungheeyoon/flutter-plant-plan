@@ -39,6 +39,9 @@ class _InfoTabState extends State<DetailInfoTab> {
           height: 40.h,
         ),
         const TipsWidget(),
+        SizedBox(
+          height: 80.h,
+        )
       ],
     );
   }
@@ -68,6 +71,7 @@ class SettingAlarm extends StatelessWidget {
           iconPath: 'assets/images/management/humid.png',
           title: '물주기',
           field: PlantField.watering,
+          isDetail: true,
         ),
         SizedBox(
           height: 12.h,
@@ -76,6 +80,7 @@ class SettingAlarm extends StatelessWidget {
           iconPath: 'assets/images/management/repotting.png',
           title: '분갈이',
           field: PlantField.repotting,
+          isDetail: true,
         ),
         SizedBox(
           height: 12.h,
@@ -84,6 +89,7 @@ class SettingAlarm extends StatelessWidget {
           iconPath: 'assets/images/management/nutrient.png',
           title: '영양제',
           field: PlantField.nutrient,
+          isDetail: true,
         ),
       ],
     );
