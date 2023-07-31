@@ -1,33 +1,26 @@
-import 'package:json_annotation/json_annotation.dart';
-
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/diary_model.dart';
+import 'package:plant_plan/add/model/information_model.dart';
+import 'package:plant_plan/common/utils/timestamp_serializer.dart';
+part 'plant_model.freezed.dart';
 part 'plant_model.g.dart';
 
-abstract class PlantModelBase {}
-
-class PlantModelError extends PlantModelBase {
-  final String message;
-
-  PlantModelError({
-    required this.message,
-  });
-}
-
-class PlantModelLoading extends PlantModelBase {}
-
-@JsonSerializable()
-class PlantModel extends PlantModelBase {
-  final int id;
-  final String name;
-  final String image;
-
-  PlantModel({
-    required this.id,
-    required this.name,
-    required this.image,
-  });
+@freezed
+class PlantModel with _$PlantModel {
+  factory PlantModel({
+    @Default("") String docId,
+    @Default("") String userImageUrl,
+    @Default("") String alias,
+    @Default(false) bool favorite,
+    @TimestampSerializer() @Default(null) DateTime? watringLastDay,
+    @TimestampSerializer() @Default(null) DateTime? repottingLastDay,
+    @TimestampSerializer() @Default(null) DateTime? nutrientLastDay,
+    required InformationModel information,
+    @Default([]) List<DiaryModel> diary,
+    @Default([]) List<AlarmModel> alarms,
+  }) = _PlantModel;
 
   factory PlantModel.fromJson(Map<String, dynamic> json) =>
       _$PlantModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PlantModelToJson(this);
 }

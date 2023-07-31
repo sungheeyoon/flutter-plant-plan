@@ -147,7 +147,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                         )),
                                   ),
                                 ])
-                              else if (selectedPlant != null) //안찍었는데 깟다왓어
+                              else if (selectedPlant != null) //안찍었는데 갔다옴
                                 FittedBox(
                                   fit: BoxFit.contain,
                                   child: CircleAvatar(
