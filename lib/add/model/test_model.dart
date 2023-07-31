@@ -1,72 +1,44 @@
-//backup
-
-// import 'package:freezed_annotation/freezed_annotation.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:uuid/uuid.dart';
-// part 'plant_information_model.freezed.dart';
-// part 'plant_information_model.g.dart';
-
-// @freezed
-// class PlantInformationModel with _$PlantInformationModel {
-//   factory PlantInformationModel({
-//     @Default("") String alias,
-//     required PlantInformationKey watering,
-//     required PlantInformationKey repotting,
-//     required PlantInformationKey nutrient,
-//   }) = _PlantInformationModel;
-
-//   factory PlantInformationModel.fromJson(Map<String, dynamic> json) =>
-//       _$PlantInformationModelFromJson(json);
-// }
-
-// @freezed
-// class PlantInformationKey with _$PlantInformationKey {
-//   factory PlantInformationKey({
-//     @TimestampSerializer() @Default(null) DateTime? lastDay,
-//     required Alarm alarm,
-//   }) = _PlantInformationKey;
-
-//   factory PlantInformationKey.fromJson(Map<String, dynamic> json) =>
-//       _$PlantInformationKeyFromJson(json);
-// }
-
-// @freezed
-// class Alarm with _$Alarm {
-//   factory Alarm({
-//     @Default('') String id,
-//     @TimestampSerializer() required DateTime startTime,
-//     @Default(0) int repeat,
-//     @Default('') String title,
-//     @Default(false) bool isOn,
-//     @Default([]) List<DateTime> offDates,
-//   }) = _Alarm;
-
-//   factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
-
-//   factory Alarm.newAlarm({
-//     required DateTime startTime,
-//     int repeat = 0,
-//     String title = '',
-//     bool isOn = false,
-//     List<DateTime> offDates = const [],
-//   }) {
-//     return Alarm(
-//       id: const Uuid().v4(),
-//       startTime: startTime,
-//       repeat: repeat,
-//       title: title,
-//       isOn: isOn,
-//       offDates: offDates,
-//     );
-//   }
-// }
-
-// class TimestampSerializer implements JsonConverter<DateTime, dynamic> {
-//   const TimestampSerializer();
-
-//   @override
-//   DateTime fromJson(dynamic timestamp) => timestamp.toDate();
-
-//   @override
-//   Timestamp toJson(DateTime date) => Timestamp.fromDate(date);
-// }
+//PlantModel
+final data = {
+  "docId": "8jGGOWwgaG1Q3XCM2Hft",
+  "userImageUrl": "",
+  "alias": "별칭",
+  "watringLastDay": "2023년 7월 16일 오후 11시 55분 53초 UTC+9",
+  "repottingLastDay": "2023년 7월 16일 오후 11시 55분 53초 UTC+9",
+  "nutrientLastDay": "2023년 7월 16일 오후 11시 55분 53초 UTC+9",
+  "favorite": false,
+  //InformationModel
+  "plant": {
+    "id": 7,
+    "imageUrl":
+        'https://firebasestorage.googleapis.com/v0/b/plant-project-33dbe.appspot.com/o/images%2F1676546459731154?alt=media&token=0752b960-04a7-4043-aaa3-2cf9b3788a22',
+    "name": "다육이",
+    "tips": {
+      "watring": {"title": "흙이 바싹", "context": "빠르게~~~"},
+      "sun": {"title": "흙이 바싹", "context": "빠르게~~~"}
+    }
+  },
+  "diary": [
+    //DiaryModel
+    {
+      "date": "2023년 7월 16일 오후 11시 55분 53초 UTC+9",
+      "emoji": "sad",
+      "title": "반짝반짝 빛나는",
+      "imageUrl": [],
+      "context": "",
+      "bookMark": "",
+    },
+  ],
+  "alarms": [
+    //AlarmModel
+    {
+      "field": "repotting",
+      "id": "dbd28f99-33a7-4399-bc6c-98e3283234b1",
+      "isOn": true,
+      "offDates": [],
+      "repeat": 1,
+      "startTime": "2023년 7월 16일 오후 11시 55분 53초 UTC+9",
+      "title": "ㅎㅎㅎㅎ",
+    }
+  ],
+};

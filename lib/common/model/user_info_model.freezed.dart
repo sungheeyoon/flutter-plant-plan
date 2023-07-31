@@ -43,7 +43,7 @@ abstract class $UserInfoModelCopyWith<$Res> {
       String selectedPhotoUrl,
       String docId});
 
-  $PlantInformationModelCopyWith<$Res> get info;
+  $PlantModelCopyWith<$Res> get plant;
 }
 
 /// @nodoc
@@ -59,13 +59,13 @@ class _$UserInfoModelCopyWithImpl<$Res, $Val extends UserInfoModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? info = null,
+    Object? info = freezed,
     Object? plant = null,
     Object? selectedPhotoUrl = null,
     Object? docId = null,
   }) {
     return _then(_value.copyWith(
-      info: null == info
+      info: freezed == info
           ? _value.info
           : info // ignore: cast_nullable_to_non_nullable
               as PlantInformationModel,
@@ -86,9 +86,9 @@ class _$UserInfoModelCopyWithImpl<$Res, $Val extends UserInfoModel>
 
   @override
   @pragma('vm:prefer-inline')
-  $PlantInformationModelCopyWith<$Res> get info {
-    return $PlantInformationModelCopyWith<$Res>(_value.info, (value) {
-      return _then(_value.copyWith(info: value) as $Val);
+  $PlantModelCopyWith<$Res> get plant {
+    return $PlantModelCopyWith<$Res>(_value.plant, (value) {
+      return _then(_value.copyWith(plant: value) as $Val);
     });
   }
 }
@@ -108,7 +108,7 @@ abstract class _$$_UserInfoModelCopyWith<$Res>
       String docId});
 
   @override
-  $PlantInformationModelCopyWith<$Res> get info;
+  $PlantModelCopyWith<$Res> get plant;
 }
 
 /// @nodoc
@@ -122,13 +122,13 @@ class __$$_UserInfoModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? info = null,
+    Object? info = freezed,
     Object? plant = null,
     Object? selectedPhotoUrl = null,
     Object? docId = null,
   }) {
     return _then(_$_UserInfoModel(
-      info: null == info
+      info: freezed == info
           ? _value.info
           : info // ignore: cast_nullable_to_non_nullable
               as PlantInformationModel,
@@ -179,7 +179,7 @@ class _$_UserInfoModel implements _UserInfoModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UserInfoModel &&
-            (identical(other.info, info) || other.info == info) &&
+            const DeepCollectionEquality().equals(other.info, info) &&
             (identical(other.plant, plant) || other.plant == plant) &&
             (identical(other.selectedPhotoUrl, selectedPhotoUrl) ||
                 other.selectedPhotoUrl == selectedPhotoUrl) &&
@@ -188,8 +188,12 @@ class _$_UserInfoModel implements _UserInfoModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, info, plant, selectedPhotoUrl, docId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(info),
+      plant,
+      selectedPhotoUrl,
+      docId);
 
   @JsonKey(ignore: true)
   @override

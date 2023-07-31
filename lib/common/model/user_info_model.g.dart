@@ -8,8 +8,7 @@ part of 'user_info_model.dart';
 
 _$_UserInfoModel _$$_UserInfoModelFromJson(Map<String, dynamic> json) =>
     _$_UserInfoModel(
-      info:
-          PlantInformationModel.fromJson(json['info'] as Map<String, dynamic>),
+      info: json['info'],
       plant: PlantModel.fromJson(json['plant'] as Map<String, dynamic>),
       selectedPhotoUrl: json['selectedPhotoUrl'] as String,
       docId: json['docId'] as String,
