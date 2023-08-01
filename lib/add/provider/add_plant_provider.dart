@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/information_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 
 enum PlantField {
   watering,
@@ -8,18 +10,27 @@ enum PlantField {
   none,
 }
 
-final plantInformationProvider =
-    StateNotifierProvider<PlantInformationNotifier, PlantInformationModel>(
+final addPlantProvider = StateNotifierProvider<AddPlantNotifier, PlantModel>(
   (ref) {
-    return PlantInformationNotifier();
+    return AddPlantNotifier();
   },
 );
 
-class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
-  PlantInformationNotifier()
+class AddPlantNotifier extends StateNotifier<PlantModel> {
+  AddPlantNotifier()
       : super(
-          PlantInformationModel(),
+          PlantModel(
+            information: InformationModel(),
+          ),
         );
+
+  void updateInformation(InformationModel information) {
+    state = state.copyWith(information: information);
+  }
+
+  void resetInformation() {
+    state = state.copyWith(information: InformationModel());
+  }
 
   void updateLastDay(
     PlantField field,
@@ -45,7 +56,7 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
   }
 
   void updateIsOn(String id) {
-    final updatedAlarms = List<Alarm>.from(state.alarms);
+    final updatedAlarms = List<AlarmModel>.from(state.alarms);
     for (int i = 0; i < updatedAlarms.length; i++) {
       if (updatedAlarms[i].id == id) {
         updatedAlarms[i] =
@@ -56,8 +67,8 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = state.copyWith(alarms: updatedAlarms);
   }
 
-  void updateAlarm(String id, Alarm newAlarm) {
-    final updatedAlarms = List<Alarm>.from(state.alarms);
+  void updateAlarm(String id, AlarmModel newAlarm) {
+    final updatedAlarms = List<AlarmModel>.from(state.alarms);
     bool found = false;
 
     for (int i = 0; i < updatedAlarms.length; i++) {
@@ -76,7 +87,7 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
   }
 
   void alarmDelete(String id) {
-    final updatedAlarms = List<Alarm>.from(state.alarms);
+    final updatedAlarms = List<AlarmModel>.from(state.alarms);
     for (int i = 0; i < updatedAlarms.length; i++) {
       if (updatedAlarms[i].id == id) {
         updatedAlarms.removeAt(i);
@@ -86,11 +97,13 @@ class PlantInformationNotifier extends StateNotifier<PlantInformationModel> {
     state = state.copyWith(alarms: updatedAlarms);
   }
 
-  void alarmAdd(Alarm alarm) {
+  void alarmAdd(AlarmModel alarm) {
     state.alarms.add(alarm);
   }
 
   void reset() {
-    state = PlantInformationModel();
+    state = PlantModel(
+      information: InformationModel(),
+    );
   }
 }
