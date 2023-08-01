@@ -57,6 +57,8 @@ abstract class $PlantModelCopyWith<$Res> {
       InformationModel information,
       List<DiaryModel> diary,
       List<AlarmModel> alarms});
+
+  $InformationModelCopyWith<$Res> get information;
 }
 
 /// @nodoc
@@ -126,6 +128,14 @@ class _$PlantModelCopyWithImpl<$Res, $Val extends PlantModel>
               as List<AlarmModel>,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $InformationModelCopyWith<$Res> get information {
+    return $InformationModelCopyWith<$Res>(_value.information, (value) {
+      return _then(_value.copyWith(information: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -147,6 +157,9 @@ abstract class _$$_PlantModelCopyWith<$Res>
       InformationModel information,
       List<DiaryModel> diary,
       List<AlarmModel> alarms});
+
+  @override
+  $InformationModelCopyWith<$Res> get information;
 }
 
 /// @nodoc

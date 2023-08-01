@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
@@ -14,7 +15,6 @@ import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/utils/image_helper.dart';
 
 class AddFirstScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addFirst';
@@ -31,23 +31,20 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
   @override
   void initState() {
     super.initState();
-    final PlantInformationModel plantState = ref.read(plantInformationProvider);
+    final PlantModel plantState = ref.read(addPlantProvider);
     textController.text = plantState.alias;
-    // TextEditingController 생성
   }
 
   @override
   void dispose() {
-    // TextEditingController 해제
     textController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedPlant = ref.watch(selectedPlantProvider);
-    final selectedPhoto = ref.watch(photoProvider);
-    final imageHelper = ImageHelper();
+    final PlantModel plantState = ref.read(addPlantProvider);
+    final File? photoState = ref.watch(photoProvider);
 
     return DefaultLayout(
       title: '식물추가',
@@ -57,14 +54,15 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
           ref.read(selectedPlantProvider.notifier).reset();
           ref.read(photoProvider.notifier).reset();
           ref.read(alarmProvider.notifier).reset();
-          ref.read(plantInformationProvider.notifier).reset();
+          ref.read(addPlantProvider.notifier).reset();
           Navigator.pop(context);
         },
       ),
       floatingActionButton: RoundedButton(
         font: Theme.of(context).textTheme.bodyLarge,
-        backgroundColor: selectedPlant != null ? pointColor2 : grayColor300,
-        borderColor: selectedPlant != null
+        backgroundColor:
+            plantState.information.id != "" ? pointColor2 : grayColor300,
+        borderColor: plantState.information.id != ""
             ? pointColor2.withOpacity(
                 0.5,
               )
@@ -74,7 +72,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
         textColor: Colors.white,
         name: '다음',
         onPressed: () async {
-          if (selectedPlant != null) {
+          if (plantState.information.id != "") {
             Navigator.pushNamed(context, AddSecondScreen.routeName);
           }
           setState(() {});
@@ -92,13 +90,13 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               SizedBox(
                 height: 8.h,
               ),
-              // top prograss bar
+
               const ProgressBar(pageIndex: 0),
 
               SizedBox(
                 height: 20.h,
               ),
-              // photo and search box
+
               Center(
                 child: Container(
                   width: 360.w,
@@ -121,13 +119,13 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                         children: [
                           Stack(
                             children: [
-                              if (selectedPhoto != null) //찍은애
+                              if (photoState != null)
                                 Stack(children: [
                                   FittedBox(
                                     fit: BoxFit.contain,
                                     child: CircleAvatar(
                                       radius: 40.h, // Image radius
-                                      backgroundImage: FileImage(selectedPhoto),
+                                      backgroundImage: FileImage(photoState),
                                     ),
                                   ),
                                   Positioned(
@@ -147,13 +145,14 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                         )),
                                   ),
                                 ])
-                              else if (selectedPlant != null) //안찍었는데 갔다옴
+                              else if (plantState.information.imageUrl !=
+                                  "") //안찍었는데 갔다옴
                                 FittedBox(
                                   fit: BoxFit.contain,
                                   child: CircleAvatar(
                                     radius: 40.h, // Image radius
-                                    backgroundImage:
-                                        NetworkImage(selectedPlant.image),
+                                    backgroundImage: NetworkImage(
+                                        plantState.information.imageUrl),
                                   ),
                                 )
                               else
@@ -167,14 +166,14 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                           ),
                         ],
                       ),
-                      if (selectedPlant != null)
+                      if (plantState.information.name != "")
                         Column(
                           children: [
                             SizedBox(
                               height: 8.h,
                             ),
                             Text(
-                              selectedPlant.name,
+                              plantState.information.name,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
@@ -239,19 +238,9 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                       ),
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        final file = await imageHelper
-                                            .pickImage(camera: true);
-                                        if (file != null) {
-                                          final croppedFile =
-                                              await imageHelper.crop(
-                                                  file: file,
-                                                  cropStyle: CropStyle.circle);
-                                          if (croppedFile != null) {
-                                            ref
-                                                .read(photoProvider.notifier)
-                                                .setPhoto(croppedFile.path);
-                                          }
-                                        }
+                                        ref
+                                            .read(photoProvider.notifier)
+                                            .setNewPhoto(camera: true);
                                       },
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
@@ -278,19 +267,9 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                                       ),
                                       onPressed: () async {
                                         Navigator.pop(context);
-                                        final file =
-                                            await imageHelper.pickImage();
-                                        if (file != null) {
-                                          final croppedFile =
-                                              await imageHelper.crop(
-                                                  file: file,
-                                                  cropStyle: CropStyle.circle);
-                                          if (croppedFile != null) {
-                                            ref
-                                                .read(photoProvider.notifier)
-                                                .setPhoto(croppedFile.path);
-                                          }
-                                        }
+                                        ref
+                                            .read(photoProvider.notifier)
+                                            .setNewPhoto(camera: false);
                                       },
                                       child: Align(
                                         alignment: const Alignment(-1.0, 0.0),
@@ -336,9 +315,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                     child: TextFormField(
                       controller: textController,
                       onChanged: (text) {
-                        ref
-                            .read(plantInformationProvider.notifier)
-                            .updateAlias(text);
+                        ref.read(addPlantProvider.notifier).updateAlias(text);
                       },
                       textAlignVertical: TextAlignVertical.center,
                       textAlign: TextAlign.start,
@@ -426,9 +403,6 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 hintText: '마지막으로 영양제 준 날을 선택해주세요',
                 labelText: '영양제',
               ),
-
-              // ElevatedButton(
-              //     onPressed: uploadFile, child: const Text("예비 업로드버튼")),
             ],
           ),
         ),

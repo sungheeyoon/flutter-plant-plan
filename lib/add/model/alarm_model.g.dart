@@ -17,7 +17,7 @@ _$_AlarmModel _$$_AlarmModelFromJson(Map<String, dynamic> json) =>
               ?.map((e) => DateTime.parse(e as String))
               .toList() ??
           const [],
-      field: $enumDecode(_$PlantFieldEnumMap, json['field']),
+      field: json['field'],
     );
 
 Map<String, dynamic> _$$_AlarmModelToJson(_$_AlarmModel instance) =>
@@ -28,12 +28,5 @@ Map<String, dynamic> _$$_AlarmModelToJson(_$_AlarmModel instance) =>
       'title': instance.title,
       'isOn': instance.isOn,
       'offDates': instance.offDates.map((e) => e.toIso8601String()).toList(),
-      'field': _$PlantFieldEnumMap[instance.field]!,
+      'field': instance.field,
     };
-
-const _$PlantFieldEnumMap = {
-  PlantField.watering: 'watering',
-  PlantField.repotting: 'repotting',
-  PlantField.nutrient: 'nutrient',
-  PlantField.none: 'none',
-};

@@ -1,33 +1,33 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:plant_plan/add/model/tip_model.dart';
 
+part 'information_model.freezed.dart';
 part 'information_model.g.dart';
 
-abstract class InformationModelBase {}
-
-class InformationModelError extends InformationModelBase {
-  final String message;
-
-  InformationModelError({
-    required this.message,
-  });
-}
-
-class InformationModelLoading extends InformationModelBase {}
-
-@JsonSerializable()
-class InformationModel extends InformationModelBase {
-  final int id;
-  final String name;
-  final String imageUrl;
-
-  InformationModel({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-  });
+@freezed
+class InformationModel with _$InformationModel {
+  factory InformationModel({
+    @Default('') String id,
+    @Default('') String name,
+    @Default('') String imageUrl,
+    @Default([]) List<TipModel> tips,
+  }) = _InformationModel;
 
   factory InformationModel.fromJson(Map<String, dynamic> json) =>
       _$InformationModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$InformationModelToJson(this);
+  // Tips를 구체화해서 모양을 잡아놓을지 아니면 빈어레이로둘지 결정중.
+  // factory InformationModel.withDefaultTips({
+  //   String id = '',
+  //   String name = '',
+  //   String imageUrl = '',
+  // }) =>
+  //     InformationModel(
+  //       id: id,
+  //       name: name,
+  //       imageUrl: imageUrl,
+  //       tips: [
+
+  //       ]
+  //     );
 }
