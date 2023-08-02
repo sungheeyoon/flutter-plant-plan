@@ -55,6 +55,14 @@ class AddPlantNotifier extends StateNotifier<PlantModel> {
     state = state.copyWith(alias: newAlias);
   }
 
+  void updateDocId(String docId) {
+    state = state.copyWith(docId: docId);
+  }
+
+  void updateUserImageUrl(String userImageUrl) {
+    state = state.copyWith(userImageUrl: userImageUrl);
+  }
+
   void updateIsOn(String id) {
     final updatedAlarms = List<AlarmModel>.from(state.alarms);
     for (int i = 0; i < updatedAlarms.length; i++) {

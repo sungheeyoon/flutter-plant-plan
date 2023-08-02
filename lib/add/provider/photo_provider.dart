@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/utils/image_helper.dart';
+import 'package:path/path.dart' as path;
 
 final photoProvider = StateNotifierProvider<PhotoNotifier, File?>((ref) {
   return PhotoNotifier();
@@ -34,6 +36,22 @@ class PhotoNotifier extends StateNotifier<File?> {
         final pickedPhoto = XFile(croppedFile.path);
         state = File(pickedPhoto.path);
       }
+    }
+  }
+
+  Future<String> uploadPhotoAndGetUserImageUrl(String uid) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    if (state == null) {
+      return '';
+    } else {
+      String fileName = path.basename(state!.path);
+      Reference storageRef = storage.ref().child('users/$uid/$fileName');
+      UploadTask uploadTask = storageRef.putFile(state!);
+
+      TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
+      String userImageUrl = await snapshot.ref.getDownloadURL();
+
+      return userImageUrl;
     }
   }
 }

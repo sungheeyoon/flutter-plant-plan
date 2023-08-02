@@ -17,12 +17,12 @@ final data = {
     "name": "다육이",
     //tipModel
     "tip": {
-      "watring": {"title": "흙이 바싹", "context": "빠르게~~~"},
-      "sun": {"title": "흙이 바싹", "context": "빠르게~~~"},
-      "temperature": {"title": "흙이 바싹", "context": "빠르게~~~"},
-      "humidity": {"title": "흙이 바싹", "context": "빠르게~~~"},
-      "soil": {"title": "흙이 바싹", "context": "빠르게~~~"},
-      "repotting": {"title": "흙이 바싹", "context": "빠르게~~~"},
+      "watering": {"title": "", "context": ""},
+      "sun": {"title": "", "context": ""},
+      "temperature": {"title": "", "context": ""},
+      "humidity": {"title": "", "context": ""},
+      "soil": {"title": "", "context": ""},
+      "repotting": {"title": "", "context": ""},
     }
   },
   "diary": [

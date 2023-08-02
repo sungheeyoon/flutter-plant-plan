@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
-import 'package:plant_plan/common/provider/userInfoProvider.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
@@ -30,19 +29,17 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
+    final List<PlantModel> plantsState = ref.watch(plantsProvider);
 
     List<ListCardModel> getCardList() {
       List<ListCardModel> results = [];
 
-      for (final UserInfoModel userInfo in userInfoList) {
-        String id = userInfo.docId;
-        String title = userInfo.info.alias == ""
-            ? userInfo.plant.name
-            : userInfo.info.alias;
-        String imageUrl = userInfo.selectedPhotoUrl == ""
-            ? userInfo.plant.image
-            : userInfo.selectedPhotoUrl;
+      for (final PlantModel plant in plantsState) {
+        String id = plant.docId;
+        String title = plant.alias == "" ? plant.information.name : plant.alias;
+        String imageUrl = plant.userImageUrl == ""
+            ? plant.information.imageUrl
+            : plant.userImageUrl;
         int dDay = -1;
         List<PlantField> fields = [];
 
@@ -52,11 +49,11 @@ class _ListScreenState extends ConsumerState<ListScreen> {
           DateTime.now().day,
         );
 
-        List<Alarm> alarms = userInfo.info.alarms;
+        List<AlarmModel> alarms = plant.alarms;
         if (alarms.isNotEmpty) {
-          List<Alarm> closestAlarms = [];
+          List<AlarmModel> closestAlarms = [];
 
-          for (Alarm alarm in alarms) {
+          for (AlarmModel alarm in alarms) {
             DateTime alarmDay = DateTime(
               alarm.startTime.year,
               alarm.startTime.month,
@@ -77,7 +74,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
             }
           }
           if (closestAlarms != []) {
-            for (Alarm closestAlarm in closestAlarms) {
+            for (AlarmModel closestAlarm in closestAlarms) {
               if (closestAlarm.field == PlantField.watering) {
                 if (fields.contains(PlantField.watering)) {
                   continue;

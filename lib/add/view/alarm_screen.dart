@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
@@ -16,7 +17,7 @@ class AlarmScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addAlarm';
   final String title;
   final PlantField field;
-  final Alarm? alarm;
+  final AlarmModel? alarm;
 
   const AlarmScreen({
     super.key,
@@ -53,7 +54,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     });
     textController.text = widget.alarm?.title ?? "";
 
-    final PlantInformationModel plantState = ref.read(plantInformationProvider);
+    final PlantModel plantState = ref.read(addPlantProvider);
     if (widget.field == PlantField.watering) {
       lastDayText = '마지막으로 물 준 날';
       lastDay = plantState.watringLastDay;
@@ -85,7 +86,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Alarm alarmState = ref.watch(alarmProvider);
+    final AlarmModel alarmState = ref.watch(alarmProvider);
 
     DateTime nextAlarmDate =
         alarmState.startTime.add(Duration(days: alarmState.repeat));
@@ -94,7 +95,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         onPressed: () {
           if (alarmState.isOn) {
             ref
-                .read(plantInformationProvider.notifier)
+                .read(addPlantProvider.notifier)
                 .updateAlarm(alarmState.id, alarmState);
             Navigator.pop(context);
           } else {

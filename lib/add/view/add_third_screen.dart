@@ -1,24 +1,20 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
-import 'package:plant_plan/add/provider/plant_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:path/path.dart' as path;
 
 class AddThirdScreen extends ConsumerWidget {
   static String get routeName => 'addThird';
@@ -29,31 +25,10 @@ class AddThirdScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final FirebaseAuth auth = FirebaseAuth.instance;
-    final selectedPlant = ref.watch(selectedPlantProvider);
-    final selectedPhoto = ref.watch(photoProvider);
-    final plantState = ref.watch(plantInformationProvider);
-
-    final FirebaseStorage storage = FirebaseStorage.instance;
-
-    Future<String> uploadPhoto(File? photo, String uid) async {
-      if (photo == null) {
-        return '';
-      }
-      String fileName = path.basename(photo.path);
-      Reference storageRef = storage.ref().child('users/$uid/$fileName');
-      UploadTask uploadTask = storageRef.putFile(photo);
-
-      TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-
-      return downloadUrl;
-    }
+    final photoState = ref.watch(photoProvider);
+    final plantState = ref.watch(addPlantProvider);
 
     void insertNewPlant() async {
-      final plantInformation = ref.read(plantInformationProvider);
-      final selectedPhoto = ref.read(photoProvider);
-      final selectedPlant = ref.watch(selectedPlantProvider);
-
       final user = auth.currentUser;
 
       if (user == null) return;
@@ -67,38 +42,26 @@ class AddThirdScreen extends ConsumerWidget {
           .doc();
 
       final String docId = docRef.id;
+      ref.read(addPlantProvider.notifier).updateDocId(docId);
+      final String userImageUrl = await ref
+          .read(photoProvider.notifier)
+          .uploadPhotoAndGetUserImageUrl(uid);
+      ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
-      final Map<String, dynamic> plantData = {
-        'selectedPhotoUrl':
-            selectedPhoto != null ? await uploadPhoto(selectedPhoto, uid) : "",
-        'plantInformation': {
-          'alias': plantInformation.alias,
-          'watringLastDay': plantInformation.watringLastDay,
-          'repottingLastDay': plantInformation.repottingLastDay,
-          'nutrientLastDay': plantInformation.nutrientLastDay,
-          'alarms':
-              plantInformation.alarms.map((alarm) => alarm.toJson()).toList(),
-        },
-        'docId': docId,
-        'id': selectedPlant?.id,
-        'image': selectedPlant?.image,
-        'name': selectedPlant?.name,
-      };
+      await docRef.set(ref.read(addPlantProvider).toJson());
 
-      await docRef.set(plantData);
-
-      ref.read(selectedPlantProvider.notifier).reset();
       ref.read(photoProvider.notifier).reset();
       ref.read(alarmProvider.notifier).reset();
-      ref.read(plantInformationProvider.notifier).reset();
+      ref.read(addPlantProvider.notifier).reset();
     }
 
     return DefaultLayout(
       title: '식물추가',
       floatingActionButton: RoundedButton(
         font: Theme.of(context).textTheme.bodyLarge,
-        backgroundColor: selectedPlant != null ? pointColor2 : grayColor300,
-        borderColor: selectedPlant != null
+        backgroundColor:
+            plantState.information.id != "" ? pointColor2 : grayColor300,
+        borderColor: plantState.information.id != ""
             ? pointColor2.withOpacity(
                 0.5,
               )
@@ -108,7 +71,7 @@ class AddThirdScreen extends ConsumerWidget {
         textColor: Colors.white,
         name: '식물 추가 완료',
         onPressed: () async {
-          if (selectedPlant != null) {
+          if (plantState.information.id != "") {
             insertNewPlant();
             Navigator.pushNamed(context, HomeScreen.routeName);
           }
@@ -149,22 +112,24 @@ class AddThirdScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      if (selectedPhoto != null) //찍은애
+                      if (photoState != null) //찍은애
                         Stack(children: [
                           FittedBox(
                             fit: BoxFit.contain,
                             child: CircleAvatar(
                               radius: 30.h, // Image radius
-                              backgroundImage: FileImage(selectedPhoto),
+                              backgroundImage: FileImage(photoState),
                             ),
                           ),
                         ])
-                      else if (selectedPlant != null) //안찍었는데 깟다왓어
+                      else if (plantState.information.imageUrl !=
+                          "") //안찍었는데 깟다왓어
                         FittedBox(
                           fit: BoxFit.contain,
                           child: CircleAvatar(
                             radius: 30.h, // Image radius
-                            backgroundImage: NetworkImage(selectedPlant.image),
+                            backgroundImage:
+                                NetworkImage(plantState.information.imageUrl),
                           ),
                         )
                       else
@@ -176,7 +141,7 @@ class AddThirdScreen extends ConsumerWidget {
                       SizedBox(
                         height: 12.h,
                       ),
-                      if (selectedPlant != null)
+                      if (plantState.information.name != "")
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Container(
@@ -192,7 +157,7 @@ class AddThirdScreen extends ConsumerWidget {
                             ),
                             child: Center(
                               child: Text(
-                                selectedPlant.name,
+                                plantState.information.name,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelMedium!
@@ -219,24 +184,18 @@ class AddThirdScreen extends ConsumerWidget {
                         height: 16.h,
                       ),
                       const ImmutableAlarmBox(
-                        iconPath: 'assets/images/management/humid.png',
-                        title: '물주기',
                         field: PlantField.watering,
                       ),
                       SizedBox(
                         height: 12.h,
                       ),
                       const ImmutableAlarmBox(
-                        iconPath: 'assets/images/management/repotting.png',
-                        title: '분갈이',
                         field: PlantField.repotting,
                       ),
                       SizedBox(
                         height: 12.h,
                       ),
                       const ImmutableAlarmBox(
-                        iconPath: 'assets/images/management/nutrient.png',
-                        title: '영양제',
                         field: PlantField.nutrient,
                       ),
                     ],
@@ -252,31 +211,41 @@ class AddThirdScreen extends ConsumerWidget {
 }
 
 class ImmutableAlarmBox extends ConsumerWidget {
-  final String iconPath;
-  final String title;
   final PlantField field;
 
   const ImmutableAlarmBox({
     super.key,
-    required this.iconPath,
-    required this.title,
     required this.field,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final PlantInformationModel plantState =
-        ref.watch(plantInformationProvider);
+    final PlantModel plantState = ref.watch(addPlantProvider);
 
     late DateTime? lastDay;
-    final Alarm? alarmState =
-        plantState.alarms.firstWhereOrNull((alarm) => alarm.field == field);
+    final AlarmModel? alarmState = plantState.alarms.firstWhereOrNull(
+      (alarm) => alarm.field == field,
+    );
     if (field == PlantField.watering) {
       lastDay = plantState.watringLastDay;
     } else if (field == PlantField.repotting) {
       lastDay = plantState.repottingLastDay;
     } else if (field == PlantField.nutrient) {
       lastDay = plantState.nutrientLastDay;
+    }
+
+    late String iconPath;
+    late String title;
+
+    if (field == PlantField.watering) {
+      iconPath = 'assets/images/management/humid.png';
+      title = '물주기';
+    } else if (field == PlantField.repotting) {
+      iconPath = 'assets/images/management/repotting.png';
+      title = '분갈이';
+    } else if (field == PlantField.nutrient) {
+      iconPath = 'assets/images/management/nutrient.png';
+      title = '영양제';
     }
     return Center(
       child: Container(
@@ -396,7 +365,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                               // if (plantState.watering.alarm
                               //         .startDay !=
                               //     null)
-                              alarmState == null || alarmState.repeat == 0
+                              alarmState?.repeat == 0
                                   ? const SizedBox.shrink()
                                   : Container(
                                       padding:
@@ -408,11 +377,11 @@ class ImmutableAlarmBox extends ConsumerWidget {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          alarmState.repeat == 1
+                                          alarmState?.repeat == 1
                                               ? '매일'
-                                              : alarmState.repeat == 7
+                                              : alarmState?.repeat == 7
                                                   ? '매주'
-                                                  : '${alarmState.repeat}일 마다',
+                                                  : '${alarmState?.repeat}일 마다',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall!
@@ -427,7 +396,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           SizedBox(
                             height: 6.h,
                           ),
-                          if (alarmState != null && alarmState.isOn)
+                          if (alarmState!.isOn)
                             Text(
                               dateFormatter(alarmState.startTime),
                               style: Theme.of(context)

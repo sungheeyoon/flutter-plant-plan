@@ -70,7 +70,7 @@ class _$AlarmModelCopyWithImpl<$Res, $Val extends AlarmModel>
     Object? title = null,
     Object? isOn = null,
     Object? offDates = null,
-    Object? field = freezed,
+    Object? field = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -97,7 +97,7 @@ class _$AlarmModelCopyWithImpl<$Res, $Val extends AlarmModel>
           ? _value.offDates
           : offDates // ignore: cast_nullable_to_non_nullable
               as List<DateTime>,
-      field: freezed == field
+      field: null == field
           ? _value.field
           : field // ignore: cast_nullable_to_non_nullable
               as PlantField,
@@ -140,7 +140,7 @@ class __$$_AlarmModelCopyWithImpl<$Res>
     Object? title = null,
     Object? isOn = null,
     Object? offDates = null,
-    Object? field = freezed,
+    Object? field = null,
   }) {
     return _then(_$_AlarmModel(
       id: null == id
@@ -167,7 +167,7 @@ class __$$_AlarmModelCopyWithImpl<$Res>
           ? _value._offDates
           : offDates // ignore: cast_nullable_to_non_nullable
               as List<DateTime>,
-      field: freezed == field
+      field: null == field
           ? _value.field
           : field // ignore: cast_nullable_to_non_nullable
               as PlantField,
@@ -235,20 +235,13 @@ class _$_AlarmModel implements _AlarmModel {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.isOn, isOn) || other.isOn == isOn) &&
             const DeepCollectionEquality().equals(other._offDates, _offDates) &&
-            const DeepCollectionEquality().equals(other.field, field));
+            (identical(other.field, field) || other.field == field));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      startTime,
-      repeat,
-      title,
-      isOn,
-      const DeepCollectionEquality().hash(_offDates),
-      const DeepCollectionEquality().hash(field));
+  int get hashCode => Object.hash(runtimeType, id, startTime, repeat, title,
+      isOn, const DeepCollectionEquality().hash(_offDates), field);
 
   @JsonKey(ignore: true)
   @override

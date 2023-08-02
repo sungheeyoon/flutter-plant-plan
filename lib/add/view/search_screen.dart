@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:korea_regexp/korea_regexp.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
-import 'package:plant_plan/add/provider/plant_provider.dart';
+import 'package:plant_plan/add/model/information_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -21,21 +21,21 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  late Stream<QuerySnapshot> _streamPlantList;
+  late Stream<QuerySnapshot> _streamInformationList;
   String enteredKeyword = "";
 
-  final CollectionReference _referencePlantList =
+  final CollectionReference _referenceInformationList =
       FirebaseFirestore.instance.collection('plant_list');
 
   @override
   initState() {
     super.initState();
-    _streamPlantList = _referencePlantList.snapshots();
+    _streamInformationList = _referenceInformationList.snapshots();
   }
 
-  List<PlantModel> _plantListFromSnapshot(QuerySnapshot snapshot) {
+  List<InformationModel> _informationListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return PlantModel.fromJson(doc.data() as Map<String, dynamic>);
+      return InformationModel.fromJson(doc.data() as Map<String, dynamic>);
     }).toList();
   }
 
@@ -65,21 +65,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: _streamPlantList,
+                stream: _streamInformationList,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error.toString()));
                   }
                   if (snapshot.connectionState == ConnectionState.active) {
-                    List<PlantModel> plantList =
-                        _plantListFromSnapshot(snapshot.data);
+                    List<InformationModel> informationList =
+                        _informationListFromSnapshot(snapshot.data);
                     return ListView.builder(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
                       ),
-                      itemCount: plantList.length,
+                      itemCount: informationList.length,
                       itemBuilder: (context, index) {
-                        PlantModel document = plantList[index];
+                        InformationModel document = informationList[index];
                         if (enteredKeyword.isEmpty) {
                           return ListTile(
                             title: Text(
@@ -92,7 +92,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                   .copyWith(color: grayBlack),
                             ),
                             leading: CachedNetworkImage(
-                              imageUrl: document.image,
+                              imageUrl: document.imageUrl,
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 width: 40.h,
@@ -117,8 +117,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             ),
                             onTap: () async {
                               ref
-                                  .read(selectedPlantProvider.notifier)
-                                  .setPlant(document);
+                                  .read(addPlantProvider.notifier)
+                                  .updateInformation(document);
                               Navigator.pop(context);
                             },
                           ).paddingOnly(bottom: 6.h);
@@ -145,7 +145,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                     .copyWith(color: grayBlack),
                               ),
                               leading: CachedNetworkImage(
-                                imageUrl: document.image,
+                                imageUrl: document.imageUrl,
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   width: 40.h,
@@ -169,8 +169,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ),
                               onTap: () {
                                 ref
-                                    .read(selectedPlantProvider.notifier)
-                                    .setPlant(document);
+                                    .read(addPlantProvider.notifier)
+                                    .updateInformation(document);
                                 Navigator.pushNamedAndRemoveUntil(context,
                                     AddFirstScreen.routeName, (route) => false,
                                     arguments: {"update": true});

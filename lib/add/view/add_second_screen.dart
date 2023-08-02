@@ -1,18 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
-import 'package:plant_plan/add/provider/plant_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
@@ -23,15 +24,16 @@ class AddSecondScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedPlant = ref.watch(selectedPlantProvider);
-    final selectedPhoto = ref.watch(photoProvider);
+    final PlantModel plantState = ref.watch(addPlantProvider);
+    final File? photoState = ref.watch(photoProvider);
 
     return DefaultLayout(
       title: '식물추가',
       floatingActionButton: RoundedButton(
         font: Theme.of(context).textTheme.bodyLarge,
-        backgroundColor: selectedPlant != null ? pointColor2 : grayColor300,
-        borderColor: selectedPlant != null
+        backgroundColor:
+            plantState.information.id != "" ? pointColor2 : grayColor300,
+        borderColor: plantState.information.id != ""
             ? pointColor2.withOpacity(
                 0.5,
               )
@@ -41,7 +43,7 @@ class AddSecondScreen extends ConsumerWidget {
         textColor: Colors.white,
         name: '다음',
         onPressed: () async {
-          if (selectedPlant != null) {
+          if (plantState.information.id != "") {
             Navigator.pushNamed(context, AddThirdScreen.routeName);
           }
         },
@@ -84,23 +86,23 @@ class AddSecondScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          if (selectedPhoto != null) //찍은애
+                          if (photoState != null) //찍음
                             Stack(children: [
                               FittedBox(
                                 fit: BoxFit.contain,
                                 child: CircleAvatar(
                                   radius: 18.h, // Image radius
-                                  backgroundImage: FileImage(selectedPhoto),
+                                  backgroundImage: FileImage(photoState),
                                 ),
                               ),
                             ])
-                          else if (selectedPlant != null) //안찍었는데 깟다왓어
+                          else if (plantState.information.imageUrl != "") //안찍음
                             FittedBox(
                               fit: BoxFit.contain,
                               child: CircleAvatar(
                                 radius: 18.h, // Image radius
-                                backgroundImage:
-                                    NetworkImage(selectedPlant.image),
+                                backgroundImage: NetworkImage(
+                                    plantState.information.imageUrl),
                               ),
                             )
                           else
@@ -112,9 +114,9 @@ class AddSecondScreen extends ConsumerWidget {
                           SizedBox(
                             width: 12.h,
                           ),
-                          if (selectedPlant != null)
+                          if (plantState.information.name != "")
                             Text(
-                              selectedPlant.name,
+                              plantState.information.name,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -181,8 +183,6 @@ class AddSecondScreen extends ConsumerWidget {
                 height: 12.h,
               ),
               const AlarmBox(
-                iconPath: 'assets/images/management/humid.png',
-                title: '물주기',
                 field: PlantField.watering,
                 isDetail: false,
               ),
@@ -190,8 +190,6 @@ class AddSecondScreen extends ConsumerWidget {
                 height: 12.h,
               ),
               const AlarmBox(
-                iconPath: 'assets/images/management/repotting.png',
-                title: '분갈이',
                 field: PlantField.repotting,
                 isDetail: false,
               ),
@@ -199,8 +197,6 @@ class AddSecondScreen extends ConsumerWidget {
                 height: 12.h,
               ),
               const AlarmBox(
-                iconPath: 'assets/images/management/nutrient.png',
-                title: '영양제',
                 field: PlantField.nutrient,
                 isDetail: false,
               ),
@@ -225,30 +221,39 @@ class AddSecondScreen extends ConsumerWidget {
 }
 
 class AlarmBox extends ConsumerWidget {
-  final String iconPath;
-  final String title;
   final PlantField field;
   final bool isDetail;
 
   const AlarmBox({
     super.key,
-    required this.iconPath,
-    required this.title,
     required this.field,
     required this.isDetail,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final PlantInformationModel plantState =
-        ref.watch(plantInformationProvider);
-    final UserInfoModel? datailState = ref.watch(detailProvider);
+    final PlantModel plantState = ref.watch(addPlantProvider);
+    final PlantModel? datailState = ref.watch(detailProvider);
 
-    final List<Alarm>? alarms =
-        isDetail ? datailState?.info.alarms : plantState.alarms;
+    final List<AlarmModel>? alarms =
+        isDetail ? datailState?.alarms : plantState.alarms;
 
-    final Alarm? alarmState =
+    final AlarmModel? alarmState =
         alarms?.firstWhereOrNull((alarm) => alarm.field == field);
+
+    late String iconPath;
+    late String title;
+
+    if (field == PlantField.watering) {
+      iconPath = 'assets/images/management/humid.png';
+      title = '물주기';
+    } else if (field == PlantField.repotting) {
+      iconPath = 'assets/images/management/repotting.png';
+      title = '분갈이';
+    } else if (field == PlantField.nutrient) {
+      iconPath = 'assets/images/management/nutrient.png';
+      title = '영양제';
+    }
 
     return GestureDetector(
       onTap: () {
@@ -417,7 +422,7 @@ class AlarmBox extends ConsumerWidget {
                           GestureDetector(
                             onTap: () {
                               ref
-                                  .read(plantInformationProvider.notifier)
+                                  .read(addPlantProvider.notifier)
                                   .alarmDelete(alarmState.id);
                             },
                             child: Image.asset(

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
-import 'package:plant_plan/common/provider/selectedDateProvider.dart';
-import 'package:plant_plan/common/provider/userInfoProvider.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
+import 'package:plant_plan/common/provider/selected_date_provider.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class MyCalendar extends ConsumerStatefulWidget {
@@ -188,7 +188,7 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
+    final List<PlantModel> plantsState = ref.watch(plantsProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
     return Container(
       color: pointColor2,
@@ -245,11 +245,10 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 PlantField? repotting;
                 PlantField? nutrient;
 
-                for (final UserInfoModel userInfo in userInfoList) {
-                  final PlantInformationModel plantInfo = userInfo.info;
-                  final List<Alarm> alarms = plantInfo.alarms;
+                for (final PlantModel plant in plantsState) {
+                  final List<AlarmModel> alarms = plant.alarms;
 
-                  for (final Alarm alarm in alarms) {
+                  for (final AlarmModel alarm in alarms) {
                     DateTime zeroStartTime = DateTime(
                       alarm.startTime.year,
                       alarm.startTime.month,

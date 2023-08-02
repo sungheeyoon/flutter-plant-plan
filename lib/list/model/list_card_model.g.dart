@@ -12,7 +12,7 @@ _$_ListCardModel _$$_ListCardModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
       dDay: json['dDay'] as int,
-      fields: json['fields'] as List<dynamic>,
+      fields: json['fields'] as List<PlantField>,
     );
 
 Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
