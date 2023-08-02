@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/alarm_with_userinfo.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
-import 'package:plant_plan/common/provider/selectedDateProvider.dart';
-import 'package:plant_plan/common/provider/userInfoProvider.dart';
+import 'package:plant_plan/common/provider/selected_date_provider.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static String get routeName => 'home';
@@ -28,7 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(userInfoProvider.notifier).fetchUserData();
+    ref.read(plantsProvider.notifier).fetchUserData();
   }
 
   @override
@@ -39,19 +39,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<UserInfoModel> userInfoList = ref.watch(userInfoProvider);
+    final List<PlantModel> plantsState = ref.watch(plantsProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
 
     List<AlarmWithUserInfo> getSelectedDateList([PlantField? field]) {
       List<AlarmWithUserInfo> results = [];
 
-      for (final userInfo in userInfoList) {
-        String alias = userInfo.info.alias;
-        PlantModel plant = userInfo.plant;
-        String selectedPhotoUrl = userInfo.selectedPhotoUrl;
-        String docId = userInfo.docId;
-
-        for (final alarm in userInfo.info.alarms) {
+      for (final PlantModel plant in plantsState) {
+        for (final AlarmModel alarm in plant.alarms) {
           if (alarm.isOn) {
             DateTime zeroStartTime = DateTime(
               alarm.startTime.year,
@@ -68,10 +63,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               results.add(
                 AlarmWithUserInfo(
                   alarm: alarm,
-                  alias: alias,
-                  plant: plant,
-                  selectedPhotoUrl: selectedPhotoUrl,
-                  docId: docId,
+                  alias: plant.alias,
+                  information: plant.information,
+                  userImageUrl: plant.userImageUrl,
+                  docId: plant.docId,
                 ),
               );
             }
@@ -659,9 +654,9 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                           borderRadius: BorderRadius.circular(14.h),
                           image: DecorationImage(
                             image: NetworkImage(
-                              widget.info.selectedPhotoUrl == ""
-                                  ? widget.info.plant.image
-                                  : widget.info.selectedPhotoUrl,
+                              widget.info.userImageUrl == ""
+                                  ? widget.info.information.imageUrl
+                                  : widget.info.userImageUrl,
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -671,7 +666,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                       Text(
                         widget.info.alias.isNotEmpty
                             ? widget.info.alias
-                            : widget.info.plant.name,
+                            : widget.info.information.name,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: grayBlack,
                             ),
@@ -692,10 +687,9 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                         onTap: () {
                           setState(() {
                             isDone = !isDone;
-                            ref
-                                .read(userInfoProvider.notifier)
-                                .toggleAlarmDateTime(widget.info.alarm.id,
-                                    widget.info.docId, selectedDateState);
+                            ref.read(plantsProvider.notifier).updateAlarm(
+                                widget.info.alarm.id, widget.info.docId,
+                                offTime: selectedDateState);
                           });
                         },
                         child: Icon(

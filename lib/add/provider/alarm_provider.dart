@@ -1,17 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 
 enum StartTimeOption { day, time }
 
-final alarmProvider = StateNotifierProvider<AlarmNotifier, Alarm>((ref) {
+final alarmProvider = StateNotifierProvider<AlarmNotifier, AlarmModel>((ref) {
   return AlarmNotifier();
 });
 
-class AlarmNotifier extends StateNotifier<Alarm> {
+class AlarmNotifier extends StateNotifier<AlarmModel> {
   AlarmNotifier()
       : super(
-          Alarm.newAlarm(startTime: DateTime.now(), field: PlantField.none),
+          AlarmModel.newAlarmModel(
+              startTime: DateTime.now(), field: PlantField.none),
         );
 
   void setStartTime(
@@ -57,10 +58,10 @@ class AlarmNotifier extends StateNotifier<Alarm> {
   }
 
   void setFieldAndReset(PlantField field) {
-    state = Alarm.newAlarm(startTime: DateTime.now(), field: field);
+    state = AlarmModel.newAlarmModel(startTime: DateTime.now(), field: field);
   }
 
-  void setAlarm(Alarm? alarm) {
+  void setAlarm(AlarmModel? alarm) {
     if (alarm == null) {
       reset();
     } else {
@@ -69,6 +70,7 @@ class AlarmNotifier extends StateNotifier<Alarm> {
   }
 
   void reset() {
-    state = Alarm.newAlarm(startTime: DateTime.now(), field: PlantField.none);
+    state = AlarmModel.newAlarmModel(
+        startTime: DateTime.now(), field: PlantField.none);
   }
 }

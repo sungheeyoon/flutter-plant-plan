@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_info_tab.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -23,7 +23,6 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
-  late Future<UserInfoModel> info;
 
   @override
   void dispose() {
@@ -145,7 +144,7 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
   bool isFavorited = false;
   @override
   Widget build(BuildContext context) {
-    final UserInfoModel? data = ref.watch(detailProvider);
+    final PlantModel? data = ref.watch(detailProvider);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -177,9 +176,9 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
                   borderRadius: BorderRadius.circular(24.h),
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(data?.selectedPhotoUrl == ""
-                        ? data?.plant.image ?? ''
-                        : data?.selectedPhotoUrl ?? ''),
+                    image: NetworkImage(data?.userImageUrl == ""
+                        ? data?.information.imageUrl ?? ''
+                        : data?.userImageUrl ?? ''),
                   ),
                 ),
               ),
@@ -190,19 +189,19 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (data?.info.alias != null && data?.info.alias != "")
+                  if (data?.alias != null && data?.alias != "")
                     Text(
-                      data?.info.alias ?? '',
+                      data?.alias ?? '',
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
                     ),
-                  if (data?.info.alias != null && data?.info.alias != "")
+                  if (data?.alias != null && data?.alias != "")
                     SizedBox(
                       height: 6.h,
                     ),
                   Text(
-                    data?.plant.name ?? '',
+                    data?.information.name ?? '',
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: grayBlack,
                         ),

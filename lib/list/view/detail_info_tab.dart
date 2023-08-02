@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
-import 'package:plant_plan/common/model/user_info_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/wideget/infoTipButton.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -68,8 +68,6 @@ class SettingAlarm extends StatelessWidget {
           height: 12.h,
         ),
         const AlarmBox(
-          iconPath: 'assets/images/management/humid.png',
-          title: '물주기',
           field: PlantField.watering,
           isDetail: true,
         ),
@@ -77,8 +75,6 @@ class SettingAlarm extends StatelessWidget {
           height: 12.h,
         ),
         const AlarmBox(
-          iconPath: 'assets/images/management/repotting.png',
-          title: '분갈이',
           field: PlantField.repotting,
           isDetail: true,
         ),
@@ -86,8 +82,6 @@ class SettingAlarm extends StatelessWidget {
           height: 12.h,
         ),
         const AlarmBox(
-          iconPath: 'assets/images/management/nutrient.png',
-          title: '영양제',
           field: PlantField.nutrient,
           isDetail: true,
         ),
@@ -103,18 +97,18 @@ class UpcomingAlarm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserInfoModel? userInfo = ref.watch(detailProvider);
+    final PlantModel? detailState = ref.watch(detailProvider);
     String watering = "";
     String repotting = "";
     String nutrient = "";
-    List<Alarm> alarms = [];
-    if (userInfo != null) {
+    List<AlarmModel> alarms = [];
+    if (detailState != null) {
       DateTime today = DateTime(
         DateTime.now().year,
         DateTime.now().month,
         DateTime.now().day,
       );
-      alarms = userInfo.info.alarms;
+      alarms = detailState.alarms;
       for (final alarm in alarms) {
         DateTime alarmDay = DateTime(
           alarm.startTime.year,

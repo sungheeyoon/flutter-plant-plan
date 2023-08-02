@@ -1,18 +1,18 @@
-import 'package:plant_plan/add/model/plant_information_model.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/information_model.dart';
 
 class AlarmWithUserInfo {
-  final Alarm alarm;
+  final AlarmModel alarm;
   final String alias;
-  final PlantModel plant;
-  final String selectedPhotoUrl;
+  final InformationModel information;
+  final String userImageUrl;
   final String docId;
 
   AlarmWithUserInfo({
     required this.alarm,
     required this.alias,
-    required this.plant,
-    required this.selectedPhotoUrl,
+    required this.information,
+    required this.userImageUrl,
     required this.docId,
   });
 }

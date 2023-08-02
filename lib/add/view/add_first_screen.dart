@@ -7,7 +7,6 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
-import 'package:plant_plan/add/provider/plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
@@ -51,7 +50,6 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          ref.read(selectedPlantProvider.notifier).reset();
           ref.read(photoProvider.notifier).reset();
           ref.read(alarmProvider.notifier).reset();
           ref.read(addPlantProvider.notifier).reset();

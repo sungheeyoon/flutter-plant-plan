@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
-import 'package:plant_plan/add/provider/plant_information_provider.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -23,7 +23,7 @@ class DatePickerWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final plantState = ref.watch(plantInformationProvider);
+    final plantState = ref.watch(addPlantProvider);
     final alarmState = ref.watch(alarmProvider);
     final DateTime? date;
 
@@ -154,9 +154,7 @@ class DatePickerWidget extends ConsumerWidget {
             .read(alarmProvider.notifier)
             .setStartTime(StartTimeOption.day, values[0]!);
       } else {
-        ref
-            .read(plantInformationProvider.notifier)
-            .updateLastDay(field, values[0]!);
+        ref.read(addPlantProvider.notifier).updateLastDay(field, values[0]!);
       }
     }
   }
