@@ -12,7 +12,9 @@ _$_ListCardModel _$$_ListCardModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
       dDay: json['dDay'] as int,
-      fields: json['fields'] as List<PlantField>,
+      fields: (json['fields'] as List<dynamic>)
+          .map((e) => $enumDecode(_$PlantFieldEnumMap, e))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
@@ -21,5 +23,12 @@ Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
       'title': instance.title,
       'imageUrl': instance.imageUrl,
       'dDay': instance.dDay,
-      'fields': instance.fields,
+      'fields': instance.fields.map((e) => _$PlantFieldEnumMap[e]!).toList(),
     };
+
+const _$PlantFieldEnumMap = {
+  PlantField.watering: 'watering',
+  PlantField.repotting: 'repotting',
+  PlantField.nutrient: 'nutrient',
+  PlantField.none: 'none',
+};

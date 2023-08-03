@@ -230,7 +230,8 @@ class __$$_PlantModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_PlantModel implements _PlantModel {
   _$_PlantModel(
       {this.docId = "",

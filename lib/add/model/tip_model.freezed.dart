@@ -115,7 +115,8 @@ class __$$_TipModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_TipModel implements _TipModel {
   _$_TipModel({this.part = '', this.title = '', this.context = ''});
 

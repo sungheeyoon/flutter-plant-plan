@@ -127,18 +127,20 @@ class AddSecondScreen extends ConsumerWidget {
                         ],
                       ),
                       RoundedButton(
-                        font: Theme.of(context).textTheme.labelMedium,
+                        font: Theme.of(context).textTheme.labelMedium!.copyWith(
+                              fontSize: 13.sp,
+                            ),
                         backgroundColor: Colors.white,
                         borderColor: pointColor2.withOpacity(
                           0.5,
                         ),
-                        width: 52.h,
-                        height: 26.h,
+                        width: 63.h,
+                        height: 30.h,
                         textColor: pointColor2,
                         name: '변경',
                         onPressed: () => Navigator.pushNamed(
                             context, AddFirstScreen.routeName),
-                      )
+                      ),
                     ],
                   ),
                 ),

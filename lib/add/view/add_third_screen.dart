@@ -365,7 +365,8 @@ class ImmutableAlarmBox extends ConsumerWidget {
                               // if (plantState.watering.alarm
                               //         .startDay !=
                               //     null)
-                              alarmState?.repeat == 0
+                              alarmState?.repeat == 0 ||
+                                      alarmState?.repeat == null
                                   ? const SizedBox.shrink()
                                   : Container(
                                       padding:
@@ -396,7 +397,7 @@ class ImmutableAlarmBox extends ConsumerWidget {
                           SizedBox(
                             height: 6.h,
                           ),
-                          if (alarmState!.isOn)
+                          if (alarmState != null && alarmState.isOn)
                             Text(
                               dateFormatter(alarmState.startTime),
                               style: Theme.of(context)

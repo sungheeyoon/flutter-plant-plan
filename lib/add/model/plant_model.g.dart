@@ -45,9 +45,9 @@ Map<String, dynamic> _$$_PlantModelToJson(_$_PlantModel instance) =>
           instance.repottingLastDay, const TimestampSerializer().toJson),
       'nutrientLastDay': _$JsonConverterToJson<dynamic, DateTime>(
           instance.nutrientLastDay, const TimestampSerializer().toJson),
-      'information': instance.information,
-      'diary': instance.diary,
-      'alarms': instance.alarms,
+      'information': instance.information.toJson(),
+      'diary': instance.diary.map((e) => e.toJson()).toList(),
+      'alarms': instance.alarms.map((e) => e.toJson()).toList(),
     };
 
 Json? _$JsonConverterToJson<Json, Value>(

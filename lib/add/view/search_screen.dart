@@ -35,7 +35,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   List<InformationModel> _informationListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return InformationModel.fromJson(doc.data() as Map<String, dynamic>);
+      return InformationModel.fromJson(doc.data()! as Map<String, dynamic>);
     }).toList();
   }
 
