@@ -128,7 +128,8 @@ class __$$_InformationModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_InformationModel implements _InformationModel {
   _$_InformationModel(
       {this.id = '',

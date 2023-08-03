@@ -176,7 +176,8 @@ class __$$_AlarmModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(explicitToJson: true)
 class _$_AlarmModel implements _AlarmModel {
   _$_AlarmModel(
       {this.id = '',

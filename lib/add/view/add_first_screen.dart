@@ -42,7 +42,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final PlantModel plantState = ref.read(addPlantProvider);
+    final PlantModel plantState = ref.watch(addPlantProvider);
     final File? photoState = ref.watch(photoProvider);
 
     return DefaultLayout(
@@ -117,6 +117,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                         children: [
                           Stack(
                             children: [
+                              //x 버튼 유무
                               if (photoState != null)
                                 Stack(children: [
                                   FittedBox(
