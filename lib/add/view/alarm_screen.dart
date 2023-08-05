@@ -153,7 +153,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 16.h,
                 ),
-                const Divider(),
+                const Divider(
+                  color: grayColor200,
+                  thickness: 1,
+                ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -183,7 +186,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 16.h,
                 ),
-                const Divider(),
+                const Divider(
+                  color: grayColor200,
+                  thickness: 1,
+                ),
                 SizedBox(
                   height: 16.h,
                 ),
@@ -348,7 +354,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 16.h,
                 ),
-                const Divider(),
+                const Divider(
+                  color: grayColor200,
+                  thickness: 1,
+                ),
                 SizedBox(
                   height: 16.h,
                 ),

@@ -21,24 +21,24 @@ class DetailScreen extends ConsumerStatefulWidget {
 
 class _DetailScreenState extends ConsumerState<DetailScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _selectedIndex = 0;
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  late TabController controller;
+  int index = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
-    _tabController.addListener(() {
+    controller = TabController(vsync: this, length: 2);
+    controller.addListener(() {
       setState(() {
-        _selectedIndex = _tabController.index;
+        index = controller.index;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,8 +59,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
               height: 16.h,
             ),
             TabBar(
-              controller: _tabController,
-              indicatorWeight: 2.h,
+              controller: controller,
+              indicatorWeight: 2,
+              indicatorColor: pointColor2,
               tabs: [
                 Tab(
                   child: Row(
@@ -71,7 +72,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                         width: 16.h,
                         height: 16.h,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 0 ? pointColor2 : grayColor400,
+                          index == 0 ? pointColor2 : grayColor400,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -79,9 +80,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                       Text(
                         '관리 정보',
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: _selectedIndex == 0
-                                  ? pointColor2
-                                  : grayColor400,
+                              color: index == 0 ? pointColor2 : grayColor400,
                             ),
                       ),
                     ],
@@ -96,7 +95,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                         width: 16.h,
                         height: 16.h,
                         colorFilter: ColorFilter.mode(
-                          _selectedIndex == 1 ? pointColor2 : grayColor400,
+                          index == 1 ? pointColor2 : grayColor400,
                           BlendMode.srcIn,
                         ),
                       ),
@@ -104,9 +103,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                       Text(
                         '다이어리',
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: _selectedIndex == 1
-                                  ? pointColor2
-                                  : grayColor400,
+                              color: index == 1 ? pointColor2 : grayColor400,
                             ),
                       ),
                     ],
@@ -114,11 +111,22 @@ class _DetailScreenState extends ConsumerState<DetailScreen>
                 ),
               ],
             ),
+            // SizedBox(
+            //   height: 10000,
+            //   child: TabBarView(
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     controller: controller,
+            //     children: const [
+            //       DetailInfoTab(),
+            //       Center(child: Text('Tab 2 content')),
+            //     ],
+            //   ),
+            // ),
             IndexedStack(
-              index: _selectedIndex,
+              index: index,
               children: [
                 Visibility(
-                  visible: _selectedIndex == 0,
+                  visible: index == 0,
                   child: const DetailInfoTab(),
                 ),
                 const Center(child: Text('Tab 2 content')),
@@ -234,13 +242,13 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
 
 class CustomTabBar extends StatelessWidget {
   final List<String> tabTitles;
-  final int selectedIndex;
+  final int index;
   final Function(int) onTabChanged;
 
   const CustomTabBar({
     super.key,
     required this.tabTitles,
-    required this.selectedIndex,
+    required this.index,
     required this.onTabChanged,
   });
 
@@ -256,7 +264,7 @@ class CustomTabBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: tabTitles.map((title) {
           final index = tabTitles.indexOf(title);
-          final isSelected = index == selectedIndex;
+          final isSelected = index == index;
           final textColor = isSelected ? pointColor2 : grayColor400;
           final iconColor = isSelected ? pointColor2 : grayColor400;
 

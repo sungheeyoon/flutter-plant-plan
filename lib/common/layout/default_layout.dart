@@ -48,6 +48,7 @@ class DefaultLayout extends StatelessWidget {
         backgroundColor: titleBackgroundColor ?? Colors.white,
         elevation: 0,
         centerTitle: true,
+        surfaceTintColor: Colors.white,
         title: Text(
           title!,
           style: Theme.of(context)
