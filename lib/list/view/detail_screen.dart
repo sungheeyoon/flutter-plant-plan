@@ -195,7 +195,6 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (data?.alias != null && data?.alias != "")
                     Text(
@@ -204,35 +203,49 @@ class _PlantDetailCardState extends ConsumerState<PlantDetailCard> {
                             color: keyColor700,
                           ),
                     ),
+                  //font height check
                   if (data?.alias != null && data?.alias != "")
-                    SizedBox(
-                      height: 6.h,
+                    const SizedBox(
+                      height: 0,
                     ),
-                  Text(
-                    data?.information.name ?? '',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: grayBlack,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        data?.information.name ?? '',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: grayBlack,
+                            ),
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isFavorited = !isFavorited;
+                          });
+                        },
+                        child: Image(
+                          image: AssetImage(
+                            isFavorited
+                                ? 'assets/icons/fav/fav_active.png'
+                                : 'assets/icons/fav/fav_inactive.png',
+                          ),
+                          width: 20.h,
+                          height: 20.h,
                         ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isFavorited = !isFavorited;
-              });
-            },
-            child: Image(
-              image: AssetImage(
-                isFavorited
-                    ? 'assets/icons/fav/fav_active.png'
-                    : 'assets/icons/fav/fav_inactive.png',
-              ),
-              width: 28.h,
-              height: 28.h,
-            ),
+          Image(
+            image: const AssetImage('assets/icons/edit.png'),
+            width: 24.h,
+            height: 24.h,
           ),
         ],
       ),
