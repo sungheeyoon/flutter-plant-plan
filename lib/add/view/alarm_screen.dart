@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
@@ -36,7 +35,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   int focusedButtonIndex = -1;
   String? nextAlarmText;
   late String lastDayText;
-  late DateTime? lastDay;
   TextEditingController textController = TextEditingController();
 
   @override
@@ -54,16 +52,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     });
     textController.text = widget.alarm?.title ?? "";
 
-    final PlantModel plantState = ref.read(addPlantProvider);
     if (widget.field == PlantField.watering) {
       lastDayText = '마지막으로 물 준 날';
-      lastDay = plantState.watringLastDay;
     } else if (widget.field == PlantField.repotting) {
       lastDayText = '마지막으로 분갈이 한 날';
-      lastDay = plantState.repottingLastDay;
     } else if (widget.field == PlantField.nutrient) {
       lastDayText = '마지막으로 영양제 준 날';
-      lastDay = plantState.nutrientLastDay;
     }
     //반복주기 버튼활성
     if (widget.alarm?.repeat == null || widget.alarm?.repeat == 0) {
@@ -130,41 +124,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 28.h,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      lastDayText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: primaryColor),
-                    ),
-                    Text(
-                      lastDay != null ? dateFormatter(lastDay!) : '-',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: grayBlack),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 16.h,
-                ),
-                const Divider(
-                  color: grayColor200,
-                  thickness: 1,
-                ),
-                SizedBox(
-                  height: 16.h,
-                ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '알림 시작일',
+                      lastDayText,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!

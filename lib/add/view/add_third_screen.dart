@@ -222,17 +222,10 @@ class ImmutableAlarmBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel plantState = ref.watch(addPlantProvider);
 
-    late DateTime? lastDay;
     final AlarmModel? alarmState = plantState.alarms.firstWhereOrNull(
       (alarm) => alarm.field == field,
     );
-    if (field == PlantField.watering) {
-      lastDay = plantState.watringLastDay;
-    } else if (field == PlantField.repotting) {
-      lastDay = plantState.repottingLastDay;
-    } else if (field == PlantField.nutrient) {
-      lastDay = plantState.nutrientLastDay;
-    }
+    final DateTime? lastDay = alarmState?.startTime;
 
     late String iconPath;
     late String title;

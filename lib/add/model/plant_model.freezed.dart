@@ -24,12 +24,6 @@ mixin _$PlantModel {
   String get userImageUrl => throw _privateConstructorUsedError;
   String get alias => throw _privateConstructorUsedError;
   bool get favorite => throw _privateConstructorUsedError;
-  @TimestampSerializer()
-  DateTime? get watringLastDay => throw _privateConstructorUsedError;
-  @TimestampSerializer()
-  DateTime? get repottingLastDay => throw _privateConstructorUsedError;
-  @TimestampSerializer()
-  DateTime? get nutrientLastDay => throw _privateConstructorUsedError;
   InformationModel get information => throw _privateConstructorUsedError;
   List<DiaryModel> get diary => throw _privateConstructorUsedError;
   List<AlarmModel> get alarms => throw _privateConstructorUsedError;
@@ -51,9 +45,6 @@ abstract class $PlantModelCopyWith<$Res> {
       String userImageUrl,
       String alias,
       bool favorite,
-      @TimestampSerializer() DateTime? watringLastDay,
-      @TimestampSerializer() DateTime? repottingLastDay,
-      @TimestampSerializer() DateTime? nutrientLastDay,
       InformationModel information,
       List<DiaryModel> diary,
       List<AlarmModel> alarms});
@@ -78,9 +69,6 @@ class _$PlantModelCopyWithImpl<$Res, $Val extends PlantModel>
     Object? userImageUrl = null,
     Object? alias = null,
     Object? favorite = null,
-    Object? watringLastDay = freezed,
-    Object? repottingLastDay = freezed,
-    Object? nutrientLastDay = freezed,
     Object? information = null,
     Object? diary = null,
     Object? alarms = null,
@@ -102,18 +90,6 @@ class _$PlantModelCopyWithImpl<$Res, $Val extends PlantModel>
           ? _value.favorite
           : favorite // ignore: cast_nullable_to_non_nullable
               as bool,
-      watringLastDay: freezed == watringLastDay
-          ? _value.watringLastDay
-          : watringLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      repottingLastDay: freezed == repottingLastDay
-          ? _value.repottingLastDay
-          : repottingLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      nutrientLastDay: freezed == nutrientLastDay
-          ? _value.nutrientLastDay
-          : nutrientLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       information: null == information
           ? _value.information
           : information // ignore: cast_nullable_to_non_nullable
@@ -151,9 +127,6 @@ abstract class _$$_PlantModelCopyWith<$Res>
       String userImageUrl,
       String alias,
       bool favorite,
-      @TimestampSerializer() DateTime? watringLastDay,
-      @TimestampSerializer() DateTime? repottingLastDay,
-      @TimestampSerializer() DateTime? nutrientLastDay,
       InformationModel information,
       List<DiaryModel> diary,
       List<AlarmModel> alarms});
@@ -177,9 +150,6 @@ class __$$_PlantModelCopyWithImpl<$Res>
     Object? userImageUrl = null,
     Object? alias = null,
     Object? favorite = null,
-    Object? watringLastDay = freezed,
-    Object? repottingLastDay = freezed,
-    Object? nutrientLastDay = freezed,
     Object? information = null,
     Object? diary = null,
     Object? alarms = null,
@@ -201,18 +171,6 @@ class __$$_PlantModelCopyWithImpl<$Res>
           ? _value.favorite
           : favorite // ignore: cast_nullable_to_non_nullable
               as bool,
-      watringLastDay: freezed == watringLastDay
-          ? _value.watringLastDay
-          : watringLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      repottingLastDay: freezed == repottingLastDay
-          ? _value.repottingLastDay
-          : repottingLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      nutrientLastDay: freezed == nutrientLastDay
-          ? _value.nutrientLastDay
-          : nutrientLastDay // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
       information: null == information
           ? _value.information
           : information // ignore: cast_nullable_to_non_nullable
@@ -230,17 +188,13 @@ class __$$_PlantModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class _$_PlantModel implements _PlantModel {
   _$_PlantModel(
       {this.docId = "",
       this.userImageUrl = "",
       this.alias = "",
       this.favorite = false,
-      @TimestampSerializer() this.watringLastDay = null,
-      @TimestampSerializer() this.repottingLastDay = null,
-      @TimestampSerializer() this.nutrientLastDay = null,
       required this.information,
       final List<DiaryModel> diary = const [],
       final List<AlarmModel> alarms = const []})
@@ -263,18 +217,6 @@ class _$_PlantModel implements _PlantModel {
   @JsonKey()
   final bool favorite;
   @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? watringLastDay;
-  @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? repottingLastDay;
-  @override
-  @JsonKey()
-  @TimestampSerializer()
-  final DateTime? nutrientLastDay;
-  @override
   final InformationModel information;
   final List<DiaryModel> _diary;
   @override
@@ -296,7 +238,7 @@ class _$_PlantModel implements _PlantModel {
 
   @override
   String toString() {
-    return 'PlantModel(docId: $docId, userImageUrl: $userImageUrl, alias: $alias, favorite: $favorite, watringLastDay: $watringLastDay, repottingLastDay: $repottingLastDay, nutrientLastDay: $nutrientLastDay, information: $information, diary: $diary, alarms: $alarms)';
+    return 'PlantModel(docId: $docId, userImageUrl: $userImageUrl, alias: $alias, favorite: $favorite, information: $information, diary: $diary, alarms: $alarms)';
   }
 
   @override
@@ -310,12 +252,6 @@ class _$_PlantModel implements _PlantModel {
             (identical(other.alias, alias) || other.alias == alias) &&
             (identical(other.favorite, favorite) ||
                 other.favorite == favorite) &&
-            (identical(other.watringLastDay, watringLastDay) ||
-                other.watringLastDay == watringLastDay) &&
-            (identical(other.repottingLastDay, repottingLastDay) ||
-                other.repottingLastDay == repottingLastDay) &&
-            (identical(other.nutrientLastDay, nutrientLastDay) ||
-                other.nutrientLastDay == nutrientLastDay) &&
             (identical(other.information, information) ||
                 other.information == information) &&
             const DeepCollectionEquality().equals(other._diary, _diary) &&
@@ -330,9 +266,6 @@ class _$_PlantModel implements _PlantModel {
       userImageUrl,
       alias,
       favorite,
-      watringLastDay,
-      repottingLastDay,
-      nutrientLastDay,
       information,
       const DeepCollectionEquality().hash(_diary),
       const DeepCollectionEquality().hash(_alarms));
@@ -357,9 +290,6 @@ abstract class _PlantModel implements PlantModel {
       final String userImageUrl,
       final String alias,
       final bool favorite,
-      @TimestampSerializer() final DateTime? watringLastDay,
-      @TimestampSerializer() final DateTime? repottingLastDay,
-      @TimestampSerializer() final DateTime? nutrientLastDay,
       required final InformationModel information,
       final List<DiaryModel> diary,
       final List<AlarmModel> alarms}) = _$_PlantModel;
@@ -375,15 +305,6 @@ abstract class _PlantModel implements PlantModel {
   String get alias;
   @override
   bool get favorite;
-  @override
-  @TimestampSerializer()
-  DateTime? get watringLastDay;
-  @override
-  @TimestampSerializer()
-  DateTime? get repottingLastDay;
-  @override
-  @TimestampSerializer()
-  DateTime? get nutrientLastDay;
   @override
   InformationModel get information;
   @override

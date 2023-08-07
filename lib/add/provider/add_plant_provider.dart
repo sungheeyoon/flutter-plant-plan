@@ -32,25 +32,6 @@ class AddPlantNotifier extends StateNotifier<PlantModel> {
     state = state.copyWith(information: InformationModel());
   }
 
-  void updateLastDay(
-    PlantField field,
-    DateTime lastDay,
-  ) {
-    switch (field) {
-      case PlantField.watering:
-        state = state.copyWith(watringLastDay: lastDay);
-        break;
-      case PlantField.repotting:
-        state = state.copyWith(repottingLastDay: lastDay);
-        break;
-      case PlantField.nutrient:
-        state = state.copyWith(nutrientLastDay: lastDay);
-        break;
-      default:
-        break;
-    }
-  }
-
   void updateAlias(String newAlias) {
     state = state.copyWith(alias: newAlias);
   }

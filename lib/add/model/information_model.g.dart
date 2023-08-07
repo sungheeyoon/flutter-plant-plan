@@ -22,5 +22,5 @@ Map<String, dynamic> _$$_InformationModelToJson(_$_InformationModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'imageUrl': instance.imageUrl,
-      'tips': instance.tips.map((e) => e.toJson()).toList(),
+      'tips': instance.tips,
     };

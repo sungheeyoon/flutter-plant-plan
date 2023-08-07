@@ -176,8 +176,7 @@ class __$$_DiaryModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class _$_DiaryModel implements _DiaryModel {
   _$_DiaryModel(
       {this.id = '',
