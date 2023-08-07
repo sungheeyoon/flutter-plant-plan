@@ -79,13 +79,13 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     String docId, {
     DateTime? startTime,
     int? repeat,
-    bool? isOn,
+    bool? isOnToggle,
     String? title,
     DateTime? offTime,
   }) async {
     if (startTime == null &&
         repeat == null &&
-        isOn == null &&
+        isOnToggle == null &&
         title == null &&
         offTime == null) {
       // startTime, repeat, isOn, title 모두 null인 경우 함수를 종료.
@@ -103,7 +103,8 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
             // null이 아니면  alarm을 업데이트.
             final updatedStartTime = startTime ?? alarm.startTime;
             final updatedRepeat = repeat ?? alarm.repeat;
-            final updatedIsOn = isOn ?? alarm.isOn;
+            final updatedIsOn =
+                isOnToggle != null && isOnToggle ? !alarm.isOn : alarm.isOn;
             final updatedTitle = title ?? alarm.title;
             final updatedOffDates = List<DateTime>.from(alarm.offDates);
             if (offTime != null) {

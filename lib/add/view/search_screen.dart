@@ -119,7 +119,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ref
                                   .read(addPlantProvider.notifier)
                                   .updateInformation(document);
-                              Navigator.pop(context);
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  AddFirstScreen.routeName, (route) => false,
+                                  arguments: {"update": true});
                             },
                           ).paddingOnly(bottom: 6.h);
                         } else {

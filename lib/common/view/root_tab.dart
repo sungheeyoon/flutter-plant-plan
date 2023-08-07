@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_plan/add/view/add_first_screen.dart';
+import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
@@ -52,7 +52,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         onTap: (int tappedIndex) {
           if (tappedIndex == 2) {
             // Icon(Icons.add)를 눌렀을 때
-            Navigator.pushNamed(context, AddFirstScreen.routeName);
+            Navigator.pushNamed(context, SearchScreen.routeName);
           } else {
             setState(() {
               index = tappedIndex;

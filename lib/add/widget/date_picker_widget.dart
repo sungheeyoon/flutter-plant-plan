@@ -2,8 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/alarm_model.dart';
-import 'package:plant_plan/add/model/plant_model.dart';
+
 import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
@@ -25,9 +24,8 @@ class DatePickerWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final plantState = ref.watch(addPlantProvider);
     final alarmState = ref.watch(alarmProvider);
-    final DateTime? date = _getDate(plantState, alarmState);
+    final date = alarmState.startTime;
 
     return GestureDetector(
       onTap: () => _showDatePicker(field, ref),
@@ -40,9 +38,9 @@ class DatePickerWidget extends ConsumerWidget {
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(left: 16),
-                hintText: date == null ? hintText : dateFormatter(date),
+                hintText: dateFormatter(date),
                 hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: date == null ? grayColor400 : grayBlack,
+                      color: grayBlack,
                     ),
                 focusedBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
@@ -99,7 +97,7 @@ class DatePickerWidget extends ConsumerWidget {
             ),
           Positioned(
             right: 10,
-            bottom: 13,
+            bottom: 21,
             child: Container(
               color: Colors.white,
               child: Padding(
@@ -117,20 +115,6 @@ class DatePickerWidget extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  DateTime? _getDate(PlantModel plantState, AlarmModel alarmState) {
-    switch (field) {
-      case PlantField.watering:
-        return alarm ? alarmState.startTime : plantState.watringLastDay;
-      case PlantField.repotting:
-        return alarm ? alarmState.startTime : plantState.repottingLastDay;
-      case PlantField.nutrient:
-        return alarm ? alarmState.startTime : plantState.nutrientLastDay;
-      case PlantField.none:
-      default:
-        return DateTime.now();
-    }
   }
 
   Future<void> _showDatePicker(PlantField field, WidgetRef ref) async {
@@ -153,8 +137,6 @@ class DatePickerWidget extends ConsumerWidget {
         ref
             .read(alarmProvider.notifier)
             .setStartTime(StartTimeOption.day, values[0]!);
-      } else {
-        ref.read(addPlantProvider.notifier).updateLastDay(field, values[0]!);
       }
     }
   }
