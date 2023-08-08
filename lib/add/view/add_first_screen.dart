@@ -8,6 +8,7 @@ import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
+import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
@@ -26,6 +27,7 @@ class AddFirstScreen extends ConsumerStatefulWidget {
 class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
   @override
   Widget build(BuildContext context) {
+    final PlantModel plantState = ref.watch(addPlantProvider);
     return DefaultLayout(
       title: '식물추가',
       leading: IconButton(
@@ -34,11 +36,15 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
           ref.read(photoProvider.notifier).reset();
           ref.read(alarmProvider.notifier).reset();
           ref.read(addPlantProvider.notifier).reset();
-          Navigator.pop(context);
+          Navigator.pushNamed(context, HomeScreen.routeName);
         },
       ),
       bottomNavigationBar: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, HomeScreen.routeName),
+        onTap: () {
+          if (plantState.information.id != "") {
+            Navigator.pushNamed(context, AddSecondScreen.routeName);
+          }
+        },
         child: Container(
           height: 46.h,
           width: 360.w,
@@ -53,28 +59,6 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
           ),
         ),
       ),
-
-      // floatingActionButton: RoundedButton(
-      //   font: Theme.of(context).textTheme.bodyLarge,
-      //   backgroundColor:
-      //       plantState.information.id != "" ? pointColor2 : grayColor300,
-      //   borderColor: plantState.information.id != ""
-      //       ? pointColor2.withOpacity(
-      //           0.5,
-      //         )
-      //       : grayColor300,
-      //   width: 328.w,
-      //   height: 44.h,
-      //   textColor: Colors.white,
-      //   name: '다음',
-      //   onPressed: () async {
-      //     if (plantState.information.id != "") {
-      //       Navigator.pushNamed(context, AddSecondScreen.routeName);
-      //     }
-      //     setState(() {});
-      //   },
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -123,21 +107,21 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               SizedBox(
                 height: 12.h,
               ),
-              const AlarmBox(
+              const AlarmBoxWidget(
                 field: PlantField.watering,
                 isDetail: false,
               ),
               SizedBox(
                 height: 12.h,
               ),
-              const AlarmBox(
+              const AlarmBoxWidget(
                 field: PlantField.repotting,
                 isDetail: false,
               ),
               SizedBox(
                 height: 12.h,
               ),
-              const AlarmBox(
+              const AlarmBoxWidget(
                 field: PlantField.nutrient,
                 isDetail: false,
               ),

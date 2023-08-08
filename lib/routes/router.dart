@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
-import 'package:plant_plan/add/view/add_third_screen.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/view/login_screen.dart';
@@ -32,11 +31,6 @@ GoRouter router = GoRouter(
           path: 'addSecond',
           name: 'addSecond',
           builder: (context, state) => const AddSecondScreen(),
-        ),
-        GoRoute(
-          path: 'addThird',
-          name: 'addThird',
-          builder: (context, state) => const AddThirdScreen(),
         ),
       ],
     ),

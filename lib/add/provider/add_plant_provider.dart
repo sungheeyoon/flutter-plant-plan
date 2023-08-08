@@ -36,7 +36,7 @@ class AddPlantNotifier extends StateNotifier<PlantModel> {
     state = state.copyWith(alias: newAlias);
   }
 
-  void updateDocId(String docId) {
+  Future<void> updateDocId(String docId) async {
     state = state.copyWith(docId: docId);
   }
 

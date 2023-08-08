@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
-import 'package:plant_plan/add/view/add_second_screen.dart';
+import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/wideget/infoTipButton.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -67,21 +67,21 @@ class SettingAlarm extends StatelessWidget {
         SizedBox(
           height: 12.h,
         ),
-        const AlarmBox(
+        const AlarmBoxWidget(
           field: PlantField.watering,
           isDetail: true,
         ),
         SizedBox(
           height: 12.h,
         ),
-        const AlarmBox(
+        const AlarmBoxWidget(
           field: PlantField.repotting,
           isDetail: true,
         ),
         SizedBox(
           height: 12.h,
         ),
-        const AlarmBox(
+        const AlarmBoxWidget(
           field: PlantField.nutrient,
           isDetail: true,
         ),

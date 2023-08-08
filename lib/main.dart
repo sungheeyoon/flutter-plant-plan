@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
-import 'package:plant_plan/add/view/add_third_screen.dart';
+
 import 'package:plant_plan/add/view/search_screen.dart';
 
 import 'package:plant_plan/common/view/home_screen.dart';
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
               // AddTab.routeName: (context) => const AddTab(),
               AddFirstScreen.routeName: (context) => const AddFirstScreen(),
               AddSecondScreen.routeName: (context) => const AddSecondScreen(),
-              AddThirdScreen.routeName: (context) => const AddThirdScreen(),
+
               SearchScreen.routeName: (context) => const SearchScreen(),
               RootTab.routeName: (context) => const RootTab(),
             },

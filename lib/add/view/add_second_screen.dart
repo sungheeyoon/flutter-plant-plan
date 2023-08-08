@@ -1,52 +1,91 @@
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
-import 'package:plant_plan/add/view/add_first_screen.dart';
-import 'package:plant_plan/add/view/add_third_screen.dart';
-import 'package:plant_plan/add/view/alarm_screen.dart';
-import 'package:plant_plan/add/widget/progress_bar.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/list/provider/detail_provider.dart';
+import 'package:plant_plan/common/utils/date_formatter.dart';
+import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/common/widget/rounded_button.dart';
 
 class AddSecondScreen extends ConsumerWidget {
   static String get routeName => 'addSecond';
-  const AddSecondScreen({super.key});
+  const AddSecondScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final PlantModel plantState = ref.watch(addPlantProvider);
-    final File? photoState = ref.watch(photoProvider);
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final photoState = ref.watch(photoProvider);
+    final plantState = ref.watch(addPlantProvider);
+
+    Future<void> insertNewPlant() async {
+      final user = auth.currentUser;
+
+      if (user == null) return;
+
+      final uid = user.uid;
+
+      final DocumentReference docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc();
+
+      final String docId = docRef.id;
+
+      await ref.read(addPlantProvider.notifier).updateDocId(docId);
+      final String userImageUrl = await ref
+          .read(photoProvider.notifier)
+          .uploadPhotoAndGetUserImageUrl(uid);
+      ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
+
+      final data = ref.read(addPlantProvider).toJson();
+
+      data['information'] = ref.read(addPlantProvider).information.toJson();
+      data['alarms'] = ref
+          .read(addPlantProvider)
+          .alarms
+          .map((alarm) => alarm.toJson())
+          .toList();
+
+      await docRef.set(data);
+
+      ref.read(photoProvider.notifier).reset();
+      ref.read(alarmProvider.notifier).reset();
+      ref.read(addPlantProvider.notifier).reset();
+    }
 
     return DefaultLayout(
       title: '식물추가',
-      floatingActionButton: RoundedButton(
-        font: Theme.of(context).textTheme.bodyLarge,
-        backgroundColor:
-            plantState.information.id != "" ? pointColor2 : grayColor300,
-        borderColor: plantState.information.id != ""
-            ? pointColor2.withOpacity(
-                0.5,
-              )
-            : grayColor300,
-        width: 328.w,
-        height: 44.h,
-        textColor: Colors.white,
-        name: '다음',
-        onPressed: () async {
+      bottomNavigationBar: GestureDetector(
+        onTap: () async {
           if (plantState.information.id != "") {
-            Navigator.pushNamed(context, AddThirdScreen.routeName);
+            await insertNewPlant();
+            if (!context.mounted) return;
+            Navigator.pushNamed(context, HomeScreen.routeName);
           }
         },
+        child: Container(
+          height: 46.h,
+          width: 360.w,
+          decoration: const BoxDecoration(color: pointColor2),
+          child: Center(
+            child: Text(
+              "다음",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: SingleChildScrollView(
@@ -55,14 +94,10 @@ class AddSecondScreen extends ConsumerWidget {
             horizontal: 24.0,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 8.0,
-              ),
-              const ProgressBar(pageIndex: 1),
-              const SizedBox(
-                height: 20.0,
+              SizedBox(
+                height: 20.h,
               ),
               Center(
                 child: Container(
@@ -79,140 +114,99 @@ class AddSecondScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (photoState != null) //찍음
-                            Stack(children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: CircleAvatar(
-                                  radius: 18.h, // Image radius
-                                  backgroundImage: FileImage(photoState),
-                                ),
-                              ),
-                            ])
-                          else if (plantState.information.imageUrl != "") //안찍음
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: CircleAvatar(
-                                radius: 18.h, // Image radius
-                                backgroundImage: NetworkImage(
-                                    plantState.information.imageUrl),
-                              ),
-                            )
-                          else
-                            Image(
-                              image: const AssetImage('assets/images/pot.png'),
-                              width: 36.h,
-                              height: 36.h,
+                      if (photoState != null) //찍은애
+                        Stack(children: [
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: CircleAvatar(
+                              radius: 30.h, // Image radius
+                              backgroundImage: FileImage(photoState),
                             ),
-                          SizedBox(
-                            width: 12.h,
                           ),
-                          if (plantState.information.name != "")
-                            Text(
-                              plantState.information.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
+                        ])
+                      else if (plantState.information.imageUrl !=
+                          "") //안찍었는데 깟다왓어
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: CircleAvatar(
+                            radius: 30.h, // Image radius
+                            backgroundImage:
+                                NetworkImage(plantState.information.imageUrl),
+                          ),
+                        )
+                      else
+                        Image(
+                          image: const AssetImage('assets/images/pot.png'),
+                          width: 60.h,
+                          height: 60.h,
+                        ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+                      if (plantState.information.name != "")
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.h,
+                              vertical: 2.h,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: keyColor100,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                plantState.information.name,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(
+                                      color: keyColor700,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (plantState.alias != "")
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                      if (plantState.alias != "")
+                        Text(
+                          plantState.alias,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
                                     color: grayBlack,
                                   ),
-                            ),
-                        ],
-                      ),
-                      RoundedButton(
-                        font: Theme.of(context).textTheme.labelMedium!.copyWith(
-                              fontSize: 13.sp,
-                            ),
-                        backgroundColor: Colors.white,
-                        borderColor: pointColor2.withOpacity(
-                          0.5,
                         ),
-                        width: 63.h,
-                        height: 30.h,
-                        textColor: pointColor2,
-                        name: '변경',
-                        onPressed: () => Navigator.pushNamed(
-                            context, AddFirstScreen.routeName),
+                      SizedBox(
+                        height: 16.h,
+                      ),
+                      const ImmutableAlarmBox(
+                        field: PlantField.watering,
+                      ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+                      const ImmutableAlarmBox(
+                        field: PlantField.repotting,
+                      ),
+                      SizedBox(
+                        height: 12.h,
+                      ),
+                      const ImmutableAlarmBox(
+                        field: PlantField.nutrient,
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 40.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.timer_outlined, // 플러스 아이콘
-                    size: 32.h, // 아이콘 크기 설정
-                    color: pointColor2, // 아이콘 색상 설정
-                  ),
-                  SizedBox(
-                    width: 8.h,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '식물 상태에 따라 관리 주기를',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: pointColor2,
-                            ),
-                      ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      Text(
-                        '원하는대로 설정하고 알림을 받아보세요',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: pointColor2,
-                            ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              const AlarmBox(
-                field: PlantField.watering,
-                isDetail: false,
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              const AlarmBox(
-                field: PlantField.repotting,
-                isDetail: false,
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              const AlarmBox(
-                field: PlantField.nutrient,
-                isDetail: false,
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              Text(
-                '앱 알림 권한을 허용해야 정상적인 알림 서비스를 이용하실 수 있어요',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: grayColor500,
-                    ),
-              ),
-              SizedBox(
-                height: 128.h,
               ),
             ],
           ),
@@ -222,26 +216,22 @@ class AddSecondScreen extends ConsumerWidget {
   }
 }
 
-class AlarmBox extends ConsumerWidget {
+class ImmutableAlarmBox extends ConsumerWidget {
   final PlantField field;
-  final bool isDetail;
 
-  const AlarmBox({
+  const ImmutableAlarmBox({
     super.key,
     required this.field,
-    required this.isDetail,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel plantState = ref.watch(addPlantProvider);
-    final PlantModel? datailState = ref.watch(detailProvider);
 
-    final List<AlarmModel>? alarms =
-        isDetail ? datailState?.alarms : plantState.alarms;
-
-    final AlarmModel? alarmState =
-        alarms?.firstWhereOrNull((alarm) => alarm.field == field);
+    final AlarmModel? alarmState = plantState.alarms.firstWhereOrNull(
+      (alarm) => alarm.field == field,
+    );
+    final DateTime? lastDay = alarmState?.startTime;
 
     late String iconPath;
     late String title;
@@ -256,130 +246,142 @@ class AlarmBox extends ConsumerWidget {
       iconPath = 'assets/images/management/nutrient.png';
       title = '영양제';
     }
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AlarmScreen(
-              title: title,
-              field: field,
-              alarm: alarmState,
-            ),
+    return Center(
+      child: Container(
+        width: 360.w,
+        padding: EdgeInsets.symmetric(
+          vertical: 10.h,
+          horizontal: 12.h,
+        ),
+        decoration: BoxDecoration(
+          color: grayColor100,
+          borderRadius: BorderRadius.circular(16.h),
+          border: Border.all(
+            width: 1.h,
+            color: grayColor300,
           ),
-        );
-      },
-      child: Center(
-        child: Container(
-          width: 360.w,
-          padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.h),
-          decoration: BoxDecoration(
-            color: grayColor100,
-            borderRadius: BorderRadius.circular(16.h),
-            border: Border.all(
-              width: 1.h,
-              color: grayColor300,
-            ),
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        iconPath,
-                        width: 20.h,
-                        height: 20.h,
-                      ),
-                      SizedBox(
-                        width: 4.h,
-                      ),
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: grayBlack,
-                            ),
-                      )
-                    ],
-                  ),
-                  if (alarmState == null)
-                    CircleAvatar(
-                      radius: 8.h,
-                      backgroundColor: pointColor2,
-                      child: const Icon(
-                        Icons.add, // 플러스 아이콘
-                        size: 16, // 아이콘 크기 설정
-                        color: Colors.white, // 아이콘 색상 설정
-                      ),
-                    ),
-                  if (alarmState != null && isDetail)
-                    SizedBox(
-                      width: 50,
-                      height: 20,
-                      child: Switch(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: alarmState.isOn,
-                        onChanged: (value) {},
-                        activeTrackColor: primaryColor.withOpacity(0.4),
-                        activeColor: primaryColor,
-                      ),
-                    ),
-                ],
-              ),
-              if (alarmState != null && alarmState.isOn)
-                Column(
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    Image.asset(
+                      iconPath,
+                      width: 16.h,
                       height: 16.h,
                     ),
-                    Container(
-                      width: 360.w,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 12.h, horizontal: 16.h),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.h),
-                        boxShadow: [
-                          BoxShadow(
-                            color: grayBlack.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 6,
-                            offset: const Offset(
-                                2, 2), // changes position of shadow
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: grayBlack,
+                          ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  height: 8.h,
+                ),
+                Container(
+                  width: 360.w,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 20.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.h),
+                    boxShadow: [
+                      BoxShadow(
+                        color: grayBlack.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 6,
+                        offset: const Offset(
+                          2,
+                          2,
+                        ), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '마지막 관리 날짜',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(
+                                  color: grayColor600,
+                                ),
+                          ),
+                          SizedBox(
+                            height: 6.h,
+                          ),
+                          Text(
+                            lastDay != null ? dateFormatter(lastDay) : '-',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              alarmState.repeat == 0
+                              Text(
+                                '알림',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .copyWith(
+                                      color: grayColor600,
+                                    ),
+                              ),
+                              SizedBox(
+                                width: 4.h,
+                              ),
+                              // if (plantState.watering.alarm
+                              //         .startDay !=
+                              //     null)
+                              alarmState?.repeat == 0 ||
+                                      alarmState?.repeat == null
                                   ? const SizedBox.shrink()
                                   : Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 4.h,
-                                        vertical: 2.h,
-                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 2.h),
                                       decoration: BoxDecoration(
                                         color: pointColor1.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(
-                                            4), // border radius 설정
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(4)),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          alarmState.repeat == 1
+                                          alarmState?.repeat == 1
                                               ? '매일'
-                                              : alarmState.repeat == 7
+                                              : alarmState?.repeat == 7
                                                   ? '매주'
-                                                  : '${alarmState.repeat}일 마다',
+                                                  : '${alarmState?.repeat}일 마다',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall!
@@ -389,57 +391,50 @@ class AlarmBox extends ConsumerWidget {
                                         ),
                                       ),
                                     ),
-                              if (alarmState.repeat != 0)
-                                SizedBox(
-                                  height: 8.h,
-                                ),
-                              Visibility(
-                                visible: alarmState.title.isNotEmpty,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      alarmState.title,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .copyWith(color: primaryColor),
-                                    ),
-                                    SizedBox(height: 2.h),
-                                  ],
-                                ),
-                              ),
-                              Text(
-                                DateFormat('h : mm a')
-                                    .format(alarmState.startTime),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayLarge!
-                                    .copyWith(
-                                      color: primaryColor,
-                                    ),
-                              )
                             ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              ref
-                                  .read(addPlantProvider.notifier)
-                                  .alarmDelete(alarmState.id);
-                            },
-                            child: Image.asset(
-                              'assets/icons/trash.png',
-                              width: 18.h,
-                              height: 18.h,
-                            ),
+                          SizedBox(
+                            height: 6.h,
                           ),
+                          if (alarmState != null && alarmState.isOn)
+                            Text(
+                              dateFormatter(alarmState.startTime
+                                  .add(Duration(days: alarmState.repeat))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: grayBlack,
+                                  ),
+                            ),
+                          if (alarmState == null)
+                            RichText(
+                              text: TextSpan(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: grayBlack,
+                                    ),
+                                children: const [
+                                  TextSpan(text: '-'),
+                                  TextSpan(
+                                    text: '333-33-33',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
                         ],
                       ),
-                    )
-                  ],
-                ),
-            ],
-          ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
