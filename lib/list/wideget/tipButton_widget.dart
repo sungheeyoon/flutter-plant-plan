@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DetailTipButton extends StatefulWidget {
+class TipButtonWidget extends StatefulWidget {
   final String text;
   final bool isFocused;
   final VoidCallback onPressed;
 
-  const DetailTipButton({
+  const TipButtonWidget({
     Key? key,
     required this.text,
     required this.isFocused,
@@ -14,10 +14,10 @@ class DetailTipButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DetailTipButtonState createState() => _DetailTipButtonState();
+  _TipButtonWidgetState createState() => _TipButtonWidgetState();
 }
 
-class _DetailTipButtonState extends State<DetailTipButton> {
+class _TipButtonWidgetState extends State<TipButtonWidget> {
   @override
   Widget build(BuildContext context) {
     const pointColor2 = Colors.blue; // Replace this with your desired color

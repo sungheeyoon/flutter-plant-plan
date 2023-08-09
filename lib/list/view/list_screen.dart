@@ -180,7 +180,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: selectedCardList.length,
               itemBuilder: (context, index) {
-                final card = selectedCardList[index];
+                final ListCardModel card = selectedCardList[index];
                 return PlantListCard(data: card);
               },
             ),
@@ -232,8 +232,9 @@ class PlantListCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: () {
-        ref.read(detailProvider.notifier).patchDetail(data.id);
+      onTap: () async {
+        await ref.read(detailProvider.notifier).patchDetail(data.id);
+        if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
