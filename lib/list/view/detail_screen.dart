@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
+import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/list/wideget/tipButton_widget.dart';
@@ -87,9 +91,11 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   bool isFavorited = false;
+
   @override
   Widget build(BuildContext context) {
-    final PlantModel? data = ref.watch(detailProvider);
+    final PlantModel? detailState = ref.watch(detailProvider);
+
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -122,9 +128,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                      data != null && data.userImageUrl == ""
-                          ? data.information.imageUrl
-                          : data?.userImageUrl ?? "",
+                      detailState != null && detailState.userImageUrl == ""
+                          ? detailState.information.imageUrl
+                          : detailState?.userImageUrl ?? "",
                     ),
                   ),
                 ),
@@ -135,15 +141,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (data?.alias != "")
+                  if (detailState?.alias != "")
                     Text(
-                      data!.alias,
+                      detailState!.alias,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
                     ),
                   //font height check
-                  if (data?.alias != "")
+                  if (detailState?.alias != "")
                     const SizedBox(
                       height: 0,
                     ),
@@ -151,7 +157,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        data!.information.name,
+                        detailState!.information.name,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -183,23 +189,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           ),
           GestureDetector(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('AlertDialog Title'),
-                  content: const Text('AlertDialog description'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'OK'),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
+              detailCardModal();
             },
             child: Image(
               image: const AssetImage('assets/icons/edit.png'),
@@ -209,6 +199,309 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> detailCardModal() {
+    bool isDelete = false;
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        PlantModel? detailState = ref.watch(detailProvider);
+        final File? photoState = ref.watch(photoProvider);
+
+        print('isDelete: $isDelete');
+        print('detailState: $detailState');
+        print('photoState: $photoState');
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              contentPadding: const EdgeInsets.all(0),
+              content: Container(
+                width: 312.w,
+                height: 283.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x1A000000),
+                      offset: Offset(0, 8),
+                      blurRadius: 8,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 24.h),
+                    Stack(
+                      children: [
+                        Stack(
+                          children: [
+                            //유저가 수정할 사진이 photoState 존재하는경우
+                            if (photoState != null)
+                              Stack(
+                                children: [
+                                  Container(
+                                    width: 60.h,
+                                    height: 60.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(24.h),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: FileImage(
+                                            photoState), // photoState가 null일 때는 NetworkImage 사용
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 1,
+                                    top: 1,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          ref
+                                              .read(photoProvider.notifier)
+                                              .reset();
+                                          isDelete = true;
+                                        });
+                                      },
+                                      child: Image(
+                                        image: const AssetImage(
+                                            'assets/icons/x.png'),
+                                        width: 16.h,
+                                        height: 16.h,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            //detailState.userImageUrl 유저가 찍은 사진이 존재함
+                            //x 버튼이 있는경우
+                            else if (detailState!.userImageUrl != "" &&
+                                !isDelete)
+                              Stack(
+                                children: [
+                                  Container(
+                                    width: 60.h,
+                                    height: 60.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(24.h),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                            detailState.userImageUrl),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 1,
+                                    top: 1,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isDelete = true;
+                                        });
+                                      },
+                                      child: Image(
+                                        image: const AssetImage(
+                                            'assets/icons/x.png'),
+                                        width: 16.h,
+                                        height: 16.h,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            //유저가 찍은 사진이 없고 관리자가 저장해놓은 imageUrl 이 있다면
+                            else if (detailState.information.imageUrl != "")
+                              Container(
+                                width: 60.h,
+                                height: 60.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24.h),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        detailState.information.imageUrl),
+                                  ),
+                                ),
+                              )
+                            else
+                              Image(
+                                image:
+                                    const AssetImage('assets/images/pot.png'),
+                                width: 60.h,
+                                height: 60.h,
+                              )
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6.h),
+                    if (detailState!.information.name != "")
+                      Text(
+                        detailState.information.name,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: grayBlack,
+                            ),
+                      ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RoundedButton(
+                          onPressed: () {
+                            ref
+                                .read(photoProvider.notifier)
+                                .setNewPhoto(camera: true);
+                          },
+                          font: Theme.of(context).textTheme.labelMedium,
+                          backgroundColor: Colors.white,
+                          borderColor: pointColor2.withOpacity(
+                            0.5,
+                          ),
+                          width: 90.h,
+                          height: 30.h,
+                          textColor: pointColor2,
+                          name: '사진 찍기',
+                        ),
+                        SizedBox(width: 8.h),
+                        RoundedButton(
+                          onPressed: () {
+                            ref
+                                .read(photoProvider.notifier)
+                                .setNewPhoto(camera: false);
+                          },
+                          font: Theme.of(context).textTheme.labelMedium,
+                          backgroundColor: Colors.white,
+                          borderColor: pointColor2.withOpacity(
+                            0.5,
+                          ),
+                          width: 90.h,
+                          height: 30.h,
+                          textColor: pointColor2,
+                          name: '사진 선택',
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            child: TextFormField(
+                              onChanged: (text) {
+                                ref
+                                    .read(addPlantProvider.notifier)
+                                    .updateAlias(text);
+                              },
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: grayBlack),
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.only(left: 16),
+                                hintText: '내 식물의 별칭을 입력해주세요',
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: grayColor400,
+                                    ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      8.0,
+                                    ),
+                                  ),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: keyColor500,
+                                  ),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      8.0,
+                                    ),
+                                  ),
+                                  borderSide: BorderSide(
+                                    width: 1,
+                                    color: grayColor400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 12,
+                            top: 0,
+                            child: Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
+                                child: Text(
+                                  '별칭',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        color: grayColor600,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Colors.grey[200],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: InkWell(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(15.0),
+                          bottomRight: Radius.circular(15.0),
+                        ),
+                        highlightColor: Colors.grey[200],
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Center(
+                          child: Text(
+                            "수정",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color: primaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
