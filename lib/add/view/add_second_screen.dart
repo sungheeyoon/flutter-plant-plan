@@ -120,29 +120,43 @@ class AddSecondScreen extends ConsumerWidget {
                     children: [
                       if (photoState != null) //찍은애
                         Stack(children: [
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: CircleAvatar(
-                              radius: 30.h, // Image radius
-                              backgroundImage: FileImage(photoState),
+                          Container(
+                            width: 60.h,
+                            height: 60.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24.h),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: FileImage(photoState),
+                              ),
                             ),
                           ),
                         ])
-                      else if (plantState.information.imageUrl !=
-                          "") //안찍었는데 깟다왓어
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: CircleAvatar(
-                            radius: 30.h, // Image radius
-                            backgroundImage:
-                                NetworkImage(plantState.information.imageUrl),
-                          ),
-                        )
-                      else
-                        Image(
-                          image: const AssetImage('assets/images/pot.png'),
+                      else if (plantState.information.imageUrl != "")
+                        Container(
                           width: 60.h,
                           height: 60.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.h),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image:
+                                  NetworkImage(plantState.information.imageUrl),
+                            ),
+                          ),
+                        ) //안찍었는데 깟다왓어
+
+                      else
+                        Container(
+                          width: 60.h,
+                          height: 60.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.h),
+                            image: const DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage('assets/images/pot.png'),
+                            ),
+                          ),
                         ),
                       SizedBox(
                         height: 12.h,
