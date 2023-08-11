@@ -9,8 +9,11 @@ import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
+import 'package:plant_plan/list/provider/x_trigger_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/list/wideget/tipButton_widget.dart';
 
@@ -90,11 +93,9 @@ class DetailCard extends ConsumerStatefulWidget {
 }
 
 class _DetailCardState extends ConsumerState<DetailCard> {
-  bool isFavorited = false;
-
   @override
   Widget build(BuildContext context) {
-    final PlantModel? detailState = ref.watch(detailProvider);
+    final PlantModel detailState = ref.watch(detailProvider)!;
 
     return Container(
       width: 360.w,
@@ -120,20 +121,14 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 60.h,
-                height: 60.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.h),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      detailState != null && detailState.userImageUrl == ""
-                          ? detailState.information.imageUrl
-                          : detailState?.userImageUrl ?? "",
-                    ),
-                  ),
+              ProfileImageWidget(
+                imageProvider: NetworkImage(
+                  detailState.userImageUrl == ""
+                      ? detailState.information.imageUrl
+                      : detailState.userImageUrl,
                 ),
+                size: 60.h,
+                radius: 24.h,
               ),
               SizedBox(
                 width: 16.h,
@@ -141,15 +136,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (detailState?.alias != "")
+                  if (detailState.alias != "")
                     Text(
-                      detailState!.alias,
+                      detailState.alias,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
                     ),
                   //font height check
-                  if (detailState?.alias != "")
+                  if (detailState.alias != "")
                     const SizedBox(
                       height: 0,
                     ),
@@ -157,7 +152,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        detailState!.information.name,
+                        detailState.information.name,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -168,12 +163,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            isFavorited = !isFavorited;
+                            ref.read(detailProvider.notifier).toggleFavorite();
+                            ref.read(plantsProvider.notifier).updatePlant(
+                                detailState.docId,
+                                favoriteToggle: true);
                           });
                         },
                         child: Image(
                           image: AssetImage(
-                            isFavorited
+                            detailState.favorite
                                 ? 'assets/icons/fav/fav_active.png'
                                 : 'assets/icons/fav/fav_inactive.png',
                           ),
@@ -203,18 +201,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   }
 
   Future<dynamic> detailCardModal() {
-    bool isDelete = false;
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        PlantModel? detailState = ref.watch(detailProvider);
-        final File? photoState = ref.watch(photoProvider);
+        return Consumer(
+          builder: (_, ref, __) {
+            final PlantModel detailState = ref.watch(detailProvider)!;
+            final File? photoState = ref.watch(photoProvider);
+            final bool xTrigger = ref.watch(xTriggerProvider);
 
-        print('isDelete: $isDelete');
-        print('detailState: $detailState');
-        print('photoState: $photoState');
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               contentPadding: const EdgeInsets.all(0),
               content: Container(
@@ -240,21 +235,14 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       children: [
                         Stack(
                           children: [
-                            //유저가 수정할 사진이 photoState 존재하는경우
-                            if (photoState != null)
+                            // 유저가 수정할 사진이 photoState 존재하는경우
+                            if (photoState != null && xTrigger == false)
                               Stack(
                                 children: [
-                                  Container(
-                                    width: 60.h,
-                                    height: 60.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24.h),
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: FileImage(
-                                            photoState), // photoState가 null일 때는 NetworkImage 사용
-                                      ),
-                                    ),
+                                  ProfileImageWidget(
+                                    imageProvider: FileImage(photoState),
+                                    size: 60.h,
+                                    radius: 24.h,
                                   ),
                                   Positioned(
                                     right: 1,
@@ -265,7 +253,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                           ref
                                               .read(photoProvider.notifier)
                                               .reset();
-                                          isDelete = true;
+                                          ref
+                                              .read(xTriggerProvider.notifier)
+                                              .isTrue();
                                         });
                                       },
                                       child: Image(
@@ -278,23 +268,17 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            //detailState.userImageUrl 유저가 찍은 사진이 존재함
-                            //x 버튼이 있는경우
-                            else if (detailState!.userImageUrl != "" &&
-                                !isDelete)
+                            // detailState.userImageUrl 유저가 찍은 사진이 존재함
+                            // x 버튼이 있는경우
+                            else if (detailState.userImageUrl != "" &&
+                                xTrigger == false)
                               Stack(
                                 children: [
-                                  Container(
-                                    width: 60.h,
-                                    height: 60.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24.h),
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                            detailState.userImageUrl),
-                                      ),
-                                    ),
+                                  ProfileImageWidget(
+                                    imageProvider:
+                                        NetworkImage(detailState.userImageUrl),
+                                    size: 60.h,
+                                    radius: 24.h,
                                   ),
                                   Positioned(
                                     right: 1,
@@ -302,7 +286,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          isDelete = true;
+                                          ref
+                                              .read(xTriggerProvider.notifier)
+                                              .isTrue();
                                         });
                                       },
                                       child: Image(
@@ -317,31 +303,25 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                               )
                             //유저가 찍은 사진이 없고 관리자가 저장해놓은 imageUrl 이 있다면
                             else if (detailState.information.imageUrl != "")
-                              Container(
-                                width: 60.h,
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(24.h),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        detailState.information.imageUrl),
-                                  ),
-                                ),
+                              ProfileImageWidget(
+                                imageProvider: NetworkImage(
+                                    detailState.information.imageUrl),
+                                size: 60.h,
+                                radius: 24.h,
                               )
                             else
-                              Image(
-                                image:
+                              ProfileImageWidget(
+                                imageProvider:
                                     const AssetImage('assets/images/pot.png'),
-                                width: 60.h,
-                                height: 60.h,
+                                size: 60.h,
+                                radius: 24.h,
                               )
                           ],
                         ),
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    if (detailState!.information.name != "")
+                    if (detailState.information.name != "")
                       Text(
                         detailState.information.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -354,9 +334,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       children: [
                         RoundedButton(
                           onPressed: () {
-                            ref
-                                .read(photoProvider.notifier)
-                                .setNewPhoto(camera: true);
+                            setState(() {
+                              ref
+                                  .read(photoProvider.notifier)
+                                  .setNewPhoto(camera: true);
+                              ref.read(xTriggerProvider.notifier).isFalse();
+                            });
                           },
                           font: Theme.of(context).textTheme.labelMedium,
                           backgroundColor: Colors.white,
@@ -371,9 +354,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         SizedBox(width: 8.h),
                         RoundedButton(
                           onPressed: () {
-                            ref
-                                .read(photoProvider.notifier)
-                                .setNewPhoto(camera: false);
+                            setState(() {
+                              ref
+                                  .read(photoProvider.notifier)
+                                  .setNewPhoto(camera: false);
+                              ref.read(xTriggerProvider.notifier).isFalse();
+                            });
                           },
                           font: Theme.of(context).textTheme.labelMedium,
                           backgroundColor: Colors.white,
@@ -501,6 +487,13 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             );
           },
         );
+      },
+    ).then(
+      (value) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          ref.read(photoProvider.notifier).reset();
+          ref.read(xTriggerProvider.notifier).isFalse();
+        });
       },
     );
   }

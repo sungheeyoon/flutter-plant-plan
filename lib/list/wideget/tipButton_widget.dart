@@ -7,11 +7,11 @@ class TipButtonWidget extends StatefulWidget {
   final VoidCallback onPressed;
 
   const TipButtonWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.isFocused,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   _TipButtonWidgetState createState() => _TipButtonWidgetState();

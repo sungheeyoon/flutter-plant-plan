@@ -6,6 +6,7 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
@@ -20,7 +21,6 @@ class ListScreen extends ConsumerStatefulWidget {
 
 class _ListScreenState extends ConsumerState<ListScreen> {
   int _selectedIndex = 0;
-
   void _onButtonTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -35,7 +35,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
       List<ListCardModel> results = [];
 
       for (final PlantModel plant in plantsState) {
-        String id = plant.docId;
+        String docId = plant.docId;
         String title = plant.alias == "" ? plant.information.name : plant.alias;
         String imageUrl = plant.userImageUrl == ""
             ? plant.information.imageUrl
@@ -101,7 +101,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
         }
         results.add(
           ListCardModel(
-              id: id,
+              docId: docId,
               title: title,
               imageUrl: imageUrl,
               dDay: dDay,
@@ -181,7 +181,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               itemCount: selectedCardList.length,
               itemBuilder: (context, index) {
                 final ListCardModel card = selectedCardList[index];
-                return PlantListCard(data: card);
+                return PlantListCard(cardData: card);
               },
             ),
           ],
@@ -222,23 +222,23 @@ class VerticalLine extends StatelessWidget {
 }
 
 class PlantListCard extends ConsumerWidget {
-  final ListCardModel data;
+  final ListCardModel cardData;
 
   const PlantListCard({
     super.key,
-    required this.data,
+    required this.cardData,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        await ref.read(detailProvider.notifier).patchDetail(data.id);
+        await ref.read(detailProvider.notifier).patchDetail(cardData.docId);
         if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(id: data.id),
+            builder: (context) => DetailScreen(id: cardData.docId),
           ),
         );
       },
@@ -262,19 +262,12 @@ class PlantListCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              width: 68.h,
-              height: 68.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28.h),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(data.imageUrl),
-                ),
-              ),
-            ),
+            ProfileImageWidget(
+                imageProvider: NetworkImage(cardData.imageUrl),
+                size: 68.h,
+                radius: 28.h),
             Text(
-              data.title,
+              cardData.title,
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                     color: grayBlack,
                   ),
@@ -290,27 +283,27 @@ class PlantListCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (data.fields.isEmpty)
+                  if (cardData.fields.isEmpty)
                     Image.asset(
                       'assets/icons/alarm_none.png',
                       width: 16.h,
                       height: 16.h,
                     ),
-                  if (data.fields.contains(PlantField.watering))
+                  if (cardData.fields.contains(PlantField.watering))
                     Image.asset(
                       'assets/images/management/humid.png',
                       width: 14.h,
                       height: 14.h,
                       fit: BoxFit.contain,
                     ),
-                  if (data.fields.contains(PlantField.repotting))
+                  if (cardData.fields.contains(PlantField.repotting))
                     Image.asset(
                       'assets/images/management/repotting.png',
                       width: 14.h,
                       height: 14.h,
                       fit: BoxFit.contain,
                     ),
-                  if (data.fields.contains(PlantField.nutrient))
+                  if (cardData.fields.contains(PlantField.nutrient))
                     Image.asset(
                       'assets/images/management/nutrient.png',
                       width: 14.h,
@@ -321,13 +314,13 @@ class PlantListCard extends ConsumerWidget {
                     width: 6.h,
                   ),
                   Text(
-                    data.fields.isEmpty
+                    cardData.fields.isEmpty
                         ? '알림 없음'
-                        : data.dDay == 0
+                        : cardData.dDay == 0
                             ? 'TODAY'
-                            : 'D-${data.dDay}',
+                            : 'D-${cardData.dDay}',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: data.fields.isEmpty
+                          color: cardData.fields.isEmpty
                               ? const Color(0xFFDEDEDE)
                               : grayColor700,
                         ),

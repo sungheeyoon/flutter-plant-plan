@@ -11,6 +11,7 @@ import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -204,16 +205,10 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                             //x 버튼 유무
                             if (photoState != null)
                               Stack(children: [
-                                Container(
-                                  width: 60.h,
-                                  height: 60.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(24.h),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: FileImage(photoState),
-                                    ),
-                                  ),
+                                ProfileImageWidget(
+                                  imageProvider: FileImage(photoState),
+                                  size: 60.h,
+                                  radius: 24.h,
                                 ),
                                 Positioned(
                                   right: 1,
@@ -233,24 +228,18 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                                 ),
                               ])
                             else if (plantState.information.imageUrl != "")
-                              Container(
-                                width: 60.h,
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(24.h),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        plantState.information.imageUrl),
-                                  ),
-                                ),
+                              ProfileImageWidget(
+                                imageProvider: NetworkImage(
+                                    plantState.information.imageUrl),
+                                size: 60.h,
+                                radius: 24.h,
                               )
                             else
-                              Image(
-                                image:
+                              ProfileImageWidget(
+                                imageProvider:
                                     const AssetImage('assets/images/pot.png'),
-                                width: 80.h,
-                                height: 80.h,
+                                size: 60.h,
+                                radius: 24.h,
                               )
                           ],
                         ),

@@ -7,7 +7,7 @@ part 'list_card_model.g.dart';
 @freezed
 class ListCardModel with _$ListCardModel {
   factory ListCardModel({
-    required String id,
+    required String docId,
     required String title,
     required String imageUrl,
     required int dDay,

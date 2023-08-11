@@ -20,7 +20,7 @@ ListCardModel _$ListCardModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ListCardModel {
-  String get id => throw _privateConstructorUsedError;
+  String get docId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
   int get dDay => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $ListCardModelCopyWith<$Res> {
       _$ListCardModelCopyWithImpl<$Res, ListCardModel>;
   @useResult
   $Res call(
-      {String id,
+      {String docId,
       String title,
       String imageUrl,
       int dDay,
@@ -59,16 +59,16 @@ class _$ListCardModelCopyWithImpl<$Res, $Val extends ListCardModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? docId = null,
     Object? title = null,
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      docId: null == docId
+          ? _value.docId
+          : docId // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _value.title
@@ -99,7 +99,7 @@ abstract class _$$_ListCardModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {String docId,
       String title,
       String imageUrl,
       int dDay,
@@ -117,16 +117,16 @@ class __$$_ListCardModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? docId = null,
     Object? title = null,
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
   }) {
     return _then(_$_ListCardModel(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      docId: null == docId
+          ? _value.docId
+          : docId // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _value.title
@@ -152,7 +152,7 @@ class __$$_ListCardModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ListCardModel implements _ListCardModel {
   _$_ListCardModel(
-      {required this.id,
+      {required this.docId,
       required this.title,
       required this.imageUrl,
       required this.dDay,
@@ -163,7 +163,7 @@ class _$_ListCardModel implements _ListCardModel {
       _$$_ListCardModelFromJson(json);
 
   @override
-  final String id;
+  final String docId;
   @override
   final String title;
   @override
@@ -180,7 +180,7 @@ class _$_ListCardModel implements _ListCardModel {
 
   @override
   String toString() {
-    return 'ListCardModel(id: $id, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields)';
+    return 'ListCardModel(docId: $docId, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields)';
   }
 
   @override
@@ -188,7 +188,7 @@ class _$_ListCardModel implements _ListCardModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ListCardModel &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.docId, docId) || other.docId == docId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
@@ -198,7 +198,7 @@ class _$_ListCardModel implements _ListCardModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, imageUrl, dDay,
+  int get hashCode => Object.hash(runtimeType, docId, title, imageUrl, dDay,
       const DeepCollectionEquality().hash(_fields));
 
   @JsonKey(ignore: true)
@@ -217,7 +217,7 @@ class _$_ListCardModel implements _ListCardModel {
 
 abstract class _ListCardModel implements ListCardModel {
   factory _ListCardModel(
-      {required final String id,
+      {required final String docId,
       required final String title,
       required final String imageUrl,
       required final int dDay,
@@ -227,7 +227,7 @@ abstract class _ListCardModel implements ListCardModel {
       _$_ListCardModel.fromJson;
 
   @override
-  String get id;
+  String get docId;
   @override
   String get title;
   @override
