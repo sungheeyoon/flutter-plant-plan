@@ -23,7 +23,7 @@ class PhotoNotifier extends StateNotifier<File?> {
   }
 
   //setPhoto 로 전환예정 test필요
-  void setNewPhoto({required bool camera}) async {
+  Future<void> setNewPhoto({required bool camera}) async {
     final imageHelper = ImageHelper();
     final file = camera
         ? await imageHelper.pickImage(camera: true)

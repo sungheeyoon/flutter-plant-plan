@@ -12,6 +12,7 @@ import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AddSecondScreen extends ConsumerWidget {
@@ -118,45 +119,29 @@ class AddSecondScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      if (photoState != null) //찍은애
-                        Stack(children: [
-                          Container(
-                            width: 60.h,
-                            height: 60.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24.h),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: FileImage(photoState),
-                              ),
+                      if (photoState != null)
+                        Stack(
+                          children: [
+                            ProfileImageWidget(
+                              imageProvider: FileImage(photoState),
+                              size: 60.h,
+                              radius: 24.h,
                             ),
-                          ),
-                        ])
+                          ],
+                        )
                       else if (plantState.information.imageUrl != "")
-                        Container(
-                          width: 60.h,
-                          height: 60.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24.h),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image:
-                                  NetworkImage(plantState.information.imageUrl),
-                            ),
-                          ),
-                        ) //안찍었는데 깟다왓어
-
+                        ProfileImageWidget(
+                          imageProvider:
+                              NetworkImage(plantState.information.imageUrl),
+                          size: 60.h,
+                          radius: 24.h,
+                        )
                       else
-                        Container(
-                          width: 60.h,
-                          height: 60.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24.h),
-                            image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('assets/images/pot.png'),
-                            ),
-                          ),
+                        ProfileImageWidget(
+                          imageProvider:
+                              const AssetImage('assets/images/pot.png'),
+                          size: 60.h,
+                          radius: 24.h,
                         ),
                       SizedBox(
                         height: 12.h,

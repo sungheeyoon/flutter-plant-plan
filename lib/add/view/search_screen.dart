@@ -9,6 +9,7 @@ import 'package:plant_plan/add/model/information_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/widgets/search_widget.dart';
 
@@ -94,16 +95,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             leading: CachedNetworkImage(
                               imageUrl: document.imageUrl,
                               imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 40.h,
-                                height: 40.h,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                  ProfileImageWidget(
+                                imageProvider: imageProvider,
+                                size: 40.h,
+                                radius: 16.h,
                               ),
                               placeholder: (context, url) => SizedBox(
                                 width: 40.h,
@@ -149,15 +144,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               leading: CachedNetworkImage(
                                 imageUrl: document.imageUrl,
                                 imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: 40.h,
-                                  height: 40.h,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
+                                    ProfileImageWidget(
+                                  imageProvider: imageProvider,
+                                  size: 40.h,
+                                  radius: 16.h,
                                 ),
                                 placeholder: (context, url) => SizedBox(
                                   width: 40.h,

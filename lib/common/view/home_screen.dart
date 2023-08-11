@@ -10,6 +10,7 @@ import 'package:plant_plan/common/provider/selected_date_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 
@@ -58,7 +59,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
             if ((difference == 0 && alarm.repeat == 0) ||
                 (alarm.repeat > 0 &&
-                    difference > -1 && // 수정: difference가 -1보다 커야 함
+                    difference > -1 &&
                     difference % alarm.repeat == 0)) {
               results.add(
                 AlarmWithUserInfo(
@@ -81,13 +82,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return results;
     }
 
+    //오늘 선택된 날짜의 알람들 전부 selectedDateAlarms 에 저장
     final List<AlarmWithUserInfo> selectedDateAlarms = getSelectedDateList();
-    int completeCount = 0;
-    for (final AlarmWithUserInfo info in selectedDateAlarms) {
-      if (info.alarm.offDates.contains(selectedDateState)) {
-        completeCount++;
-      }
-    }
+    // 오늘 선택된 날짜의 알람들중 PlantField 별 filter
     final List<AlarmWithUserInfo> wateringAlarms =
         getSelectedDateList(PlantField.watering);
     final List<AlarmWithUserInfo> repottingAlarms =
@@ -95,6 +92,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<AlarmWithUserInfo> nutrientAlarms =
         getSelectedDateList(PlantField.nutrient);
 
+    //완료된 알람 카운트
+    int completeCount = 0;
+    for (final AlarmWithUserInfo info in selectedDateAlarms) {
+      if (info.alarm.offDates.contains(selectedDateState)) {
+        completeCount++;
+      }
+    }
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -105,391 +109,406 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 height: 194.h,
                 child: const MyCalendar(),
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 12.h,
+                ),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              32.h,
-                            ),
-                            color: grayColor100,
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: ProgressWidget(
+                          selectedDateAlarms: selectedDateAlarms,
+                          completeCount: completeCount),
+                    ),
+                    SizedBox(
+                      height: 16.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          Text(
+                            "TO-DO",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(color: primaryColor),
                           ),
-                          height: 54.h,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '해야할 일',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .copyWith(color: grayColor500),
-                                  ),
-                                  SizedBox(
-                                    height: 4.h,
-                                  ),
-                                  Text(
-                                    '${selectedDateAlarms.length}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .copyWith(color: grayBlack),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                width: 1.0,
-                                height: 16.h,
-                                color: grayColor300,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '완료',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .copyWith(color: grayColor500),
-                                  ),
-                                  SizedBox(
-                                    height: 4.h,
-                                  ),
-                                  Text(
-                                    '$completeCount', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn 갯수를 파악해서 넣는다
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .copyWith(color: grayBlack),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                width: 1.0,
-                                height: 16.h,
-                                color: grayColor300,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '성공률',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .copyWith(color: grayColor500),
-                                  ),
-                                  SizedBox(
-                                    height: 4.h,
-                                  ),
-                                  Text(
-                                    '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall!
-                                        .copyWith(color: grayBlack),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 16.h,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          children: [
-                            Text(
-                              "TO-DO",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: primaryColor),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              // 아이콘 옆에 클릭했을 때 실행할 코드
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "탭별로 보기",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(color: grayColor500),
+                                ),
+                                SizedBox(
+                                  width: 8.h,
+                                ),
+                                Image.asset(
+                                  'assets/icons/home/change_view.png',
+                                  width: 18.h,
+                                  height: 18.h,
+                                ),
+                              ],
                             ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                // 아이콘 옆에 클릭했을 때 실행할 코드
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(0,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut);
+                                setState(
+                                  () {
+                                    _currentPageIndex = 0;
+                                  },
+                                );
                               },
+                              style: TextButton.styleFrom(
+                                backgroundColor: _currentPageIndex == 0
+                                    ? primaryColor
+                                    : Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(
+                                    left: Radius.circular(30),
+                                    right: Radius.circular(30),
+                                  ),
+                                ),
+                              ),
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "탭별로 보기",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(color: grayColor500),
+                                  Opacity(
+                                    opacity:
+                                        _currentPageIndex == 0 ? 1.0 : 0.75,
+                                    child: Image.asset(
+                                      'assets/images/management/humid.png',
+                                      width: 16.h,
+                                      height: 16.h,
+                                    ),
                                   ),
                                   SizedBox(
-                                    width: 8.h,
+                                    width: 4.h,
                                   ),
-                                  Image.asset(
-                                    'assets/icons/home/change_view.png',
-                                    width: 18.h,
-                                    height: 18.h,
+                                  Text(
+                                    '물주기',
+                                    style: _currentPageIndex == 0
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              color: Colors.white,
+                                            )
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: primaryColor
+                                                  .withOpacity(0.75),
+                                            ),
+                                  ),
+                                  SizedBox(
+                                    width: 4.h,
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 6.h,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(0,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut);
-                                  setState(
-                                    () {
-                                      _currentPageIndex = 0;
-                                    },
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: _currentPageIndex == 0
-                                      ? primaryColor
-                                      : Colors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
-                                    ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(1,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut);
+                                setState(
+                                  () {
+                                    _currentPageIndex = 1;
+                                  },
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: _currentPageIndex == 1
+                                    ? primaryColor
+                                    : Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(
+                                    left: Radius.circular(30),
+                                    right: Radius.circular(30),
                                   ),
                                 ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Opacity(
-                                      opacity:
-                                          _currentPageIndex == 0 ? 1.0 : 0.75,
-                                      child: Image.asset(
-                                        'assets/images/management/humid.png',
-                                        width: 16.h,
-                                        height: 16.h,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                    Text(
-                                      '물주기',
-                                      style: _currentPageIndex == 0
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .labelLarge!
-                                              .copyWith(
-                                                color: Colors.white,
-                                              )
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                color: primaryColor
-                                                    .withOpacity(0.75),
-                                              ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                  ],
-                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(1,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut);
-                                  setState(
-                                    () {
-                                      _currentPageIndex = 1;
-                                    },
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: _currentPageIndex == 1
-                                      ? primaryColor
-                                      : Colors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Opacity(
+                                    opacity:
+                                        _currentPageIndex == 1 ? 1.0 : 0.75,
+                                    child: Image.asset(
+                                      'assets/images/management/repotting.png',
+                                      width: 16.h,
+                                      height: 16.h,
                                     ),
                                   ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Opacity(
-                                      opacity:
-                                          _currentPageIndex == 1 ? 1.0 : 0.75,
-                                      child: Image.asset(
-                                        'assets/images/management/repotting.png',
-                                        width: 16.h,
-                                        height: 16.h,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                    Text(
-                                      '분갈이',
-                                      style: _currentPageIndex == 1
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .labelLarge!
-                                              .copyWith(
-                                                color: Colors.white,
-                                              )
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                color: primaryColor
-                                                    .withOpacity(0.75),
-                                              ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                  ],
-                                ),
+                                  SizedBox(
+                                    width: 4.h,
+                                  ),
+                                  Text(
+                                    '분갈이',
+                                    style: _currentPageIndex == 1
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              color: Colors.white,
+                                            )
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: primaryColor
+                                                  .withOpacity(0.75),
+                                            ),
+                                  ),
+                                  SizedBox(
+                                    width: 4.h,
+                                  ),
+                                ],
                               ),
                             ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () {
-                                  _pageController.animateToPage(2,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut);
-                                  setState(() {
-                                    _currentPageIndex = 2;
-                                  });
-                                },
-                                style: TextButton.styleFrom(
-                                  backgroundColor: _currentPageIndex == 2
-                                      ? primaryColor
-                                      : Colors.white,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
-                                    ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                _pageController.animateToPage(2,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut);
+                                setState(() {
+                                  _currentPageIndex = 2;
+                                });
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: _currentPageIndex == 2
+                                    ? primaryColor
+                                    : Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.horizontal(
+                                    left: Radius.circular(30),
+                                    right: Radius.circular(30),
                                   ),
                                 ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Opacity(
-                                      opacity:
-                                          _currentPageIndex == 1 ? 1.0 : 0.75,
-                                      child: Image.asset(
-                                        'assets/images/management/nutrient.png',
-                                        width: 16.h,
-                                        height: 16.h,
-                                      ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Opacity(
+                                    opacity:
+                                        _currentPageIndex == 1 ? 1.0 : 0.75,
+                                    child: Image.asset(
+                                      'assets/images/management/nutrient.png',
+                                      width: 16.h,
+                                      height: 16.h,
                                     ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                    Text(
-                                      '영양제',
-                                      style: _currentPageIndex == 2
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .labelLarge!
-                                              .copyWith(
-                                                color: Colors.white,
-                                              )
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                color: primaryColor
-                                                    .withOpacity(0.75),
-                                              ),
-                                    ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(
+                                    width: 4.h,
+                                  ),
+                                  Text(
+                                    '영양제',
+                                    style: _currentPageIndex == 2
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(
+                                              color: Colors.white,
+                                            )
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: primaryColor
+                                                  .withOpacity(0.75),
+                                            ),
+                                  ),
+                                  SizedBox(
+                                    width: 4.h,
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const Divider(
-                        thickness: 1,
-                        color: grayColor200,
+                    ),
+                    const Divider(
+                      thickness: 1,
+                      color: grayColor200,
+                    ),
+                    SizedBox(
+                      height: 4.h,
+                    ),
+                    SizedBox(
+                      height: 400.h,
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentPageIndex = index;
+                          });
+                        },
+                        children: [
+                          TodoTap(
+                              selectedDateAlarms: wateringAlarms,
+                              field: PlantField.watering),
+                          TodoTap(
+                              selectedDateAlarms: repottingAlarms,
+                              field: PlantField.repotting),
+                          TodoTap(
+                              selectedDateAlarms: nutrientAlarms,
+                              field: PlantField.nutrient),
+                        ],
                       ),
-                      SizedBox(
-                        height: 4.h,
-                      ),
-                      SizedBox(
-                        height: 400.h,
-                        child: PageView(
-                          controller: _pageController,
-                          onPageChanged: (index) {
-                            setState(() {
-                              _currentPageIndex = index;
-                            });
-                          },
-                          children: [
-                            TodoTap(
-                                selectedDateAlarms: wateringAlarms,
-                                field: PlantField.watering),
-                            TodoTap(
-                                selectedDateAlarms: repottingAlarms,
-                                field: PlantField.repotting),
-                            TodoTap(
-                                selectedDateAlarms: nutrientAlarms,
-                                field: PlantField.nutrient),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ProgressWidget extends StatelessWidget {
+  const ProgressWidget({
+    super.key,
+    required this.selectedDateAlarms,
+    required this.completeCount,
+  });
+
+  final List<AlarmWithUserInfo> selectedDateAlarms;
+  final int completeCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          32.h,
+        ),
+        color: grayColor100,
+      ),
+      height: 54.h,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '해야할 일',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: grayColor500),
+              ),
+              SizedBox(
+                height: 4.h,
+              ),
+              Text(
+                '${selectedDateAlarms.length}',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .copyWith(color: grayBlack),
+              ),
+            ],
+          ),
+          Container(
+            width: 1.0,
+            height: 16.h,
+            color: grayColor300,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '완료',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: grayColor500),
+              ),
+              SizedBox(
+                height: 4.h,
+              ),
+              Text(
+                '$completeCount',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .copyWith(color: grayBlack),
+              ),
+            ],
+          ),
+          Container(
+            width: 1.0,
+            height: 16.h,
+            color: grayColor300,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '성공률',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: grayColor500),
+              ),
+              SizedBox(
+                height: 4.h,
+              ),
+              Text(
+                '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .copyWith(color: grayBlack),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -647,21 +666,14 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 36.h,
-                        height: 36.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14.h),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.info.userImageUrl == ""
-                                  ? widget.info.information.imageUrl
-                                  : widget.info.userImageUrl,
-                            ),
-                            fit: BoxFit.cover,
+                      ProfileImageWidget(
+                          imageProvider: NetworkImage(
+                            widget.info.userImageUrl == ""
+                                ? widget.info.information.imageUrl
+                                : widget.info.userImageUrl,
                           ),
-                        ),
-                      ),
+                          size: 36.h,
+                          radius: 14.h),
                       SizedBox(width: 8.h),
                       Text(
                         widget.info.alias.isNotEmpty

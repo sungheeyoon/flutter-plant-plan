@@ -36,43 +36,60 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     state = datas;
   }
 
-  // void fetchUserDataForSelectedDay(DateTime selectedDay) async {
-  //   final FirebaseAuth auth = FirebaseAuth.instance;
-  //   final user = auth.currentUser;
-  //   final List<PlantModel> datas = [];
+  void updatePlant(
+    String docId, {
+    String? alias,
+    bool? favoriteToggle,
+  }) async {
+    if (alias == null && favoriteToggle == null) {
+      return;
+    }
+    final List<PlantModel> updatedPlants = [...state]; // 새로운 리스트로 복사
 
-  //   if (user != null) {
-  //     final uid = user.uid;
-  //     final userDataSnapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(uid)
-  //         .collection('plants')
-  //         .where('isSelectedDay', isEqualTo: selectedDay)
-  //         .get();
+    for (int i = 0; i < updatedPlants.length; i++) {
+      final PlantModel plant = updatedPlants[i];
+      if (plant.docId == docId) {
+        final updatedAlias = alias ?? plant.alias;
+        final updatedIsFavorite = favoriteToggle != null && favoriteToggle
+            ? !plant.favorite
+            : plant.favorite;
+        final updatedPlant = plant.copyWith(
+          alias: updatedAlias,
+          favorite: updatedIsFavorite,
+        );
 
-  //     final userData = userDataSnapshot.docs.map((doc) => doc.data()).toList();
+        //업데이트한 plant의 인덱스를 찾아 updatedPlants 를 수정한다
+        updatedPlants[i] = updatedPlant;
 
-  //     for (var data in userData) {
-  //       final info = PlantInformationModel.fromJson(data['plantInformation']);
-  //       final plant = PlantModel.fromJson({
-  //         'id': data['id'],
-  //         'image': data['image'],
-  //         'name': data['name'],
-  //       });
+        break;
+      }
+    }
 
-  //       datas.add(
-  //         PlantModel(
-  //           info: info,
-  //           plant: plant,
-  //           selectedPhotoUrl: data['selectedPhotoUrl'],
-  //           docId: data['docId'],
-  //         ),
-  //       );
-  //     }
-  //   }
+    // 데이터베이스 업데이트
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
 
-  //   state = datas;
-  // }
+    if (user != null) {
+      final uid = user.uid;
+
+      final Map<String, dynamic> plantData = {
+        'alias':
+            updatedPlants.firstWhere((plant) => plant.docId == docId).alias,
+        'favorite':
+            updatedPlants.firstWhere((plant) => plant.docId == docId).favorite,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId)
+          .update(plantData);
+    }
+
+    // 전체 상태를 업데이트
+    state = updatedPlants;
+  }
 
   void updateAlarm(
     String alarmId,
