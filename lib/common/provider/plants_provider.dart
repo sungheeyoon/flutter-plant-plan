@@ -189,4 +189,14 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     // 전체 상태를 업데이트
     state = updatedPlants;
   }
+
+  PlantModel getPlant(String docId) {
+    for (final PlantModel plant in state) {
+      if (docId == plant.docId) {
+        print(plant);
+        return plant;
+      }
+    }
+    throw Exception("docId 와 매치되는 plant가 없습니다.: $docId");
+  }
 }
