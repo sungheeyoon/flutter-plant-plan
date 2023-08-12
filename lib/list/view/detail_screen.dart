@@ -17,75 +17,62 @@ import 'package:plant_plan/list/provider/x_trigger_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/list/wideget/tipButton_widget.dart';
 
-class DetailScreen extends ConsumerStatefulWidget {
-  final String id;
+class DetailScreen extends StatelessWidget {
+  final PlantModel plant;
   const DetailScreen({
     super.key,
-    required this.id,
+    required this.plant,
   });
 
   @override
-  ConsumerState<DetailScreen> createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends ConsumerState<DetailScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    PlantModel? detailData = ref.watch(detailProvider);
     return DefaultLayout(
       title: '내 식물',
       child: SingleChildScrollView(
-        child: detailData is PlantModel
-            ? Column(
-                children: [
-                  SizedBox(
-                    height: 6.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.h),
-                    child: const DetailCard(),
-                  ),
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.h),
-                    child: const UpcomingAlarm(),
-                  ),
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.h),
-                    child: const SettingAlarm(),
-                  ),
-                  SizedBox(
-                    height: 40.h,
-                  ),
-                  const Tips(),
-                  SizedBox(
-                    height: 80.h,
-                  )
-                ],
-              )
-            : const Center(
-                child: (Text(
-                  '데이터를 불러오는데 실패했습니다.',
-                )),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 6.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.h),
+              child: DetailCard(
+                plant: plant,
               ),
+            ),
+            SizedBox(
+              height: 40.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.h),
+              child: const UpcomingAlarm(),
+            ),
+            SizedBox(
+              height: 40.h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.h),
+              child: const SettingAlarm(),
+            ),
+            SizedBox(
+              height: 40.h,
+            ),
+            const Tips(),
+            SizedBox(
+              height: 80.h,
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class DetailCard extends ConsumerStatefulWidget {
+  final PlantModel plant;
   const DetailCard({
     super.key,
+    required this.plant,
   });
 
   @override
@@ -93,10 +80,15 @@ class DetailCard extends ConsumerStatefulWidget {
 }
 
 class _DetailCardState extends ConsumerState<DetailCard> {
+  late bool isFavorite;
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.plant.favorite;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final PlantModel detailState = ref.watch(detailProvider)!;
-
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -123,9 +115,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             children: [
               ProfileImageWidget(
                 imageProvider: NetworkImage(
-                  detailState.userImageUrl == ""
-                      ? detailState.information.imageUrl
-                      : detailState.userImageUrl,
+                  widget.plant.userImageUrl == ""
+                      ? widget.plant.information.imageUrl
+                      : widget.plant.userImageUrl,
                 ),
                 size: 60.h,
                 radius: 24.h,
@@ -136,15 +128,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (detailState.alias != "")
+                  if (widget.plant.alias != "")
                     Text(
-                      detailState.alias,
+                      widget.plant.alias,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
                     ),
                   //font height check
-                  if (detailState.alias != "")
+                  if (widget.plant.alias != "")
                     const SizedBox(
                       height: 0,
                     ),
@@ -152,7 +144,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        detailState.information.name,
+                        widget.plant.information.name,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -163,15 +155,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            ref.read(detailProvider.notifier).toggleFavorite();
+                            isFavorite = !isFavorite;
                             ref.read(plantsProvider.notifier).updatePlant(
-                                detailState.docId,
+                                widget.plant.docId,
                                 favoriteToggle: true);
                           });
                         },
                         child: Image(
                           image: AssetImage(
-                            detailState.favorite
+                            isFavorite
                                 ? 'assets/icons/fav/fav_active.png'
                                 : 'assets/icons/fav/fav_inactive.png',
                           ),
@@ -206,7 +198,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
       builder: (BuildContext context) {
         return Consumer(
           builder: (_, ref, __) {
-            final PlantModel detailState = ref.watch(detailProvider)!;
             final File? photoState = ref.watch(photoProvider);
             final bool xTrigger = ref.watch(xTriggerProvider);
 
@@ -270,13 +261,13 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                               )
                             // detailState.userImageUrl 유저가 찍은 사진이 존재함
                             // x 버튼이 있는경우
-                            else if (detailState.userImageUrl != "" &&
+                            else if (widget.plant.userImageUrl != "" &&
                                 xTrigger == false)
                               Stack(
                                 children: [
                                   ProfileImageWidget(
                                     imageProvider:
-                                        NetworkImage(detailState.userImageUrl),
+                                        NetworkImage(widget.plant.userImageUrl),
                                     size: 60.h,
                                     radius: 24.h,
                                   ),
@@ -302,10 +293,10 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                 ],
                               )
                             //유저가 찍은 사진이 없고 관리자가 저장해놓은 imageUrl 이 있다면
-                            else if (detailState.information.imageUrl != "")
+                            else if (widget.plant.information.imageUrl != "")
                               ProfileImageWidget(
                                 imageProvider: NetworkImage(
-                                    detailState.information.imageUrl),
+                                    widget.plant.information.imageUrl),
                                 size: 60.h,
                                 radius: 24.h,
                               )
@@ -321,9 +312,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    if (detailState.information.name != "")
+                    if (widget.plant.information.name != "")
                       Text(
-                        detailState.information.name,
+                        widget.plant.information.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: grayBlack,
                             ),

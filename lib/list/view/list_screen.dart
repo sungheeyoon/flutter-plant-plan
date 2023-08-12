@@ -234,11 +234,14 @@ class PlantListCard extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         await ref.read(detailProvider.notifier).patchDetail(cardData.docId);
+
         if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(id: cardData.docId),
+            builder: (context) => DetailScreen(
+              plant: ref.read(plantsProvider.notifier).getPlant(cardData.docId),
+            ),
           ),
         );
       },
