@@ -81,10 +81,31 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
+  TextEditingController textController = TextEditingController();
   @override
   void initState() {
     super.initState();
     isFavorite = widget.plant.favorite;
+    textController.text = widget.plant.alias;
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
+  int calculateIsChangePhoto(
+      File? photoState, String userImageUrl, String informationImageUrl) {
+    if (photoState != null) {
+      return 1;
+    } else if (userImageUrl.isNotEmpty) {
+      return 2;
+    } else if (informationImageUrl.isNotEmpty) {
+      return 3;
+    } else {
+      return 4;
+    }
   }
 
   @override
@@ -200,6 +221,13 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           builder: (_, ref, __) {
             final File? photoState = ref.watch(photoProvider);
             final bool xTrigger = ref.watch(xTriggerProvider);
+            final int isChangePhoto = calculateIsChangePhoto(
+              ref.read(photoProvider),
+              widget.plant.userImageUrl,
+              widget.plant.information.imageUrl,
+            );
+
+            print('first ischangephotoadfasdf== $isChangePhoto');
 
             return AlertDialog(
               contentPadding: const EdgeInsets.all(0),
@@ -226,8 +254,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       children: [
                         Stack(
                           children: [
-                            // 유저가 수정할 사진이 photoState 존재하는경우
                             if (photoState != null && xTrigger == false)
+                              // 사용자가 새로운 이미지를 선택한 경우
                               Stack(
                                 children: [
                                   ProfileImageWidget(
@@ -259,10 +287,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            // detailState.userImageUrl 유저가 찍은 사진이 존재함
-                            // x 버튼이 있는경우
                             else if (widget.plant.userImageUrl != "" &&
                                 xTrigger == false)
+                              // 사용자가 기존 이미지를 선택한 경우
                               Stack(
                                 children: [
                                   ProfileImageWidget(
@@ -292,8 +319,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            //유저가 찍은 사진이 없고 관리자가 저장해놓은 imageUrl 이 있다면
                             else if (widget.plant.information.imageUrl != "")
+                              // 관리자가 저장한 이미지가 있는 경우
                               ProfileImageWidget(
                                 imageProvider: NetworkImage(
                                     widget.plant.information.imageUrl),
@@ -301,6 +328,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                 radius: 24.h,
                               )
                             else
+                              // 어떤 이미지도 없는 경우
                               ProfileImageWidget(
                                 imageProvider:
                                     const AssetImage('assets/images/pot.png'),
@@ -372,10 +400,11 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                           Container(
                             margin: const EdgeInsets.only(top: 8),
                             child: TextFormField(
+                              controller: textController,
                               onChanged: (text) {
-                                ref
-                                    .read(addPlantProvider.notifier)
-                                    .updateAlias(text);
+                                setState(() {
+                                  textController.text = text;
+                                });
                               },
                               textAlignVertical: TextAlignVertical.center,
                               textAlign: TextAlign.start,
@@ -456,7 +485,42 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                           bottomRight: Radius.circular(15.0),
                         ),
                         highlightColor: Colors.grey[200],
-                        onTap: () {
+                        onTap: () async {
+                          if (photoState != null && xTrigger == false) {
+                            //widget.plant.userImageUrl = photoState 로 변경
+
+                            if (widget.plant.userImageUrl != "") {
+                              //이전 유저이미지 삭제
+                              print('isChangePhto ==== $isChangePhoto');
+                              try {
+                                await ref
+                                    .read(photoProvider.notifier)
+                                    .deleteImage(widget.plant.userImageUrl);
+                                print("Image deleted successfully");
+                              } catch (error) {
+                                print("Error deleting image: $error");
+                              }
+                            }
+                            //Firebase 에 이미지 업로드후 imageUrl반환
+                            final String userImageUrl = await ref
+                                .read(photoProvider.notifier)
+                                .uploadPhotoAndGetUserImageUrl();
+                            //Firebase userImageUrl업데이트 및 plantsState변경
+                            ref.read(plantsProvider.notifier).updatePlant(
+                                widget.plant.docId,
+                                userImageUrl: userImageUrl);
+                          } else if (widget.plant.information.imageUrl != "") {
+                            if (isChangePhoto != 3) {
+                              if (isChangePhoto == 2) {
+                                //기존 유저이미지 삭제후 유저이미지 ""
+                              } else {
+                                //유저이미지 ""
+                              }
+                            }
+                          } else if (isChangePhoto == 4) {
+                            print('Error:관리자 식물사진정보 누락');
+                          }
+                          ref.read(photoProvider.notifier).reset();
                           Navigator.of(context).pop();
                         },
                         child: Center(

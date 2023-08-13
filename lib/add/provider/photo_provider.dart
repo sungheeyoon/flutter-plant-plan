@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/utils/image_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart' as path;
 
 final photoProvider = StateNotifierProvider<PhotoNotifier, File?>((ref) {
@@ -39,7 +40,13 @@ class PhotoNotifier extends StateNotifier<File?> {
     }
   }
 
-  Future<String> uploadPhotoAndGetUserImageUrl(String uid) async {
+  Future<String> uploadPhotoAndGetUserImageUrl() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+
+    if (user == null) return "";
+
+    final uid = user.uid;
     final FirebaseStorage storage = FirebaseStorage.instance;
     if (state == null) {
       return '';
@@ -53,5 +60,17 @@ class PhotoNotifier extends StateNotifier<File?> {
 
       return userImageUrl;
     }
+  }
+
+  Future<void> deleteImage(String imageUrl) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+
+    if (user == null) return;
+
+    final FirebaseStorage storage = FirebaseStorage.instance;
+
+    Reference imageRef = storage.refFromURL(imageUrl);
+    await imageRef.delete();
   }
 }
