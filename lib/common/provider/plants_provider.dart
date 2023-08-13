@@ -39,9 +39,10 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
   void updatePlant(
     String docId, {
     String? alias,
+    String? userImageUrl,
     bool? favoriteToggle,
   }) async {
-    if (alias == null && favoriteToggle == null) {
+    if (alias == null && favoriteToggle == null && userImageUrl == null) {
       return;
     }
     final List<PlantModel> updatedPlants = [...state]; // 새로운 리스트로 복사
@@ -49,6 +50,7 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     for (int i = 0; i < updatedPlants.length; i++) {
       final PlantModel plant = updatedPlants[i];
       if (plant.docId == docId) {
+        final updatedUserImageUrl = userImageUrl ?? plant.userImageUrl;
         final updatedAlias = alias ?? plant.alias;
         final updatedIsFavorite = favoriteToggle != null && favoriteToggle
             ? !plant.favorite
@@ -56,6 +58,7 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
         final updatedPlant = plant.copyWith(
           alias: updatedAlias,
           favorite: updatedIsFavorite,
+          userImageUrl: updatedUserImageUrl,
         );
 
         //업데이트한 plant의 인덱스를 찾아 updatedPlants 를 수정한다
@@ -77,6 +80,9 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
             updatedPlants.firstWhere((plant) => plant.docId == docId).alias,
         'favorite':
             updatedPlants.firstWhere((plant) => plant.docId == docId).favorite,
+        'userImageUrl': updatedPlants
+            .firstWhere((plant) => plant.docId == docId)
+            .userImageUrl,
       };
 
       await FirebaseFirestore.instance

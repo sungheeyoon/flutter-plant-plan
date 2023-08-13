@@ -45,7 +45,7 @@ class AddSecondScreen extends ConsumerWidget {
       await ref.read(addPlantProvider.notifier).updateDocId(docId);
       final String userImageUrl = await ref
           .read(photoProvider.notifier)
-          .uploadPhotoAndGetUserImageUrl(uid);
+          .uploadPhotoAndGetUserImageUrl();
       ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
       final data = ref.read(addPlantProvider).toJson();
