@@ -81,12 +81,14 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
+  late bool isUserImageUrl;
   TextEditingController textController = TextEditingController();
   @override
   void initState() {
     super.initState();
     isFavorite = widget.plant.favorite;
     textController.text = widget.plant.alias;
+    isUserImageUrl = widget.plant.userImageUrl != "" ? true : false;
   }
 
   @override
@@ -221,13 +223,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           builder: (_, ref, __) {
             final File? photoState = ref.watch(photoProvider);
             final bool xTrigger = ref.watch(xTriggerProvider);
-            final int isChangePhoto = calculateIsChangePhoto(
-              ref.read(photoProvider),
-              widget.plant.userImageUrl,
-              widget.plant.information.imageUrl,
-            );
-
-            print('first ischangephotoadfasdf== $isChangePhoto');
 
             return AlertDialog(
               contentPadding: const EdgeInsets.all(0),
@@ -487,11 +482,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         highlightColor: Colors.grey[200],
                         onTap: () async {
                           if (photoState != null && xTrigger == false) {
-                            //widget.plant.userImageUrl = photoState 로 변경
-
-                            if (widget.plant.userImageUrl != "") {
-                              //이전 유저이미지 삭제
-                              print('isChangePhto ==== $isChangePhoto');
+                            if (isUserImageUrl) {
                               try {
                                 await ref
                                     .read(photoProvider.notifier)
@@ -501,27 +492,32 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                 print("Error deleting image: $error");
                               }
                             }
-                            //Firebase 에 이미지 업로드후 imageUrl반환
                             final String userImageUrl = await ref
                                 .read(photoProvider.notifier)
                                 .uploadPhotoAndGetUserImageUrl();
-                            //Firebase userImageUrl업데이트 및 plantsState변경
-                            ref.read(plantsProvider.notifier).updatePlant(
+                            await ref.read(plantsProvider.notifier).updatePlant(
                                 widget.plant.docId,
                                 userImageUrl: userImageUrl);
+                            ref.read(photoProvider.notifier).reset();
+                            ref.read(xTriggerProvider.notifier).isFalse();
                           } else if (widget.plant.information.imageUrl != "") {
-                            if (isChangePhoto != 3) {
-                              if (isChangePhoto == 2) {
-                                //기존 유저이미지 삭제후 유저이미지 ""
-                              } else {
-                                //유저이미지 ""
+                            if (isUserImageUrl) {
+                              try {
+                                await ref
+                                    .read(photoProvider.notifier)
+                                    .deleteImage(widget.plant.userImageUrl);
+                                print("Image deleted successfully");
+                              } catch (error) {
+                                print("Error deleting image: $error");
                               }
                             }
-                          } else if (isChangePhoto == 4) {
-                            print('Error:관리자 식물사진정보 누락');
+                            ref.read(plantsProvider.notifier).updatePlant(
+                                widget.plant.docId,
+                                userImageUrl: "");
+                            ref.read(photoProvider.notifier).reset();
+                            ref.read(xTriggerProvider.notifier).isFalse();
                           }
-                          ref.read(photoProvider.notifier).reset();
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(); // 모달 창 닫기
                         },
                         child: Center(
                           child: Text(
@@ -542,13 +538,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             );
           },
         );
-      },
-    ).then(
-      (value) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          ref.read(photoProvider.notifier).reset();
-          ref.read(xTriggerProvider.notifier).isFalse();
-        });
       },
     );
   }
