@@ -36,7 +36,7 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     state = datas;
   }
 
-  void updatePlant(
+  Future<void> updatePlant(
     String docId, {
     String? alias,
     String? userImageUrl,
