@@ -233,8 +233,6 @@ class PlantListCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        await ref.read(detailProvider.notifier).patchDetail(cardData.docId);
-
         if (!context.mounted) return;
         Navigator.push(
           context,

@@ -9,6 +9,7 @@ import 'package:plant_plan/common/model/alarm_with_userinfo.dart';
 import 'package:plant_plan/common/provider/selected_date_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
+import 'package:plant_plan/common/utils/home_utils.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -43,62 +44,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final List<PlantModel> plantsState = ref.watch(plantsProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
 
-    List<AlarmWithUserInfo> getSelectedDateList([PlantField? field]) {
-      List<AlarmWithUserInfo> results = [];
-
-      for (final PlantModel plant in plantsState) {
-        for (final AlarmModel alarm in plant.alarms) {
-          if (alarm.isOn) {
-            DateTime zeroStartTime = DateTime(
-              alarm.startTime.year,
-              alarm.startTime.month,
-              alarm.startTime.day,
-            );
-
-            int difference = selectedDateState.difference(zeroStartTime).inDays;
-
-            if ((difference == 0 && alarm.repeat == 0) ||
-                (alarm.repeat > 0 &&
-                    difference > -1 &&
-                    difference % alarm.repeat == 0)) {
-              results.add(
-                AlarmWithUserInfo(
-                  alarm: alarm,
-                  alias: plant.alias,
-                  information: plant.information,
-                  userImageUrl: plant.userImageUrl,
-                  docId: plant.docId,
-                ),
-              );
-            }
-          }
-        }
-      }
-
-      if (field != null) {
-        results = results.where((alarm) => alarm.alarm.field == field).toList();
-      }
-
-      return results;
-    }
-
     //오늘 선택된 날짜의 알람들 전부 selectedDateAlarms 에 저장
-    final List<AlarmWithUserInfo> selectedDateAlarms = getSelectedDateList();
+    final List<AlarmWithUserInfo> selectedDateAlarms =
+        getSelectedDateList(plantsState, selectedDateState);
     // 오늘 선택된 날짜의 알람들중 PlantField 별 filter
-    final List<AlarmWithUserInfo> wateringAlarms =
-        getSelectedDateList(PlantField.watering);
-    final List<AlarmWithUserInfo> repottingAlarms =
-        getSelectedDateList(PlantField.repotting);
-    final List<AlarmWithUserInfo> nutrientAlarms =
-        getSelectedDateList(PlantField.nutrient);
+    final List<AlarmWithUserInfo> wateringAlarms = getSelectedDateList(
+        plantsState, selectedDateState, PlantField.watering);
+    final List<AlarmWithUserInfo> repottingAlarms = getSelectedDateList(
+        plantsState, selectedDateState, PlantField.repotting);
+    final List<AlarmWithUserInfo> nutrientAlarms = getSelectedDateList(
+        plantsState, selectedDateState, PlantField.nutrient);
 
     //완료된 알람 카운트
-    int completeCount = 0;
-    for (final AlarmWithUserInfo info in selectedDateAlarms) {
-      if (info.alarm.offDates.contains(selectedDateState)) {
-        completeCount++;
-      }
-    }
+    int completeCount =
+        calculateCompleteCount(selectedDateAlarms, selectedDateState);
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
