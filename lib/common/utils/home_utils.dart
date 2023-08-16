@@ -5,6 +5,7 @@ import 'package:plant_plan/common/model/alarm_with_userinfo.dart';
 
 import 'package:plant_plan/add/model/alarm_model.dart';
 
+//선택된날짜의 알람을가지고있는 알람들을 리턴
 List<AlarmWithUserInfo> getSelectedDateList(
     List<PlantModel> plantsState, DateTime selectedDateState,
     [PlantField? field]) {
@@ -46,6 +47,7 @@ List<AlarmWithUserInfo> getSelectedDateList(
   return results;
 }
 
+//선택된날짜의 알람을가지고있는 알람들의 완료갯수를 카운팅
 int calculateCompleteCount(
     List<AlarmWithUserInfo> selectedDateAlarms, DateTime selectedDateState) {
   int completeCount = 0;

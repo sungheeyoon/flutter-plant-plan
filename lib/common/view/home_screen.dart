@@ -13,7 +13,6 @@ import 'package:plant_plan/common/utils/home_utils.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/add/model/alarm_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static String get routeName => 'home';
@@ -47,17 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     //오늘 선택된 날짜의 알람들 전부 selectedDateAlarms 에 저장
     final List<AlarmWithUserInfo> selectedDateAlarms =
         getSelectedDateList(plantsState, selectedDateState);
-    // 오늘 선택된 날짜의 알람들중 PlantField 별 filter
-    final List<AlarmWithUserInfo> wateringAlarms = getSelectedDateList(
-        plantsState, selectedDateState, PlantField.watering);
-    final List<AlarmWithUserInfo> repottingAlarms = getSelectedDateList(
-        plantsState, selectedDateState, PlantField.repotting);
-    final List<AlarmWithUserInfo> nutrientAlarms = getSelectedDateList(
-        plantsState, selectedDateState, PlantField.nutrient);
 
-    //완료된 알람 카운트
-    int completeCount =
-        calculateCompleteCount(selectedDateAlarms, selectedDateState);
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -85,7 +74,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: ProgressWidget(
                           selectedDateAlarms: selectedDateAlarms,
-                          completeCount: completeCount),
+                          completeCount: calculateCompleteCount(
+                              selectedDateAlarms, selectedDateState)),
                     ),
                     SizedBox(
                       height: 16.h,
@@ -346,13 +336,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         },
                         children: [
                           TodoTap(
-                              selectedDateAlarms: wateringAlarms,
+                              selectedDateAlarms: getSelectedDateList(
+                                  plantsState,
+                                  selectedDateState,
+                                  PlantField.watering),
                               field: PlantField.watering),
                           TodoTap(
-                              selectedDateAlarms: repottingAlarms,
+                              selectedDateAlarms: getSelectedDateList(
+                                  plantsState,
+                                  selectedDateState,
+                                  PlantField.repotting),
                               field: PlantField.repotting),
                           TodoTap(
-                              selectedDateAlarms: nutrientAlarms,
+                              selectedDateAlarms: getSelectedDateList(
+                                  plantsState,
+                                  selectedDateState,
+                                  PlantField.nutrient),
                               field: PlantField.nutrient),
                         ],
                       ),

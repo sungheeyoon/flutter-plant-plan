@@ -82,6 +82,7 @@ class DetailCard extends ConsumerStatefulWidget {
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
   late bool isUserImageUrl;
+  late PlantModel modifiedPlant;
   TextEditingController textController = TextEditingController();
   @override
   void initState() {
@@ -89,6 +90,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     isFavorite = widget.plant.favorite;
     textController.text = widget.plant.alias;
     isUserImageUrl = widget.plant.userImageUrl != "" ? true : false;
+    modifiedPlant = widget.plant;
   }
 
   @override
@@ -138,9 +140,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             children: [
               ProfileImageWidget(
                 imageProvider: NetworkImage(
-                  widget.plant.userImageUrl == ""
-                      ? widget.plant.information.imageUrl
-                      : widget.plant.userImageUrl,
+                  modifiedPlant.userImageUrl == ""
+                      ? modifiedPlant.information.imageUrl
+                      : modifiedPlant.userImageUrl,
                 ),
                 size: 60.h,
                 radius: 24.h,
@@ -151,15 +153,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.plant.alias != "")
+                  if (modifiedPlant.alias != "")
                     Text(
-                      widget.plant.alias,
+                      modifiedPlant.alias,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
                     ),
                   //font height check
-                  if (widget.plant.alias != "")
+                  if (modifiedPlant.alias != "")
                     const SizedBox(
                       height: 0,
                     ),
@@ -167,7 +169,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        widget.plant.information.name,
+                        modifiedPlant.information.name,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -180,7 +182,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                           setState(() {
                             isFavorite = !isFavorite;
                             ref.read(plantsProvider.notifier).updatePlant(
-                                widget.plant.docId,
+                                modifiedPlant.docId,
                                 favoriteToggle: true);
                           });
                         },
@@ -202,7 +204,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           ),
           GestureDetector(
             onTap: () {
-              detailCardModal();
+              openDetailCardModal();
             },
             child: Image(
               image: const AssetImage('assets/icons/edit.png'),
@@ -213,6 +215,19 @@ class _DetailCardState extends ConsumerState<DetailCard> {
         ],
       ),
     );
+  }
+
+  Future<void> openDetailCardModal() async {
+    final result = await detailCardModal(); // 모달 창 열기 및 결과값 대기
+    if (result == "updated") {
+      final modifiedPlant =
+          await ref.read(plantsProvider.notifier).getPlant(widget.plant.docId);
+      if (mounted) {
+        setState(() {
+          this.modifiedPlant = modifiedPlant; // 수정된 값으로 업데이트
+        });
+      }
+    }
   }
 
   Future<dynamic> detailCardModal() {
@@ -517,7 +532,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                             ref.read(photoProvider.notifier).reset();
                             ref.read(xTriggerProvider.notifier).isFalse();
                           }
-                          Navigator.of(context).pop(); // 모달 창 닫기
+                          if (context.mounted) {
+                            return Navigator.of(context).pop("updated");
+                          } // 모달 창 닫기
                         },
                         child: Center(
                           child: Text(
@@ -539,60 +556,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
           },
         );
       },
-    );
-  }
-}
-
-class DetailCardModal extends StatelessWidget {
-  const DetailCardModal({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Container(
-          width: 312,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x1A000000),
-                offset: Offset(0, 8),
-                blurRadius: 8,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min, // 모달 창 크기를 컨텐츠에 맞게 조절
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  "Modal Title",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text("Your Content Here"),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Perform an action
-                },
-                child: const Text("Confirm"),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
