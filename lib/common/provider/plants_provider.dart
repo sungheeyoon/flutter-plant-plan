@@ -196,10 +196,9 @@ class PlantsNotifier extends StateNotifier<List<PlantModel>> {
     state = updatedPlants;
   }
 
-  PlantModel getPlant(String docId) {
+  Future<PlantModel> getPlant(String docId) async {
     for (final PlantModel plant in state) {
       if (docId == plant.docId) {
-        print(plant);
         return plant;
       }
     }

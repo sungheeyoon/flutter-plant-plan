@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
-import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/common/utils/list_utils.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
   const ListScreen({super.key});
@@ -31,119 +30,15 @@ class _ListScreenState extends ConsumerState<ListScreen> {
   Widget build(BuildContext context) {
     final List<PlantModel> plantsState = ref.watch(plantsProvider);
 
-    List<ListCardModel> getCardList() {
-      List<ListCardModel> results = [];
-
-      for (final PlantModel plant in plantsState) {
-        String docId = plant.docId;
-        String title = plant.alias == "" ? plant.information.name : plant.alias;
-        String imageUrl = plant.userImageUrl == ""
-            ? plant.information.imageUrl
-            : plant.userImageUrl;
-        int dDay = -1;
-        List<PlantField> fields = [];
-
-        DateTime today = DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-        );
-
-        List<AlarmModel> alarms = plant.alarms;
-        if (alarms.isNotEmpty) {
-          List<AlarmModel> closestAlarms = [];
-
-          for (AlarmModel alarm in alarms) {
-            DateTime alarmDay = DateTime(
-              alarm.startTime.year,
-              alarm.startTime.month,
-              alarm.startTime.day,
-            );
-
-            while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
-              alarmDay = alarmDay.add(Duration(days: alarm.repeat));
-            }
-
-            int difference = today.difference(alarmDay).inDays.abs();
-
-            if (dDay == -1 || difference < dDay) {
-              closestAlarms = [alarm];
-              dDay = difference;
-            } else if (difference == dDay) {
-              closestAlarms.add(alarm);
-            }
-          }
-          if (closestAlarms != []) {
-            for (AlarmModel closestAlarm in closestAlarms) {
-              if (closestAlarm.field == PlantField.watering) {
-                if (fields.contains(PlantField.watering)) {
-                  continue;
-                } else {
-                  fields.add(PlantField.watering);
-                }
-              }
-              if (closestAlarm.field == PlantField.repotting) {
-                if (fields.contains(PlantField.repotting)) {
-                  continue;
-                } else {
-                  fields.add(PlantField.repotting);
-                }
-              }
-              if (closestAlarm.field == PlantField.nutrient) {
-                if (fields.contains(PlantField.nutrient)) {
-                  continue;
-                } else {
-                  fields.add(PlantField.nutrient);
-                }
-              }
-            }
-          }
-        }
-        results.add(
-          ListCardModel(
-              docId: docId,
-              title: title,
-              imageUrl: imageUrl,
-              dDay: dDay,
-              fields: fields),
-        );
-      }
-
-      return results;
-    }
-
-    List<ListCardModel> cardList = getCardList();
-    //alphabeticalOrdercardList 는 cardList 의 card.title 문자순서대로 정렬되며 순서는 한글순,영어순,숫자순,특수문자순으로정렬한다.
-    List<ListCardModel> alphabeticalOrdercardList = [];
-    //notificationOrdercardList 는 cardList 의 card.dDay 오름차순으로 정렬되며 card.dDay 가 -1 이면 맨뒤로가게정렬한다.
-    List<ListCardModel> notificationOrdercardList = [];
-
-    // cardList를 이름 순서로 정렬하는 함수
-    int compareByTitle(ListCardModel a, ListCardModel b) {
-      // 한글, 영어, 숫자, 특수문자 순서로 비교하여 정렬
-      return a.title.compareTo(b.title);
-    }
-
-    // cardList를 D-Day 오름차순으로 정렬하는 함수
-    int compareByDDay(ListCardModel a, ListCardModel b) {
-      if (a.dDay == -1) return 1; // -1인 항목은 맨 뒤로 보내기
-      if (b.dDay == -1) return -1; // -1인 항목은 맨 뒤로 보내기
-      return a.dDay.compareTo(b.dDay);
-    }
-
-    // 이름 순서대로 정렬하여 alphabeticalOrdercardList에 추가
-    alphabeticalOrdercardList.addAll(cardList);
-    alphabeticalOrdercardList.sort(compareByTitle);
-
-    // D-Day 오름차순으로 정렬하여 notificationOrdercardList에 추가
-    notificationOrdercardList.addAll(cardList);
-    notificationOrdercardList.sort(compareByDDay);
+    List<ListCardModel> cardList = getCardList(plantsState);
 
     List<ListCardModel> selectedCardList;
     if (_selectedIndex == 1) {
-      selectedCardList = alphabeticalOrdercardList;
+      //cardList 의 card.title 문자순서대로 정렬되며 순서는 한글순,영어순,숫자순,특수문자순으로정렬한다.
+      selectedCardList = [...cardList]..sort(compareByTitle);
     } else if (_selectedIndex == 2) {
-      selectedCardList = notificationOrdercardList;
+      //cardList 의 card.dDay 오름차순으로 정렬되며 card.dDay 가 -1 이면 맨뒤로가게정렬한다.
+      selectedCardList = [...cardList]..sort(compareByDDay);
     } else {
       selectedCardList = cardList;
     }
@@ -233,13 +128,13 @@ class PlantListCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
+        final plant =
+            await ref.read(plantsProvider.notifier).getPlant(cardData.docId);
         if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(
-              plant: ref.read(plantsProvider.notifier).getPlant(cardData.docId),
-            ),
+            builder: (context) => DetailScreen(plant: plant),
           ),
         );
       },
