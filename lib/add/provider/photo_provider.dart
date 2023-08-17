@@ -71,6 +71,12 @@ class PhotoNotifier extends StateNotifier<File?> {
     final FirebaseStorage storage = FirebaseStorage.instance;
 
     Reference imageRef = storage.refFromURL(imageUrl);
-    await imageRef.delete();
+
+    try {
+      await imageRef.delete();
+      print("Image deleted successfully");
+    } catch (error) {
+      print("Error deleting image: $error");
+    }
   }
 }

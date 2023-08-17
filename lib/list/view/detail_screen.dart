@@ -81,23 +81,20 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
-  late bool isUserImageUrl;
   late PlantModel modifiedPlant;
-  TextEditingController textController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     isFavorite = widget.plant.favorite;
-    textController.text = widget.plant.alias;
-    isUserImageUrl = widget.plant.userImageUrl != "" ? true : false;
     modifiedPlant = widget.plant;
   }
 
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   textController.dispose();
+  //   super.dispose();
+  // }
 
   int calculateIsChangePhoto(
       File? photoState, String userImageUrl, String informationImageUrl) {
@@ -114,6 +111,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   @override
   Widget build(BuildContext context) {
+    final File? photoState = ref.watch(photoProvider);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -138,15 +136,21 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ProfileImageWidget(
-                imageProvider: NetworkImage(
-                  modifiedPlant.userImageUrl == ""
-                      ? modifiedPlant.information.imageUrl
-                      : modifiedPlant.userImageUrl,
-                ),
-                size: 60.h,
-                radius: 24.h,
-              ),
+              photoState != null
+                  ? ProfileImageWidget(
+                      imageProvider: FileImage(photoState),
+                      size: 60.h,
+                      radius: 24.h,
+                    )
+                  : ProfileImageWidget(
+                      imageProvider: NetworkImage(
+                        modifiedPlant.userImageUrl == ""
+                            ? modifiedPlant.information.imageUrl
+                            : modifiedPlant.userImageUrl,
+                      ),
+                      size: 60.h,
+                      radius: 24.h,
+                    ),
               SizedBox(
                 width: 16.h,
               ),
@@ -219,21 +223,56 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   Future<void> openDetailCardModal() async {
     final result = await detailCardModal(); // 모달 창 열기 및 결과값 대기
-    if (result == "updated") {
-      final modifiedPlant =
-          await ref.read(plantsProvider.notifier).getPlant(widget.plant.docId);
-      if (mounted) {
-        setState(() {
-          this.modifiedPlant = modifiedPlant; // 수정된 값으로 업데이트
-        });
+    if (result == "updatedPhoto" || result == "updateDelete") {
+      //수정이된경우
+      if (result == "updatedPhoto") {
+        //새로운 사진을 추가했을경우
+
+        //firebaseStore에 imageUpload
+        final String userImageUrl = await ref
+            .read(photoProvider.notifier)
+            .uploadPhotoAndGetUserImageUrl();
+        //변경된 imageUrl State에 update
+        await ref
+            .read(plantsProvider.notifier)
+            .updatePlant(widget.plant.docId, userImageUrl: userImageUrl);
+      } else if (result == "updateDelete") {
+        //기존 사진을 삭제했을경우
+        await ref
+            .read(plantsProvider.notifier)
+            .updatePlant(widget.plant.docId, userImageUrl: "");
       }
+      // final modifiedPlant =
+      //     await ref.read(plantsProvider.notifier).getPlant(widget.plant.docId);
+      // if (mounted) {
+      //   setState(
+      //     () {
+      //       // 수정된 값으로 업데이트
+      //       this.modifiedPlant = modifiedPlant;
+      //     },
+      //   );
+      // }
+
+      if (modifiedPlant.userImageUrl != "") {
+        //기존이미지가 존재한다면 삭제
+        await ref
+            .read(photoProvider.notifier)
+            .deleteImage(modifiedPlant.userImageUrl);
+      }
+    } else {
+      ref.read(photoProvider.notifier).reset();
     }
+    ref.read(xTriggerProvider.notifier).isFalse();
   }
 
   Future<dynamic> detailCardModal() {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
+        TextEditingController textController =
+            TextEditingController(text: modifiedPlant.alias);
+        textController.selection =
+            TextSelection.collapsed(offset: textController.text.length);
         return Consumer(
           builder: (_, ref, __) {
             final File? photoState = ref.watch(photoProvider);
@@ -297,14 +336,14 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            else if (widget.plant.userImageUrl != "" &&
+                            else if (modifiedPlant.userImageUrl != "" &&
                                 xTrigger == false)
                               // 사용자가 기존 이미지를 선택한 경우
                               Stack(
                                 children: [
                                   ProfileImageWidget(
-                                    imageProvider:
-                                        NetworkImage(widget.plant.userImageUrl),
+                                    imageProvider: NetworkImage(
+                                        modifiedPlant.userImageUrl),
                                     size: 60.h,
                                     radius: 24.h,
                                   ),
@@ -329,11 +368,11 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            else if (widget.plant.information.imageUrl != "")
+                            else if (modifiedPlant.information.imageUrl != "")
                               // 관리자가 저장한 이미지가 있는 경우
                               ProfileImageWidget(
                                 imageProvider: NetworkImage(
-                                    widget.plant.information.imageUrl),
+                                    modifiedPlant.information.imageUrl),
                                 size: 60.h,
                                 radius: 24.h,
                               )
@@ -350,9 +389,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    if (widget.plant.information.name != "")
+                    if (modifiedPlant.information.name != "")
                       Text(
-                        widget.plant.information.name,
+                        modifiedPlant.information.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -411,11 +450,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                             margin: const EdgeInsets.only(top: 8),
                             child: TextFormField(
                               controller: textController,
-                              onChanged: (text) {
-                                setState(() {
-                                  textController.text = text;
-                                });
-                              },
                               textAlignVertical: TextAlignVertical.center,
                               textAlign: TextAlign.start,
                               style: Theme.of(context)
@@ -496,44 +530,24 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         ),
                         highlightColor: Colors.grey[200],
                         onTap: () async {
-                          if (photoState != null && xTrigger == false) {
-                            if (isUserImageUrl) {
-                              try {
-                                await ref
-                                    .read(photoProvider.notifier)
-                                    .deleteImage(widget.plant.userImageUrl);
-                                print("Image deleted successfully");
-                              } catch (error) {
-                                print("Error deleting image: $error");
-                              }
-                            }
-                            final String userImageUrl = await ref
-                                .read(photoProvider.notifier)
-                                .uploadPhotoAndGetUserImageUrl();
+                          if (modifiedPlant.alias != textController.text) {
+                            //별칭이 수정됐을경우
                             await ref.read(plantsProvider.notifier).updatePlant(
-                                widget.plant.docId,
-                                userImageUrl: userImageUrl);
-                            ref.read(photoProvider.notifier).reset();
-                            ref.read(xTriggerProvider.notifier).isFalse();
-                          } else if (widget.plant.information.imageUrl != "") {
-                            if (isUserImageUrl) {
-                              try {
-                                await ref
-                                    .read(photoProvider.notifier)
-                                    .deleteImage(widget.plant.userImageUrl);
-                                print("Image deleted successfully");
-                              } catch (error) {
-                                print("Error deleting image: $error");
-                              }
+                                modifiedPlant.docId,
+                                alias: textController.text);
+                          }
+                          if (photoState != null && xTrigger == false) {
+                            //새로운이미지를 추가하는경우
+                            if (context.mounted) {
+                              return Navigator.of(context).pop("updatedPhoto");
                             }
-                            ref.read(plantsProvider.notifier).updatePlant(
-                                widget.plant.docId,
-                                userImageUrl: "");
-                            ref.read(photoProvider.notifier).reset();
-                            ref.read(xTriggerProvider.notifier).isFalse();
+                          } else if (modifiedPlant.information.imageUrl != "") {
+                            if (context.mounted) {
+                              return Navigator.of(context).pop("updatedDelete");
+                            }
                           }
                           if (context.mounted) {
-                            return Navigator.of(context).pop("updated");
+                            return Navigator.of(context).pop();
                           } // 모달 창 닫기
                         },
                         child: Center(
