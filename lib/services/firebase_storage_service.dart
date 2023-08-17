@@ -18,3 +18,17 @@ class FirebaseStorageService extends GetxService {
     }
   }
 }
+
+Future<void> getAllImageUrls() async {
+  List<String> imageUrls = [];
+
+  Reference ref = FirebaseStorage.instance.ref().child('images');
+  ListResult result = await ref.listAll();
+
+  for (Reference imageRef in result.items) {
+    String imageUrl = await imageRef.getDownloadURL();
+    imageUrls.add(imageUrl);
+  }
+
+  print('yournewimage: $imageUrls');
+}
