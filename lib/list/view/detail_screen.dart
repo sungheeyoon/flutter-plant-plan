@@ -82,19 +82,23 @@ class DetailCard extends ConsumerStatefulWidget {
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
   late PlantModel modifiedPlant;
-
+  late String alias;
+  File? newPhoto;
+  TextEditingController textController = TextEditingController();
   @override
   void initState() {
     super.initState();
     isFavorite = widget.plant.favorite;
     modifiedPlant = widget.plant;
+    alias = widget.plant.alias;
+    textController.text = alias;
   }
 
-  // @override
-  // void dispose() {
-  //   textController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   int calculateIsChangePhoto(
       File? photoState, String userImageUrl, String informationImageUrl) {
@@ -111,7 +115,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   @override
   Widget build(BuildContext context) {
-    final File? photoState = ref.watch(photoProvider);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -136,9 +139,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              photoState != null
+              newPhoto != null
                   ? ProfileImageWidget(
-                      imageProvider: FileImage(photoState),
+                      imageProvider: FileImage(newPhoto!),
                       size: 60.h,
                       radius: 24.h,
                     )
@@ -157,17 +160,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (modifiedPlant.alias != "")
+                  if (alias != "")
                     Text(
-                      modifiedPlant.alias,
+                      alias,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: keyColor700,
                           ),
-                    ),
-                  //font height check
-                  if (modifiedPlant.alias != "")
-                    const SizedBox(
-                      height: 0,
                     ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,6 +225,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
       //수정이된경우
       if (result == "updatedPhoto") {
         //새로운 사진을 추가했을경우
+        setState(() {
+          newPhoto = ref.read(photoProvider);
+        });
 
         //firebaseStore에 imageUpload
         final String userImageUrl = await ref
@@ -255,22 +256,21 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
       if (modifiedPlant.userImageUrl != "") {
         //기존이미지가 존재한다면 삭제
-        await ref
-            .read(photoProvider.notifier)
-            .deleteImage(modifiedPlant.userImageUrl);
+        setState(() async {
+          await ref
+              .read(photoProvider.notifier)
+              .deleteImage(modifiedPlant.userImageUrl);
+        });
       }
-    } else {
-      ref.read(photoProvider.notifier).reset();
     }
     ref.read(xTriggerProvider.notifier).isFalse();
+    ref.read(photoProvider.notifier).reset();
   }
 
   Future<dynamic> detailCardModal() {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        TextEditingController textController =
-            TextEditingController(text: modifiedPlant.alias);
         textController.selection =
             TextSelection.collapsed(offset: textController.text.length);
         return Consumer(
@@ -530,8 +530,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         ),
                         highlightColor: Colors.grey[200],
                         onTap: () async {
-                          if (modifiedPlant.alias != textController.text) {
+                          if (alias != textController.text) {
                             //별칭이 수정됐을경우
+                            setState(() {
+                              alias = textController.text;
+                            });
+
                             await ref.read(plantsProvider.notifier).updatePlant(
                                 modifiedPlant.docId,
                                 alias: textController.text);
