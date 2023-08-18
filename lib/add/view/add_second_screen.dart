@@ -71,7 +71,9 @@ class AddSecondScreen extends ConsumerWidget {
           if (plantState.information.id != "") {
             await insertNewPlant();
             if (!context.mounted) return;
-            Navigator.pushNamed(context, HomeScreen.routeName);
+
+            Navigator.pushNamedAndRemoveUntil(
+                context, HomeScreen.routeName, (route) => false);
           }
         },
         child: Container(
@@ -80,7 +82,7 @@ class AddSecondScreen extends ConsumerWidget {
           decoration: const BoxDecoration(color: pointColor2),
           child: Center(
             child: Text(
-              "다음",
+              "식물 추가 완료",
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Colors.white,
                   ),

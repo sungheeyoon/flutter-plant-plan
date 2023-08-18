@@ -12,7 +12,7 @@ class ImageHelper {
 
   Future<XFile?> pickImage({
     bool camera = false,
-    int imageQuality = 100,
+    int imageQuality = 25,
   }) async {
     XFile? file;
     if (camera) {
