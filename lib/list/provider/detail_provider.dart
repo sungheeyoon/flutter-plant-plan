@@ -1,35 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
-import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/list/model/detail_model.dart';
 
 final detailProvider =
-    StateNotifierProvider<DetailNotifier, PlantModel?>((ref) {
-  final List<PlantModel> userInfoList = ref.watch(plantsProvider);
-  return DetailNotifier(
-    userInfoList: userInfoList,
-  );
+    StateNotifierProvider<DetailNotifier, DetailModelBase>((ref) {
+  return DetailNotifier();
 });
 
-class DetailNotifier extends StateNotifier<PlantModel?> {
-  final List<PlantModel> userInfoList;
-  DetailNotifier({
-    required this.userInfoList,
-  }) : super(null);
+class DetailNotifier extends StateNotifier<DetailModelBase> {
+  DetailNotifier() : super(DetailModelLoading());
 
-  Future<void> patchDetail(String docId) async {
-    PlantModel? matchingUserInfo;
-
-    for (final userInfo in userInfoList) {
-      if (userInfo.docId == docId) {
-        matchingUserInfo = userInfo;
-        break;
-      }
-    }
-
-    state = matchingUserInfo;
+  void updateDetail(PlantModel data) {
+    state = DetailModel(data: data);
   }
 
   void toggleFavorite() {
-    state = state!.copyWith(favorite: !state!.favorite);
+    if (state is DetailModel) {
+      final DetailModel currentState = state as DetailModel;
+      final updatedData =
+          currentState.data.copyWith(favorite: currentState.data.favorite);
+      state = DetailModel(data: updatedData);
+    } else {
+      state = DetailModelError(message: 'Not PlantModel');
+    }
   }
 }

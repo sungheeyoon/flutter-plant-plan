@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:plant_plan/add/view/add_first_screen.dart';
-import 'package:plant_plan/add/view/add_second_screen.dart';
-
-import 'package:plant_plan/add/view/search_screen.dart';
-
-import 'package:plant_plan/common/view/home_screen.dart';
-import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
-
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,16 +38,6 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
             debugShowCheckedModeBanner: false,
-            routes: {
-              LoginScreen.routeName: (context) => const LoginScreen(),
-              HomeScreen.routeName: (context) => const HomeScreen(),
-              // AddTab.routeName: (context) => const AddTab(),
-              AddFirstScreen.routeName: (context) => const AddFirstScreen(),
-              AddSecondScreen.routeName: (context) => const AddSecondScreen(),
-
-              SearchScreen.routeName: (context) => const SearchScreen(),
-              RootTab.routeName: (context) => const RootTab(),
-            },
             theme: ThemeData(
               scaffoldBackgroundColor: Colors.white,
               fontFamily: 'Pretendard',

@@ -45,7 +45,7 @@ class DetailScreen extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.h),
-              child: const UpcomingAlarm(),
+              // child: const UpcomingAlarm(),
             ),
             SizedBox(
               height: 40.h,
@@ -81,16 +81,16 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   late bool isFavorite;
-  late PlantModel modifiedPlant;
   late String alias;
+  late String userImageUrl;
   File? newPhoto;
   TextEditingController textController = TextEditingController();
   @override
   void initState() {
     super.initState();
     isFavorite = widget.plant.favorite;
-    modifiedPlant = widget.plant;
     alias = widget.plant.alias;
+    userImageUrl = widget.plant.userImageUrl;
     textController.text = alias;
   }
 
@@ -98,19 +98,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   void dispose() {
     textController.dispose();
     super.dispose();
-  }
-
-  int calculateIsChangePhoto(
-      File? photoState, String userImageUrl, String informationImageUrl) {
-    if (photoState != null) {
-      return 1;
-    } else if (userImageUrl.isNotEmpty) {
-      return 2;
-    } else if (informationImageUrl.isNotEmpty) {
-      return 3;
-    } else {
-      return 4;
-    }
   }
 
   @override
@@ -141,15 +128,16 @@ class _DetailCardState extends ConsumerState<DetailCard> {
             children: [
               newPhoto != null
                   ? ProfileImageWidget(
+                      //새로운사진을 넣었을때
                       imageProvider: FileImage(newPhoto!),
                       size: 60.h,
                       radius: 24.h,
                     )
                   : ProfileImageWidget(
                       imageProvider: NetworkImage(
-                        modifiedPlant.userImageUrl == ""
-                            ? modifiedPlant.information.imageUrl
-                            : modifiedPlant.userImageUrl,
+                        userImageUrl == ""
+                            ? widget.plant.information.imageUrl
+                            : userImageUrl,
                       ),
                       size: 60.h,
                       radius: 24.h,
@@ -171,7 +159,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        modifiedPlant.information.name,
+                        widget.plant.information.name,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -180,13 +168,15 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         width: 6,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                            ref.read(plantsProvider.notifier).updatePlant(
-                                modifiedPlant.docId,
-                                favoriteToggle: true);
-                          });
+                        onTap: () async {
+                          setState(
+                            () {
+                              isFavorite = !isFavorite;
+                              ref.read(plantsProvider.notifier).updatePlant(
+                                  widget.plant.docId,
+                                  favoriteToggle: true);
+                            },
+                          );
                         },
                         child: Image(
                           image: AssetImage(
@@ -221,46 +211,39 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   Future<void> openDetailCardModal() async {
     final result = await detailCardModal(); // 모달 창 열기 및 결과값 대기
-    if (result == "updatedPhoto" || result == "updateDelete") {
+    if (result == "updatedPhoto" || result == "updatedDelete") {
       //수정이된경우
+      if (userImageUrl != "") {
+        //기존이미지가 존재한다면 삭제
+        await ref.read(photoProvider.notifier).deleteImage(userImageUrl);
+      }
+
+      if (result == "updatedDelete") {
+        //기존 사진을 삭제했을경우
+        setState(() {
+          userImageUrl = "";
+          newPhoto = null;
+        });
+
+        await ref
+            .read(plantsProvider.notifier)
+            .updatePlant(widget.plant.docId, userImageUrl: "");
+      }
       if (result == "updatedPhoto") {
         //새로운 사진을 추가했을경우
+
         setState(() {
           newPhoto = ref.read(photoProvider);
         });
 
         //firebaseStore에 imageUpload
-        final String userImageUrl = await ref
+        final String newUserImageUrl = await ref
             .read(photoProvider.notifier)
             .uploadPhotoAndGetUserImageUrl();
         //변경된 imageUrl State에 update
         await ref
             .read(plantsProvider.notifier)
-            .updatePlant(widget.plant.docId, userImageUrl: userImageUrl);
-      } else if (result == "updateDelete") {
-        //기존 사진을 삭제했을경우
-        await ref
-            .read(plantsProvider.notifier)
-            .updatePlant(widget.plant.docId, userImageUrl: "");
-      }
-      // final modifiedPlant =
-      //     await ref.read(plantsProvider.notifier).getPlant(widget.plant.docId);
-      // if (mounted) {
-      //   setState(
-      //     () {
-      //       // 수정된 값으로 업데이트
-      //       this.modifiedPlant = modifiedPlant;
-      //     },
-      //   );
-      // }
-
-      if (modifiedPlant.userImageUrl != "") {
-        //기존이미지가 존재한다면 삭제
-        setState(() async {
-          await ref
-              .read(photoProvider.notifier)
-              .deleteImage(modifiedPlant.userImageUrl);
-        });
+            .updatePlant(widget.plant.docId, userImageUrl: newUserImageUrl);
       }
     }
     ref.read(xTriggerProvider.notifier).isFalse();
@@ -336,14 +319,44 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            else if (modifiedPlant.userImageUrl != "" &&
-                                xTrigger == false)
+                            else if (newPhoto != null && xTrigger == false)
+                              Stack(
+                                children: [
+                                  ProfileImageWidget(
+                                    imageProvider: FileImage(newPhoto!),
+                                    size: 60.h,
+                                    radius: 24.h,
+                                  ),
+                                  Positioned(
+                                    right: 1,
+                                    top: 1,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          ref
+                                              .read(photoProvider.notifier)
+                                              .reset();
+                                          ref
+                                              .read(xTriggerProvider.notifier)
+                                              .isTrue();
+                                        });
+                                      },
+                                      child: Image(
+                                        image: const AssetImage(
+                                            'assets/icons/x.png'),
+                                        width: 16.h,
+                                        height: 16.h,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else if (userImageUrl != "" && xTrigger == false)
                               // 사용자가 기존 이미지를 선택한 경우
                               Stack(
                                 children: [
                                   ProfileImageWidget(
-                                    imageProvider: NetworkImage(
-                                        modifiedPlant.userImageUrl),
+                                    imageProvider: NetworkImage(userImageUrl),
                                     size: 60.h,
                                     radius: 24.h,
                                   ),
@@ -368,11 +381,11 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ),
                                 ],
                               )
-                            else if (modifiedPlant.information.imageUrl != "")
+                            else if (widget.plant.information.imageUrl != "")
                               // 관리자가 저장한 이미지가 있는 경우
                               ProfileImageWidget(
                                 imageProvider: NetworkImage(
-                                    modifiedPlant.information.imageUrl),
+                                    widget.plant.information.imageUrl),
                                 size: 60.h,
                                 radius: 24.h,
                               )
@@ -389,9 +402,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       ],
                     ),
                     SizedBox(height: 6.h),
-                    if (modifiedPlant.information.name != "")
+                    if (widget.plant.information.name != "")
                       Text(
-                        modifiedPlant.information.name,
+                        widget.plant.information.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: grayBlack,
                             ),
@@ -537,17 +550,18 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                             });
 
                             await ref.read(plantsProvider.notifier).updatePlant(
-                                modifiedPlant.docId,
+                                widget.plant.docId,
                                 alias: textController.text);
                           }
-                          if (photoState != null && xTrigger == false) {
+                          if (xTrigger) {
+                            //xTrigger 이면 기존사진삭제 및 기본사진으로
+                            if (context.mounted) {
+                              return Navigator.of(context).pop("updatedDelete");
+                            }
+                          } else if (photoState != null && xTrigger == false) {
                             //새로운이미지를 추가하는경우
                             if (context.mounted) {
                               return Navigator.of(context).pop("updatedPhoto");
-                            }
-                          } else if (modifiedPlant.information.imageUrl != "") {
-                            if (context.mounted) {
-                              return Navigator.of(context).pop("updatedDelete");
                             }
                           }
                           if (context.mounted) {
@@ -578,177 +592,177 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   }
 }
 
-class UpcomingAlarm extends ConsumerWidget {
-  const UpcomingAlarm({
-    super.key,
-  });
+// class UpcomingAlarm extends ConsumerWidget {
+//   const UpcomingAlarm({
+//     super.key,
+//   });
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final PlantModel? detailState = ref.watch(detailProvider);
-    String watering = "";
-    String repotting = "";
-    String nutrient = "";
-    List<AlarmModel> alarms = [];
-    if (detailState != null) {
-      DateTime today = DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-      );
-      alarms = detailState.alarms;
-      for (final alarm in alarms) {
-        DateTime alarmDay = DateTime(
-          alarm.startTime.year,
-          alarm.startTime.month,
-          alarm.startTime.day,
-        );
-        while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
-          alarmDay = alarmDay.add(Duration(days: alarm.repeat));
-        }
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final PlantModel? detailState = ref.watch(detailProvider);
+//     String watering = "";
+//     String repotting = "";
+//     String nutrient = "";
+//     List<AlarmModel> alarms = [];
+//     if (detailState != null) {
+//       DateTime today = DateTime(
+//         DateTime.now().year,
+//         DateTime.now().month,
+//         DateTime.now().day,
+//       );
+//       alarms = detailState.alarms;
+//       for (final alarm in alarms) {
+//         DateTime alarmDay = DateTime(
+//           alarm.startTime.year,
+//           alarm.startTime.month,
+//           alarm.startTime.day,
+//         );
+//         while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
+//           alarmDay = alarmDay.add(Duration(days: alarm.repeat));
+//         }
 
-        int difference = today.difference(alarmDay).inDays.abs();
-        if (alarm.field == PlantField.watering) {
-          watering = difference == 0 ? 'TODAY' : 'D-$difference';
-        } else if (alarm.field == PlantField.repotting) {
-          repotting = difference == 0 ? 'TODAY' : 'D-$difference';
-        } else if (alarm.field == PlantField.nutrient) {
-          nutrient = difference == 0 ? 'TODAY' : 'D-$difference';
-        }
-      }
-    }
+//         int difference = today.difference(alarmDay).inDays.abs();
+//         if (alarm.field == PlantField.watering) {
+//           watering = difference == 0 ? 'TODAY' : 'D-$difference';
+//         } else if (alarm.field == PlantField.repotting) {
+//           repotting = difference == 0 ? 'TODAY' : 'D-$difference';
+//         } else if (alarm.field == PlantField.nutrient) {
+//           nutrient = difference == 0 ? 'TODAY' : 'D-$difference';
+//         }
+//       }
+//     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "다가오는 알림",
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: primaryColor),
-        ),
-        SizedBox(
-          height: 12.h,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            //다가오는 알림 컨테이너
-            Container(
-              width: 98.w,
-              height: 110.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.h),
-                border: Border.all(
-                  color: const Color(0xFFAAE2F3),
-                  width: 1.h,
-                ),
-              ),
-              padding: EdgeInsets.all(16.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/images/management/humid.png',
-                    width: 28.h,
-                    height: 28.h,
-                  ),
-                  Text(
-                    "물주기",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: const Color(0xFF72CBE7),
-                        ),
-                  ),
-                  Text(
-                    watering == "" ? '알림 없음' : watering,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: watering == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 98.w,
-              height: 110.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.h),
-                border: Border.all(
-                  color: subColor2,
-                  width: 1.h,
-                ),
-              ),
-              padding: EdgeInsets.all(16.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/images/management/repotting.png',
-                    width: 28.h,
-                    height: 28.h,
-                  ),
-                  Text(
-                    "분갈이",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: subColor2,
-                        ),
-                  ),
-                  Text(
-                    repotting == "" ? '알림 없음' : repotting,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: repotting == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 98.w,
-              height: 110.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.h),
-                border: Border.all(
-                  color: keyColor500,
-                  width: 1.h,
-                ),
-              ),
-              padding: EdgeInsets.all(16.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/images/management/nutrient.png',
-                    width: 28.h,
-                    height: 28.h,
-                  ),
-                  Text(
-                    "영양제",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: keyColor500,
-                        ),
-                  ),
-                  Text(
-                    nutrient == "" ? '알림 없음' : nutrient,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: nutrient == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
-                        ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ],
-    );
-  }
-}
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           "다가오는 알림",
+//           style: Theme.of(context)
+//               .textTheme
+//               .titleMedium!
+//               .copyWith(color: primaryColor),
+//         ),
+//         SizedBox(
+//           height: 12.h,
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             //다가오는 알림 컨테이너
+//             Container(
+//               width: 98.w,
+//               height: 110.h,
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(12.h),
+//                 border: Border.all(
+//                   color: const Color(0xFFAAE2F3),
+//                   width: 1.h,
+//                 ),
+//               ),
+//               padding: EdgeInsets.all(16.h),
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Image.asset(
+//                     'assets/images/management/humid.png',
+//                     width: 28.h,
+//                     height: 28.h,
+//                   ),
+//                   Text(
+//                     "물주기",
+//                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
+//                           color: const Color(0xFF72CBE7),
+//                         ),
+//                   ),
+//                   Text(
+//                     watering == "" ? '알림 없음' : watering,
+//                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+//                           color: watering == "" ? grayColor400 : grayBlack,
+//                           fontSize: 16,
+//                         ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               width: 98.w,
+//               height: 110.h,
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(12.h),
+//                 border: Border.all(
+//                   color: subColor2,
+//                   width: 1.h,
+//                 ),
+//               ),
+//               padding: EdgeInsets.all(16.h),
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Image.asset(
+//                     'assets/images/management/repotting.png',
+//                     width: 28.h,
+//                     height: 28.h,
+//                   ),
+//                   Text(
+//                     "분갈이",
+//                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
+//                           color: subColor2,
+//                         ),
+//                   ),
+//                   Text(
+//                     repotting == "" ? '알림 없음' : repotting,
+//                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+//                           color: repotting == "" ? grayColor400 : grayBlack,
+//                           fontSize: 16,
+//                         ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               width: 98.w,
+//               height: 110.h,
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(12.h),
+//                 border: Border.all(
+//                   color: keyColor500,
+//                   width: 1.h,
+//                 ),
+//               ),
+//               padding: EdgeInsets.all(16.h),
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Image.asset(
+//                     'assets/images/management/nutrient.png',
+//                     width: 28.h,
+//                     height: 28.h,
+//                   ),
+//                   Text(
+//                     "영양제",
+//                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
+//                           color: keyColor500,
+//                         ),
+//                   ),
+//                   Text(
+//                     nutrient == "" ? '알림 없음' : nutrient,
+//                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+//                           color: nutrient == "" ? grayColor400 : grayBlack,
+//                           fontSize: 16,
+//                         ),
+//                   ),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class SettingAlarm extends StatelessWidget {
   const SettingAlarm({
