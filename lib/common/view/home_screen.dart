@@ -16,7 +16,11 @@ import 'package:plant_plan/utils/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   static String get routeName => 'home';
-  const HomeScreen({super.key});
+  final List<PlantModel> plants;
+  const HomeScreen({
+    super.key,
+    required this.plants,
+  });
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -29,7 +33,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(plantsProvider.notifier).fetchUserData();
   }
 
   @override
@@ -40,13 +43,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PlantModel> plantsState = ref.watch(plantsProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
 
-    //오늘 선택된 날짜의 알람들 전부 selectedDateAlarms 에 저장
     final List<AlarmWithUserInfo> selectedDateAlarms =
-        getSelectedDateList(plantsState, selectedDateState);
-
+        getSelectedDateList(widget.plants, selectedDateState);
     return DefaultLayout(
       backgroundColor: pointColor2,
       child: SingleChildScrollView(
@@ -55,7 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               SizedBox(
                 height: 194.h,
-                child: const MyCalendar(),
+                child: MyCalendar(plants: widget.plants),
               ),
               Container(
                 padding: EdgeInsets.symmetric(
@@ -337,19 +337,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         children: [
                           TodoTap(
                               selectedDateAlarms: getSelectedDateList(
-                                  plantsState,
+                                  widget.plants,
                                   selectedDateState,
                                   PlantField.watering),
                               field: PlantField.watering),
                           TodoTap(
                               selectedDateAlarms: getSelectedDateList(
-                                  plantsState,
+                                  widget.plants,
                                   selectedDateState,
                                   PlantField.repotting),
                               field: PlantField.repotting),
                           TodoTap(
                               selectedDateAlarms: getSelectedDateList(
-                                  plantsState,
+                                  widget.plants,
                                   selectedDateState,
                                   PlantField.nutrient),
                               field: PlantField.nutrient),

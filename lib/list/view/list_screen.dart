@@ -12,7 +12,11 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/common/utils/list_utils.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
-  const ListScreen({super.key});
+  final List<PlantModel> plants;
+  const ListScreen({
+    super.key,
+    required this.plants,
+  });
 
   @override
   ConsumerState<ListScreen> createState() => _ListScreenState();
@@ -28,9 +32,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PlantModel> plantsState = ref.watch(plantsProvider);
-
-    List<ListCardModel> cardList = getCardList(plantsState);
+    List<ListCardModel> cardList = getCardList(widget.plants);
 
     List<ListCardModel> selectedCardList;
     if (_selectedIndex == 1) {
@@ -129,7 +131,7 @@ class PlantListCard extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         final plant =
-            await ref.read(plantsProvider.notifier).getPlant(cardData.docId);
+            await ref.watch(plantsProvider.notifier).getPlant(cardData.docId);
         if (!context.mounted) return;
         Navigator.push(
           context,

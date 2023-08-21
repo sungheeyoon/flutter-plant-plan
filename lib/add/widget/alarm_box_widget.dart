@@ -19,17 +19,17 @@ class AlarmBoxWidget extends ConsumerWidget {
     required this.field,
     required this.isDetail,
   });
-
+  //수정해야됨
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel plantState = ref.watch(addPlantProvider);
-    final PlantModel? datailState = ref.watch(detailProvider);
+    // final PlantModel? datailState = ref.watch(detailProvider);
 
-    final List<AlarmModel>? alarms =
-        isDetail ? datailState?.alarms : plantState.alarms;
-
+    // final List<AlarmModel>? alarms =
+    //     isDetail ? datailState?.alarms : plantState.alarms;
+    final List<AlarmModel> alarms = plantState.alarms;
     final AlarmModel? alarmState =
-        alarms?.firstWhereOrNull((alarm) => alarm.field == field);
+        alarms.firstWhereOrNull((alarm) => alarm.field == field);
 
     late String iconPath;
     late String title;

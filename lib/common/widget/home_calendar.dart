@@ -6,11 +6,11 @@ import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/provider/selected_date_provider.dart';
-import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class MyCalendar extends ConsumerStatefulWidget {
-  const MyCalendar({Key? key}) : super(key: key);
+  final List<PlantModel> plants;
+  const MyCalendar({super.key, required this.plants});
 
   @override
   ConsumerState<MyCalendar> createState() => _MyCalendarState();
@@ -188,7 +188,6 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PlantModel> plantsState = ref.watch(plantsProvider);
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
     return Container(
       color: pointColor2,
@@ -245,7 +244,7 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                 PlantField? repotting;
                 PlantField? nutrient;
 
-                for (final PlantModel plant in plantsState) {
+                for (final PlantModel plant in widget.plants) {
                   final List<AlarmModel> alarms = plant.alarms;
 
                   for (final AlarmModel alarm in alarms) {
