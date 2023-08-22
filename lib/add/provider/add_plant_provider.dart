@@ -75,7 +75,7 @@ class AddPlantNotifier extends StateNotifier<PlantModel> {
     state = state.copyWith(alarms: updatedAlarms);
   }
 
-  void alarmDelete(String id) {
+  void deleteAlarm(String id) {
     final updatedAlarms = List<AlarmModel>.from(state.alarms);
     for (int i = 0; i < updatedAlarms.length; i++) {
       if (updatedAlarms[i].id == id) {
