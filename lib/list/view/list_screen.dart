@@ -7,6 +7,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/common/utils/list_utils.dart';
@@ -132,11 +133,12 @@ class PlantListCard extends ConsumerWidget {
       onTap: () async {
         final plant =
             await ref.watch(plantsProvider.notifier).getPlant(cardData.docId);
+        ref.read(detailProvider.notifier).updateDetail(plant);
         if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(plant: plant),
+            builder: (context) => const DetailScreen(),
           ),
         );
       },

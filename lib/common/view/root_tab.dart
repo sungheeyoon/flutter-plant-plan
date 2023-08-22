@@ -7,7 +7,7 @@ import 'package:plant_plan/common/model/plants_model.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
-import 'package:plant_plan/common/view/loading_screen.dart';
+import 'package:plant_plan/common/view/splash_screen.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -55,7 +55,7 @@ class _RootTabState extends ConsumerState<RootTab>
   Widget build(BuildContext context) {
     final PlantsModelBase plantsState = ref.watch(plantsProvider);
     if (plantsState is PlantsModelLoading) {
-      return const LoadingScreen();
+      return const SplashScreen();
     } else if (plantsState is PlantsModelError) {
       return ErrorScreen(errorMessage: plantsState.message);
     } else if (plantsState is PlantsModel) {
@@ -70,7 +70,11 @@ class _RootTabState extends ConsumerState<RootTab>
           onTap: (int tappedIndex) {
             if (tappedIndex == 2) {
               // Icon(Icons.add)를 눌렀을 때
-              Navigator.pushNamed(context, SearchScreen.routeName);
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return const SearchScreen();
+                },
+              ));
             } else {
               setState(() {
                 index = tappedIndex;

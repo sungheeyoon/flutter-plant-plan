@@ -7,6 +7,8 @@ import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/list/model/detail_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -23,11 +25,11 @@ class AlarmBoxWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel plantState = ref.watch(addPlantProvider);
-    // final PlantModel? datailState = ref.watch(detailProvider);
+    final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
 
-    // final List<AlarmModel>? alarms =
-    //     isDetail ? datailState?.alarms : plantState.alarms;
-    final List<AlarmModel> alarms = plantState.alarms;
+    final List<AlarmModel> alarms =
+        isDetail ? detailState.data.alarms : plantState.alarms;
+
     final AlarmModel? alarmState =
         alarms.firstWhereOrNull((alarm) => alarm.field == field);
 
@@ -113,14 +115,21 @@ class AlarmBoxWidget extends ConsumerWidget {
                       child: Switch(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: alarmState.isOn,
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          ref
+                              .read(detailProvider.notifier)
+                              .toggleIsOnAlarm(alarmState.id);
+                          ref.read(plantsProvider.notifier).updateAlarm(
+                              alarmState.id, detailState.data.docId,
+                              isOnToggle: true);
+                        },
                         activeTrackColor: primaryColor.withOpacity(0.4),
                         activeColor: primaryColor,
                       ),
                     ),
                 ],
               ),
-              if (alarmState != null && alarmState.isOn)
+              if (alarmState != null)
                 Column(
                   children: [
                     SizedBox(
@@ -211,9 +220,17 @@ class AlarmBoxWidget extends ConsumerWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              ref
-                                  .read(addPlantProvider.notifier)
-                                  .alarmDelete(alarmState.id);
+                              if (isDetail) {
+                                ref
+                                    .read(detailProvider.notifier)
+                                    .deleteAlarm(alarmState.id);
+                                ref.read(plantsProvider.notifier).deleteAlarm(
+                                    alarmState.id, detailState.data.docId);
+                              } else {
+                                ref
+                                    .read(addPlantProvider.notifier)
+                                    .deleteAlarm(alarmState.id);
+                              }
                             },
                             child: Image.asset(
                               'assets/icons/trash.png',

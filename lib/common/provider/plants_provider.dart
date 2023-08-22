@@ -14,6 +14,7 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
 
   Future<void> fetchPlants() async {
     try {
+      await Future.delayed(const Duration(microseconds: 2500));
       List<PlantModel> data = await FirebaseService().fireBaseFetchPlant();
       state = PlantsModel(data: data);
     } catch (e) {
@@ -69,6 +70,41 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
       await FirebaseService().fireBaseUpdatePlant(docId, updatedData);
     } catch (error) {
       state = PlantsModelError(message: error.toString());
+    }
+  }
+
+  Future<void> deleteAlarm(
+    String alarmId,
+    String docId,
+  ) async {
+    final PlantsModel currentState = state as PlantsModel;
+    final List<PlantModel> updatedPlants = [...currentState.data];
+    bool shouldUpdateDatabase = false;
+
+    for (int i = 0; i < updatedPlants.length; i++) {
+      if (updatedPlants[i].docId == docId) {
+        final List<AlarmModel> alarms =
+            List<AlarmModel>.from(updatedPlants[i].alarms);
+
+        for (int j = 0; j < alarms.length; j++) {
+          if (alarms[j].id == alarmId) {
+            alarms.removeAt(j);
+            shouldUpdateDatabase = true;
+            break;
+          }
+        }
+
+        updatedPlants[i] = updatedPlants[i].copyWith(alarms: alarms);
+        break;
+      }
+    }
+    state = PlantsModel(data: updatedPlants);
+    if (shouldUpdateDatabase) {
+      try {
+        await FirebaseService().fireBaseDeleteAlarm(docId, alarmId);
+      } catch (error) {
+        state = PlantsModelError(message: error.toString());
+      }
     }
   }
 
