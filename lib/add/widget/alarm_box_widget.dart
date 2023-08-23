@@ -24,11 +24,11 @@ class AlarmBoxWidget extends ConsumerWidget {
   //수정해야됨
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final PlantModel plantState = ref.watch(addPlantProvider);
+    final PlantModel addPlantState = ref.watch(addPlantProvider);
     final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
 
     final List<AlarmModel> alarms =
-        isDetail ? detailState.data.alarms : plantState.alarms;
+        isDetail ? detailState.data.alarms : addPlantState.alarms;
 
     final AlarmModel? alarmState =
         alarms.firstWhereOrNull((alarm) => alarm.field == field);
@@ -53,9 +53,9 @@ class AlarmBoxWidget extends ConsumerWidget {
           context,
           MaterialPageRoute(
             builder: (context) => AlarmScreen(
-              title: title,
               field: field,
               alarm: alarmState,
+              isDetail: isDetail,
             ),
           ),
         );

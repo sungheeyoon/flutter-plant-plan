@@ -187,6 +187,58 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
     }
   }
 
+  Future<void> updateOrAddAlarm(
+    String alarmId,
+    String docId,
+    AlarmModel newAlarm,
+  ) async {
+    final PlantsModel currentState = state as PlantsModel;
+    final List<PlantModel> updatedPlants = [...currentState.data];
+    bool shouldUpdateDatabase = false;
+
+    for (final PlantModel plant in updatedPlants) {
+      if (plant.docId == docId) {
+        final List<AlarmModel> alarms = List<AlarmModel>.from(plant.alarms);
+        bool foundExistingAlarm = false;
+
+        for (final AlarmModel alarm in alarms) {
+          if (alarm.id == alarmId) {
+            final updatedAlarm = newAlarm.copyWith(id: alarm.id);
+            final index = alarms.indexOf(alarm);
+            alarms[index] = updatedAlarm;
+
+            shouldUpdateDatabase = true;
+            foundExistingAlarm = true;
+
+            break;
+          }
+        }
+
+        if (!foundExistingAlarm) {
+          alarms.add(newAlarm);
+          shouldUpdateDatabase = true;
+        }
+
+        final updatedPlant = plant.copyWith(alarms: alarms);
+        final index = updatedPlants.indexOf(plant);
+        updatedPlants[index] = updatedPlant;
+
+        break;
+      }
+    }
+
+    state = PlantsModel(data: updatedPlants);
+
+    if (shouldUpdateDatabase) {
+      try {
+        await FirebaseService().fireBaseUpdateAlarm(docId,
+            updatedPlants.firstWhere((plant) => plant.docId == docId).alarms);
+      } catch (error) {
+        state = PlantsModelError(message: error.toString());
+      }
+    }
+  }
+
   Future<PlantModel> getPlant(String docId) async {
     final PlantsModel currentState = state as PlantsModel;
 

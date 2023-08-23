@@ -21,11 +21,12 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
       DateTime.now().day,
     );
 
-    List<AlarmModel> alarms = plant.alarms;
-    if (alarms.isNotEmpty) {
+    List<AlarmModel> activeAlarms =
+        plant.alarms.where((alarm) => alarm.isOn).toList();
+    if (activeAlarms.isNotEmpty) {
       List<AlarmModel> closestAlarms = [];
 
-      for (AlarmModel alarm in alarms) {
+      for (AlarmModel alarm in activeAlarms) {
         DateTime alarmDay = DateTime(
           alarm.startTime.year,
           alarm.startTime.month,
@@ -45,7 +46,7 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
           closestAlarms.add(alarm);
         }
       }
-      if (closestAlarms != []) {
+      if (closestAlarms.isNotEmpty) {
         for (AlarmModel closestAlarm in closestAlarms) {
           if (closestAlarm.field == PlantField.watering) {
             if (fields.contains(PlantField.watering)) {

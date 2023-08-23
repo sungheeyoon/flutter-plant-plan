@@ -8,21 +8,24 @@ import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
+import 'package:plant_plan/list/model/detail_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
 
 import 'package:plant_plan/utils/colors.dart';
 
 class AlarmScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addAlarm';
-  final String title;
   final PlantField field;
+  final bool isDetail;
   final AlarmModel? alarm;
 
   const AlarmScreen({
     super.key,
-    required this.title,
     required this.field,
     required this.alarm,
+    required this.isDetail,
   });
 
   @override
@@ -30,6 +33,7 @@ class AlarmScreen extends ConsumerStatefulWidget {
 }
 
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
+  late String title;
   bool isSwitched = false;
   late PlantField selectedField;
   int focusedButtonIndex = -1;
@@ -40,8 +44,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   @override
   void initState() {
     super.initState();
-    // final PlantInformationModel plantState = ref.read(plantInformationProvider);
-    //물준날, 분갈이, 영양제에 따른 페이지 초기화
 
     Future.delayed(Duration.zero, () {
       if (widget.alarm != null) {
@@ -54,10 +56,13 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
     if (widget.field == PlantField.watering) {
       lastDayText = '마지막으로 물 준 날';
+      title = '물주기';
     } else if (widget.field == PlantField.repotting) {
       lastDayText = '마지막으로 분갈이 한 날';
+      title = '분갈이';
     } else if (widget.field == PlantField.nutrient) {
       lastDayText = '마지막으로 영양제 준 날';
+      title = '영양제';
     }
     //반복주기 버튼활성
     if (widget.alarm?.repeat == null || widget.alarm?.repeat == 0) {
@@ -73,7 +78,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
   @override
   void dispose() {
-    // TextEditingController 해제
     textController.dispose();
     super.dispose();
   }
@@ -87,11 +91,21 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     return DefaultLayout(
       textbutton: TextButton(
         onPressed: () {
-          if (alarmState.isOn) {
-            ref
-                .read(addPlantProvider.notifier)
-                .updateAlarm(alarmState.id, alarmState);
-            Navigator.pop(context);
+          if (focusedButtonIndex != -1 && alarmState.repeat != 0) {
+            if (widget.isDetail) {
+              final detailState = ref.read(detailProvider) as DetailModel;
+              ref
+                  .read(detailProvider.notifier)
+                  .updateAlarm(alarmState.id, alarmState);
+              ref.read(plantsProvider.notifier).updateOrAddAlarm(
+                  alarmState.id, detailState.data.docId, alarmState);
+              Navigator.pop(context);
+            } else {
+              ref
+                  .read(addPlantProvider.notifier)
+                  .updateAlarm(alarmState.id, alarmState);
+              Navigator.pop(context);
+            }
           } else {
             return;
           }
@@ -103,13 +117,13 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         child: Text(
           '완료',
           style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: !alarmState.isOn
-                    ? const Color(0xFF999999).withOpacity(0.38)
-                    : pointColor2,
+                color: focusedButtonIndex != -1 && alarmState.repeat != 0
+                    ? pointColor2
+                    : const Color(0xFF999999).withOpacity(0.38),
               ),
         ),
       ),
-      title: '${widget.title} 알림',
+      title: '$title 알림',
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -120,11 +134,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 12.h,
                 ),
-                hourMinute12H(time: widget.alarm?.startTime),
+                hourMinute12H(time: widget.alarm?.startTime ?? DateTime.now()),
                 SizedBox(
                   height: 28.h,
                 ),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -298,8 +311,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       ),
                     ],
                   ),
-
-                if (alarmState.isOn && focusedButtonIndex != -1)
+                if (focusedButtonIndex != -1)
                   SingleChildScrollView(
                     child: Column(
                       children: [
@@ -400,49 +412,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 const SizedBox(
                   height: 40,
                 ),
-
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       '다시 알림',
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .labelLarge!
-                //           .copyWith(color: primaryColor),
-                //     ),
-                //     Switch(
-                //         value: isSwitched,
-                //         onChanged: (value) {
-                //           setState(() {
-                //             isSwitched = value;
-                //           });
-                //         },
-                //         activeTrackColor: primaryColor.withOpacity(0.4),
-                //         activeColor: primaryColor),
-                //   ],
-                // ),
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     // await NotificationService().showNotification(
-                //     //     id: 0, title: 'what', body: "asdasd", payLoad: "asdasd");
-                //     debugPrint('Notification Scheduled for $dateTime');
-                //     NotificationService().scheduleNotification(
-                //         title: 'Scheduled Notification',
-                //         body: '$dateTime',
-                //         scheduledNotificationDateTime:
-                //             dateTime[DateTimeKey.now]!);
-                //   },
-                //   child: const Text('Scheduled Notification'),
-                // ),
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     debugPrint('cancel Notification Scheduled');
-                //     NotificationService().cancel(0);
-                //   },
-                //   child: const Text('cancel Notification'),
-                // ),
               ],
             ),
           ),
@@ -452,25 +421,18 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   }
 
   void _updateFocusedButton(int index) {
-    // final Alarm alarmState = ref.watch(alarmProvider);
     setState(
       () {
         if (focusedButtonIndex == index) {
           focusedButtonIndex = -1;
-          // ref
-          //     .read(alarmProvider.notifier)
-          //     .setDateTimeNull(AlarmDateTimeField.nextAlarm);
         } else {
           focusedButtonIndex = index;
-          // ref
-          //     .read(alarmProvider.notifier)
-          //     .updateNextAlarmTime(days: alarmState.repeat);
         }
       },
     );
   }
 
-  Widget hourMinute12H({required DateTime? time}) {
+  Widget hourMinute12H({required DateTime time}) {
     return Container(
       width: 360.w,
       height: 194.h,
@@ -479,7 +441,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: TimePickerSpinner(
-        time: time ?? DateTime.now(),
+        time: time,
         is24HourMode: false,
         normalTextStyle: TextStyle(
           fontWeight: FontWeight.w400,

@@ -65,6 +65,30 @@ class DetailNotifier extends StateNotifier<DetailModelBase> {
     }
   }
 
+  void updateAlarm(String id, AlarmModel newAlarm) {
+    if (state is DetailModel) {
+      final DetailModel currentState = state as DetailModel;
+      final updatedAlarms = List<AlarmModel>.from(currentState.data.alarms);
+      bool found = false;
+
+      for (int i = 0; i < updatedAlarms.length; i++) {
+        if (updatedAlarms[i].id == id) {
+          updatedAlarms[i] = newAlarm;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        updatedAlarms.add(newAlarm);
+      }
+      final updatedData = currentState.data.copyWith(alarms: updatedAlarms);
+      state = DetailModel(data: updatedData);
+    } else {
+      state = DetailModelError(message: 'Not DetailModel');
+    }
+  }
+
   void deleteAlarm(String id) {
     if (state is DetailModel) {
       final DetailModel currentState = state as DetailModel;
