@@ -103,6 +103,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   @override
   Widget build(BuildContext context) {
     final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
+    textController = TextEditingController(text: detailState.data.alias);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -632,11 +633,11 @@ class UpcomingAlarm extends ConsumerWidget {
       }
 
       int difference = today.difference(alarmDay).inDays.abs();
-      if (alarm.field == PlantField.watering) {
+      if (alarm.field == PlantField.watering && alarm.isOn) {
         watering = difference == 0 ? 'TODAY' : 'D-$difference';
-      } else if (alarm.field == PlantField.repotting) {
+      } else if (alarm.field == PlantField.repotting && alarm.isOn) {
         repotting = difference == 0 ? 'TODAY' : 'D-$difference';
-      } else if (alarm.field == PlantField.nutrient) {
+      } else if (alarm.field == PlantField.nutrient && alarm.isOn) {
         nutrient = difference == 0 ? 'TODAY' : 'D-$difference';
       }
     }
