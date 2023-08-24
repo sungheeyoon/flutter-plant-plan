@@ -27,6 +27,8 @@ mixin _$PlantModel {
   InformationModel get information => throw _privateConstructorUsedError;
   List<DiaryModel> get diary => throw _privateConstructorUsedError;
   List<AlarmModel> get alarms => throw _privateConstructorUsedError;
+  @TimestampSerializer()
+  DateTime? get timestamp => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +49,8 @@ abstract class $PlantModelCopyWith<$Res> {
       bool favorite,
       InformationModel information,
       List<DiaryModel> diary,
-      List<AlarmModel> alarms});
+      List<AlarmModel> alarms,
+      @TimestampSerializer() DateTime? timestamp});
 
   $InformationModelCopyWith<$Res> get information;
 }
@@ -72,6 +75,7 @@ class _$PlantModelCopyWithImpl<$Res, $Val extends PlantModel>
     Object? information = null,
     Object? diary = null,
     Object? alarms = null,
+    Object? timestamp = freezed,
   }) {
     return _then(_value.copyWith(
       docId: null == docId
@@ -102,6 +106,10 @@ class _$PlantModelCopyWithImpl<$Res, $Val extends PlantModel>
           ? _value.alarms
           : alarms // ignore: cast_nullable_to_non_nullable
               as List<AlarmModel>,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 
@@ -129,7 +137,8 @@ abstract class _$$_PlantModelCopyWith<$Res>
       bool favorite,
       InformationModel information,
       List<DiaryModel> diary,
-      List<AlarmModel> alarms});
+      List<AlarmModel> alarms,
+      @TimestampSerializer() DateTime? timestamp});
 
   @override
   $InformationModelCopyWith<$Res> get information;
@@ -153,6 +162,7 @@ class __$$_PlantModelCopyWithImpl<$Res>
     Object? information = null,
     Object? diary = null,
     Object? alarms = null,
+    Object? timestamp = freezed,
   }) {
     return _then(_$_PlantModel(
       docId: null == docId
@@ -183,6 +193,10 @@ class __$$_PlantModelCopyWithImpl<$Res>
           ? _value._alarms
           : alarms // ignore: cast_nullable_to_non_nullable
               as List<AlarmModel>,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -197,7 +211,8 @@ class _$_PlantModel implements _PlantModel {
       this.favorite = false,
       required this.information,
       final List<DiaryModel> diary = const [],
-      final List<AlarmModel> alarms = const []})
+      final List<AlarmModel> alarms = const [],
+      @TimestampSerializer() this.timestamp = null})
       : _diary = diary,
         _alarms = alarms;
 
@@ -237,8 +252,13 @@ class _$_PlantModel implements _PlantModel {
   }
 
   @override
+  @JsonKey()
+  @TimestampSerializer()
+  final DateTime? timestamp;
+
+  @override
   String toString() {
-    return 'PlantModel(docId: $docId, userImageUrl: $userImageUrl, alias: $alias, favorite: $favorite, information: $information, diary: $diary, alarms: $alarms)';
+    return 'PlantModel(docId: $docId, userImageUrl: $userImageUrl, alias: $alias, favorite: $favorite, information: $information, diary: $diary, alarms: $alarms, timestamp: $timestamp)';
   }
 
   @override
@@ -255,7 +275,9 @@ class _$_PlantModel implements _PlantModel {
             (identical(other.information, information) ||
                 other.information == information) &&
             const DeepCollectionEquality().equals(other._diary, _diary) &&
-            const DeepCollectionEquality().equals(other._alarms, _alarms));
+            const DeepCollectionEquality().equals(other._alarms, _alarms) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
   }
 
   @JsonKey(ignore: true)
@@ -268,7 +290,8 @@ class _$_PlantModel implements _PlantModel {
       favorite,
       information,
       const DeepCollectionEquality().hash(_diary),
-      const DeepCollectionEquality().hash(_alarms));
+      const DeepCollectionEquality().hash(_alarms),
+      timestamp);
 
   @JsonKey(ignore: true)
   @override
@@ -292,7 +315,8 @@ abstract class _PlantModel implements PlantModel {
       final bool favorite,
       required final InformationModel information,
       final List<DiaryModel> diary,
-      final List<AlarmModel> alarms}) = _$_PlantModel;
+      final List<AlarmModel> alarms,
+      @TimestampSerializer() final DateTime? timestamp}) = _$_PlantModel;
 
   factory _PlantModel.fromJson(Map<String, dynamic> json) =
       _$_PlantModel.fromJson;
@@ -311,6 +335,9 @@ abstract class _PlantModel implements PlantModel {
   List<DiaryModel> get diary;
   @override
   List<AlarmModel> get alarms;
+  @override
+  @TimestampSerializer()
+  DateTime? get timestamp;
   @override
   @JsonKey(ignore: true)
   _$$_PlantModelCopyWith<_$_PlantModel> get copyWith =>

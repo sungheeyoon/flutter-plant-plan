@@ -159,7 +159,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 DatePickerWidget(
                   field: widget.field,
                   hintText: '날짜를 설정해주세요',
-                  alarm: true,
                 ),
                 SizedBox(
                   height: 16.h,

@@ -51,7 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
         // 로그인 성공
         // 추가적인 작업 수행 또는 홈 화면으로 이동
         if (context.mounted) {
-          Navigator.pushNamed(context, RootTab.routeName);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const RootTab()),
+              (route) => false);
         }
         print('로그인 성공: ${userCredential.user!.uid}');
       } on FirebaseAuthException catch (e) {

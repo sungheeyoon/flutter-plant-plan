@@ -114,9 +114,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ref
                                   .read(addPlantProvider.notifier)
                                   .updateInformation(document);
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  AddFirstScreen.routeName, (route) => false,
-                                  arguments: {"update": true});
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const AddFirstScreen()));
                             },
                           ).paddingOnly(bottom: 6.h);
                         } else {
@@ -163,9 +166,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                 ref
                                     .read(addPlantProvider.notifier)
                                     .updateInformation(document);
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    AddFirstScreen.routeName, (route) => false,
-                                    arguments: {"update": true});
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const AddFirstScreen()),
+                                    (route) => false);
                               },
                             ).paddingOnly(bottom: 6.h);
                           }

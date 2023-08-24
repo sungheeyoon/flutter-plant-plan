@@ -10,7 +10,7 @@ import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
 import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -37,13 +37,25 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
           ref.read(photoProvider.notifier).reset();
           ref.read(alarmProvider.notifier).reset();
           ref.read(addPlantProvider.notifier).reset();
-          Navigator.pushNamed(context, HomeScreen.routeName);
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const RootTab()),
+              (route) => false);
         },
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
           if (plantState.information.id != "") {
-            Navigator.pushNamed(context, AddSecondScreen.routeName);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AddSecondScreen();
+                },
+              ),
+            );
           }
         },
         child: Container(

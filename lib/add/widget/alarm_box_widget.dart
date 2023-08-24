@@ -25,10 +25,23 @@ class AlarmBoxWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel addPlantState = ref.watch(addPlantProvider);
-    final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
+    DetailModel? detailState;
+
+    if (isDetail) {
+      detailState = ref.watch(detailProvider) as DetailModel;
+    } else {
+      // isDetail이 false일 때에는 DetailModelLoading 상태 처리
+      final detailStateValue = ref.watch(detailProvider);
+      if (detailStateValue is DetailModel) {
+        detailState = detailStateValue;
+      } else if (detailStateValue is DetailModelLoading) {
+        // DetailModelLoading 상태 처리
+        // 예: detailState = DetailModelLoading();
+      }
+    }
 
     final List<AlarmModel> alarms =
-        isDetail ? detailState.data.alarms : addPlantState.alarms;
+        isDetail ? detailState?.data.alarms ?? [] : addPlantState.alarms;
 
     final AlarmModel? alarmState =
         alarms.firstWhereOrNull((alarm) => alarm.field == field);
@@ -120,7 +133,7 @@ class AlarmBoxWidget extends ConsumerWidget {
                               .read(detailProvider.notifier)
                               .toggleIsOnAlarm(alarmState.id);
                           ref.read(plantsProvider.notifier).updateAlarm(
-                              alarmState.id, detailState.data.docId,
+                              alarmState.id, detailState!.data.docId,
                               isOnToggle: true);
                         },
                         activeTrackColor: primaryColor.withOpacity(0.4),
@@ -225,7 +238,7 @@ class AlarmBoxWidget extends ConsumerWidget {
                                     .read(detailProvider.notifier)
                                     .deleteAlarm(alarmState.id);
                                 ref.read(plantsProvider.notifier).deleteAlarm(
-                                    alarmState.id, detailState.data.docId);
+                                    alarmState.id, detailState!.data.docId);
                               } else {
                                 ref
                                     .read(addPlantProvider.notifier)

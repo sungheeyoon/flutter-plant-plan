@@ -43,9 +43,8 @@ class _ListScreenState extends ConsumerState<ListScreen> {
       //cardList 의 card.dDay 오름차순으로 정렬되며 card.dDay 가 -1 이면 맨뒤로가게정렬한다.
       selectedCardList = [...cardList]..sort(compareByDDay);
     } else {
-      selectedCardList = cardList;
+      selectedCardList = [...cardList]..sort(compareByTimeStamp);
     }
-
     return DefaultLayout(
       backgroundColor: const Color(0xFFF8F8F8),
       title: '나의 식물',

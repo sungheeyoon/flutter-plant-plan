@@ -11,7 +11,7 @@ import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/utils/date_formatter.dart';
-import 'package:plant_plan/common/view/home_screen.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -49,7 +49,7 @@ class AddSecondScreen extends ConsumerWidget {
       ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
       final data = ref.read(addPlantProvider).toJson();
-
+      data['timestamp'] = DateTime.now();
       data['information'] = ref.read(addPlantProvider).information.toJson();
       data['alarms'] = ref
           .read(addPlantProvider)
@@ -71,9 +71,11 @@ class AddSecondScreen extends ConsumerWidget {
           if (plantState.information.id != "") {
             await insertNewPlant();
             if (!context.mounted) return;
-
-            Navigator.pushNamedAndRemoveUntil(
-                context, HomeScreen.routeName, (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const RootTab()),
+                (route) => false);
           }
         },
         child: Container(

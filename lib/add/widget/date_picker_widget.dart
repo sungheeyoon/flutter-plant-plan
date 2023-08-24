@@ -12,13 +12,11 @@ class DatePickerWidget extends ConsumerWidget {
   final PlantField field;
   final String hintText;
   final String? labelText;
-  final bool alarm;
 
   const DatePickerWidget({
     super.key,
     required this.field,
     required this.hintText,
-    this.alarm = false,
     this.labelText,
   });
 
@@ -124,7 +122,8 @@ class DatePickerWidget extends ConsumerWidget {
     final values = await showCalendarDatePicker2Dialog(
       context: ref.context,
       config: CalendarDatePicker2WithActionButtonsConfig(
-        firstDate: alarm ? DateTime.now() : DateTime(1),
+        firstDate: DateTime(2020),
+        lastDate: DateTime.now(),
         selectedDayHighlightColor: pointColor2,
       ),
       dialogSize: const Size(325, 400),
@@ -133,11 +132,9 @@ class DatePickerWidget extends ConsumerWidget {
       dialogBackgroundColor: Colors.white,
     );
     if (values != null) {
-      if (alarm) {
-        ref
-            .read(alarmProvider.notifier)
-            .setStartTime(StartTimeOption.day, values[0]!);
-      }
+      ref
+          .read(alarmProvider.notifier)
+          .setStartTime(StartTimeOption.day, values[0]!);
     }
   }
 }

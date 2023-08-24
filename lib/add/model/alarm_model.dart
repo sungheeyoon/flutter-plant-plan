@@ -12,7 +12,7 @@ class AlarmModel with _$AlarmModel {
     @TimestampSerializer() required DateTime startTime,
     @Default(0) int repeat,
     @Default('') String title,
-    @Default(false) bool isOn,
+    @Default(true) bool isOn,
     @Default([]) List<DateTime> offDates,
     required PlantField field, // nutrient, watering, repotting 중 하나의 필드
   }) = _AlarmModel;

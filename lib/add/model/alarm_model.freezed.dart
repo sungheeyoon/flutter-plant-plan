@@ -183,7 +183,7 @@ class _$_AlarmModel implements _AlarmModel {
       @TimestampSerializer() required this.startTime,
       this.repeat = 0,
       this.title = '',
-      this.isOn = false,
+      this.isOn = true,
       final List<DateTime> offDates = const [],
       required this.field})
       : _offDates = offDates;

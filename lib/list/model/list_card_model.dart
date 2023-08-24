@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
+import 'package:plant_plan/common/utils/timestamp_serializer.dart';
 
 part 'list_card_model.freezed.dart';
 part 'list_card_model.g.dart';
@@ -12,6 +13,7 @@ class ListCardModel with _$ListCardModel {
     required String imageUrl,
     required int dDay,
     required List<PlantField> fields,
+    @TimestampSerializer() required DateTime timestamp,
   }) = _ListCardModel;
 
   factory ListCardModel.fromJson(Map<String, dynamic> json) =>
