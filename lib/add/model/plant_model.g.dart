@@ -22,6 +22,9 @@ _$_PlantModel _$$_PlantModelFromJson(Map<String, dynamic> json) =>
               ?.map((e) => AlarmModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      timestamp: json['timestamp'] == null
+          ? null
+          : const TimestampSerializer().fromJson(json['timestamp']),
     );
 
 Map<String, dynamic> _$$_PlantModelToJson(_$_PlantModel instance) =>
@@ -33,4 +36,12 @@ Map<String, dynamic> _$$_PlantModelToJson(_$_PlantModel instance) =>
       'information': instance.information,
       'diary': instance.diary,
       'alarms': instance.alarms,
+      'timestamp': _$JsonConverterToJson<dynamic, DateTime>(
+          instance.timestamp, const TimestampSerializer().toJson),
     };
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

@@ -14,6 +14,7 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
         : plant.userImageUrl;
     int dDay = -1;
     List<PlantField> fields = [];
+    DateTime? timestamp = plant.timestamp;
 
     DateTime today = DateTime(
       DateTime.now().year,
@@ -78,7 +79,8 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
           title: title,
           imageUrl: imageUrl,
           dDay: dDay,
-          fields: fields),
+          fields: fields,
+          timestamp: timestamp as DateTime),
     );
   }
 
@@ -87,9 +89,14 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
 
 // cardList를 D-Day 오름차순으로 정렬하는 함수
 int compareByDDay(ListCardModel a, ListCardModel b) {
-  if (a.dDay == -1) return 1; // -1인 항목은 맨 뒤로 보내기
+  if (a.dDay == -1) return 1;
   if (b.dDay == -1) return -1; // -1인 항목은 맨 뒤로 보내기
   return a.dDay.compareTo(b.dDay);
+}
+
+// timestamp기준 오름차순정렬
+int compareByTimeStamp(ListCardModel a, ListCardModel b) {
+  return a.timestamp.compareTo(b.timestamp);
 }
 
 // cardList를 이름 순서로 정렬하는 함수

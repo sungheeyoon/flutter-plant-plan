@@ -15,6 +15,7 @@ _$_ListCardModel _$$_ListCardModelFromJson(Map<String, dynamic> json) =>
       fields: (json['fields'] as List<dynamic>)
           .map((e) => $enumDecode(_$PlantFieldEnumMap, e))
           .toList(),
+      timestamp: const TimestampSerializer().fromJson(json['timestamp']),
     );
 
 Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
@@ -24,6 +25,7 @@ Map<String, dynamic> _$$_ListCardModelToJson(_$_ListCardModel instance) =>
       'imageUrl': instance.imageUrl,
       'dDay': instance.dDay,
       'fields': instance.fields.map((e) => _$PlantFieldEnumMap[e]!).toList(),
+      'timestamp': const TimestampSerializer().toJson(instance.timestamp),
     };
 
 const _$PlantFieldEnumMap = {

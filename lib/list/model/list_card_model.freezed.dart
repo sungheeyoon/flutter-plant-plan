@@ -25,6 +25,8 @@ mixin _$ListCardModel {
   String get imageUrl => throw _privateConstructorUsedError;
   int get dDay => throw _privateConstructorUsedError;
   List<PlantField> get fields => throw _privateConstructorUsedError;
+  @TimestampSerializer()
+  DateTime get timestamp => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +45,8 @@ abstract class $ListCardModelCopyWith<$Res> {
       String title,
       String imageUrl,
       int dDay,
-      List<PlantField> fields});
+      List<PlantField> fields,
+      @TimestampSerializer() DateTime timestamp});
 }
 
 /// @nodoc
@@ -64,6 +67,7 @@ class _$ListCardModelCopyWithImpl<$Res, $Val extends ListCardModel>
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
+    Object? timestamp = null,
   }) {
     return _then(_value.copyWith(
       docId: null == docId
@@ -86,6 +90,10 @@ class _$ListCardModelCopyWithImpl<$Res, $Val extends ListCardModel>
           ? _value.fields
           : fields // ignore: cast_nullable_to_non_nullable
               as List<PlantField>,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -103,7 +111,8 @@ abstract class _$$_ListCardModelCopyWith<$Res>
       String title,
       String imageUrl,
       int dDay,
-      List<PlantField> fields});
+      List<PlantField> fields,
+      @TimestampSerializer() DateTime timestamp});
 }
 
 /// @nodoc
@@ -122,6 +131,7 @@ class __$$_ListCardModelCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
+    Object? timestamp = null,
   }) {
     return _then(_$_ListCardModel(
       docId: null == docId
@@ -144,6 +154,10 @@ class __$$_ListCardModelCopyWithImpl<$Res>
           ? _value._fields
           : fields // ignore: cast_nullable_to_non_nullable
               as List<PlantField>,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -156,7 +170,8 @@ class _$_ListCardModel implements _ListCardModel {
       required this.title,
       required this.imageUrl,
       required this.dDay,
-      required final List<PlantField> fields})
+      required final List<PlantField> fields,
+      @TimestampSerializer() required this.timestamp})
       : _fields = fields;
 
   factory _$_ListCardModel.fromJson(Map<String, dynamic> json) =>
@@ -179,8 +194,12 @@ class _$_ListCardModel implements _ListCardModel {
   }
 
   @override
+  @TimestampSerializer()
+  final DateTime timestamp;
+
+  @override
   String toString() {
-    return 'ListCardModel(docId: $docId, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields)';
+    return 'ListCardModel(docId: $docId, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields, timestamp: $timestamp)';
   }
 
   @override
@@ -193,13 +212,15 @@ class _$_ListCardModel implements _ListCardModel {
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
             (identical(other.dDay, dDay) || other.dDay == dDay) &&
-            const DeepCollectionEquality().equals(other._fields, _fields));
+            const DeepCollectionEquality().equals(other._fields, _fields) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, docId, title, imageUrl, dDay,
-      const DeepCollectionEquality().hash(_fields));
+      const DeepCollectionEquality().hash(_fields), timestamp);
 
   @JsonKey(ignore: true)
   @override
@@ -217,11 +238,13 @@ class _$_ListCardModel implements _ListCardModel {
 
 abstract class _ListCardModel implements ListCardModel {
   factory _ListCardModel(
-      {required final String docId,
-      required final String title,
-      required final String imageUrl,
-      required final int dDay,
-      required final List<PlantField> fields}) = _$_ListCardModel;
+          {required final String docId,
+          required final String title,
+          required final String imageUrl,
+          required final int dDay,
+          required final List<PlantField> fields,
+          @TimestampSerializer() required final DateTime timestamp}) =
+      _$_ListCardModel;
 
   factory _ListCardModel.fromJson(Map<String, dynamic> json) =
       _$_ListCardModel.fromJson;
@@ -236,6 +259,9 @@ abstract class _ListCardModel implements ListCardModel {
   int get dDay;
   @override
   List<PlantField> get fields;
+  @override
+  @TimestampSerializer()
+  DateTime get timestamp;
   @override
   @JsonKey(ignore: true)
   _$$_ListCardModelCopyWith<_$_ListCardModel> get copyWith =>

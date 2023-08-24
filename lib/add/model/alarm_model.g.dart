@@ -12,7 +12,7 @@ _$_AlarmModel _$$_AlarmModelFromJson(Map<String, dynamic> json) =>
       startTime: const TimestampSerializer().fromJson(json['startTime']),
       repeat: json['repeat'] as int? ?? 0,
       title: json['title'] as String? ?? '',
-      isOn: json['isOn'] as bool? ?? false,
+      isOn: json['isOn'] as bool? ?? true,
       offDates: (json['offDates'] as List<dynamic>?)
               ?.map((e) => DateTime.parse(e as String))
               .toList() ??
