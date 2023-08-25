@@ -8,6 +8,7 @@ import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/view/splash_screen.dart';
+import 'package:plant_plan/diary/view/diary_screen.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -151,7 +152,7 @@ class _RootTabState extends ConsumerState<RootTab>
             HomeScreen(plants: plants),
             ListScreen(plants: plants),
             const Text('asd'),
-            const Text('asdasd'),
+            const DiaryScreen(),
             const Text('asdasdsad'),
           ],
         ),
