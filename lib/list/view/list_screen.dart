@@ -47,7 +47,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
     }
     return DefaultLayout(
       backgroundColor: const Color(0xFFF8F8F8),
-      title: '나의 식물',
+      title: '내 식물',
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(24.h, 20.h, 24.h, 12.h),
         child: Column(
