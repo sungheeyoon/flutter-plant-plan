@@ -10,7 +10,7 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final TextButton? textbutton;
+  final List<Widget>? actions;
   final Widget? leading;
 
   const DefaultLayout({
@@ -21,7 +21,7 @@ class DefaultLayout extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
-    this.textbutton,
+    this.actions,
     this.leading,
     Key? key,
   }) : super(key: key);
@@ -57,10 +57,8 @@ class DefaultLayout extends StatelessWidget {
               .copyWith(color: primaryColor),
         ),
         foregroundColor: primaryColor,
-        actions: [
-          if (textbutton != null) textbutton!,
-        ],
-        leading: leading, // 추가: leading 위젯 설정
+        actions: actions,
+        leading: leading,
       );
     }
   }

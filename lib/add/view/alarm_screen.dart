@@ -89,40 +89,42 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     DateTime nextAlarmDate =
         alarmState.startTime.add(Duration(days: alarmState.repeat));
     return DefaultLayout(
-      textbutton: TextButton(
-        onPressed: () {
-          if (focusedButtonIndex != -1 && alarmState.repeat != 0) {
-            if (widget.isDetail) {
-              final detailState = ref.read(detailProvider) as DetailModel;
-              ref
-                  .read(detailProvider.notifier)
-                  .updateAlarm(alarmState.id, alarmState);
-              ref.read(plantsProvider.notifier).updateOrAddAlarm(
-                  alarmState.id, detailState.data.docId, alarmState);
-              Navigator.pop(context);
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (focusedButtonIndex != -1 && alarmState.repeat != 0) {
+              if (widget.isDetail) {
+                final detailState = ref.read(detailProvider) as DetailModel;
+                ref
+                    .read(detailProvider.notifier)
+                    .updateAlarm(alarmState.id, alarmState);
+                ref.read(plantsProvider.notifier).updateOrAddAlarm(
+                    alarmState.id, detailState.data.docId, alarmState);
+                Navigator.pop(context);
+              } else {
+                ref
+                    .read(addPlantProvider.notifier)
+                    .updateAlarm(alarmState.id, alarmState);
+                Navigator.pop(context);
+              }
             } else {
-              ref
-                  .read(addPlantProvider.notifier)
-                  .updateAlarm(alarmState.id, alarmState);
-              Navigator.pop(context);
+              return;
             }
-          } else {
-            return;
-          }
-        },
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.only(right: 5.w),
-          disabledForegroundColor: const Color(0xFF999999).withOpacity(0.38),
-        ),
-        child: Text(
-          '완료',
-          style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                color: focusedButtonIndex != -1 && alarmState.repeat != 0
-                    ? pointColor2
-                    : const Color(0xFF999999).withOpacity(0.38),
-              ),
-        ),
-      ),
+          },
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.only(right: 5.w),
+            disabledForegroundColor: const Color(0xFF999999).withOpacity(0.38),
+          ),
+          child: Text(
+            '완료',
+            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  color: focusedButtonIndex != -1 && alarmState.repeat != 0
+                      ? pointColor2
+                      : const Color(0xFF999999).withOpacity(0.38),
+                ),
+          ),
+        )
+      ],
       title: '$title 알림',
       child: SafeArea(
         child: SingleChildScrollView(
