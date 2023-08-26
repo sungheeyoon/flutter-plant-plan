@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
+import 'package:plant_plan/diary/view/diary_creation_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class DiaryScreen extends ConsumerStatefulWidget {
@@ -20,6 +21,36 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     return DefaultLayout(
       backgroundColor: grayColor100,
       title: '다이어리',
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 12.0),
+        child: IconButton(
+          icon: const Image(
+            image: AssetImage('assets/icons/edit.png'),
+            width: 24,
+            height: 24,
+          ),
+          onPressed: () {},
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: IconButton(
+            icon: const Image(
+              image: AssetImage('assets/icons/edit.png'),
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DiaryCreationScreen()),
+              );
+            },
+          ),
+        ),
+      ],
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +222,12 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ),
                 ],
               ),
-            )
+            ),
+            Image(
+              image: const AssetImage('assets/icons/edit.png'),
+              width: 24.h,
+              height: 24.h,
+            ),
           ],
         ),
       ),
