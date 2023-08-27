@@ -23,13 +23,28 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
       title: '다이어리',
       leading: Padding(
         padding: const EdgeInsets.only(left: 12.0),
-        child: IconButton(
-          icon: const Image(
-            image: AssetImage('assets/icons/edit.png'),
-            width: 24,
-            height: 24,
-          ),
-          onPressed: () {},
+        child: Row(
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: grayColor400,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  'All',
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: grayColor500,
+                      ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       actions: [
@@ -162,21 +177,21 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                         const SizedBox(width: 24),
                         ProfileImageWidget(
                           imageProvider: const AssetImage(
-                              'assets/icons/fav/fav_active.png'),
+                              'assets/images/plants/plantA.png'),
                           size: 120.h,
                           radius: 12.h,
                         ),
                         const SizedBox(width: 12),
                         ProfileImageWidget(
                           imageProvider: const AssetImage(
-                              'assets/icons/fav/fav_active.png'),
+                              'assets/images/plants/plantA.png'),
                           size: 120.h,
                           radius: 12.h,
                         ),
                         const SizedBox(width: 12),
                         ProfileImageWidget(
                           imageProvider: const AssetImage(
-                              'assets/icons/fav/fav_active.png'),
+                              'assets/images/plants/plantA.png'),
                           size: 120.h,
                           radius: 12.h,
                         ),
@@ -205,10 +220,13 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.bookmark,
-                          size: 24.0,
-                          color: Colors.grey,
+                        GestureDetector(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/icons/bookmark.png', // 이미지 파일의 경로
+                            width: 24, // 이미지의 너비
+                            height: 24, // 이미지의 높이
+                          ),
                         ),
                         Text(
                           '오후 7:38',
@@ -222,11 +240,6 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ),
                 ],
               ),
-            ),
-            Image(
-              image: const AssetImage('assets/icons/edit.png'),
-              width: 24.h,
-              height: 24.h,
             ),
           ],
         ),
