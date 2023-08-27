@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class DiaryCreationScreen extends StatefulWidget {
   const DiaryCreationScreen({super.key});
@@ -10,10 +13,10 @@ class DiaryCreationScreen extends StatefulWidget {
 }
 
 class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
-  String? _selectedItem;
-
   @override
   Widget build(BuildContext context) {
+    final plantNameController = TextEditingController();
+
     return DefaultLayout(
       title: '다이어리 작성',
       actions: [
@@ -39,28 +42,26 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: DropdownButtonFormField<String>(
-              value: _selectedItem,
-              icon: const Icon(Icons.chevron_right),
-              decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                labelText: '식물을 선택해주세요',
-                labelStyle: const TextStyle(color: Colors.grey),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            child: CustomDropdown(
+              hintText: '식물을 선택해주세요',
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: grayColor400),
+              selectedStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: grayBlack),
+              listItemStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: grayBlack),
+              borderSide: const BorderSide(
+                color: grayColor400,
+                width: 1.0,
               ),
-              onChanged: (value) {
-                setState(() {
-                  _selectedItem = value;
-                });
-              },
-              items: const [
-                DropdownMenuItem(value: 'item1', child: Text('아이템 1')),
-                DropdownMenuItem(value: 'item2', child: Text('아이템 2')),
-                DropdownMenuItem(value: 'item3', child: Text('아이템 3')),
-              ],
+              items: const ['안시리움', '개시려움', '선인장', '송죽장'],
+              controller: plantNameController,
             ),
           ),
           const SizedBox(
@@ -75,28 +76,92 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Expanded(
+                Expanded(
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: '제목',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: grayColor400),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: grayColor400),
                       ),
-                      focusedBorder: UnderlineInputBorder(
+                      focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: grayBlack),
                       ),
                     ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: grayBlack),
                   ),
                 ),
                 IconButton(
                   icon: const Image(
-                    image: AssetImage('assets/icons/edit.png'),
-                    width: 24,
-                    height: 24,
+                    image: AssetImage('assets/icons/add_emoji.png'),
+                    width: 32,
+                    height: 32,
                   ),
                   onPressed: () {},
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const SizedBox(width: 24),
+                Stack(
+                  children: [
+                    ProfileImageWidget(
+                      imageProvider:
+                          const AssetImage('assets/images/plants/plantA.png'),
+                      size: 168.h,
+                      radius: 12.h,
+                    ),
+                    Positioned(
+                      right: -1,
+                      top: -1,
+                      child: GestureDetector(
+                        onTap: () {
+                          // GestureDetector를 터치했을 때 수행할 동작
+                        },
+                        child: Image(
+                          image: const AssetImage('assets/icons/x.png'),
+                          width: 20.h,
+                          height: 20.h,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 168.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 16),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 168.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 16),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 168.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 24),
               ],
             ),
           ),
@@ -107,19 +172,27 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                   child: ConstrainedBox(
                     constraints:
                         BoxConstraints(minHeight: constraint.maxHeight),
-                    child: const IntrinsicHeight(
+                    child: IntrinsicHeight(
                       child: Column(
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24.0),
                               child: TextField(
                                 decoration: InputDecoration(
                                   hintText: '내용을 입력해주세요',
-                                  hintStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: grayColor400),
                                   border: InputBorder.none,
                                 ),
                                 maxLines: null,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: grayBlack),
                               ),
                             ),
                           ),
@@ -129,25 +202,31 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Divider(
+                                const Divider(
                                   thickness: 1,
                                   color: grayColor200,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 20, vertical: 12),
                                   child: Row(
                                     children: [
-                                      Image(
-                                        image:
-                                            AssetImage('assets/icons/edit.png'),
-                                        width: 24,
-                                        height: 24,
+                                      const Image(
+                                        image: AssetImage(
+                                            'assets/icons/camera.png'),
+                                        width: 20,
+                                        height: 20,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 8,
                                       ),
-                                      Text("사진추가 (최대 10 장)")
+                                      Text(
+                                        "사진추가 (최대 10 장)",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(color: grayColor500),
+                                      )
                                     ],
                                   ),
                                 )
@@ -162,71 +241,6 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
               },
             ),
           )
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          //   child: Column(
-          //     children: [
-          //       Row(
-          //         children: [
-          //           const Expanded(
-          //             child: TextField(
-          //               decoration: InputDecoration(
-          //                 hintText: '제목',
-          //                 hintStyle: TextStyle(color: Colors.grey),
-          //                 enabledBorder: UnderlineInputBorder(
-          //                   borderSide: BorderSide(color: Colors.grey),
-          //                 ),
-          //                 focusedBorder: UnderlineInputBorder(
-          //                   borderSide: BorderSide(color: grayBlack),
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //           IconButton(
-          //             icon: const Image(
-          //               image: AssetImage('assets/icons/edit.png'),
-          //               width: 24,
-          //               height: 24,
-          //             ),
-          //             onPressed: () {
-          //               // 아이콘 버튼이 클릭되었을 때 수행할 동작
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //       const SizedBox(
-          //         height: 16,
-          //       ),
-
-          //       const Expanded(
-          //         child: TextField(
-          //           decoration: InputDecoration(
-          //             hintText: '내용을 입력해주세요',
-          //             hintStyle: TextStyle(color: Colors.grey),
-          //             border: InputBorder.none,
-          //           ),
-          //           maxLines: null,
-          //         ),
-          //       ),
-          //       const Divider(
-          //         thickness: 1,
-          //         color: grayColor100,
-          //       ),
-          //       Align(
-          //         alignment: Alignment.bottomCenter,
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(bottom: 30),
-          //           child: TextButton(
-          //             onPressed: () {
-          //               // 하단 버튼이 클릭되었을 때 수행할 동작
-          //             },
-          //             child: const Text('하단 버튼'),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
