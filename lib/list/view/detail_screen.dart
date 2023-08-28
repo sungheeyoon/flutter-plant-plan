@@ -90,8 +90,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
   @override
   void initState() {
     super.initState();
-    //모달창들어갈떄 별명 초기화필요
-    // textController.text = alias;
   }
 
   @override

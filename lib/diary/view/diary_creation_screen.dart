@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -13,6 +15,33 @@ class DiaryCreationScreen extends StatefulWidget {
 }
 
 class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
+  String emoji = "";
+  final List<XFile> images = [];
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> galleryImage() async {
+    if (images.length < 10) {
+      List<XFile>? pics = await picker.pickMultiImage(imageQuality: 20);
+      if (pics.isNotEmpty && pics.length + images.length <= 10) {
+        setState(() {
+          images.addAll(pics);
+        });
+      }
+    }
+  }
+
+  Future<void> cameraImage() async {
+    if (images.length < 10) {
+      final XFile? image =
+          await picker.pickImage(source: ImageSource.camera, imageQuality: 20);
+      setState(() {
+        if (image is XFile) {
+          images.add(image);
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final plantNameController = TextEditingController();
@@ -97,73 +126,32 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                         .copyWith(color: grayBlack),
                   ),
                 ),
-                IconButton(
-                  icon: const Image(
-                    image: AssetImage('assets/icons/add_emoji.png'),
-                    width: 32,
-                    height: 32,
-                  ),
-                  onPressed: () {},
+                GestureDetector(
+                  onTap: () async {
+                    final newEmoji = await emojiModal(context);
+                    setState(() {
+                      if (newEmoji != null) {
+                        emoji = newEmoji;
+                      }
+                    });
+                  },
+                  child: emoji == ""
+                      ? const Image(
+                          image: AssetImage('assets/icons/add_emoji.png'),
+                          width: 32,
+                          height: 32,
+                        )
+                      : Image.asset(
+                          'assets/icons/emoji/$emoji.png',
+                          width: 32,
+                          height: 32,
+                        ),
                 ),
               ],
             ),
           ),
           const SizedBox(
             height: 16,
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                const SizedBox(width: 24),
-                Stack(
-                  children: [
-                    ProfileImageWidget(
-                      imageProvider:
-                          const AssetImage('assets/images/plants/plantA.png'),
-                      size: 168.h,
-                      radius: 12.h,
-                    ),
-                    Positioned(
-                      right: -1,
-                      top: -1,
-                      child: GestureDetector(
-                        onTap: () {
-                          // GestureDetector를 터치했을 때 수행할 동작
-                        },
-                        child: Image(
-                          image: const AssetImage('assets/icons/x.png'),
-                          width: 20.h,
-                          height: 20.h,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 168.h,
-                  radius: 12.h,
-                ),
-                const SizedBox(width: 16),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 168.h,
-                  radius: 12.h,
-                ),
-                const SizedBox(width: 16),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 168.h,
-                  radius: 12.h,
-                ),
-                const SizedBox(width: 24),
-              ],
-            ),
           ),
           Expanded(
             child: LayoutBuilder(
@@ -175,6 +163,50 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                     child: IntrinsicHeight(
                       child: Column(
                         children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 24),
+                                for (int index = 0;
+                                    index < images.length;
+                                    index++)
+                                  Row(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          ProfileImageWidget(
+                                            imageProvider: FileImage(
+                                                File(images[index].path)),
+                                            size: 168.h,
+                                            radius: 12.h,
+                                          ),
+                                          Positioned(
+                                            right: 6,
+                                            top: 6,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                // GestureDetector를 터치했을 때 수행할 동작
+                                              },
+                                              child: Image(
+                                                image: const AssetImage(
+                                                    'assets/icons/x.png'),
+                                                width: 20.h,
+                                                height: 20.h,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                    ],
+                                  ),
+                                const SizedBox(width: 24),
+                              ],
+                            ),
+                          ),
                           Expanded(
                             child: Padding(
                               padding:
@@ -196,43 +228,6 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                const Divider(
-                                  thickness: 1,
-                                  color: grayColor200,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 12),
-                                  child: Row(
-                                    children: [
-                                      const Image(
-                                        image: AssetImage(
-                                            'assets/icons/camera.png'),
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
-                                      Text(
-                                        "사진추가 (최대 10 장)",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: grayColor500),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -240,9 +235,220 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                 );
               },
             ),
-          )
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Divider(
+                  thickness: 1,
+                  color: grayColor200,
+                ),
+                InkWell(
+                  onTap: () => showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) => Container(
+                      padding: const EdgeInsets.all(32),
+                      height: 180.h,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("식물 사진 추가",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: grayBlack)),
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              cameraImage();
+                            },
+                            child: Align(
+                              alignment: const Alignment(-1.0, 0.0),
+                              child: Text(
+                                "카메라",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: grayColor700,
+                                    ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              galleryImage();
+                            },
+                            child: Align(
+                              alignment: const Alignment(-1.0, 0.0),
+                              child: Text(
+                                "갤러리 사진 선택",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: grayColor700,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    child: Row(
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/icons/camera.png'),
+                          width: 20,
+                          height: 20,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "사진추가 (최대 10 장)",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(color: grayColor500),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+Future<dynamic> emojiModal(context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        contentPadding: const EdgeInsets.all(0),
+        content: Container(
+          width: 312.w,
+          height: 158.h,
+          padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 32),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1A000000),
+                offset: Offset(0, 8),
+                blurRadius: 8,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '오늘의 기분을 알려주세요 \u{1F340}',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: grayBlack,
+                    ),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    width: 1,
+                    color: grayColor300,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        return Navigator.of(context).pop("smile");
+                      },
+                      child: const Image(
+                        image: AssetImage('assets/icons/emoji/smile.png'),
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        return Navigator.of(context).pop("suprised");
+                      },
+                      child: const Image(
+                        image: AssetImage('assets/icons/emoji/suprised.png'),
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        return Navigator.of(context).pop("crying");
+                      },
+                      child: const Image(
+                        image: AssetImage('assets/icons/emoji/crying.png'),
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        return Navigator.of(context).pop("angry");
+                      },
+                      child: const Image(
+                        image: AssetImage('assets/icons/emoji/angry.png'),
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
