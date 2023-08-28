@@ -149,6 +149,7 @@ flutter:
     - assets/icons/emoji/smile.png
     - assets/icons/emoji/crying.png
     - assets/icons/emoji/suprised.png
+    - assets/icons/emoji/angry.png
 
     - assets/icons/fav/fav_active.png
     - assets/icons/fav/fav_inactive.png
