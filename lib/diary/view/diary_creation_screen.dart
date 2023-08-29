@@ -1,23 +1,40 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_plan/add/model/diary_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/plants_model.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
+import 'package:plant_plan/diary/provider/diary_provider.dart';
+import 'package:plant_plan/services/firebase_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
-class DiaryCreationScreen extends StatefulWidget {
-  const DiaryCreationScreen({super.key});
+class DiaryCreationScreen extends ConsumerStatefulWidget {
+  final DiaryModel? diary;
+  const DiaryCreationScreen({
+    super.key,
+    this.diary,
+  });
 
   @override
-  State<DiaryCreationScreen> createState() => _DiaryCreationScreenState();
+  ConsumerState<DiaryCreationScreen> createState() =>
+      _DiaryCreationScreenState();
 }
 
-class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
+class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
+  final ImagePicker picker = ImagePicker();
   String emoji = "";
   final List<XFile> images = [];
-  final ImagePicker picker = ImagePicker();
+  List<String> imageUrls = [];
+  TextEditingController plantController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController contextController = TextEditingController();
+  ScrollController scrollController = ScrollController();
+  int index = -1;
 
   Future<void> galleryImage() async {
     if (images.length < 10) {
@@ -25,6 +42,7 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
       if (pics.isNotEmpty && pics.length + images.length <= 10) {
         setState(() {
           images.addAll(pics);
+          scrollToMaxExtent();
         });
       }
     }
@@ -37,30 +55,94 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
       setState(() {
         if (image is XFile) {
           images.add(image);
+          scrollToMaxExtent();
         }
       });
     }
   }
 
+  Future<void> scrollToMaxExtent() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.diary != null) {
+      ref.read(diaryProvider.notifier).setDiary(widget.diary!);
+      titleController.text = widget.diary!.title;
+      contextController.text = widget.diary!.context;
+      emoji = widget.diary!.emoji;
+      imageUrls = widget.diary!.imageUrl;
+    } else {
+      Future.delayed(Duration.zero, () {
+        ref.read(diaryProvider.notifier).reset();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    plantController.dispose();
+    titleController.dispose();
+    contextController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final plantNameController = TextEditingController();
+    final PlantsModel plantsState = ref.watch(plantsProvider) as PlantsModel;
+    final DiaryModel diaryState = ref.watch(diaryProvider);
+    List<String> plantNameList = [];
+    List<String> plantIdList = [];
+
+    print(diaryState);
+
+    for (final plant in plantsState.data) {
+      final plantName = plant.information.name +
+          (plant.alias != "" ? '(${plant.alias})' : '');
+      plantNameList.add(plantName);
+      plantIdList.add(plant.docId);
+    }
 
     return DefaultLayout(
       title: '다이어리 작성',
       actions: [
         TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            if (index != -1 &&
+                diaryState.title != "" &&
+                diaryState.context != "") {
+              final docId = plantIdList[index];
+              final DiaryModel newDiary = DiaryModel.newDiaryModel(
+                date: DateTime.now(),
+                emoji: emoji,
+                title: titleController.text,
+                context: contextController.text,
+              );
+              await FirebaseService().fireBaseAddDiary(docId, newDiary, images);
+              ref.read(diaryProvider.notifier).reset();
+            }
+          },
           style: TextButton.styleFrom(
             padding: const EdgeInsets.only(right: 24),
             disabledForegroundColor: const Color(0xFF999999).withOpacity(0.38),
           ),
           child: Text(
             '완료',
-            style: Theme.of(context)
-                .textTheme
-                .labelLarge!
-                .copyWith(color: pointColor2),
+            style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                  color: index != -1 &&
+                          diaryState.title != "" &&
+                          diaryState.context != ""
+                      ? pointColor2
+                      : const Color(0xFF999999).withOpacity(0.38),
+                ),
           ),
         )
       ],
@@ -89,8 +171,13 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                 color: grayColor400,
                 width: 1.0,
               ),
-              items: const ['안시리움', '개시려움', '선인장', '송죽장'],
-              controller: plantNameController,
+              items: plantNameList,
+              controller: plantController,
+              onChanged: (p0) {
+                setState(() {
+                  index = plantNameList.indexOf(plantController.text);
+                });
+              },
             ),
           ),
           const SizedBox(
@@ -107,6 +194,10 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: titleController,
+                    onChanged: (text) {
+                      ref.read(diaryProvider.notifier).setTitle(text);
+                    },
                     decoration: InputDecoration(
                       hintText: '제목',
                       hintStyle: Theme.of(context)
@@ -132,6 +223,7 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                     setState(() {
                       if (newEmoji != null) {
                         emoji = newEmoji;
+                        ref.read(diaryProvider.notifier).setEmoji(newEmoji);
                       }
                     });
                   },
@@ -162,9 +254,11 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                         BoxConstraints(minHeight: constraint.maxHeight),
                     child: IntrinsicHeight(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
+                            controller: scrollController,
                             child: Row(
                               children: [
                                 const SizedBox(width: 24),
@@ -186,7 +280,9 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                                             top: 6,
                                             child: GestureDetector(
                                               onTap: () {
-                                                // GestureDetector를 터치했을 때 수행할 동작
+                                                setState(() {
+                                                  images.removeAt(index);
+                                                });
                                               },
                                               child: Image(
                                                 image: const AssetImage(
@@ -212,6 +308,12 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24.0),
                               child: TextField(
+                                controller: contextController,
+                                onChanged: (text) {
+                                  ref
+                                      .read(diaryProvider.notifier)
+                                      .setContext(text);
+                                },
                                 decoration: InputDecoration(
                                   hintText: '내용을 입력해주세요',
                                   hintStyle: Theme.of(context)
@@ -336,7 +438,9 @@ class _DiaryCreationScreenState extends State<DiaryCreationScreen> {
                           width: 8,
                         ),
                         Text(
-                          "사진추가 (최대 10 장)",
+                          images.isEmpty
+                              ? "사진추가 (최대 10 장)"
+                              : "사진추가 (${images.length}/10)",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!

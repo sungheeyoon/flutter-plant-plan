@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/diary_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 
 class FirebaseService {
@@ -96,6 +100,62 @@ class FirebaseService {
       }
     } else {
       print('Handle when the user is not logged in');
+    }
+  }
+
+  Future<void> fireBaseAddDiary(
+      String docId, DiaryModel newDiary, List<XFile> images) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDocSnapshot = await plantDocRef.get();
+
+      if (plantDocSnapshot.exists) {
+        final plantData = plantDocSnapshot.data() as Map<String, dynamic>;
+        final List<dynamic> currentDiaries = plantData['diary'];
+
+        final updatedDiaries = List<Map<String, dynamic>>.from(currentDiaries);
+
+        if (images.isNotEmpty) {
+          for (final image in images) {
+            final imageUrl = await uploadImageAndGetURL(image);
+
+            newDiary =
+                newDiary.copyWith(imageUrl: [...newDiary.imageUrl, imageUrl]);
+          }
+        }
+
+        updatedDiaries.add(newDiary.toJson());
+
+        await plantDocRef.update({'diary': updatedDiaries});
+      }
+    }
+    return;
+  }
+
+  Future<String> uploadImageAndGetURL(XFile image) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+      final storageReference = FirebaseStorage.instance
+          .ref()
+          .child('users')
+          .child(uid)
+          .child('diary')
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final UploadTask uploadTask = storageReference.putFile(File(image.path));
+      final TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => {});
+
+      final downloadURL = await taskSnapshot.ref.getDownloadURL();
+      return downloadURL;
+    } else {
+      return '';
     }
   }
 }
