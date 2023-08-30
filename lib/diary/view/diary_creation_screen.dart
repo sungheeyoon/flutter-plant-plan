@@ -29,7 +29,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   final ImagePicker picker = ImagePicker();
   String emoji = "";
   final List<XFile> images = [];
-  List<String> imageUrls = [];
+  List<String> netWorkImageUrls = [];
   TextEditingController plantController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController contextController = TextEditingController();
@@ -37,7 +37,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   int index = -1;
 
   Future<void> galleryImage() async {
-    if (images.length < 10) {
+    if (netWorkImageUrls.length + images.length < 10) {
       List<XFile>? pics = await picker.pickMultiImage(imageQuality: 20);
       if (pics.isNotEmpty && pics.length + images.length <= 10) {
         setState(() {
@@ -49,7 +49,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   }
 
   Future<void> cameraImage() async {
-    if (images.length < 10) {
+    if (netWorkImageUrls.length + images.length < 10) {
       final XFile? image =
           await picker.pickImage(source: ImageSource.camera, imageQuality: 20);
       setState(() {
@@ -78,7 +78,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
       titleController.text = widget.diary!.title;
       contextController.text = widget.diary!.context;
       emoji = widget.diary!.emoji;
-      imageUrls = widget.diary!.imageUrl;
+      netWorkImageUrls = widget.diary!.imageUrl;
     } else {
       Future.delayed(Duration.zero, () {
         ref.read(diaryProvider.notifier).reset();
@@ -102,8 +102,6 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
     List<String> plantNameList = [];
     List<String> plantIdList = [];
 
-    print(diaryState);
-
     for (final plant in plantsState.data) {
       final plantName = plant.information.name +
           (plant.alias != "" ? '(${plant.alias})' : '');
@@ -120,14 +118,35 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 diaryState.title != "" &&
                 diaryState.context != "") {
               final docId = plantIdList[index];
-              final DiaryModel newDiary = DiaryModel.newDiaryModel(
-                date: DateTime.now(),
-                emoji: emoji,
-                title: titleController.text,
-                context: contextController.text,
-              );
-              await FirebaseService().fireBaseAddDiary(docId, newDiary, images);
+              //만약 수정이아닌 추가인경우 작성날짜를 현재로 설정한다.
+              if (widget.diary == null) {
+                ref.read(diaryProvider.notifier).setDateNow();
+              }
+              //만약 netWorkImageUrls 가 수정되었다면
+              if (widget.diary != null &&
+                  netWorkImageUrls.toString() !=
+                      diaryState.imageUrl.toString()) {
+                //삭제할 이미지를 deletedImageUrls 에 추가시킨다.
+                final List<String> deletedImageUrls = [];
+                for (final imageUrl in widget.diary!.imageUrl) {
+                  if (!netWorkImageUrls.contains(imageUrl)) {
+                    deletedImageUrls.add(imageUrl);
+                  }
+                }
+                for (final imageUrl in deletedImageUrls) {
+                  await FirebaseService().deleteImageFromStorage(imageUrl);
+                }
+              }
+              //firebase에 저장되어있는 imageUrl과 netWorkImageUrls 를 동기화시킨다.
+              await FirebaseService().syncImagesWithFirebaseStorage(
+                  netWorkImageUrls, docId, widget.diary!.id);
+
+              //변경,추가된 diary와 이미지를 추가삽입한다.
+              await FirebaseService()
+                  .fireBaseAddDiary(docId, diaryState, images);
               ref.read(diaryProvider.notifier).reset();
+            } else {
+              return;
             }
           },
           style: TextButton.styleFrom(
@@ -262,6 +281,44 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                             child: Row(
                               children: [
                                 const SizedBox(width: 24),
+                                for (int index = 0;
+                                    index < netWorkImageUrls.length;
+                                    index++)
+                                  Row(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          ProfileImageWidget(
+                                            imageProvider: NetworkImage(
+                                                netWorkImageUrls[index]),
+                                            size: 168.h,
+                                            radius: 12.h,
+                                          ),
+                                          Positioned(
+                                            right: 6,
+                                            top: 6,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  netWorkImageUrls
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                              child: Image(
+                                                image: const AssetImage(
+                                                    'assets/icons/x.png'),
+                                                width: 20.h,
+                                                height: 20.h,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 16,
+                                      ),
+                                    ],
+                                  ),
                                 for (int index = 0;
                                     index < images.length;
                                     index++)
@@ -440,7 +497,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                         Text(
                           images.isEmpty
                               ? "사진추가 (최대 10 장)"
-                              : "사진추가 (${images.length}/10)",
+                              : "사진추가 (${netWorkImageUrls.length + images.length}/10)",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
