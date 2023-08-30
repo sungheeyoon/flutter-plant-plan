@@ -158,4 +158,42 @@ class FirebaseService {
       return '';
     }
   }
+
+  Future<void> deleteImageFromStorage(String imageUrl) async {
+    try {
+      Reference imageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+      await imageRef.delete();
+    } catch (error) {
+      print("Error deleting image from storage: $error");
+    }
+  }
+
+  Future<void> syncImagesWithFirebaseStorage(
+      List<String> imageUrls, String docId, String diaryId) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDocSnapshot = await plantDocRef.get();
+
+      if (plantDocSnapshot.exists) {
+        final plantData = plantDocSnapshot.data();
+        if (plantData != null) {
+          List<dynamic> diaryList = plantData['diary'];
+          for (var i = 0; i < diaryList.length; i++) {
+            if (diaryList[i]['id'] == diaryId) {
+              diaryList[i]['imageUrl'] = imageUrls;
+              break;
+            }
+          }
+          await plantDocRef.update({'diary': diaryList});
+        }
+      }
+    }
+  }
 }
