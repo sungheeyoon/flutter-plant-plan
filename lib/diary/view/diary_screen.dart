@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/utils/diary_utils.dart';
+import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/diary/view/diary_creation_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class DiaryScreen extends ConsumerStatefulWidget {
+  final List<PlantModel> plants;
   const DiaryScreen({
     super.key,
+    required this.plants,
   });
 
   @override
@@ -17,7 +22,15 @@ class DiaryScreen extends ConsumerStatefulWidget {
 
 class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<DiaryCardModel> cardList = getDiaryCardList(widget.plants);
+    print(cardList);
+
     return DefaultLayout(
       backgroundColor: grayColor100,
       title: '다이어리',
@@ -66,183 +79,188 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           ),
         ),
       ],
-      child: SingleChildScrollView(
+      child: const SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const DateContainer(date: '2020-11-11'),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //image name alias
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            ProfileImageWidget(
-                              imageProvider: const AssetImage(
-                                  'assets/icons/fav/fav_active.png'),
-                              size: 28.h,
-                              radius: 11.h,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              '안시리움',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    color: grayBlack,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '몰라별명임마',
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: keyColor700,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  //divider
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: Divider(
-                      color: grayColor200,
-                      thickness: 1,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  //emoji title dotdotdot
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.face,
-                              size: 24.0,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              '반짝반짝 빛나는',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                    color: grayBlack,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        const Icon(
-                          Icons.more_horiz,
-                          size: 24.0,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  //images
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 24),
-                        ProfileImageWidget(
-                          imageProvider: const AssetImage(
-                              'assets/images/plants/plantA.png'),
-                          size: 120.h,
-                          radius: 12.h,
-                        ),
-                        const SizedBox(width: 12),
-                        ProfileImageWidget(
-                          imageProvider: const AssetImage(
-                              'assets/images/plants/plantA.png'),
-                          size: 120.h,
-                          radius: 12.h,
-                        ),
-                        const SizedBox(width: 12),
-                        ProfileImageWidget(
-                          imageProvider: const AssetImage(
-                              'assets/images/plants/plantA.png'),
-                          size: 120.h,
-                          radius: 12.h,
-                        ),
-                        const SizedBox(width: 24),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  //context
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    child: ReadMoreText(
-                      text:
-                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.뭐라고썻는지모르겟지?아네 ㅋㅋ 쩝ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ야임마모르것당',
-                    ),
-                  ),
-                  //bookMark time
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/icons/bookmark.png', // 이미지 파일의 경로
-                            width: 24, // 이미지의 너비
-                            height: 24, // 이미지의 높이
-                          ),
-                        ),
-                        Text(
-                          '오후 7:38',
-                          style:
-                              Theme.of(context).textTheme.labelSmall!.copyWith(
-                                    color: grayColor500,
-                                  ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            DateContainer(date: diaryCard.diary.date),
+            DiaryCard(diaryCard: diaryCard),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DiaryCard extends StatelessWidget {
+  final DiaryCardModel diaryCard;
+  const DiaryCard({
+    super.key,
+    required this.diaryCard,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //image name alias
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    ProfileImageWidget(
+                      imageProvider: NetworkImage(diaryCard.imageUrl),
+                      size: 28.h,
+                      radius: 11.h,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      diaryCard.name,
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: grayBlack,
+                          ),
+                    ),
+                  ],
+                ),
+                Text(
+                  diaryCard.alias,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: keyColor700,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          //divider
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Divider(
+              color: grayColor200,
+              thickness: 1,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          //emoji title dotdotdot
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    if (diaryCard.diary.emoji != "")
+                      Image.asset(
+                        'assets/icons/emoji/${diaryCard.diary.emoji}.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                    if (diaryCard.diary.emoji != "")
+                      const SizedBox(
+                        width: 4,
+                      ),
+                    Text(
+                      diaryCard.diary.title,
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: grayBlack,
+                          ),
+                    ),
+                  ],
+                ),
+                const Icon(
+                  Icons.more_horiz,
+                  size: 24.0,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          //images
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const SizedBox(width: 24),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 120.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 12),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 120.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 12),
+                ProfileImageWidget(
+                  imageProvider:
+                      const AssetImage('assets/images/plants/plantA.png'),
+                  size: 120.h,
+                  radius: 12.h,
+                ),
+                const SizedBox(width: 24),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          //context
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: ReadMoreText(
+              text: diaryCard.diary.context,
+            ),
+          ),
+          //bookMark time
+          const SizedBox(
+            height: 8,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {},
+                  child: Image.asset(
+                    'assets/icons/bookmark.png',
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+                Text(
+                  '오후 7:38',
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: grayColor500,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -280,10 +298,12 @@ class DateContainer extends StatelessWidget {
 
 class ReadMoreText extends StatefulWidget {
   final String text;
+  final int maxLines; // 최대 줄 수 설정
 
   const ReadMoreText({
     Key? key,
     required this.text,
+    this.maxLines = 4, // 기본값으로 4 줄까지만 보이도록 설정
   }) : super(key: key);
 
   @override
@@ -304,7 +324,7 @@ class _ReadMoreTextState extends State<ReadMoreText> {
 
     final textPainter = TextPainter(
       text: textSpan,
-      maxLines: isExpanded ? null : 4,
+      maxLines: isExpanded ? null : widget.maxLines, // 최대 줄 수 적용
       textDirection: TextDirection.ltr,
     );
 
@@ -317,7 +337,7 @@ class _ReadMoreTextState extends State<ReadMoreText> {
       children: [
         RichText(
           text: textSpan,
-          maxLines: isExpanded ? null : 4,
+          maxLines: isExpanded ? null : widget.maxLines, // 최대 줄 수 적용
           overflow: TextOverflow.ellipsis,
         ),
         if (isTextOverflowed)

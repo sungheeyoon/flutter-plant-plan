@@ -152,7 +152,7 @@ class _RootTabState extends ConsumerState<RootTab>
             HomeScreen(plants: plants),
             ListScreen(plants: plants),
             const Text('asd'),
-            const DiaryScreen(),
+            DiaryScreen(plants: plants),
             const Text('asdasdsad'),
           ],
         ),
