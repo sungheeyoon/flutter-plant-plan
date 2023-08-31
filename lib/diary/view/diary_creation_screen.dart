@@ -136,10 +136,10 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 for (final imageUrl in deletedImageUrls) {
                   await FirebaseService().deleteImageFromStorage(imageUrl);
                 }
+                //firebase에 저장되어있는 imageUrl과 netWorkImageUrls 를 동기화시킨다.
+                await FirebaseService().syncImagesWithFirebaseStorage(
+                    netWorkImageUrls, docId, widget.diary!.id);
               }
-              //firebase에 저장되어있는 imageUrl과 netWorkImageUrls 를 동기화시킨다.
-              await FirebaseService().syncImagesWithFirebaseStorage(
-                  netWorkImageUrls, docId, widget.diary!.id);
 
               //변경,추가된 diary와 이미지를 추가삽입한다.
               await FirebaseService()
