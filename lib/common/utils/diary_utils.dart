@@ -13,8 +13,6 @@ List<DiaryCardModel> getDiaryCardList(List<PlantModel> plantsState) {
         : plant.userImageUrl;
 
     for (final diary in plant.diary) {
-      //DiaryCardModel result 에있는
-      //DateTime result.diary.date 의 시간 내림차순으로 정렬하는코드만들어줘  여기에넣는게좋을까?
       results.add(
         DiaryCardModel(
           docId: docId,

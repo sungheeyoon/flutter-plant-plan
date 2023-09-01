@@ -20,3 +20,24 @@ String formatTime(DateTime dateTime) {
   String minute = dateTime.minute.toString().padLeft(2, '0');
   return '$hour:$minute $period';
 }
+
+String formatKoreanTime(DateTime dateTime) {
+  String period = "오전";
+  int hour = dateTime.hour;
+  int minute = dateTime.minute;
+
+  if (hour >= 12) {
+    period = "오후";
+    if (hour > 12) {
+      hour -= 12;
+    }
+  }
+
+  if (hour == 0) {
+    hour = 12;
+  }
+
+  String formattedMinute = minute < 10 ? "0$minute" : "$minute";
+
+  return "$period $hour:$formattedMinute";
+}

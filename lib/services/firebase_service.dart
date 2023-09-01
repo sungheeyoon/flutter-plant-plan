@@ -196,4 +196,33 @@ class FirebaseService {
       }
     }
   }
+
+  Future<void> toggleDiaryBookmark(String docId, String diaryId) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDocSnapshot = await plantDocRef.get();
+
+      if (plantDocSnapshot.exists) {
+        final List<dynamic> currentDiaries = plantDocSnapshot.data()?['diary'];
+
+        final updatedDiaries = List<Map<String, dynamic>>.from(currentDiaries);
+
+        for (var i = 0; i < updatedDiaries.length; i++) {
+          if (updatedDiaries[i]['id'] == diaryId) {
+            updatedDiaries[i]['bookMark'] = !updatedDiaries[i]['bookMark'];
+            break;
+          }
+        }
+
+        await plantDocRef.update({'diary': updatedDiaries});
+      }
+    }
+  }
 }

@@ -64,6 +64,7 @@ class _RootTabState extends ConsumerState<RootTab>
 
       return DefaultLayout(
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
           selectedItemColor: primaryColor,
           unselectedItemColor: Colors.black12,
           selectedFontSize: 10,
