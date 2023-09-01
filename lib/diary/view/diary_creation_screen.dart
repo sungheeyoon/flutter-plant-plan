@@ -314,9 +314,12 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
+                                      if (index !=
+                                              netWorkImageUrls.length - 1 &&
+                                          images.isNotEmpty)
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
                                     ],
                                   ),
                                 for (int index = 0;
@@ -351,9 +354,10 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(
-                                        width: 16,
-                                      ),
+                                      if (index != images.length - 1)
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
                                     ],
                                   ),
                                 const SizedBox(width: 24),
@@ -407,6 +411,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 ),
                 InkWell(
                   onTap: () => showModalBottomSheet(
+                    backgroundColor: Colors.white,
                     context: context,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(

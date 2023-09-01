@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/common/utils/diary_utils.dart';
 import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
@@ -29,7 +31,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     List<DiaryCardModel> cardList = getDiaryCardList(widget.plants);
-    print(cardList);
+    String? previousDate;
 
     return DefaultLayout(
       backgroundColor: grayColor100,
@@ -79,26 +81,48 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           ),
         ),
       ],
-      child: const SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DateContainer(date: diaryCard.diary.date),
-            DiaryCard(diaryCard: diaryCard),
-          ],
-        ),
+      child: ListView.builder(
+        itemCount: cardList.length,
+        itemBuilder: (context, index) {
+          DiaryCardModel diaryCard = cardList[index];
+          String diaryDate = dateFormatter(diaryCard.diary.date);
+
+          Widget dateWidget;
+          if (previousDate != diaryDate) {
+            dateWidget = DateContainer(date: diaryDate);
+          } else {
+            dateWidget = const SizedBox.shrink();
+          }
+
+          previousDate = diaryDate;
+
+          return Column(
+            children: [
+              dateWidget,
+              DiaryCard(diaryCard: diaryCard),
+              const SizedBox(
+                height: 8,
+              )
+            ],
+          );
+        },
       ),
     );
   }
 }
 
-class DiaryCard extends StatelessWidget {
+class DiaryCard extends ConsumerStatefulWidget {
   final DiaryCardModel diaryCard;
   const DiaryCard({
     super.key,
     required this.diaryCard,
   });
 
+  @override
+  ConsumerState<DiaryCard> createState() => _DiaryCardState();
+}
+
+class _DiaryCardState extends ConsumerState<DiaryCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -117,7 +141,7 @@ class DiaryCard extends StatelessWidget {
                 Row(
                   children: [
                     ProfileImageWidget(
-                      imageProvider: NetworkImage(diaryCard.imageUrl),
+                      imageProvider: NetworkImage(widget.diaryCard.imageUrl),
                       size: 28.h,
                       radius: 11.h,
                     ),
@@ -125,7 +149,7 @@ class DiaryCard extends StatelessWidget {
                       width: 8,
                     ),
                     Text(
-                      diaryCard.name,
+                      widget.diaryCard.name,
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                             color: grayBlack,
                           ),
@@ -133,7 +157,7 @@ class DiaryCard extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  diaryCard.alias,
+                  widget.diaryCard.alias,
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: keyColor700,
                       ),
@@ -164,28 +188,33 @@ class DiaryCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    if (diaryCard.diary.emoji != "")
+                    if (widget.diaryCard.diary.emoji != "")
                       Image.asset(
-                        'assets/icons/emoji/${diaryCard.diary.emoji}.png',
+                        'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
                         width: 24,
                         height: 24,
                       ),
-                    if (diaryCard.diary.emoji != "")
+                    if (widget.diaryCard.diary.emoji != "")
                       const SizedBox(
                         width: 4,
                       ),
                     Text(
-                      diaryCard.diary.title,
+                      widget.diaryCard.diary.title,
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                             color: grayBlack,
                           ),
                     ),
                   ],
                 ),
-                const Icon(
-                  Icons.more_horiz,
-                  size: 24.0,
-                  color: Colors.grey,
+                GestureDetector(
+                  onTap: () {
+                    showDropdownMenu();
+                  },
+                  child: const Icon(
+                    Icons.more_horiz,
+                    size: 24.0,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -199,38 +228,39 @@ class DiaryCard extends StatelessWidget {
             child: Row(
               children: [
                 const SizedBox(width: 24),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 120.h,
-                  radius: 12.h,
-                ),
-                const SizedBox(width: 12),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 120.h,
-                  radius: 12.h,
-                ),
-                const SizedBox(width: 12),
-                ProfileImageWidget(
-                  imageProvider:
-                      const AssetImage('assets/images/plants/plantA.png'),
-                  size: 120.h,
-                  radius: 12.h,
-                ),
+                for (int index = 0;
+                    index < widget.diaryCard.diary.imageUrl.length;
+                    index++)
+                  Row(
+                    children: [
+                      ProfileImageWidget(
+                        imageProvider: NetworkImage(
+                            widget.diaryCard.diary.imageUrl[index]),
+                        size: 168.h,
+                        radius: 12.h,
+                      ),
+                      if (index != widget.diaryCard.diary.imageUrl.length - 1)
+                        const SizedBox(
+                          width: 16,
+                        ),
+                    ],
+                  ),
                 const SizedBox(width: 24),
               ],
             ),
           ),
+
           const SizedBox(
             height: 8,
           ),
-          //context
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ReadMoreText(
-              text: diaryCard.diary.context,
+              text: widget.diaryCard.diary.context,
+              maxLines: 4,
+              textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: grayBlack,
+                  ),
             ),
           ),
           //bookMark time
@@ -244,15 +274,20 @@ class DiaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(plantsProvider.notifier).toggleDiaryBookmark(
+                        widget.diaryCard.docId, widget.diaryCard.diary.id);
+                  },
                   child: Image.asset(
-                    'assets/icons/bookmark.png',
+                    widget.diaryCard.diary.bookMark
+                        ? 'assets/icons/bookmark.png'
+                        : 'assets/icons/bookmark_outline.png',
                     width: 24,
                     height: 24,
                   ),
                 ),
                 Text(
-                  '오후 7:38',
+                  formatKoreanTime(widget.diaryCard.diary.date),
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         color: grayColor500,
                       ),
@@ -262,6 +297,148 @@ class DiaryCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void showDropdownMenu() {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final Offset position = button.localToGlobal(Offset(236.w, 110));
+
+    showMenu(
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0))),
+      surfaceTintColor: Colors.white,
+      color: Colors.white,
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        position.dx + button.size.width,
+        position.dy + 1.0,
+      ),
+      items: [
+        PopupMenuItem<String>(
+          value: 'Edit',
+          child: Row(
+            children: [
+              const Image(
+                image: AssetImage('assets/icons/edit.png'),
+                width: 20,
+                height: 20,
+                color: grayBlack,
+              ),
+              const SizedBox(
+                width: 6,
+              ),
+              Text(
+                '수정하기',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: grayBlack,
+                    ),
+              )
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'Delete',
+          child: Row(
+            children: [
+              const Image(
+                image: AssetImage('assets/icons/trash.png'),
+                width: 20,
+                height: 20,
+                color: Colors.red,
+              ),
+              const SizedBox(
+                width: 6,
+              ),
+              Text(
+                '삭제하기',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.red,
+                    ),
+              )
+            ],
+          ),
+        ),
+      ],
+    ).then(
+      (selectedValue) {
+        if (selectedValue == 'Edit') {
+          // Option 1을 선택한 경우에 대한 동작 추가
+        } else if (selectedValue == 'Delete') {
+          // Option 2를 선택한 경우에 대한 동작 추가
+        }
+      },
+    );
+  }
+}
+
+class ReadMoreText extends StatefulWidget {
+  final String text;
+  final int maxLines;
+  final TextStyle textStyle;
+
+  const ReadMoreText({
+    super.key,
+    required this.text,
+    this.maxLines = 3, // 원하는 최대 라인 수 설정
+    this.textStyle = const TextStyle(),
+  });
+
+  @override
+  _ReadMoreTextState createState() => _ReadMoreTextState();
+}
+
+class _ReadMoreTextState extends State<ReadMoreText> {
+  bool isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextSpan textSpan =
+        TextSpan(text: widget.text, style: widget.textStyle);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textPainter = TextPainter(
+          text: textSpan,
+          maxLines: widget.maxLines,
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: constraints.maxWidth);
+
+        if (textPainter.didExceedMaxLines) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text.rich(
+                textSpan,
+                maxLines: isExpanded ? null : widget.maxLines,
+                overflow:
+                    isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+                child: Text(
+                  isExpanded ? '접기' : '더 보기',
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: grayColor500,
+                      ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Text.rich(
+            textSpan,
+            maxLines: isExpanded ? null : widget.maxLines,
+            overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+          );
+        }
+      },
     );
   }
 }
@@ -292,67 +469,6 @@ class DateContainer extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ReadMoreText extends StatefulWidget {
-  final String text;
-  final int maxLines; // 최대 줄 수 설정
-
-  const ReadMoreText({
-    Key? key,
-    required this.text,
-    this.maxLines = 4, // 기본값으로 4 줄까지만 보이도록 설정
-  }) : super(key: key);
-
-  @override
-  State<ReadMoreText> createState() => _ReadMoreTextState();
-}
-
-class _ReadMoreTextState extends State<ReadMoreText> {
-  bool isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final textSpan = TextSpan(
-      text: widget.text,
-      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: grayBlack,
-          ),
-    );
-
-    final textPainter = TextPainter(
-      text: textSpan,
-      maxLines: isExpanded ? null : widget.maxLines, // 최대 줄 수 적용
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout(maxWidth: MediaQuery.of(context).size.width);
-
-    final isTextOverflowed = textPainter.didExceedMaxLines;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          text: textSpan,
-          maxLines: isExpanded ? null : widget.maxLines, // 최대 줄 수 적용
-          overflow: TextOverflow.ellipsis,
-        ),
-        if (isTextOverflowed)
-          TextButton(
-            onPressed: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-            child: Text(
-              isExpanded ? '접기' : '더 보기',
-              style: const TextStyle(color: Colors.blue),
-            ),
-          ),
-      ],
     );
   }
 }

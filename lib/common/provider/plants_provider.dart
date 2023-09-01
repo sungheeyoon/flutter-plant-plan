@@ -250,4 +250,29 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
 
     throw Exception("docId와 매치되는 plant가 없습니다.: $docId");
   }
+
+  Future<void> toggleDiaryBookmark(String docId, String diaryId) async {
+    final PlantsModel currentState = state as PlantsModel;
+    final updatedData = currentState.data.map((plant) {
+      if (plant.docId == docId) {
+        final updatedDiaryList = plant.diary.map((diary) {
+          if (diary.id == diaryId) {
+            return diary.copyWith(bookMark: !diary.bookMark);
+          }
+          return diary;
+        }).toList();
+
+        return plant.copyWith(diary: updatedDiaryList);
+      }
+      return plant;
+    }).toList();
+
+    state = currentState.copyWith(data: updatedData);
+
+    try {
+      await FirebaseService().toggleDiaryBookmark(docId, diaryId);
+    } catch (error) {
+      state = PlantsModelError(message: error.toString());
+    }
+  }
 }

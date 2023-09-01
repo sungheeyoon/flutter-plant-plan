@@ -18,4 +18,12 @@ class PlantsModel extends PlantsModelBase {
   PlantsModel({
     required this.data,
   });
+
+  PlantsModel copyWith({
+    List<PlantModel>? data,
+  }) {
+    return PlantsModel(
+      data: data ?? this.data,
+    );
+  }
 }

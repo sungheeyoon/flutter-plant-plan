@@ -39,6 +39,13 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: Colors.blue,
+                brightness: Brightness.light,
+              ).copyWith(
+                surface: Colors.white,
+                surfaceTint: Colors.white,
+              ),
               scaffoldBackgroundColor: Colors.white,
               fontFamily: 'Pretendard',
               textTheme: TextTheme(
