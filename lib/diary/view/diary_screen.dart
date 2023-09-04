@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -140,10 +141,23 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
               children: [
                 Row(
                   children: [
-                    ProfileImageWidget(
-                      imageProvider: NetworkImage(widget.diaryCard.imageUrl),
-                      size: 28.h,
-                      radius: 11.h,
+                    CachedNetworkImage(
+                      imageUrl: widget.diaryCard.imageUrl,
+                      imageBuilder: (context, imageProvider) =>
+                          ProfileImageWidget(
+                        imageProvider: imageProvider,
+                        size: 28.h,
+                        radius: 11.h,
+                      ),
+                      placeholder: (context, url) => SizedBox(
+                        width: 28.h,
+                        height: 28.h,
+                        child: const CircleAvatar(
+                          backgroundColor: grayColor200,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                     const SizedBox(
                       width: 8,
@@ -233,11 +247,24 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                     index++)
                   Row(
                     children: [
-                      ProfileImageWidget(
-                        imageProvider: NetworkImage(
-                            widget.diaryCard.diary.imageUrl[index]),
-                        size: 168.h,
-                        radius: 12.h,
+                      CachedNetworkImage(
+                        imageUrl: widget.diaryCard.diary.imageUrl[index],
+                        imageBuilder: (context, imageProvider) =>
+                            ProfileImageWidget(
+                          imageProvider: imageProvider,
+                          size: 168.h,
+                          radius: 12.h,
+                        ),
+                        placeholder: (context, url) => Container(
+                          width: 168.h,
+                          height: 168.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.h),
+                            color: grayColor200,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                       if (index != widget.diaryCard.diary.imageUrl.length - 1)
                         const SizedBox(
