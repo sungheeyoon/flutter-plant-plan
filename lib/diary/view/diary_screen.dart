@@ -222,7 +222,7 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    showDropdownMenu();
+                    showDropdownMenu(widget.diaryCard);
                   },
                   child: const Icon(
                     Icons.more_horiz,
@@ -327,7 +327,7 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
     );
   }
 
-  void showDropdownMenu() {
+  void showDropdownMenu(DiaryCardModel diaryCard) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final Offset position = button.localToGlobal(Offset(236.w, 110));
 
@@ -392,9 +392,101 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
     ).then(
       (selectedValue) {
         if (selectedValue == 'Edit') {
-          // Option 1을 선택한 경우에 대한 동작 추가
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DiaryCreationScreen(
+                diaryCard: diaryCard,
+              ),
+            ),
+          );
         } else if (selectedValue == 'Delete') {
-          // Option 2를 선택한 경우에 대한 동작 추가
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                contentPadding: const EdgeInsets.all(0),
+                content: SizedBox(
+                  width: 312.w,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 43),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '해당 다이어리를 삭제하시겠습니까?',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                          ),
+                        ),
+                      ),
+                      const Divider(
+                        color: grayColor200,
+                        thickness: 2,
+                        height: 1,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  ref.read(plantsProvider.notifier).deleteDiary(
+                                      diaryCard.diary.id, diaryCard.docId);
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '삭제',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                        color: primaryColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  '취소',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .copyWith(
+                                        color: primaryColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         }
       },
     );
