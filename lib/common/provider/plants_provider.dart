@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/diary_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
 import 'package:plant_plan/services/firebase_service.dart';
@@ -102,6 +103,41 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
     if (shouldUpdateDatabase) {
       try {
         await FirebaseService().fireBaseDeleteAlarm(docId, alarmId);
+      } catch (error) {
+        state = PlantsModelError(message: error.toString());
+      }
+    }
+  }
+
+  Future<void> deleteDiary(
+    String diaryId,
+    String docId,
+  ) async {
+    final PlantsModel currentState = state as PlantsModel;
+    final List<PlantModel> updatedPlants = [...currentState.data];
+    bool shouldUpdateDatabase = false;
+
+    for (int i = 0; i < updatedPlants.length; i++) {
+      if (updatedPlants[i].docId == docId) {
+        final List<DiaryModel> diaryEntries =
+            List<DiaryModel>.from(updatedPlants[i].diary);
+
+        for (int j = 0; j < diaryEntries.length; j++) {
+          if (diaryEntries[j].id == diaryId) {
+            diaryEntries.removeAt(j);
+            shouldUpdateDatabase = true;
+            break;
+          }
+        }
+
+        updatedPlants[i] = updatedPlants[i].copyWith(diary: diaryEntries);
+        break;
+      }
+    }
+    state = PlantsModel(data: updatedPlants);
+    if (shouldUpdateDatabase) {
+      try {
+        await FirebaseService().fireBaseDeleteDiary(docId, diaryId);
       } catch (error) {
         state = PlantsModelError(message: error.toString());
       }

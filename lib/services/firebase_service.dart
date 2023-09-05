@@ -103,6 +103,38 @@ class FirebaseService {
     }
   }
 
+  Future<void> fireBaseDeleteDiary(String docId, String diaryId) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDocSnapshot = await plantDocRef.get();
+      if (plantDocSnapshot.exists) {
+        final diaryEntries =
+            List<Map<String, dynamic>>.from(plantDocSnapshot.data()!['diary']);
+        for (final diary in diaryEntries) {
+          if (diary['id'] == diaryId) {
+            for (final imageUrl in diary['imageUrl']) {
+              await FirebaseService().deleteImageFromStorage(imageUrl);
+            }
+          }
+        }
+        diaryEntries.removeWhere((diary) => diary['id'] == diaryId);
+
+        await plantDocRef.update({'diary': diaryEntries});
+      } else {
+        print('the plant document does not exist');
+      }
+    } else {
+      print('Handle when the user is not logged in');
+    }
+  }
+
   Future<void> fireBaseAddDiary(
       String docId, DiaryModel newDiary, List<XFile> images) async {
     if (_currentUser != null) {

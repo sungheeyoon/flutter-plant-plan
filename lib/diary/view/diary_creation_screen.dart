@@ -8,16 +8,17 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
+import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/diary/provider/diary_provider.dart';
 import 'package:plant_plan/services/firebase_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class DiaryCreationScreen extends ConsumerStatefulWidget {
-  final DiaryModel? diary;
+  final DiaryCardModel? diaryCard;
   const DiaryCreationScreen({
     super.key,
-    this.diary,
+    this.diaryCard,
   });
 
   @override
@@ -34,6 +35,8 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contextController = TextEditingController();
   ScrollController scrollController = ScrollController();
+  List<String> plantNameList = [];
+  List<String> plantIdList = [];
   int index = -1;
 
   Future<void> galleryImage() async {
@@ -70,15 +73,29 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
     );
   }
 
+  void makePlantList(PlantsModel plants) {
+    for (final plant in plants.data) {
+      final plantName = plant.information.name +
+          (plant.alias != "" ? '(${plant.alias})' : '');
+      plantNameList.add(plantName);
+      plantIdList.add(plant.docId);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    if (widget.diary != null) {
-      ref.read(diaryProvider.notifier).setDiary(widget.diary!);
-      titleController.text = widget.diary!.title;
-      contextController.text = widget.diary!.context;
-      emoji = widget.diary!.emoji;
-      netWorkImageUrls = widget.diary!.imageUrl;
+    if (widget.diaryCard != null) {
+      Future.delayed(Duration.zero, () {
+        ref.read(diaryProvider.notifier).setDiary(widget.diaryCard!.diary);
+        makePlantList(ref.watch(plantsProvider) as PlantsModel);
+        index = plantIdList.indexOf(widget.diaryCard!.docId);
+        plantController.text = plantNameList[index];
+      });
+      titleController.text = widget.diaryCard!.diary.title;
+      contextController.text = widget.diaryCard!.diary.context;
+      emoji = widget.diaryCard!.diary.emoji;
+      netWorkImageUrls = widget.diaryCard!.diary.imageUrl;
     } else {
       Future.delayed(Duration.zero, () {
         ref.read(diaryProvider.notifier).reset();
@@ -97,17 +114,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final PlantsModel plantsState = ref.watch(plantsProvider) as PlantsModel;
     final DiaryModel diaryState = ref.watch(diaryProvider);
-    List<String> plantNameList = [];
-    List<String> plantIdList = [];
-
-    for (final plant in plantsState.data) {
-      final plantName = plant.information.name +
-          (plant.alias != "" ? '(${plant.alias})' : '');
-      plantNameList.add(plantName);
-      plantIdList.add(plant.docId);
-    }
 
     return DefaultLayout(
       title: '다이어리 작성',
@@ -119,16 +126,16 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 diaryState.context != "") {
               final docId = plantIdList[index];
               //만약 수정이아닌 추가인경우 작성날짜를 현재로 설정한다.
-              if (widget.diary == null) {
+              if (widget.diaryCard == null) {
                 ref.read(diaryProvider.notifier).setDateNow();
               }
               //만약 netWorkImageUrls 가 수정되었다면
-              if (widget.diary != null &&
+              if (widget.diaryCard != null &&
                   netWorkImageUrls.toString() !=
                       diaryState.imageUrl.toString()) {
                 //삭제할 이미지를 deletedImageUrls 에 추가시킨다.
                 final List<String> deletedImageUrls = [];
-                for (final imageUrl in widget.diary!.imageUrl) {
+                for (final imageUrl in widget.diaryCard!.diary.imageUrl) {
                   if (!netWorkImageUrls.contains(imageUrl)) {
                     deletedImageUrls.add(imageUrl);
                   }
@@ -138,7 +145,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 }
                 //firebase에 저장되어있는 imageUrl과 netWorkImageUrls 를 동기화시킨다.
                 await FirebaseService().syncImagesWithFirebaseStorage(
-                    netWorkImageUrls, docId, widget.diary!.id);
+                    netWorkImageUrls, docId, widget.diaryCard!.diary.id);
               }
 
               //변경,추가된 diary와 이미지를 추가삽입한다.
@@ -190,7 +197,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 color: grayColor400,
                 width: 1.0,
               ),
-              items: plantNameList,
+              items: plantNameList.isEmpty ? ['No items'] : plantNameList,
               controller: plantController,
               onChanged: (p0) {
                 setState(() {
