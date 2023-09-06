@@ -13,6 +13,7 @@ import 'package:plant_plan/diary/provider/diary_provider.dart';
 import 'package:plant_plan/services/firebase_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DiaryCreationScreen extends ConsumerStatefulWidget {
   final DiaryCardModel? diaryCard;
@@ -85,10 +86,11 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   @override
   void initState() {
     super.initState();
+    makePlantList(ref.read(plantsProvider) as PlantsModel);
     if (widget.diaryCard != null) {
       Future.delayed(Duration.zero, () {
         ref.read(diaryProvider.notifier).setDiary(widget.diaryCard!.diary);
-        makePlantList(ref.watch(plantsProvider) as PlantsModel);
+
         index = plantIdList.indexOf(widget.diaryCard!.docId);
         plantController.text = plantNameList[index];
       });
@@ -152,6 +154,8 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
               await FirebaseService()
                   .fireBaseAddDiary(docId, diaryState, images);
               ref.read(diaryProvider.notifier).reset();
+              if (!context.mounted) return;
+              Navigator.pop(context);
             } else {
               return;
             }
@@ -295,11 +299,26 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                     children: [
                                       Stack(
                                         children: [
-                                          ProfileImageWidget(
-                                            imageProvider: NetworkImage(
-                                                netWorkImageUrls[index]),
-                                            size: 168.h,
-                                            radius: 12.h,
+                                          CachedNetworkImage(
+                                            imageUrl: netWorkImageUrls[index],
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    ProfileImageWidget(
+                                              imageProvider: imageProvider,
+                                              size: 168.h,
+                                              radius: 12.h,
+                                            ),
+                                            placeholder: (context, url) =>
+                                                SizedBox(
+                                              width: 168.h,
+                                              height: 168.h,
+                                              child: const CircleAvatar(
+                                                backgroundColor: grayColor200,
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                           Positioned(
                                             right: 6,
@@ -321,9 +340,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                           ),
                                         ],
                                       ),
-                                      if (index !=
-                                              netWorkImageUrls.length - 1 &&
-                                          images.isNotEmpty)
+                                      if (index != netWorkImageUrls.length - 1)
                                         const SizedBox(
                                           width: 16,
                                         ),

@@ -87,23 +87,21 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         itemBuilder: (context, index) {
           DiaryCardModel diaryCard = cardList[index];
           String diaryDate = dateFormatter(diaryCard.diary.date);
-
+          bool last = false;
           Widget dateWidget;
           if (previousDate != diaryDate) {
             dateWidget = DateContainer(date: diaryDate);
+            previousDate = diaryDate;
+            last = true;
           } else {
             dateWidget = const SizedBox.shrink();
           }
 
-          previousDate = diaryDate;
-
           return Column(
             children: [
+              if (!last) const SizedBox(height: 8),
               dateWidget,
               DiaryCard(diaryCard: diaryCard),
-              const SizedBox(
-                height: 8,
-              )
             ],
           );
         },
