@@ -311,4 +311,18 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
       state = PlantsModelError(message: error.toString());
     }
   }
+
+  Future<void> updatedDiaryList(String docId) async {
+    final List<DiaryModel> newDiaryList =
+        await FirebaseService().fetchDiaryList(docId);
+    final PlantsModel currentState = state as PlantsModel;
+    final updatedData = currentState.data.map((plant) {
+      if (plant.docId == docId) {
+        return plant.copyWith(diary: newDiaryList);
+      }
+      return plant;
+    }).toList();
+
+    state = currentState.copyWith(data: updatedData);
+  }
 }

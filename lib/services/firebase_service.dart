@@ -171,6 +171,48 @@ class FirebaseService {
     return;
   }
 
+  Future<void> fireBaseUpdateDiary(
+      String docId, DiaryModel diary, List<XFile> images) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDocSnapshot = await plantDocRef.get();
+
+      if (plantDocSnapshot.exists) {
+        final plantData = plantDocSnapshot.data() as Map<String, dynamic>;
+        final List<dynamic> currentDiaries = plantData['diary'];
+
+        final updatedDiaries = List<Map<String, dynamic>>.from(currentDiaries);
+
+        for (int i = 0; i < updatedDiaries.length; i++) {
+          final Map<String, dynamic> diaryData = updatedDiaries[i];
+          if (diaryData['id'] == diary.id) {
+            if (images.isNotEmpty) {
+              for (final image in images) {
+                final imageUrl = await uploadImageAndGetURL(image);
+
+                diary = diary.copyWith(imageUrl: [...diary.imageUrl, imageUrl]);
+              }
+            }
+            updatedDiaries[i] = diary.toJson();
+            break;
+          }
+        }
+
+        await plantDocRef.update({
+          'diary': updatedDiaries,
+        });
+      }
+    }
+    return;
+  }
+
   Future<String> uploadImageAndGetURL(XFile image) async {
     if (_currentUser != null) {
       final uid = _currentUser!.uid;
@@ -256,5 +298,31 @@ class FirebaseService {
         await plantDocRef.update({'diary': updatedDiaries});
       }
     }
+  }
+
+  Future<List<DiaryModel>> fetchDiaryList(String docId) async {
+    if (_currentUser != null) {
+      final uid = _currentUser!.uid;
+      final plantDocRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('plants')
+          .doc(docId);
+
+      final plantDoc = await plantDocRef.get();
+
+      if (plantDoc.exists) {
+        final data = plantDoc.data() as Map<String, dynamic>;
+        if (data.containsKey('diary')) {
+          final diaryList = List<Map<String, dynamic>>.from(data['diary']);
+          final List<DiaryModel> diaries = diaryList
+              .map((diaryData) => DiaryModel.fromJson(diaryData))
+              .toList();
+          return diaries;
+        }
+      }
+      return [];
+    }
+    return [];
   }
 }

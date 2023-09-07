@@ -40,6 +40,21 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   List<String> plantIdList = [];
   int index = -1;
 
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.black.withOpacity(0.7),
+          content: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> galleryImage() async {
     if (netWorkImageUrls.length + images.length < 10) {
       List<XFile>? pics = await picker.pickMultiImage(imageQuality: 20);
@@ -127,11 +142,9 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 diaryState.title != "" &&
                 diaryState.context != "") {
               final docId = plantIdList[index];
-              //만약 수정이아닌 추가인경우 작성날짜를 현재로 설정한다.
-              if (widget.diaryCard == null) {
-                ref.read(diaryProvider.notifier).setDateNow();
-              }
-              //만약 netWorkImageUrls 가 수정되었다면
+              showLoadingDialog(context);
+
+              //만약 netWorkImageUrls 가 삭제되었다면
               if (widget.diaryCard != null &&
                   netWorkImageUrls.toString() !=
                       diaryState.imageUrl.toString()) {
@@ -150,11 +163,22 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                     netWorkImageUrls, docId, widget.diaryCard!.diary.id);
               }
 
-              //변경,추가된 diary와 이미지를 추가삽입한다.
-              await FirebaseService()
-                  .fireBaseAddDiary(docId, diaryState, images);
+              //글쓰기인경우
+              if (widget.diaryCard == null) {
+                //작성날짜를 현재로 설정한다.
+                ref.read(diaryProvider.notifier).setDateNow();
+                //변경,추가된 diary와 이미지를 추가삽입한다.
+                await FirebaseService()
+                    .fireBaseAddDiary(docId, diaryState, images);
+              } else {
+                await FirebaseService()
+                    .fireBaseUpdateDiary(docId, diaryState, images);
+              }
+
+              await ref.read(plantsProvider.notifier).updatedDiaryList(docId);
               ref.read(diaryProvider.notifier).reset();
               if (!context.mounted) return;
+              Navigator.of(context).pop();
               Navigator.pop(context);
             } else {
               return;
@@ -326,8 +350,12 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                             child: GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  netWorkImageUrls
-                                                      .removeAt(index);
+                                                  List<String> updatedUrls =
+                                                      List.from(
+                                                          netWorkImageUrls);
+                                                  updatedUrls.removeAt(index);
+                                                  netWorkImageUrls =
+                                                      updatedUrls;
                                                 });
                                               },
                                               child: Image(
@@ -340,7 +368,9 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                           ),
                                         ],
                                       ),
-                                      if (index != netWorkImageUrls.length - 1)
+                                      if (index !=
+                                              netWorkImageUrls.length - 1 ||
+                                          images.isNotEmpty)
                                         const SizedBox(
                                           width: 16,
                                         ),
@@ -641,4 +671,18 @@ Future<dynamic> emojiModal(context) {
       );
     },
   );
+}
+
+class DiaryLoadingScreen extends StatelessWidget {
+  const DiaryLoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.black.withOpacity(0.7), // Add background overlay
+      content: const Center(
+        child: CircularProgressIndicator(), // Circular loading indicator
+      ),
+    );
+  }
 }
