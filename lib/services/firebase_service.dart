@@ -245,6 +245,7 @@ class FirebaseService {
   Future<void> syncImagesWithFirebaseStorage(
       List<String> imageUrls, String docId, String diaryId) async {
     if (_currentUser != null) {
+      print('imageUrls = $imageUrls');
       final uid = _currentUser!.uid;
 
       final plantDocRef = FirebaseFirestore.instance
@@ -259,12 +260,25 @@ class FirebaseService {
         final plantData = plantDocSnapshot.data();
         if (plantData != null) {
           List<dynamic> diaryList = plantData['diary'];
+          bool found = false;
+
           for (var i = 0; i < diaryList.length; i++) {
             if (diaryList[i]['id'] == diaryId) {
-              diaryList[i]['imageUrl'] = imageUrls;
+              // 이미지 URL 목록이 비어있지 않은 경우에만 업데이트
+              if (imageUrls.isNotEmpty) {
+                diaryList[i]['imageUrl'] = imageUrls;
+              } else {
+                diaryList[i]['imageUrl'] = [];
+              }
+              found = true;
               break;
             }
           }
+
+          if (!found) {
+            throw Exception('Diary with ID $diaryId not found.');
+          }
+
           await plantDocRef.update({'diary': diaryList});
         }
       }

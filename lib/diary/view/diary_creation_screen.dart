@@ -156,9 +156,10 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                   }
                 }
                 for (final imageUrl in deletedImageUrls) {
+                  await CachedNetworkImage.evictFromCache(imageUrl);
                   await FirebaseService().deleteImageFromStorage(imageUrl);
                 }
-                //firebase에 저장되어있는 imageUrl과 netWorkImageUrls 를 동기화시킨다.
+
                 await FirebaseService().syncImagesWithFirebaseStorage(
                     netWorkImageUrls, docId, widget.diaryCard!.diary.id);
               }
@@ -177,6 +178,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
 
               await ref.read(plantsProvider.notifier).updatedDiaryList(docId);
               ref.read(diaryProvider.notifier).reset();
+
               if (!context.mounted) return;
               Navigator.of(context).pop();
               Navigator.pop(context);
@@ -679,9 +681,17 @@ class DiaryLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.black.withOpacity(0.7), // Add background overlay
-      content: const Center(
-        child: CircularProgressIndicator(), // Circular loading indicator
+      insetPadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.black.withOpacity(0.7),
+      content: const SizedBox(
+        width: 80,
+        height: 80,
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
