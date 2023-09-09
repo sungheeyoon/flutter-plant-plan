@@ -45,10 +45,17 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.black.withOpacity(0.7),
-          content: const Center(
-            child: CircularProgressIndicator(),
+        return Dialog(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          insetPadding: EdgeInsets.zero,
+          child: const SizedBox(
+            width: 1000,
+            height: 1000,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
           ),
         );
       },
@@ -172,8 +179,8 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                 await FirebaseService()
                     .fireBaseAddDiary(docId, diaryState, images);
               } else {
-                await FirebaseService()
-                    .fireBaseUpdateDiary(docId, diaryState, images);
+                await FirebaseService().fireBaseUpdateDiary(
+                    docId, diaryState, netWorkImageUrls, images);
               }
 
               await ref.read(plantsProvider.notifier).updatedDiaryList(docId);
@@ -673,26 +680,4 @@ Future<dynamic> emojiModal(context) {
       );
     },
   );
-}
-
-class DiaryLoadingScreen extends StatelessWidget {
-  const DiaryLoadingScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      insetPadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      backgroundColor: Colors.black.withOpacity(0.7),
-      content: const SizedBox(
-        width: 80,
-        height: 80,
-        child: Center(
-          child: CircularProgressIndicator(
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
 }
