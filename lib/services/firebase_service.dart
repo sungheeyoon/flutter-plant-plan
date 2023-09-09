@@ -171,8 +171,9 @@ class FirebaseService {
     return;
   }
 
-  Future<void> fireBaseUpdateDiary(
-      String docId, DiaryModel diary, List<XFile> images) async {
+  Future<void> fireBaseUpdateDiary(String docId, DiaryModel diary,
+      List<String> netWorkImageUrls, List<XFile> images) async {
+    print(netWorkImageUrls);
     if (_currentUser != null) {
       final uid = _currentUser!.uid;
 
@@ -193,14 +194,18 @@ class FirebaseService {
         for (int i = 0; i < updatedDiaries.length; i++) {
           final Map<String, dynamic> diaryData = updatedDiaries[i];
           if (diaryData['id'] == diary.id) {
+            List<String> updatedImageUrls = [...netWorkImageUrls];
+
             if (images.isNotEmpty) {
               for (final image in images) {
                 final imageUrl = await uploadImageAndGetURL(image);
-
-                diary = diary.copyWith(imageUrl: [...diary.imageUrl, imageUrl]);
+                updatedImageUrls.add(imageUrl);
               }
             }
+
+            diary = diary.copyWith(imageUrl: updatedImageUrls);
             updatedDiaries[i] = diary.toJson();
+            print('updatedDiaries[i] : $updatedDiaries[i]');
             break;
           }
         }
@@ -245,7 +250,6 @@ class FirebaseService {
   Future<void> syncImagesWithFirebaseStorage(
       List<String> imageUrls, String docId, String diaryId) async {
     if (_currentUser != null) {
-      print('imageUrls = $imageUrls');
       final uid = _currentUser!.uid;
 
       final plantDocRef = FirebaseFirestore.instance

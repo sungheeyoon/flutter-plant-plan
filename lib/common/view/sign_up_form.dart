@@ -25,6 +25,7 @@ class SignUpForm extends StatelessWidget {
 
         if (userCredential.user != null) {
           // 회원가입 성공
+          await userCredential.user?.updateDisplayName(formData['name']);
           //user 정보 데이터베이스에 등록
           await FirebaseFirestore.instance
               .collection('user')
