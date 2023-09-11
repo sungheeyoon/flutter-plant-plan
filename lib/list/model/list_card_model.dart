@@ -13,6 +13,7 @@ class ListCardModel with _$ListCardModel {
     required String imageUrl,
     required int dDay,
     required List<PlantField> fields,
+    required bool favorite,
     @TimestampSerializer() required DateTime timestamp,
   }) = _ListCardModel;
 

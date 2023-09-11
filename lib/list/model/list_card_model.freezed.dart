@@ -25,6 +25,7 @@ mixin _$ListCardModel {
   String get imageUrl => throw _privateConstructorUsedError;
   int get dDay => throw _privateConstructorUsedError;
   List<PlantField> get fields => throw _privateConstructorUsedError;
+  bool get favorite => throw _privateConstructorUsedError;
   @TimestampSerializer()
   DateTime get timestamp => throw _privateConstructorUsedError;
 
@@ -46,6 +47,7 @@ abstract class $ListCardModelCopyWith<$Res> {
       String imageUrl,
       int dDay,
       List<PlantField> fields,
+      bool favorite,
       @TimestampSerializer() DateTime timestamp});
 }
 
@@ -67,6 +69,7 @@ class _$ListCardModelCopyWithImpl<$Res, $Val extends ListCardModel>
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
+    Object? favorite = null,
     Object? timestamp = null,
   }) {
     return _then(_value.copyWith(
@@ -90,6 +93,10 @@ class _$ListCardModelCopyWithImpl<$Res, $Val extends ListCardModel>
           ? _value.fields
           : fields // ignore: cast_nullable_to_non_nullable
               as List<PlantField>,
+      favorite: null == favorite
+          ? _value.favorite
+          : favorite // ignore: cast_nullable_to_non_nullable
+              as bool,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
@@ -112,6 +119,7 @@ abstract class _$$_ListCardModelCopyWith<$Res>
       String imageUrl,
       int dDay,
       List<PlantField> fields,
+      bool favorite,
       @TimestampSerializer() DateTime timestamp});
 }
 
@@ -131,6 +139,7 @@ class __$$_ListCardModelCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? dDay = null,
     Object? fields = null,
+    Object? favorite = null,
     Object? timestamp = null,
   }) {
     return _then(_$_ListCardModel(
@@ -154,6 +163,10 @@ class __$$_ListCardModelCopyWithImpl<$Res>
           ? _value._fields
           : fields // ignore: cast_nullable_to_non_nullable
               as List<PlantField>,
+      favorite: null == favorite
+          ? _value.favorite
+          : favorite // ignore: cast_nullable_to_non_nullable
+              as bool,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
@@ -171,6 +184,7 @@ class _$_ListCardModel implements _ListCardModel {
       required this.imageUrl,
       required this.dDay,
       required final List<PlantField> fields,
+      required this.favorite,
       @TimestampSerializer() required this.timestamp})
       : _fields = fields;
 
@@ -194,12 +208,14 @@ class _$_ListCardModel implements _ListCardModel {
   }
 
   @override
+  final bool favorite;
+  @override
   @TimestampSerializer()
   final DateTime timestamp;
 
   @override
   String toString() {
-    return 'ListCardModel(docId: $docId, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields, timestamp: $timestamp)';
+    return 'ListCardModel(docId: $docId, title: $title, imageUrl: $imageUrl, dDay: $dDay, fields: $fields, favorite: $favorite, timestamp: $timestamp)';
   }
 
   @override
@@ -213,6 +229,8 @@ class _$_ListCardModel implements _ListCardModel {
                 other.imageUrl == imageUrl) &&
             (identical(other.dDay, dDay) || other.dDay == dDay) &&
             const DeepCollectionEquality().equals(other._fields, _fields) &&
+            (identical(other.favorite, favorite) ||
+                other.favorite == favorite) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp));
   }
@@ -220,7 +238,7 @@ class _$_ListCardModel implements _ListCardModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, docId, title, imageUrl, dDay,
-      const DeepCollectionEquality().hash(_fields), timestamp);
+      const DeepCollectionEquality().hash(_fields), favorite, timestamp);
 
   @JsonKey(ignore: true)
   @override
@@ -243,6 +261,7 @@ abstract class _ListCardModel implements ListCardModel {
           required final String imageUrl,
           required final int dDay,
           required final List<PlantField> fields,
+          required final bool favorite,
           @TimestampSerializer() required final DateTime timestamp}) =
       _$_ListCardModel;
 
@@ -259,6 +278,8 @@ abstract class _ListCardModel implements ListCardModel {
   int get dDay;
   @override
   List<PlantField> get fields;
+  @override
+  bool get favorite;
   @override
   @TimestampSerializer()
   DateTime get timestamp;

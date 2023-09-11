@@ -91,9 +91,9 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.timer_outlined, // 플러스 아이콘
-                    size: 32.h, // 아이콘 크기 설정
-                    color: pointColor2, // 아이콘 색상 설정
+                    Icons.timer_outlined,
+                    size: 32.h,
+                    color: pointColor2,
                   ),
                   SizedBox(
                     width: 8.h,

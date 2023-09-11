@@ -3,10 +3,15 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
 
-List<ListCardModel> getCardList(List<PlantModel> plantsState) {
+List<ListCardModel> getCardList(List<PlantModel> plantsState, bool isFavorite) {
   List<ListCardModel> results = [];
 
   for (final PlantModel plant in plantsState) {
+    if (isFavorite && !plant.favorite) {
+      // isFavorite가 true이고 plant.favorite가 false인 경우 무시
+      continue;
+    }
+
     String docId = plant.docId;
     String title = plant.alias == "" ? plant.information.name : plant.alias;
     String imageUrl = plant.userImageUrl == ""
@@ -75,12 +80,14 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState) {
     }
     results.add(
       ListCardModel(
-          docId: docId,
-          title: title,
-          imageUrl: imageUrl,
-          dDay: dDay,
-          fields: fields,
-          timestamp: timestamp as DateTime),
+        docId: docId,
+        title: title,
+        imageUrl: imageUrl,
+        dDay: dDay,
+        fields: fields,
+        favorite: plant.favorite,
+        timestamp: timestamp as DateTime,
+      ),
     );
   }
 
