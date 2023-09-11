@@ -2,16 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 
-final userMeProvider = StateNotifierProvider<UserMeStateNotifier, UserModel?>(
+final userMeProvider =
+    StateNotifierProvider<UserMeStateNotifier, UserModelBase?>(
   (ref) {
     return UserMeStateNotifier();
   },
 );
 
-class UserMeStateNotifier extends StateNotifier<UserModel?> {
+class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserMeStateNotifier() : super(UserModel.loading()) {
+  UserMeStateNotifier() : super(UserModelBase.loading()) {
     // 앱 시작 시 현재 로그인된 사용자 정보 가져오기
     _fetchCurrentUser();
   }
@@ -20,7 +21,8 @@ class UserMeStateNotifier extends StateNotifier<UserModel?> {
     final user = _auth.currentUser;
 
     if (user != null) {
-      state = UserModel(email: user.email!, username: user.displayName ?? '');
+      state =
+          UserModelBase.user(id: user.email!, username: user.displayName ?? '');
     } else {
       state = null;
     }
@@ -38,10 +40,11 @@ class UserMeStateNotifier extends StateNotifier<UserModel?> {
 
       final user = authResult.user;
       if (user != null) {
-        state = UserModel(email: user.email!, username: user.displayName ?? '');
+        state = UserModelBase.user(
+            id: user.email!, username: user.displayName ?? '');
       }
     } catch (e) {
-      state = UserModel.error('로그인에 실패했습니다.');
+      state = UserModelBase.error('로그인에 실패했습니다.');
     }
   }
 

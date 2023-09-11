@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -123,21 +124,23 @@ class AlarmBoxWidget extends ConsumerWidget {
                     ),
                   if (alarmState != null && isDetail)
                     SizedBox(
-                      width: 50,
-                      height: 20,
-                      child: Switch(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: alarmState.isOn,
-                        onChanged: (value) {
-                          ref
-                              .read(detailProvider.notifier)
-                              .toggleIsOnAlarm(alarmState.id);
-                          ref.read(plantsProvider.notifier).updateAlarm(
-                              alarmState.id, detailState!.data.docId,
-                              isOnToggle: true);
-                        },
-                        activeTrackColor: primaryColor.withOpacity(0.4),
-                        activeColor: primaryColor,
+                      width: 40.h,
+                      height: 25.2.h,
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: CupertinoSwitch(
+                          value: alarmState.isOn,
+                          onChanged: (value) {
+                            ref
+                                .read(detailProvider.notifier)
+                                .toggleIsOnAlarm(alarmState.id);
+                            ref.read(plantsProvider.notifier).updateAlarm(
+                                alarmState.id, detailState!.data.docId,
+                                isOnToggle: true);
+                          },
+                          trackColor: grayColor400,
+                          activeColor: pointColor2,
+                        ),
                       ),
                     ),
                 ],

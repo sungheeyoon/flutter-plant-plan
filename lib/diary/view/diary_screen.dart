@@ -130,7 +130,6 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //image name alias
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -180,7 +179,7 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
           const SizedBox(
             height: 8,
           ),
-          //divider
+
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Divider(

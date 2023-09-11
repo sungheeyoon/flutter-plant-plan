@@ -14,80 +14,65 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType']) {
-    case 'default':
-      return _UserModel.fromJson(json);
-    case 'error':
-      return _UserModelError.fromJson(json);
-    case 'loading':
-      return _UserModelLoading.fromJson(json);
-
-    default:
-      throw CheckedFromJsonException(json, 'runtimeType', 'UserModel',
-          'Invalid union type "${json['runtimeType']}"!');
-  }
-}
-
 /// @nodoc
-mixin _$UserModel {
+mixin _$UserModelBase {
   @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String email, String username) $default, {
+  TResult when<TResult extends Object?>({
     required TResult Function(String message) error,
     required TResult Function() loading,
+    required TResult Function(String id, String username) user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String email, String username)? $default, {
+  TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String message)? error,
     TResult? Function()? loading,
+    TResult? Function(String id, String username)? user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String email, String username)? $default, {
+  TResult maybeWhen<TResult extends Object?>({
     TResult Function(String message)? error,
     TResult Function()? loading,
+    TResult Function(String id, String username)? user,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default, {
-    required TResult Function(_UserModelError value) error,
-    required TResult Function(_UserModelLoading value) loading,
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserModelError value) error,
+    required TResult Function(UserModelLoading value) loading,
+    required TResult Function(UserModel value) user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default, {
-    TResult? Function(_UserModelError value)? error,
-    TResult? Function(_UserModelLoading value)? loading,
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserModelError value)? error,
+    TResult? Function(UserModelLoading value)? loading,
+    TResult? Function(UserModel value)? user,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    TResult Function(_UserModelError value)? error,
-    TResult Function(_UserModelLoading value)? loading,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserModelError value)? error,
+    TResult Function(UserModelLoading value)? loading,
+    TResult Function(UserModel value)? user,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserModelCopyWith<$Res> {
-  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
-      _$UserModelCopyWithImpl<$Res, UserModel>;
+abstract class $UserModelBaseCopyWith<$Res> {
+  factory $UserModelBaseCopyWith(
+          UserModelBase value, $Res Function(UserModelBase) then) =
+      _$UserModelBaseCopyWithImpl<$Res, UserModelBase>;
 }
 
 /// @nodoc
-class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
-    implements $UserModelCopyWith<$Res> {
-  _$UserModelCopyWithImpl(this._value, this._then);
+class _$UserModelBaseCopyWithImpl<$Res, $Val extends UserModelBase>
+    implements $UserModelBaseCopyWith<$Res> {
+  _$UserModelBaseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -96,190 +81,20 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
 }
 
 /// @nodoc
-abstract class _$$_UserModelCopyWith<$Res> {
-  factory _$$_UserModelCopyWith(
-          _$_UserModel value, $Res Function(_$_UserModel) then) =
-      __$$_UserModelCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String email, String username});
-}
-
-/// @nodoc
-class __$$_UserModelCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$_UserModel>
-    implements _$$_UserModelCopyWith<$Res> {
-  __$$_UserModelCopyWithImpl(
-      _$_UserModel _value, $Res Function(_$_UserModel) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? email = null,
-    Object? username = null,
-  }) {
-    return _then(_$_UserModel(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_UserModel implements _UserModel {
-  _$_UserModel(
-      {required this.email, required this.username, final String? $type})
-      : $type = $type ?? 'default';
-
-  factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
-      _$$_UserModelFromJson(json);
-
-  @override
-  final String email;
-  @override
-  final String username;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
-
-  @override
-  String toString() {
-    return 'UserModel(email: $email, username: $username)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_UserModel &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.username, username) ||
-                other.username == username));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, email, username);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
-      __$$_UserModelCopyWithImpl<_$_UserModel>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String email, String username) $default, {
-    required TResult Function(String message) error,
-    required TResult Function() loading,
-  }) {
-    return $default(email, username);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String email, String username)? $default, {
-    TResult? Function(String message)? error,
-    TResult? Function()? loading,
-  }) {
-    return $default?.call(email, username);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String email, String username)? $default, {
-    TResult Function(String message)? error,
-    TResult Function()? loading,
-    required TResult orElse(),
-  }) {
-    if ($default != null) {
-      return $default(email, username);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default, {
-    required TResult Function(_UserModelError value) error,
-    required TResult Function(_UserModelLoading value) loading,
-  }) {
-    return $default(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default, {
-    TResult? Function(_UserModelError value)? error,
-    TResult? Function(_UserModelLoading value)? loading,
-  }) {
-    return $default?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    TResult Function(_UserModelError value)? error,
-    TResult Function(_UserModelLoading value)? loading,
-    required TResult orElse(),
-  }) {
-    if ($default != null) {
-      return $default(this);
-    }
-    return orElse();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_UserModelToJson(
-      this,
-    );
-  }
-}
-
-abstract class _UserModel implements UserModel {
-  factory _UserModel(
-      {required final String email,
-      required final String username}) = _$_UserModel;
-
-  factory _UserModel.fromJson(Map<String, dynamic> json) =
-      _$_UserModel.fromJson;
-
-  String get email;
-  String get username;
-  @JsonKey(ignore: true)
-  _$$_UserModelCopyWith<_$_UserModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$_UserModelErrorCopyWith<$Res> {
-  factory _$$_UserModelErrorCopyWith(
-          _$_UserModelError value, $Res Function(_$_UserModelError) then) =
-      __$$_UserModelErrorCopyWithImpl<$Res>;
+abstract class _$$UserModelErrorCopyWith<$Res> {
+  factory _$$UserModelErrorCopyWith(
+          _$UserModelError value, $Res Function(_$UserModelError) then) =
+      __$$UserModelErrorCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$_UserModelErrorCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$_UserModelError>
-    implements _$$_UserModelErrorCopyWith<$Res> {
-  __$$_UserModelErrorCopyWithImpl(
-      _$_UserModelError _value, $Res Function(_$_UserModelError) _then)
+class __$$UserModelErrorCopyWithImpl<$Res>
+    extends _$UserModelBaseCopyWithImpl<$Res, _$UserModelError>
+    implements _$$UserModelErrorCopyWith<$Res> {
+  __$$UserModelErrorCopyWithImpl(
+      _$UserModelError _value, $Res Function(_$UserModelError) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -287,7 +102,7 @@ class __$$_UserModelErrorCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$_UserModelError(
+    return _then(_$UserModelError(
       null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -297,69 +112,61 @@ class __$$_UserModelErrorCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$_UserModelError implements _UserModelError {
-  _$_UserModelError(this.message, {final String? $type})
-      : $type = $type ?? 'error';
 
-  factory _$_UserModelError.fromJson(Map<String, dynamic> json) =>
-      _$$_UserModelErrorFromJson(json);
+class _$UserModelError implements UserModelError {
+  _$UserModelError(this.message);
 
   @override
   final String message;
 
-  @JsonKey(name: 'runtimeType')
-  final String $type;
-
   @override
   String toString() {
-    return 'UserModel.error(message: $message)';
+    return 'UserModelBase.error(message: $message)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserModelError &&
+            other is _$UserModelError &&
             (identical(other.message, message) || other.message == message));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserModelErrorCopyWith<_$_UserModelError> get copyWith =>
-      __$$_UserModelErrorCopyWithImpl<_$_UserModelError>(this, _$identity);
+  _$$UserModelErrorCopyWith<_$UserModelError> get copyWith =>
+      __$$UserModelErrorCopyWithImpl<_$UserModelError>(this, _$identity);
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String email, String username) $default, {
+  TResult when<TResult extends Object?>({
     required TResult Function(String message) error,
     required TResult Function() loading,
+    required TResult Function(String id, String username) user,
   }) {
     return error(message);
   }
 
   @override
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String email, String username)? $default, {
+  TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String message)? error,
     TResult? Function()? loading,
+    TResult? Function(String id, String username)? user,
   }) {
     return error?.call(message);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String email, String username)? $default, {
+  TResult maybeWhen<TResult extends Object?>({
     TResult Function(String message)? error,
     TResult Function()? loading,
+    TResult Function(String id, String username)? user,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -370,30 +177,30 @@ class _$_UserModelError implements _UserModelError {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default, {
-    required TResult Function(_UserModelError value) error,
-    required TResult Function(_UserModelLoading value) loading,
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserModelError value) error,
+    required TResult Function(UserModelLoading value) loading,
+    required TResult Function(UserModel value) user,
   }) {
     return error(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default, {
-    TResult? Function(_UserModelError value)? error,
-    TResult? Function(_UserModelLoading value)? loading,
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserModelError value)? error,
+    TResult? Function(UserModelLoading value)? loading,
+    TResult? Function(UserModel value)? user,
   }) {
     return error?.call(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    TResult Function(_UserModelError value)? error,
-    TResult Function(_UserModelLoading value)? loading,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserModelError value)? error,
+    TResult Function(UserModelLoading value)? loading,
+    TResult Function(UserModel value)? user,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -401,95 +208,78 @@ class _$_UserModelError implements _UserModelError {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_UserModelErrorToJson(
-      this,
-    );
-  }
 }
 
-abstract class _UserModelError implements UserModel {
-  factory _UserModelError(final String message) = _$_UserModelError;
-
-  factory _UserModelError.fromJson(Map<String, dynamic> json) =
-      _$_UserModelError.fromJson;
+abstract class UserModelError implements UserModelBase {
+  factory UserModelError(final String message) = _$UserModelError;
 
   String get message;
   @JsonKey(ignore: true)
-  _$$_UserModelErrorCopyWith<_$_UserModelError> get copyWith =>
+  _$$UserModelErrorCopyWith<_$UserModelError> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UserModelLoadingCopyWith<$Res> {
-  factory _$$_UserModelLoadingCopyWith(
-          _$_UserModelLoading value, $Res Function(_$_UserModelLoading) then) =
-      __$$_UserModelLoadingCopyWithImpl<$Res>;
+abstract class _$$UserModelLoadingCopyWith<$Res> {
+  factory _$$UserModelLoadingCopyWith(
+          _$UserModelLoading value, $Res Function(_$UserModelLoading) then) =
+      __$$UserModelLoadingCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_UserModelLoadingCopyWithImpl<$Res>
-    extends _$UserModelCopyWithImpl<$Res, _$_UserModelLoading>
-    implements _$$_UserModelLoadingCopyWith<$Res> {
-  __$$_UserModelLoadingCopyWithImpl(
-      _$_UserModelLoading _value, $Res Function(_$_UserModelLoading) _then)
+class __$$UserModelLoadingCopyWithImpl<$Res>
+    extends _$UserModelBaseCopyWithImpl<$Res, _$UserModelLoading>
+    implements _$$UserModelLoadingCopyWith<$Res> {
+  __$$UserModelLoadingCopyWithImpl(
+      _$UserModelLoading _value, $Res Function(_$UserModelLoading) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$_UserModelLoading implements _UserModelLoading {
-  _$_UserModelLoading({final String? $type}) : $type = $type ?? 'loading';
 
-  factory _$_UserModelLoading.fromJson(Map<String, dynamic> json) =>
-      _$$_UserModelLoadingFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+class _$UserModelLoading implements UserModelLoading {
+  _$UserModelLoading();
 
   @override
   String toString() {
-    return 'UserModel.loading()';
+    return 'UserModelBase.loading()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_UserModelLoading);
+        (other.runtimeType == runtimeType && other is _$UserModelLoading);
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(String email, String username) $default, {
+  TResult when<TResult extends Object?>({
     required TResult Function(String message) error,
     required TResult Function() loading,
+    required TResult Function(String id, String username) user,
   }) {
     return loading();
   }
 
   @override
   @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String email, String username)? $default, {
+  TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String message)? error,
     TResult? Function()? loading,
+    TResult? Function(String id, String username)? user,
   }) {
     return loading?.call();
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String email, String username)? $default, {
+  TResult maybeWhen<TResult extends Object?>({
     TResult Function(String message)? error,
     TResult Function()? loading,
+    TResult Function(String id, String username)? user,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -500,30 +290,30 @@ class _$_UserModelLoading implements _UserModelLoading {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_UserModel value) $default, {
-    required TResult Function(_UserModelError value) error,
-    required TResult Function(_UserModelLoading value) loading,
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserModelError value) error,
+    required TResult Function(UserModelLoading value) loading,
+    required TResult Function(UserModel value) user,
   }) {
     return loading(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_UserModel value)? $default, {
-    TResult? Function(_UserModelError value)? error,
-    TResult? Function(_UserModelLoading value)? loading,
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserModelError value)? error,
+    TResult? Function(UserModelLoading value)? loading,
+    TResult? Function(UserModel value)? user,
   }) {
     return loading?.call(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_UserModel value)? $default, {
-    TResult Function(_UserModelError value)? error,
-    TResult Function(_UserModelLoading value)? loading,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserModelError value)? error,
+    TResult Function(UserModelLoading value)? loading,
+    TResult Function(UserModel value)? user,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -531,18 +321,158 @@ class _$_UserModelLoading implements _UserModelLoading {
     }
     return orElse();
   }
+}
 
+abstract class UserModelLoading implements UserModelBase {
+  factory UserModelLoading() = _$UserModelLoading;
+}
+
+/// @nodoc
+abstract class _$$UserModelCopyWith<$Res> {
+  factory _$$UserModelCopyWith(
+          _$UserModel value, $Res Function(_$UserModel) then) =
+      __$$UserModelCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String id, String username});
+}
+
+/// @nodoc
+class __$$UserModelCopyWithImpl<$Res>
+    extends _$UserModelBaseCopyWithImpl<$Res, _$UserModel>
+    implements _$$UserModelCopyWith<$Res> {
+  __$$UserModelCopyWithImpl(
+      _$UserModel _value, $Res Function(_$UserModel) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
   @override
-  Map<String, dynamic> toJson() {
-    return _$$_UserModelLoadingToJson(
-      this,
-    );
+  $Res call({
+    Object? id = null,
+    Object? username = null,
+  }) {
+    return _then(_$UserModel(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
-abstract class _UserModelLoading implements UserModel {
-  factory _UserModelLoading() = _$_UserModelLoading;
+/// @nodoc
 
-  factory _UserModelLoading.fromJson(Map<String, dynamic> json) =
-      _$_UserModelLoading.fromJson;
+class _$UserModel implements UserModel {
+  _$UserModel({required this.id, required this.username});
+
+  @override
+  final String id;
+  @override
+  final String username;
+
+  @override
+  String toString() {
+    return 'UserModelBase.user(id: $id, username: $username)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UserModel &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.username, username) ||
+                other.username == username));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id, username);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UserModelCopyWith<_$UserModel> get copyWith =>
+      __$$UserModelCopyWithImpl<_$UserModel>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message) error,
+    required TResult Function() loading,
+    required TResult Function(String id, String username) user,
+  }) {
+    return user(id, username);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message)? error,
+    TResult? Function()? loading,
+    TResult? Function(String id, String username)? user,
+  }) {
+    return user?.call(id, username);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message)? error,
+    TResult Function()? loading,
+    TResult Function(String id, String username)? user,
+    required TResult orElse(),
+  }) {
+    if (user != null) {
+      return user(id, username);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserModelError value) error,
+    required TResult Function(UserModelLoading value) loading,
+    required TResult Function(UserModel value) user,
+  }) {
+    return user(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserModelError value)? error,
+    TResult? Function(UserModelLoading value)? loading,
+    TResult? Function(UserModel value)? user,
+  }) {
+    return user?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserModelError value)? error,
+    TResult Function(UserModelLoading value)? loading,
+    TResult Function(UserModel value)? user,
+    required TResult orElse(),
+  }) {
+    if (user != null) {
+      return user(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UserModel implements UserModelBase {
+  factory UserModel(
+      {required final String id, required final String username}) = _$UserModel;
+
+  String get id;
+  String get username;
+  @JsonKey(ignore: true)
+  _$$UserModelCopyWith<_$UserModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }

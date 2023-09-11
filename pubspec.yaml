@@ -135,6 +135,12 @@ flutter:
     - assets/icons/add_emoji.png
     - assets/icons/camera.png
 
+    - assets/icons/my_page/alarm.png
+    - assets/icons/my_page/bell.png
+    - assets/icons/my_page/megaphone.png
+    - assets/icons/my_page/setting.png
+    - assets/icons/my_page/star.png
+
     - assets/icons/navbar/home.png
     - assets/icons/navbar/post.png
     - assets/icons/navbar/calendar.png
