@@ -34,7 +34,7 @@ class DefaultLayout extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: child,
     );
   }
