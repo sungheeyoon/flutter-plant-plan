@@ -37,12 +37,12 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
             if ((reasonController.text.isEmpty ||
                     reasonController.text == '기타') &&
                 messageController.text.isEmpty) {
+              null;
+            } else {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const WithdrawLastScreen()));
-            } else {
-              null;
             }
           },
           backgroundColor: (reasonController.text.isEmpty ||

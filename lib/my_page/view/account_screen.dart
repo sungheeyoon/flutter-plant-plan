@@ -75,7 +75,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   color: grayColor300,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 13),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
