@@ -36,7 +36,7 @@ class WithdrawLastScreen extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            '해당 다이어리를 삭제하시겠습니까?',
+                            '정말 계정을 삭제하시겠습니까?',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -159,12 +159,25 @@ class WithdrawLastScreen extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            Text(
-              '\u{1F4CD} 계정이 삭제된 이후에는 계정을 다시 살리거나 식물, 알림  및 다이어리 등의 데이터를 복구할 수 없어요',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: grayBlack),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('\u{1F4CD}'),
+                const SizedBox(
+                  width: 4,
+                ),
+                Expanded(
+                  child: Text(
+                    '계정이 삭제된 이후에는 계정을 다시 살리거나 식물, 알림  및 다이어리 등의 데이터를 복구할 수 없어요',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: grayBlack),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2, // 최대 두 줄까지 표시
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 16,
