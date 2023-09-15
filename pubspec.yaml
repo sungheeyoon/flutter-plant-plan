@@ -134,6 +134,7 @@ flutter:
     - assets/icons/x.png
     - assets/icons/add_emoji.png
     - assets/icons/camera.png
+    - assets/icons/cancel.png
 
     - assets/icons/my_page/alarm.png
     - assets/icons/my_page/bell.png

@@ -103,7 +103,7 @@ int compareByDDay(ListCardModel a, ListCardModel b) {
 
 // timestamp기준 오름차순정렬
 int compareByTimeStamp(ListCardModel a, ListCardModel b) {
-  return a.timestamp.compareTo(b.timestamp);
+  return b.timestamp.compareTo(a.timestamp);
 }
 
 // cardList를 이름 순서로 정렬하는 함수

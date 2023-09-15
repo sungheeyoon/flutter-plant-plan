@@ -34,7 +34,6 @@ class AlarmScreen extends ConsumerStatefulWidget {
 
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   late String title;
-  bool isSwitched = false;
   late PlantField selectedField;
   int focusedButtonIndex = -1;
   String? nextAlarmText;
@@ -85,7 +84,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     final AlarmModel alarmState = ref.watch(alarmProvider);
-
     DateTime nextAlarmDate =
         alarmState.startTime.add(Duration(days: alarmState.repeat));
     return DefaultLayout(

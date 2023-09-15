@@ -74,6 +74,34 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
     }
   }
 
+  Future<void> deletePlant(String docId) async {
+    final PlantsModel currentState = state as PlantsModel;
+    final List<PlantModel> updatedPlants = [...currentState.data];
+    bool shouldUpdateDatabase = false;
+    PlantModel? plant;
+
+    for (int i = 0; i < updatedPlants.length; i++) {
+      if (updatedPlants[i].docId == docId) {
+        plant = updatedPlants[i];
+
+        updatedPlants.removeAt(i);
+        shouldUpdateDatabase = true;
+
+        break;
+      } else {
+        state = PlantsModelError(message: "docId dosen't exsist");
+      }
+    }
+    state = PlantsModel(data: updatedPlants);
+    if (shouldUpdateDatabase && plant is PlantModel) {
+      try {
+        await FirebaseService().fireBaseDeletePlant(plant);
+      } catch (error) {
+        state = PlantsModelError(message: error.toString());
+      }
+    }
+  }
+
   Future<void> deleteAlarm(
     String alarmId,
     String docId,

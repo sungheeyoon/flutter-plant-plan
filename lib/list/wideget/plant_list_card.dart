@@ -9,11 +9,8 @@ import 'package:plant_plan/utils/colors.dart';
 
 class PlantListCard extends ConsumerWidget {
   final ListCardModel cardData;
-
-  const PlantListCard({
-    super.key,
-    required this.cardData,
-  });
+  final bool? isdeleteIdList;
+  const PlantListCard({super.key, required this.cardData, this.isdeleteIdList});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -130,6 +127,45 @@ class PlantListCard extends ConsumerWidget {
               width: 16.h,
               height: 16.h,
             ),
+          ),
+        if (isdeleteIdList != null && isdeleteIdList!)
+          Positioned(
+            child: Container(
+              decoration: BoxDecoration(
+                color: grayBlack.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(12.h),
+              ),
+            ),
+          ),
+        if (isdeleteIdList != null && isdeleteIdList!)
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 10.h,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.check),
+                color: Colors.white,
+                onPressed: () {},
+              ),
+            ),
+
+            // Container(
+            //   width: 19.h,
+            //   height: 19.h,
+            //   padding: const EdgeInsets.all(0.0),
+            //   decoration: const BoxDecoration(
+            //     color: Colors.white,
+            //     shape: BoxShape.circle, // 원 모양으로 설정
+            //   ),
+            //   child: Icon(
+            //     Icons.check_circle,
+            //     size: 20.h,
+            //     color: pointColor2,
+            //   ),
+            // ),
           ),
       ],
     );

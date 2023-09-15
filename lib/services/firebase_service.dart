@@ -47,15 +47,27 @@ class FirebaseService {
     }
   }
 
-  Future<void> fireBaseDeletePlant(String docId) async {
+  Future<void> fireBaseDeletePlant(PlantModel plant) async {
     if (_currentUser != null) {
       final uid = _currentUser!.uid;
 
+      //유저가 설정한 식물이미지 삭제
+      if (plant.userImageUrl != "") {
+        deleteImageFromStorage(plant.userImageUrl);
+      }
+      //해당 식물의 다이어리 이미지 전부 삭제
+      for (DiaryModel diary in plant.diary) {
+        for (final diaryImage in diary.imageUrl) {
+          deleteImageFromStorage(diaryImage);
+        }
+      }
+
+      //firestore 해당 식물 문서삭제
       await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
           .collection('plants')
-          .doc(docId)
+          .doc(plant.docId)
           .delete();
     }
   }

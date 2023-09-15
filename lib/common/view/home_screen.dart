@@ -78,40 +78,235 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               selectedDateAlarms, selectedDateState)),
                     ),
                     SizedBox(
-                      height: 16.h,
+                      height: 20.h,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                      ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            "TO-DO",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(color: primaryColor),
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              // 아이콘 옆에 클릭했을 때 실행할 코드
+                          TextButton(
+                            onPressed: () {
+                              _pageController.animateToPage(0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                              setState(
+                                () {
+                                  _currentPageIndex = 0;
+                                },
+                              );
                             },
+                            style: TextButton.styleFrom(
+                              backgroundColor: _currentPageIndex == 0
+                                  ? primaryColor
+                                  : Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(30),
+                                  right: Radius.circular(30),
+                                ),
+                              ),
+                            ),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "탭별로 보기",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(color: grayColor500),
+                                  '전체',
+                                  style: _currentPageIndex == 0
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          )
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color:
+                                                primaryColor.withOpacity(0.75),
+                                          ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _pageController.animateToPage(1,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                              setState(
+                                () {
+                                  _currentPageIndex = 1;
+                                },
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: _currentPageIndex == 1
+                                  ? primaryColor
+                                  : Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(30),
+                                  right: Radius.circular(30),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: _currentPageIndex == 0 ? 1.0 : 0.75,
+                                  child: Image.asset(
+                                    'assets/images/management/humid.png',
+                                    width: 16.h,
+                                    height: 16.h,
+                                  ),
                                 ),
                                 SizedBox(
-                                  width: 8.h,
+                                  width: 4.h,
                                 ),
-                                Image.asset(
-                                  'assets/icons/home/change_view.png',
-                                  width: 18.h,
-                                  height: 18.h,
+                                Text(
+                                  '물주기',
+                                  style: _currentPageIndex == 1
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          )
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color:
+                                                primaryColor.withOpacity(0.75),
+                                          ),
+                                ),
+                                SizedBox(
+                                  width: 4.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _pageController.animateToPage(2,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                              setState(
+                                () {
+                                  _currentPageIndex = 2;
+                                },
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: _currentPageIndex == 2
+                                  ? primaryColor
+                                  : Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(30),
+                                  right: Radius.circular(30),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: _currentPageIndex == 2 ? 1.0 : 0.75,
+                                  child: Image.asset(
+                                    'assets/images/management/repotting.png',
+                                    width: 16.h,
+                                    height: 16.h,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4.h,
+                                ),
+                                Text(
+                                  '분갈이',
+                                  style: _currentPageIndex == 2
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          )
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color:
+                                                primaryColor.withOpacity(0.75),
+                                          ),
+                                ),
+                                SizedBox(
+                                  width: 4.h,
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _pageController.animateToPage(3,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut);
+                              setState(() {
+                                _currentPageIndex = 3;
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: _currentPageIndex == 3
+                                  ? primaryColor
+                                  : Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(30),
+                                  right: Radius.circular(30),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: _currentPageIndex == 3 ? 1.0 : 0.75,
+                                  child: Image.asset(
+                                    'assets/images/management/nutrient.png',
+                                    width: 16.h,
+                                    height: 16.h,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 4.h,
+                                ),
+                                Text(
+                                  '영양제',
+                                  style: _currentPageIndex == 3
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .labelLarge!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          )
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color:
+                                                primaryColor.withOpacity(0.75),
+                                          ),
+                                ),
+                                SizedBox(
+                                  width: 4.h,
                                 ),
                               ],
                             ),
@@ -120,213 +315,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 6.h,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                _pageController.animateToPage(0,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut);
-                                setState(
-                                  () {
-                                    _currentPageIndex = 0;
-                                  },
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _currentPageIndex == 0
-                                    ? primaryColor
-                                    : Colors.white,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                    left: Radius.circular(30),
-                                    right: Radius.circular(30),
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Opacity(
-                                    opacity:
-                                        _currentPageIndex == 0 ? 1.0 : 0.75,
-                                    child: Image.asset(
-                                      'assets/images/management/humid.png',
-                                      width: 16.h,
-                                      height: 16.h,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                  Text(
-                                    '물주기',
-                                    style: _currentPageIndex == 0
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              color: Colors.white,
-                                            )
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              color: primaryColor
-                                                  .withOpacity(0.75),
-                                            ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                _pageController.animateToPage(1,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut);
-                                setState(
-                                  () {
-                                    _currentPageIndex = 1;
-                                  },
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _currentPageIndex == 1
-                                    ? primaryColor
-                                    : Colors.white,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                    left: Radius.circular(30),
-                                    right: Radius.circular(30),
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Opacity(
-                                    opacity:
-                                        _currentPageIndex == 1 ? 1.0 : 0.75,
-                                    child: Image.asset(
-                                      'assets/images/management/repotting.png',
-                                      width: 16.h,
-                                      height: 16.h,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                  Text(
-                                    '분갈이',
-                                    style: _currentPageIndex == 1
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              color: Colors.white,
-                                            )
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              color: primaryColor
-                                                  .withOpacity(0.75),
-                                            ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                _pageController.animateToPage(2,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut);
-                                setState(() {
-                                  _currentPageIndex = 2;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: _currentPageIndex == 2
-                                    ? primaryColor
-                                    : Colors.white,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                    left: Radius.circular(30),
-                                    right: Radius.circular(30),
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Opacity(
-                                    opacity:
-                                        _currentPageIndex == 1 ? 1.0 : 0.75,
-                                    child: Image.asset(
-                                      'assets/images/management/nutrient.png',
-                                      width: 16.h,
-                                      height: 16.h,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                  Text(
-                                    '영양제',
-                                    style: _currentPageIndex == 2
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
-                                              color: Colors.white,
-                                            )
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              color: primaryColor
-                                                  .withOpacity(0.75),
-                                            ),
-                                  ),
-                                  SizedBox(
-                                    width: 4.h,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      thickness: 1,
-                      color: grayColor200,
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                    SizedBox(
-                      height: 400.h,
+                      height: 365.h,
                       child: PageView(
                         controller: _pageController,
                         onPageChanged: (index) {
@@ -335,6 +324,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           });
                         },
                         children: [
+                          TodoTap(
+                            selectedDateAlarms: selectedDateAlarms,
+                            field: PlantField.none,
+                          ),
                           TodoTap(
                               selectedDateAlarms: getSelectedDateList(
                                   widget.plants,
@@ -400,8 +393,8 @@ class ProgressWidget extends StatelessWidget {
                     .labelSmall!
                     .copyWith(color: grayColor500),
               ),
-              SizedBox(
-                height: 4.h,
+              const SizedBox(
+                height: 2,
               ),
               Text(
                 '${selectedDateAlarms.length}',
@@ -427,8 +420,8 @@ class ProgressWidget extends StatelessWidget {
                     .labelSmall!
                     .copyWith(color: grayColor500),
               ),
-              SizedBox(
-                height: 4.h,
+              const SizedBox(
+                height: 2,
               ),
               Text(
                 '$completeCount',
@@ -454,11 +447,12 @@ class ProgressWidget extends StatelessWidget {
                     .labelSmall!
                     .copyWith(color: grayColor500),
               ),
-              SizedBox(
-                height: 4.h,
+              const SizedBox(
+                height: 2,
               ),
               Text(
-                '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%', //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
+                //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
+                '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%',
                 style: Theme.of(context)
                     .textTheme
                     .headlineSmall!
@@ -498,55 +492,72 @@ class TodoTap extends ConsumerWidget {
         fieldColor = keyColor400;
         break;
       default:
-        fieldColor = Colors.transparent;
+        fieldColor = primaryColor;
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${selectedDateAlarms.length}개의 일정이 있어요',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: fieldColor),
-            ),
-            SizedBox(height: 8.h),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: selectedDateAlarms.length,
-              itemBuilder: (BuildContext context, int index) {
-                selectedDateAlarms.sort((a, b) {
-                  final aHasOffDate =
-                      a.alarm.offDates.contains(selectedDateState);
-                  final bHasOffDate =
-                      b.alarm.offDates.contains(selectedDateState);
-
-                  if (aHasOffDate && !bHasOffDate) {
-                    return 1; // a가 offDates를 가지고 있고 b가 가지고 있지 않은 경우 b를 더 앞에 배치
-                  } else if (!aHasOffDate && bHasOffDate) {
-                    return -1; // a가 offDates를 가지고 있지 않고 b가 가지고 있는 경우 a를 더 앞에 배치
-                  } else {
-                    return b.alarm.startTime.compareTo(a.alarm
-                        .startTime); // offDates가 동일한 경우 startTime을 기준으로 정렬 (시간 순서를 반대로)
-                  }
-                });
-                final info = selectedDateAlarms[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6.h),
-                  child: AlarmCard(
-                    info: info,
+    return selectedDateAlarms.isEmpty
+        ? Center(
+            child: Text(
+              '오늘은 일정이 없어요',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: grayColor600,
                   ),
-                );
-              },
             ),
-          ],
-        ),
-      ),
-    );
+          )
+        : SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    '${selectedDateAlarms.length}개의 일정이 있어요',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: fieldColor),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: selectedDateAlarms.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    selectedDateAlarms.sort((a, b) {
+                      final aHasOffDate =
+                          a.alarm.offDates.contains(selectedDateState);
+                      final bHasOffDate =
+                          b.alarm.offDates.contains(selectedDateState);
+
+                      if (aHasOffDate && !bHasOffDate) {
+                        return 1; // a가 offDates를 가지고 있고 b가 가지고 있지 않은 경우 b를 더 앞에 배치
+                      } else if (!aHasOffDate && bHasOffDate) {
+                        return -1; // a가 offDates를 가지고 있지 않고 b가 가지고 있는 경우 a를 더 앞에 배치
+                      } else {
+                        return b.alarm.startTime.compareTo(a.alarm
+                            .startTime); // offDates가 동일한 경우 startTime을 기준으로 정렬 (시간 순서를 반대로)
+                      }
+                    });
+                    final info = selectedDateAlarms[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 6.h),
+                      child: AlarmCard(
+                        info: info,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          );
   }
 }
 

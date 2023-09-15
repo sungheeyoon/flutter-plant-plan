@@ -24,7 +24,7 @@ class AlarmModel with _$AlarmModel {
     required DateTime startTime,
     int repeat = 0,
     String title = '',
-    bool isOn = false,
+    bool isOn = true,
     List<DateTime> offDates = const [],
     required PlantField field,
   }) {

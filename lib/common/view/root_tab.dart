@@ -9,6 +9,7 @@ import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
 import 'package:plant_plan/common/view/splash_screen.dart';
 import 'package:plant_plan/diary/view/diary_screen.dart';
+import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -62,91 +63,94 @@ class _RootTabState extends ConsumerState<RootTab>
       return ErrorScreen(errorMessage: plantsState.message);
     } else if (plantsState is PlantsModel) {
       final List<PlantModel> plants = plantsState.data;
+      final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
 
       return DefaultLayout(
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          selectedItemColor: primaryColor,
-          unselectedItemColor: Colors.black12,
-          selectedFontSize: 10,
-          unselectedFontSize: 10,
-          onTap: (int tappedIndex) {
-            if (tappedIndex == 2) {
-              // Icon(Icons.add)를 눌렀을 때
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return const SearchScreen();
+        bottomNavigationBar: listDeleteModeState
+            ? null
+            : BottomNavigationBar(
+                backgroundColor: Colors.white,
+                selectedItemColor: primaryColor,
+                unselectedItemColor: Colors.black12,
+                selectedFontSize: 10,
+                unselectedFontSize: 10,
+                onTap: (int tappedIndex) {
+                  if (tappedIndex == 2) {
+                    // Icon(Icons.add)를 눌렀을 때
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const SearchScreen();
+                      },
+                    ));
+                  } else {
+                    setState(() {
+                      index = tappedIndex;
+                      controller.animateTo(tappedIndex);
+                    });
+                  }
                 },
-              ));
-            } else {
-              setState(() {
-                index = tappedIndex;
-                controller.animateTo(tappedIndex);
-              });
-            }
-          },
-          currentIndex: index,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/icons/navbar/home.png',
-                width: 30,
-                height: 30,
+                currentIndex: index,
+                type: BottomNavigationBarType.fixed,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/icons/navbar/home.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    activeIcon: Image.asset(
+                      'assets/icons/navbar/home_active.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/icons/navbar/pot.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    activeIcon: Image.asset(
+                      'assets/icons/navbar/pot_active.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    label: '',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.add),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/icons/navbar/post.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    activeIcon: Image.asset(
+                      'assets/icons/navbar/post_active.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    label: '',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Image.asset(
+                      'assets/icons/navbar/mypage.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    activeIcon: Image.asset(
+                      'assets/icons/navbar/mypage_active.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                    label: '',
+                  ),
+                ],
+                selectedLabelStyle: const TextStyle(height: 0),
               ),
-              activeIcon: Image.asset(
-                'assets/icons/navbar/home_active.png',
-                width: 30,
-                height: 30,
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/icons/navbar/pot.png',
-                width: 30,
-                height: 30,
-              ),
-              activeIcon: Image.asset(
-                'assets/icons/navbar/pot_active.png',
-                width: 30,
-                height: 30,
-              ),
-              label: '',
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/icons/navbar/post.png',
-                width: 30,
-                height: 30,
-              ),
-              activeIcon: Image.asset(
-                'assets/icons/navbar/post_active.png',
-                width: 30,
-                height: 30,
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset(
-                'assets/icons/navbar/mypage.png',
-                width: 30,
-                height: 30,
-              ),
-              activeIcon: Image.asset(
-                'assets/icons/navbar/mypage_active.png',
-                width: 30,
-                height: 30,
-              ),
-              label: '',
-            ),
-          ],
-          selectedLabelStyle: const TextStyle(height: 0),
-        ),
         child: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           controller: controller,
