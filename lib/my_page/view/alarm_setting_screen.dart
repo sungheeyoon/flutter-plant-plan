@@ -22,7 +22,6 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
     super.initState();
   }
 
-  // 각 스위치의 상태가 변경될 때 호출되는 콜백 함수
   void onSwitchValueChanged() {
     setState(() {
       serviceSwitch =

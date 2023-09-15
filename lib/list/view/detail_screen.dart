@@ -11,6 +11,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/loading_screen.dart';
+import 'package:plant_plan/common/widget/delete_modal.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/list/model/detail_model.dart';
@@ -33,6 +34,39 @@ class DetailScreen extends ConsumerWidget {
       return ErrorScreen(errorMessage: detailState.message);
     } else if (detailState is DetailModel) {
       return DefaultLayout(
+        actions: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DeleteModal(
+                    text: '해당 식물을 삭제하시겠습니까?',
+                    buttonText: '삭제하기',
+                    onPressed: () {
+                      ref
+                          .read(plantsProvider.notifier)
+                          .deletePlant(detailState.data.docId);
+                      //modal창종료
+                      Navigator.of(context).pop();
+                      //listScreen으로이동
+                      Navigator.of(context).pop();
+                    },
+                  );
+                },
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24.0),
+              child: Image.asset(
+                'assets/icons/trash.png',
+                width: 24,
+                height: 24,
+              ),
+            ),
+          )
+        ],
         title: '내 식물',
         child: SingleChildScrollView(
           child: Column(
