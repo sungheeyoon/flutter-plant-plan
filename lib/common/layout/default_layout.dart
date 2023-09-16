@@ -12,6 +12,7 @@ class DefaultLayout extends StatelessWidget {
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final List<Widget>? actions;
   final Widget? leading;
+  final Widget? drawer;
 
   const DefaultLayout({
     required this.child,
@@ -23,6 +24,7 @@ class DefaultLayout extends StatelessWidget {
     this.floatingActionButtonLocation,
     this.actions,
     this.leading,
+    this.drawer,
     Key? key,
   }) : super(key: key);
 
@@ -35,6 +37,7 @@ class DefaultLayout extends StatelessWidget {
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       resizeToAvoidBottomInset: false,
+      drawer: drawer,
       body: child,
     );
   }

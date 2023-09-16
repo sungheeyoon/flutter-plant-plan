@@ -41,3 +41,38 @@ String formatKoreanTime(DateTime dateTime) {
 
   return "$period $hour:$formattedMinute";
 }
+
+DateTime? findEarliestDate(List<DateTime> offDates) {
+  if (offDates.isEmpty) {
+    return null;
+  }
+
+  DateTime earliestDate = offDates.reduce((currentDate, nextDate) {
+    return currentDate.isBefore(nextDate) ? currentDate : nextDate;
+  });
+
+  // 년,월,일만사용
+  earliestDate = DateTime(
+    earliestDate.year,
+    earliestDate.month,
+    earliestDate.day,
+  );
+
+  return earliestDate;
+}
+
+int calculateDateDifferenceInDays(DateTime startDate, DateTime endDate) {
+  // 년,월,일만사용
+  final start = DateTime(startDate.year, startDate.month, startDate.day);
+  final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+  // 밀리초 단위로 두 날짜 간의 차이를 계산
+  final differenceInMilliseconds = end.difference(start).inMilliseconds;
+
+  // 차이를 일로 변환. 1일은 24시간이므로 1000 밀리초 * 60 초 * 60 분 * 24 시간을 사용하여 계산
+  final differenceInDays =
+      (differenceInMilliseconds / (1000 * 60 * 60 * 24)).abs();
+
+  // 소수점 이하의 일 수를 반올림하여 반환.
+  return differenceInDays.round();
+}
