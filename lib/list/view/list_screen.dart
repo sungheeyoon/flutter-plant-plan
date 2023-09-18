@@ -10,8 +10,8 @@ import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/list/wideget/plant_list_card.dart';
-import 'package:plant_plan/common/utils/list_utils.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/list_utils.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
   final List<PlantModel> plants;

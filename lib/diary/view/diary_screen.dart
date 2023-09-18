@@ -6,12 +6,12 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
-import 'package:plant_plan/common/utils/date_formatter.dart';
-import 'package:plant_plan/common/utils/diary_utils.dart';
 import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/diary/view/diary_creation_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/date_formatter.dart';
+import 'package:plant_plan/utils/diary_utils.dart';
 
 class DiaryScreen extends ConsumerStatefulWidget {
   final List<PlantModel> plants;
@@ -28,6 +28,7 @@ class DiaryScreen extends ConsumerStatefulWidget {
 class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   String selectedPlantDocId = "";
   List<DiaryCardModel> selectedCardList = [];
+
   @override
   void initState() {
     super.initState();
@@ -605,6 +606,7 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                                   ref.read(plantsProvider.notifier).deleteDiary(
                                       diaryCard.diary.id, diaryCard.docId);
                                   Navigator.of(context).pop();
+                                  showCustomToast(context, '다이어리가 삭제되었습니다.');
                                 },
                                 child: Text(
                                   '삭제',

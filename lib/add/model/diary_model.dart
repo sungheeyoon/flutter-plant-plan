@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:plant_plan/common/utils/timestamp_serializer.dart';
+import 'package:plant_plan/utils/timestamp_serializer.dart';
 import 'package:uuid/uuid.dart';
 part 'diary_model.freezed.dart';
 part 'diary_model.g.dart';

@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
-import 'package:plant_plan/common/utils/timestamp_serializer.dart';
+import 'package:plant_plan/utils/timestamp_serializer.dart';
 import 'package:uuid/uuid.dart';
 part 'alarm_model.freezed.dart';
 part 'alarm_model.g.dart';
