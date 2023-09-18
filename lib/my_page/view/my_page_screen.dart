@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/utils/list_utils.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
 import 'package:plant_plan/list/wideget/plant_list_card.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
@@ -10,6 +9,7 @@ import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/my_page/view/account_screen.dart';
 import 'package:plant_plan/my_page/view/alarm_setting_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/list_utils.dart';
 
 class MyPageScreen extends ConsumerWidget {
   final List<PlantModel> plants;

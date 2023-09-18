@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
-import 'package:plant_plan/common/utils/timestamp_serializer.dart';
+import 'package:plant_plan/utils/timestamp_serializer.dart';
 
 part 'list_card_model.freezed.dart';
 part 'list_card_model.g.dart';

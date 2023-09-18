@@ -14,6 +14,7 @@ import 'package:plant_plan/services/firebase_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:plant_plan/utils/diary_utils.dart';
 
 class DiaryCreationScreen extends ConsumerStatefulWidget {
   final DiaryCardModel? diaryCard;
@@ -189,6 +190,10 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
               if (!context.mounted) return;
               Navigator.of(context).pop();
               Navigator.pop(context);
+              final message = (widget.diaryCard != null)
+                  ? '다이어리가 수정되었습니다'
+                  : '다이어리가 추가되었습니다';
+              showCustomToast(context, message);
             } else {
               return;
             }

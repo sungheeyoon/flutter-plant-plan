@@ -9,10 +9,10 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
-import 'package:plant_plan/common/utils/date_formatter.dart';
 import 'package:plant_plan/list/model/detail_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/date_formatter.dart';
 
 class AlarmBoxWidget extends ConsumerWidget {
   final PlantField field;
