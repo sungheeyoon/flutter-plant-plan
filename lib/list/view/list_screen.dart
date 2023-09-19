@@ -15,9 +15,11 @@ import 'package:plant_plan/utils/list_utils.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
   final List<PlantModel> plants;
+  final bool favorite;
   const ListScreen({
     super.key,
     required this.plants,
+    this.favorite = false,
   });
 
   @override
@@ -43,6 +45,17 @@ class _ListScreenState extends ConsumerState<ListScreen> {
         deleteIdList.add(docId);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant ListScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.favorite) {
+      setState(() {
+        isFavorite = widget.favorite;
+      });
+    }
   }
 
   @override
