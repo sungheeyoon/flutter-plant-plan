@@ -19,13 +19,14 @@ class RootTab extends ConsumerStatefulWidget {
   const RootTab({super.key});
 
   @override
-  ConsumerState<RootTab> createState() => _RootTabState();
+  ConsumerState<RootTab> createState() => RootTabState();
 }
 
-class _RootTabState extends ConsumerState<RootTab>
+class RootTabState extends ConsumerState<RootTab>
     with SingleTickerProviderStateMixin {
   late TabController controller;
   int index = 0;
+  bool isFavoriteForListScreen = false;
 
   @override
   void initState() {
@@ -47,6 +48,15 @@ class _RootTabState extends ConsumerState<RootTab>
   void tabListener() {
     setState(() {
       index = controller.index;
+    });
+  }
+
+  void navigateToFavoriteListScreen() {
+    int listScreenIndex = 1;
+
+    setState(() {
+      isFavoriteForListScreen = true;
+      controller.animateTo(listScreenIndex);
     });
   }
 
@@ -87,6 +97,9 @@ class _RootTabState extends ConsumerState<RootTab>
                       index = tappedIndex;
                       controller.animateTo(tappedIndex);
                     });
+                  }
+                  if (tappedIndex != 1) {
+                    isFavoriteForListScreen = false;
                   }
                 },
                 currentIndex: index,
@@ -156,7 +169,10 @@ class _RootTabState extends ConsumerState<RootTab>
           controller: controller,
           children: [
             HomeScreen(plants: plants),
-            ListScreen(plants: plants),
+            ListScreen(
+              plants: plants,
+              favorite: isFavoriteForListScreen,
+            ),
             const Text('asd'),
             DiaryScreen(plants: plants),
             MyPageScreen(plants: plants),

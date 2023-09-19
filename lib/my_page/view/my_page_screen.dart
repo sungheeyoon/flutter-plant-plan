@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
 import 'package:plant_plan/list/wideget/plant_list_card.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
@@ -52,7 +53,10 @@ class MyPageScreen extends ConsumerWidget {
           const SizedBox(
             height: 12,
           ),
-          Favorite(cardList: cardList),
+          Favorite(
+            cardList: cardList,
+            plants: plants,
+          ),
           const SizedBox(
             height: 18,
           ),
@@ -235,13 +239,17 @@ class Favorite extends StatelessWidget {
   const Favorite({
     super.key,
     required this.cardList,
+    required this.plants,
   });
 
   final List<ListCardModel> cardList;
+  final List<PlantModel> plants;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -255,20 +263,30 @@ class Favorite extends StatelessWidget {
                       color: grayBlack,
                     ),
               ),
-              Row(
-                children: [
-                  Text(
-                    '${cardList.length}개',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: grayColor500,
-                        ),
-                  ),
-                  const Icon(
-                    Icons.navigate_next_sharp,
-                    color: grayColor500,
-                    size: 20,
-                  ),
-                ],
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  final rootTabState =
+                      context.findAncestorStateOfType<RootTabState>();
+                  if (rootTabState != null) {
+                    rootTabState.navigateToFavoriteListScreen();
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      '${cardList.length}개',
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            color: grayColor500,
+                          ),
+                    ),
+                    const Icon(
+                      Icons.navigate_next_sharp,
+                      color: grayColor500,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
