@@ -9,6 +9,7 @@ import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/my_page/view/account_screen.dart';
 import 'package:plant_plan/my_page/view/alarm_setting_screen.dart';
+import 'package:plant_plan/my_page/view/notice_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/list_utils.dart';
 
@@ -206,27 +207,36 @@ class SettingMenu extends StatelessWidget {
             height: 16,
             color: grayColor300,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const ImageIcon(
-                  AssetImage('assets/icons/my_page/megaphone.png'),
-                  color: grayColor700,
-                  size: 24,
-                ),
-                const SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  '공지사항',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: grayColor700),
-                ),
-              ],
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NoticeScreen(),
+              ),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const ImageIcon(
+                    AssetImage('assets/icons/my_page/megaphone.png'),
+                    color: grayColor700,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Text(
+                    '공지사항',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: grayColor700),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
