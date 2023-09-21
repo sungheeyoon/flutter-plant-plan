@@ -10,4 +10,5 @@ class UserModelBase with _$UserModelBase {
     required String id,
     required String username,
   }) = UserModel;
+  factory UserModelBase.notLoggedIn() = UserNotLoggedIn;
 }

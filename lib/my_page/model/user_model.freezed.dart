@@ -21,6 +21,7 @@ mixin _$UserModelBase {
     required TResult Function(String message) error,
     required TResult Function() loading,
     required TResult Function(String id, String username) user,
+    required TResult Function() notLoggedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$UserModelBase {
     TResult? Function(String message)? error,
     TResult? Function()? loading,
     TResult? Function(String id, String username)? user,
+    TResult? Function()? notLoggedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$UserModelBase {
     TResult Function(String message)? error,
     TResult Function()? loading,
     TResult Function(String id, String username)? user,
+    TResult Function()? notLoggedIn,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$UserModelBase {
     required TResult Function(UserModelError value) error,
     required TResult Function(UserModelLoading value) loading,
     required TResult Function(UserModel value) user,
+    required TResult Function(UserNotLoggedIn value) notLoggedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$UserModelBase {
     TResult? Function(UserModelError value)? error,
     TResult? Function(UserModelLoading value)? loading,
     TResult? Function(UserModel value)? user,
+    TResult? Function(UserNotLoggedIn value)? notLoggedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$UserModelBase {
     TResult Function(UserModelError value)? error,
     TResult Function(UserModelLoading value)? loading,
     TResult Function(UserModel value)? user,
+    TResult Function(UserNotLoggedIn value)? notLoggedIn,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -147,6 +153,7 @@ class _$UserModelError implements UserModelError {
     required TResult Function(String message) error,
     required TResult Function() loading,
     required TResult Function(String id, String username) user,
+    required TResult Function() notLoggedIn,
   }) {
     return error(message);
   }
@@ -157,6 +164,7 @@ class _$UserModelError implements UserModelError {
     TResult? Function(String message)? error,
     TResult? Function()? loading,
     TResult? Function(String id, String username)? user,
+    TResult? Function()? notLoggedIn,
   }) {
     return error?.call(message);
   }
@@ -167,6 +175,7 @@ class _$UserModelError implements UserModelError {
     TResult Function(String message)? error,
     TResult Function()? loading,
     TResult Function(String id, String username)? user,
+    TResult Function()? notLoggedIn,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -181,6 +190,7 @@ class _$UserModelError implements UserModelError {
     required TResult Function(UserModelError value) error,
     required TResult Function(UserModelLoading value) loading,
     required TResult Function(UserModel value) user,
+    required TResult Function(UserNotLoggedIn value) notLoggedIn,
   }) {
     return error(this);
   }
@@ -191,6 +201,7 @@ class _$UserModelError implements UserModelError {
     TResult? Function(UserModelError value)? error,
     TResult? Function(UserModelLoading value)? loading,
     TResult? Function(UserModel value)? user,
+    TResult? Function(UserNotLoggedIn value)? notLoggedIn,
   }) {
     return error?.call(this);
   }
@@ -201,6 +212,7 @@ class _$UserModelError implements UserModelError {
     TResult Function(UserModelError value)? error,
     TResult Function(UserModelLoading value)? loading,
     TResult Function(UserModel value)? user,
+    TResult Function(UserNotLoggedIn value)? notLoggedIn,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -260,6 +272,7 @@ class _$UserModelLoading implements UserModelLoading {
     required TResult Function(String message) error,
     required TResult Function() loading,
     required TResult Function(String id, String username) user,
+    required TResult Function() notLoggedIn,
   }) {
     return loading();
   }
@@ -270,6 +283,7 @@ class _$UserModelLoading implements UserModelLoading {
     TResult? Function(String message)? error,
     TResult? Function()? loading,
     TResult? Function(String id, String username)? user,
+    TResult? Function()? notLoggedIn,
   }) {
     return loading?.call();
   }
@@ -280,6 +294,7 @@ class _$UserModelLoading implements UserModelLoading {
     TResult Function(String message)? error,
     TResult Function()? loading,
     TResult Function(String id, String username)? user,
+    TResult Function()? notLoggedIn,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -294,6 +309,7 @@ class _$UserModelLoading implements UserModelLoading {
     required TResult Function(UserModelError value) error,
     required TResult Function(UserModelLoading value) loading,
     required TResult Function(UserModel value) user,
+    required TResult Function(UserNotLoggedIn value) notLoggedIn,
   }) {
     return loading(this);
   }
@@ -304,6 +320,7 @@ class _$UserModelLoading implements UserModelLoading {
     TResult? Function(UserModelError value)? error,
     TResult? Function(UserModelLoading value)? loading,
     TResult? Function(UserModel value)? user,
+    TResult? Function(UserNotLoggedIn value)? notLoggedIn,
   }) {
     return loading?.call(this);
   }
@@ -314,6 +331,7 @@ class _$UserModelLoading implements UserModelLoading {
     TResult Function(UserModelError value)? error,
     TResult Function(UserModelLoading value)? loading,
     TResult Function(UserModel value)? user,
+    TResult Function(UserNotLoggedIn value)? notLoggedIn,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -403,6 +421,7 @@ class _$UserModel implements UserModel {
     required TResult Function(String message) error,
     required TResult Function() loading,
     required TResult Function(String id, String username) user,
+    required TResult Function() notLoggedIn,
   }) {
     return user(id, username);
   }
@@ -413,6 +432,7 @@ class _$UserModel implements UserModel {
     TResult? Function(String message)? error,
     TResult? Function()? loading,
     TResult? Function(String id, String username)? user,
+    TResult? Function()? notLoggedIn,
   }) {
     return user?.call(id, username);
   }
@@ -423,6 +443,7 @@ class _$UserModel implements UserModel {
     TResult Function(String message)? error,
     TResult Function()? loading,
     TResult Function(String id, String username)? user,
+    TResult Function()? notLoggedIn,
     required TResult orElse(),
   }) {
     if (user != null) {
@@ -437,6 +458,7 @@ class _$UserModel implements UserModel {
     required TResult Function(UserModelError value) error,
     required TResult Function(UserModelLoading value) loading,
     required TResult Function(UserModel value) user,
+    required TResult Function(UserNotLoggedIn value) notLoggedIn,
   }) {
     return user(this);
   }
@@ -447,6 +469,7 @@ class _$UserModel implements UserModel {
     TResult? Function(UserModelError value)? error,
     TResult? Function(UserModelLoading value)? loading,
     TResult? Function(UserModel value)? user,
+    TResult? Function(UserNotLoggedIn value)? notLoggedIn,
   }) {
     return user?.call(this);
   }
@@ -457,6 +480,7 @@ class _$UserModel implements UserModel {
     TResult Function(UserModelError value)? error,
     TResult Function(UserModelLoading value)? loading,
     TResult Function(UserModel value)? user,
+    TResult Function(UserNotLoggedIn value)? notLoggedIn,
     required TResult orElse(),
   }) {
     if (user != null) {
@@ -475,4 +499,118 @@ abstract class UserModel implements UserModelBase {
   @JsonKey(ignore: true)
   _$$UserModelCopyWith<_$UserModel> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UserNotLoggedInCopyWith<$Res> {
+  factory _$$UserNotLoggedInCopyWith(
+          _$UserNotLoggedIn value, $Res Function(_$UserNotLoggedIn) then) =
+      __$$UserNotLoggedInCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$UserNotLoggedInCopyWithImpl<$Res>
+    extends _$UserModelBaseCopyWithImpl<$Res, _$UserNotLoggedIn>
+    implements _$$UserNotLoggedInCopyWith<$Res> {
+  __$$UserNotLoggedInCopyWithImpl(
+      _$UserNotLoggedIn _value, $Res Function(_$UserNotLoggedIn) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$UserNotLoggedIn implements UserNotLoggedIn {
+  _$UserNotLoggedIn();
+
+  @override
+  String toString() {
+    return 'UserModelBase.notLoggedIn()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$UserNotLoggedIn);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message) error,
+    required TResult Function() loading,
+    required TResult Function(String id, String username) user,
+    required TResult Function() notLoggedIn,
+  }) {
+    return notLoggedIn();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message)? error,
+    TResult? Function()? loading,
+    TResult? Function(String id, String username)? user,
+    TResult? Function()? notLoggedIn,
+  }) {
+    return notLoggedIn?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message)? error,
+    TResult Function()? loading,
+    TResult Function(String id, String username)? user,
+    TResult Function()? notLoggedIn,
+    required TResult orElse(),
+  }) {
+    if (notLoggedIn != null) {
+      return notLoggedIn();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(UserModelError value) error,
+    required TResult Function(UserModelLoading value) loading,
+    required TResult Function(UserModel value) user,
+    required TResult Function(UserNotLoggedIn value) notLoggedIn,
+  }) {
+    return notLoggedIn(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UserModelError value)? error,
+    TResult? Function(UserModelLoading value)? loading,
+    TResult? Function(UserModel value)? user,
+    TResult? Function(UserNotLoggedIn value)? notLoggedIn,
+  }) {
+    return notLoggedIn?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(UserModelError value)? error,
+    TResult Function(UserModelLoading value)? loading,
+    TResult Function(UserModel value)? user,
+    TResult Function(UserNotLoggedIn value)? notLoggedIn,
+    required TResult orElse(),
+  }) {
+    if (notLoggedIn != null) {
+      return notLoggedIn(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UserNotLoggedIn implements UserModelBase {
+  factory UserNotLoggedIn() = _$UserNotLoggedIn;
 }

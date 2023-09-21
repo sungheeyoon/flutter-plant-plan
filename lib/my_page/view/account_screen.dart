@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/widget/delete_modal.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/my_page/view/withdraw_first_screen.dart';
@@ -102,13 +103,34 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                   thickness: 1,
                   color: grayColor300,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Text(
-                    '로그아웃',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor600,
-                        ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DeleteModal(
+                          text: '정말 로그아웃 하시겠습니까?',
+                          buttonText: '로그아웃',
+                          isRed: false,
+                          onPressed: () {
+                            //로그아웃 삽입예정
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    width: 136, // Fills the available width
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 0), // Adjust padding here
+                    child: Text(
+                      '로그아웃',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: grayColor600,
+                          ),
+                    ),
                   ),
                 ),
                 const Divider(
@@ -123,8 +145,10 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       builder: (context) => const WithdrawFirstScreen(),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                  child: Container(
+                    width: 136, // Fills the available width
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 18, horizontal: 0), // Adjust padding here
                     child: Text(
                       '탈퇴하기',
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(

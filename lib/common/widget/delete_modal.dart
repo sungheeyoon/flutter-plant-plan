@@ -6,13 +6,14 @@ class DeleteModal extends StatelessWidget {
   final String text;
   final String buttonText;
   final VoidCallback onPressed;
+  final bool isRed;
 
-  const DeleteModal({
-    super.key,
-    required this.text,
-    required this.buttonText,
-    required this.onPressed,
-  });
+  const DeleteModal(
+      {super.key,
+      required this.text,
+      required this.buttonText,
+      required this.onPressed,
+      required this.isRed});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class DeleteModal extends StatelessWidget {
                         buttonText,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: errorColor,
+                              color: isRed ? errorColor : primaryColor,
                             ),
                       ),
                     ),

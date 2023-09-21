@@ -24,7 +24,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       state =
           UserModelBase.user(id: user.email!, username: user.displayName ?? '');
     } else {
-      state = null;
+      state = UserModelBase.notLoggedIn();
     }
   }
 
@@ -49,7 +49,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
   }
 
   Future<void> logout() async {
-    state = null;
+    state = UserModelBase.notLoggedIn();
     await _auth.signOut();
   }
 }
