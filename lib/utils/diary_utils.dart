@@ -5,7 +5,8 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-List<DiaryCardModel> getDiaryCardList(List<PlantModel> plantsState) {
+List<DiaryCardModel> getDiaryCardList(
+    List<PlantModel> plantsState, bool isBookMark) {
   List<DiaryCardModel> results = [];
 
   for (final PlantModel plant in plantsState) {
@@ -17,6 +18,10 @@ List<DiaryCardModel> getDiaryCardList(List<PlantModel> plantsState) {
         : plant.userImageUrl;
 
     for (final diary in plant.diary) {
+      if (isBookMark && !diary.bookMark) {
+        continue;
+      }
+
       results.add(
         DiaryCardModel(
           docId: docId,

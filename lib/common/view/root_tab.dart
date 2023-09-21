@@ -27,6 +27,7 @@ class RootTabState extends ConsumerState<RootTab>
   late TabController controller;
   int index = 0;
   bool isFavoriteForListScreen = false;
+  bool isBookMarkForDiaryScreen = false;
 
   @override
   void initState() {
@@ -57,6 +58,15 @@ class RootTabState extends ConsumerState<RootTab>
     setState(() {
       isFavoriteForListScreen = true;
       controller.animateTo(listScreenIndex);
+    });
+  }
+
+  void navigateToBookMarkDiaryScreen() {
+    int diaryScreenIndex = 3;
+
+    setState(() {
+      isBookMarkForDiaryScreen = true;
+      controller.animateTo(diaryScreenIndex);
     });
   }
 
@@ -100,6 +110,9 @@ class RootTabState extends ConsumerState<RootTab>
                   }
                   if (tappedIndex != 1) {
                     isFavoriteForListScreen = false;
+                  }
+                  if (tappedIndex != 3) {
+                    isBookMarkForDiaryScreen = false;
                   }
                 },
                 currentIndex: index,
@@ -174,7 +187,10 @@ class RootTabState extends ConsumerState<RootTab>
               favorite: isFavoriteForListScreen,
             ),
             const Text('asd'),
-            DiaryScreen(plants: plants),
+            DiaryScreen(
+              plants: plants,
+              bookMark: isBookMarkForDiaryScreen,
+            ),
             MyPageScreen(plants: plants),
           ],
         ),

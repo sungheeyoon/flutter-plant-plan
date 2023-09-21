@@ -44,6 +44,7 @@ class DetailScreen extends ConsumerWidget {
                   return DeleteModal(
                     text: '해당 식물을 삭제하시겠습니까?',
                     buttonText: '삭제하기',
+                    isRed: false,
                     onPressed: () {
                       ref
                           .read(plantsProvider.notifier)

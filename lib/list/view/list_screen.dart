@@ -16,6 +16,7 @@ import 'package:plant_plan/utils/list_utils.dart';
 class ListScreen extends ConsumerStatefulWidget {
   final List<PlantModel> plants;
   final bool favorite;
+
   const ListScreen({
     super.key,
     required this.plants,
@@ -113,6 +114,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                       return DeleteModal(
                         text: '해당 식물을 삭제하시겠습니까?',
                         buttonText: '삭제하기',
+                        isRed: false,
                         onPressed: () async {
                           for (final deleteId in deleteIdList) {
                             await ref

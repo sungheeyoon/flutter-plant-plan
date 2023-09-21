@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/list/model/list_card_model.dart';
+import 'package:plant_plan/list/provider/detail_provider.dart';
+import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/list/wideget/plant_list_card.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
@@ -73,10 +76,20 @@ class MyPageScreen extends ConsumerWidget {
                         color: grayBlack,
                       ),
                 ),
-                const Icon(
-                  Icons.navigate_next_sharp,
-                  color: grayColor500,
-                  size: 20,
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    final rootTabState =
+                        context.findAncestorStateOfType<RootTabState>();
+                    if (rootTabState != null) {
+                      rootTabState.navigateToBookMarkDiaryScreen();
+                    }
+                  },
+                  child: const Icon(
+                    Icons.navigate_next_sharp,
+                    color: grayColor500,
+                    size: 20,
+                  ),
                 ),
               ],
             ),
@@ -245,7 +258,7 @@ class SettingMenu extends StatelessWidget {
   }
 }
 
-class Favorite extends StatelessWidget {
+class Favorite extends ConsumerWidget {
   const Favorite({
     super.key,
     required this.cardList,
@@ -256,7 +269,7 @@ class Favorite extends StatelessWidget {
   final List<PlantModel> plants;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -311,7 +324,24 @@ class Favorite extends StatelessWidget {
                 for (int index = 0; index < cardList.length; index++)
                   Row(
                     children: [
-                      PlantListCard(cardData: cardList[index]),
+                      GestureDetector(
+                          onTap: () async {
+                            final plant = await ref
+                                .watch(plantsProvider.notifier)
+                                .getPlant(cardList[index].docId);
+
+                            ref
+                                .read(detailProvider.notifier)
+                                .updateDetail(plant);
+                            if (!context.mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DetailScreen(),
+                              ),
+                            );
+                          },
+                          child: PlantListCard(cardData: cardList[index])),
                       if (cardList.length - 1 != index)
                         const SizedBox(
                           width: 8,
