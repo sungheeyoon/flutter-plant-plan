@@ -225,10 +225,14 @@ class OnboardingContent extends StatelessWidget {
                   child: OutlinedButton(
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool('showHome', true);
+                        prefs.setBool('showLogin', true);
                         if (context.mounted) {
-                          Navigator.pushReplacementNamed(
-                              context, LoginScreen.routeName);
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const LoginScreen()),
+                              (route) => false);
                         }
                       },
                       style: OutlinedButton.styleFrom(

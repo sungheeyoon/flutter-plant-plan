@@ -5,12 +5,19 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
+import 'package:plant_plan/utils/colors.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
   static String get routeName => 'signUp';
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
-  SignUpForm({super.key});
+  const SignUpForm({super.key});
+
+  @override
+  State<SignUpForm> createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   Future<void> _signUp(BuildContext context) async {
     if (_formKey.currentState!.saveAndValidate()) {
@@ -63,6 +70,7 @@ class SignUpForm extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
+            backgroundColor: MaterialStateProperty.all(pointColor2),
           ),
           child: Text(
             '회원가입하기',
@@ -75,61 +83,67 @@ class SignUpForm extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: FormBuilder(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              InputBox(
-                name: 'name',
-                title: '닉네임',
-                hintText: '이름을 입력해주세요',
-                validator: (val) {
-                  if (val == null || val.isEmpty) {
-                    return '이름을 입력해주세요.';
-                  }
-                  return null;
-                },
+        child: Column(
+          children: [
+            FormBuilder(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  InputBox(
+                    name: 'name',
+                    title: '닉네임',
+                    hintText: '이름을 입력해주세요',
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return '이름을 입력해주세요.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20.0.h),
+                  InputBox(
+                    name: 'email',
+                    title: '이메일',
+                    hintText: '이메일을 입력해주세요',
+                    validator: (val) {
+                      if (val == null || !val.contains('@')) {
+                        return '이메일 형식이 유효하지 않습니다.';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20.0.h),
+                  InputBox(
+                    name: 'password',
+                    title: '비밀번호',
+                    hintText: '비밀번호를 입력해주세요',
+                    validator: (val) {
+                      if (val == null || val.length < 6) {
+                        return '비밀번호는 6자 이상이어야 합니다.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20.0),
+                  InputBox(
+                    name: 'confirmPassword',
+                    title: '비밀번호 확인',
+                    hintText: '비밀번호를 다시 입력해주세요',
+                    validator: (val) {
+                      if (val == null ||
+                          val !=
+                              _formKey
+                                  .currentState!.fields['password']?.value) {
+                        return '비밀번호가 일치하지 않습니다.';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: 20.0.h),
-              InputBox(
-                name: 'email',
-                title: '이메일',
-                hintText: '이메일을 입력해주세요',
-                validator: (val) {
-                  if (val == null || !val.contains('@')) {
-                    return '이메일 형식이 유효하지 않습니다.';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20.0.h),
-              InputBox(
-                name: 'password',
-                title: '비밀번호',
-                hintText: '비밀번호를 입력해주세요',
-                validator: (val) {
-                  if (val == null || val.length < 6) {
-                    return '비밀번호는 6자 이상이어야 합니다.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20.0),
-              InputBox(
-                name: 'confirmPassword',
-                title: '비밀번호 확인',
-                hintText: '비밀번호를 다시 입력해주세요',
-                validator: (val) {
-                  if (val == null ||
-                      val != _formKey.currentState!.fields['password']?.value) {
-                    return '비밀번호가 일치하지 않습니다.';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

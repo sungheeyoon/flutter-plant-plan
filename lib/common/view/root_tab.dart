@@ -15,7 +15,7 @@ import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class RootTab extends ConsumerStatefulWidget {
-  static String get routeName => 'home';
+  static String get routeName => 'root';
   const RootTab({super.key});
 
   @override
