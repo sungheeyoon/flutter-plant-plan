@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/widget/delete_modal.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
@@ -114,7 +115,13 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                           buttonText: '로그아웃',
                           isRed: false,
                           onPressed: () {
-                            //로그아웃 삽입예정
+                            ref.read(userMeProvider.notifier).logout();
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()),
+                            );
                             Navigator.of(context).pop();
                           },
                         );

@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
+import 'package:plant_plan/common/view/sign_up_form.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -122,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       name: 'password',
                       title: '비밀번호',
                       hintText: '비밀번호를 입력해주세요',
+                      isPassword: true,
                     ),
                     const SizedBox(height: 8.0),
                     Text(
@@ -142,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
+                        backgroundColor: MaterialStateProperty.all(pointColor2),
                       ),
                       child: Text(
                         '로그인',
@@ -228,9 +230,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(width: 8.h),
                   GestureDetector(
                     onTap: () {
-                      GoRouter.of(context).go('/login/signUp');
-
-                      // 회원가입 버튼을 눌렀을 때 수행할 동작
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SignUpForm();
+                      }));
                     },
                     child: Text(
                       '회원가입',

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
+import 'package:plant_plan/common/view/onboarding_screen.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
+import 'package:plant_plan/my_page/model/user_model.dart';
+import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/services/notifi_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +27,7 @@ Future main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   final bool showLogin;
 
   const MyApp({
@@ -32,128 +36,108 @@ class MyApp extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
   Widget build(BuildContext context) {
+    final UserModelBase userState = ref.watch(userMeProvider);
     return ScreenUtilInit(
       designSize: const Size(360, 760),
       builder: (context, child) {
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(
-                primarySwatch: Colors.blue,
-                brightness: Brightness.light,
-              ).copyWith(
-                surface: Colors.white,
-                surfaceTint: Colors.white,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.blue,
+              brightness: Brightness.light,
+            ).copyWith(
+              surface: Colors.white,
+              surfaceTint: Colors.white,
+            ),
+            scaffoldBackgroundColor: Colors.white,
+            fontFamily: 'Pretendard',
+            textTheme: TextTheme(
+              displayLarge: TextStyle(
+                fontSize: 28.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
               ),
-              scaffoldBackgroundColor: Colors.white,
-              fontFamily: 'Pretendard',
-              textTheme: TextTheme(
-                displayLarge: TextStyle(
-                  fontSize: 28.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                displayMedium: TextStyle(
-                  fontSize: 24.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -1.h,
-                ),
-                displaySmall: TextStyle(
-                  fontSize: 22.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                headlineLarge: TextStyle(
-                  fontSize: 20.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1.h,
-                ),
-                headlineMedium: TextStyle(
-                  fontSize: 20.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.8.h,
-                ),
-                headlineSmall: TextStyle(
-                  fontSize: 18.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.7.h,
-                ),
-                titleLarge: TextStyle(
-                  fontSize: 18.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.7.h,
-                ),
-                titleMedium: TextStyle(
-                  fontSize: 16.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.h,
-                ),
-                bodyLarge: TextStyle(
-                  fontSize: 16.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.h,
-                ),
-                bodyMedium: TextStyle(
-                  fontSize: 14.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.6.h,
-                ),
-                bodySmall: TextStyle(
-                  fontSize: 12.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5.h,
-                ),
-                labelLarge: TextStyle(
-                  fontSize: 14.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.6.h,
-                ),
-                labelMedium: TextStyle(
-                  fontSize: 12.0.h,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5.h,
-                ),
-                labelSmall: TextStyle(
-                  fontSize: 10.0.h,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.4.h,
-                ),
+              displayMedium: TextStyle(
+                fontSize: 24.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -1.h,
+              ),
+              displaySmall: TextStyle(
+                fontSize: 22.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
+              ),
+              headlineLarge: TextStyle(
+                fontSize: 20.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -1.h,
+              ),
+              headlineMedium: TextStyle(
+                fontSize: 20.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.8.h,
+              ),
+              headlineSmall: TextStyle(
+                fontSize: 18.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.7.h,
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.7.h,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.6.h,
+              ),
+              bodyLarge: TextStyle(
+                fontSize: 16.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.6.h,
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 14.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.6.h,
+              ),
+              bodySmall: TextStyle(
+                fontSize: 12.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.5.h,
+              ),
+              labelLarge: TextStyle(
+                fontSize: 14.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.6.h,
+              ),
+              labelMedium: TextStyle(
+                fontSize: 12.0.h,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5.h,
+              ),
+              labelSmall: TextStyle(
+                fontSize: 10.0.h,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.4.h,
               ),
             ),
-            home: const RootTab()
-            // FutureBuilder<bool>(
-            //   future: _showSplashScreen(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return const SplashScreen();
-            //     } else if (snapshot.hasData) {
-            //       return StreamBuilder<User?>(
-            //         stream: FirebaseAuth.instance.authStateChanges(),
-            //         builder: (context, snapshot) {
-            //           if (snapshot.hasData) {
-            //             return const RootTab();
-            //           }
-            //           // if (showLogin) {
-            //           //   return const LoginScreen();
-            //           else {
-            //             return const LoginScreen();
-            //           }
-            //         },
-            //       );
-            //     } else {
-            //       return const Text('Error');
-            //     }
-            //   },
-            // ),
-            );
+          ),
+          home: userState is UserModel
+              ? const RootTab()
+              : (widget.showLogin
+                  ? const LoginScreen()
+                  : const OnboardingScreen()),
+        );
       },
     );
-  }
-
-  Future<bool> _showSplashScreen() async {
-    await Future.delayed(const Duration(
-        milliseconds: 1200)); // Display splash screen for 2 seconds
-    return true; // Return true to indicate that splash screen should be skipped
   }
 }

@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 
 final userMeProvider =
-    StateNotifierProvider<UserMeStateNotifier, UserModelBase?>(
+    StateNotifierProvider<UserMeStateNotifier, UserModelBase>(
   (ref) {
     return UserMeStateNotifier();
   },
 );
 
-class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
+class UserMeStateNotifier extends StateNotifier<UserModelBase> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   UserMeStateNotifier() : super(UserModelBase.loading()) {
