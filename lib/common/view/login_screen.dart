@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_loginKey.currentState!.saveAndValidate()) {
       final formData = _loginKey.currentState!.value;
       setState(() {
-        _errorText = ''; // 초기화
+        _errorText = ''; // Reset error message
       });
 
       if (formData['email'] == null || formData['email'].isEmpty) {
@@ -42,39 +42,46 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: formData['email'],
-          password: formData['password'],
-        );
-
-        // 로그인 성공
-        // 추가적인 작업 수행 또는 홈 화면으로 이동
-        if (context.mounted) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => const RootTab()),
-              (route) => false);
-        }
-        print('로그인 성공: ${userCredential.user!.uid}');
-      } on FirebaseAuthException catch (e) {
-        // 로그인 실패
-        if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-          setState(() {
-            _errorText = '이메일 혹은 비밀번호가 잘못되었습니다.';
-          });
-          print('로그인 실패: ${e.code}');
-        } else {
-          setState(() {
-            _errorText = '이메일 혹은 비밀번호가 잘못되었습니다.';
-          });
-          print('로그인 실패: ${e.message}');
-        }
+        await performLogin(formData['email'], formData['password']);
+      } catch (e) {
+        displayError(e);
       }
     } else {
       print('로그인 실패: 유효성 검사 실패');
     }
+  }
+
+  Future<void> performLogin(String email, String password) async {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Login success
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => const RootTab()),
+        (route) => false,
+      );
+    }
+    print('로그인 성공: ${userCredential.user!.uid}');
+  }
+
+  void displayError(dynamic error) {
+    String errorMessage = '로그인에 실패했습니다.';
+    if (error is FirebaseAuthException) {
+      if (error.code == 'user-not-found' || error.code == 'wrong-password') {
+        errorMessage = '이메일 혹은 비밀번호가 잘못되었습니다.';
+      }
+    }
+
+    setState(() {
+      _errorText = errorMessage;
+    });
+
+    print('로그인 실패: $errorMessage');
   }
 
   @override
@@ -232,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return SignUpForm();
+                        return const SignUpForm();
                       }));
                     },
                     child: Text(

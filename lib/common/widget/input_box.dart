@@ -83,13 +83,13 @@ class _InputBoxState extends State<InputBox> {
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                  color: Colors.red, // 실패 상태에서의 외곽선 색상 설정
+                  color: errorColor, // 실패 상태에서의 외곽선 색상 설정
                 ),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(
-                  color: Colors.red, // 실패 상태에서의 외곽선 색상 설정
+                  color: errorColor, // 실패 상태에서의 외곽선 색상 설정
                 ),
               ),
               contentPadding: const EdgeInsets.symmetric(

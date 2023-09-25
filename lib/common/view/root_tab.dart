@@ -11,6 +11,7 @@ import 'package:plant_plan/common/view/splash_screen.dart';
 import 'package:plant_plan/diary/view/diary_screen.dart';
 import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
+
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -77,6 +78,7 @@ class RootTabState extends ConsumerState<RootTab>
   @override
   Widget build(BuildContext context) {
     final PlantsModelBase plantsState = ref.watch(plantsProvider);
+
     if (plantsState is PlantsModelLoading) {
       return const SplashScreen();
     } else if (plantsState is PlantsModelError) {
