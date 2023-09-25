@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/utils/colors.dart';
 
@@ -19,14 +20,17 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
+  String? _emailErrorMessage;
+
   Future<void> _signUp(BuildContext context) async {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
+      final email = formData['email'];
 
       try {
         final userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: formData['email'],
+          email: email,
           password: formData['password'],
         );
 
@@ -39,16 +43,27 @@ class _SignUpFormState extends State<SignUpForm> {
               .doc(userCredential.user!.uid)
               .set({
             'userName': formData['name'],
-            'email': formData['email'],
+            'email': email,
           });
           print('회원가입 성공');
-          // 추가적인 작업 수행 또는 홈 화면으로 이동
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const RootTab()),
+            (route) => false,
+          );
         } else {
-          // 회원가입 실패
           print('회원가입 실패');
         }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'email-already-in-use') {
+          setState(() {
+            _emailErrorMessage = '이미 가입된 이메일 주소입니다.';
+          });
+        } else {
+          print('회원가입 에러: $e');
+        }
       } catch (e) {
-        // 회원가입 에러 처리
         print('회원가입 에러: $e');
       }
     }
@@ -107,8 +122,14 @@ class _SignUpFormState extends State<SignUpForm> {
                     title: '이메일',
                     hintText: '이메일을 입력해주세요',
                     validator: (val) {
-                      if (val == null || !val.contains('@')) {
+                      if (val == null || val.isEmpty) {
+                        return '이메일을 입력해주세요.';
+                      } else if (!RegExp(
+                              r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(val)) {
                         return '이메일 형식이 유효하지 않습니다.';
+                      } else if (_emailErrorMessage != null) {
+                        return _emailErrorMessage;
                       }
                       return null;
                     },
