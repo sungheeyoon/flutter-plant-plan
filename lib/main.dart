@@ -6,8 +6,8 @@ import 'package:plant_plan/common/view/onboarding_screen.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
+import 'package:plant_plan/services/login_manager.dart';
 import 'package:plant_plan/services/notifi_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -17,22 +17,27 @@ Future main() async {
   tz.initializeTimeZones();
   await Firebase.initializeApp();
 
-  final prefs = await SharedPreferences.getInstance();
-  final showLogin = prefs.getBool('showLogin') ?? false;
+  final autoLoginManager = LoginManager();
+  await autoLoginManager.initialize();
+
+  final isShowLogin = autoLoginManager.isShowLogin;
+  final isAutoLogin = autoLoginManager.isAutoLogin;
 
   runApp(
     ProviderScope(
-      child: MyApp(showLogin: showLogin),
+      child: MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
     ),
   );
 }
 
 class MyApp extends ConsumerStatefulWidget {
-  final bool showLogin;
+  final bool isShowLogin;
+  final bool isAutoLogin;
 
   const MyApp({
     Key? key,
-    required this.showLogin,
+    required this.isShowLogin,
+    required this.isAutoLogin,
   }) : super(key: key);
 
   @override
@@ -40,9 +45,33 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  String determineInitialRoute(
+      bool isShowLogin, bool isAutoLogin, UserModelBase userState) {
+    // 첫 실행  isShowLogin 이 false인 경우 OnboardingScreen으로 이동
+    if (isShowLogin == false) {
+      return '/onboarding';
+    }
+
+    // 자동 로그인 및 사용자 상태에 따라 경로 결정
+    if (userState is UserModel) {
+      if (!isAutoLogin) {
+        // 로그아웃 및 로그인 화면으로 이동
+        // ref.read(userMeProvider.notifier).logout();
+        return '/login';
+      } else {
+        return '/rootTab';
+      }
+    } else {
+      return '/login';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserModelBase userState = ref.watch(userMeProvider);
+
+    String initialRoute = determineInitialRoute(
+        widget.isShowLogin, widget.isAutoLogin, userState);
     return ScreenUtilInit(
       designSize: const Size(360, 760),
       builder: (context, child) {
@@ -131,11 +160,12 @@ class _MyAppState extends ConsumerState<MyApp> {
               ),
             ),
           ),
-          home: userState is UserModel
-              ? const RootTab()
-              : (widget.showLogin
-                  ? const LoginScreen()
-                  : const OnboardingScreen()),
+          initialRoute: initialRoute,
+          routes: {
+            '/login': (context) => const LoginScreen(),
+            '/onboarding': (context) => const OnboardingScreen(),
+            '/rootTab': (context) => const RootTab(),
+          },
         );
       },
     );
