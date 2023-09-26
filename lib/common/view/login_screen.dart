@@ -1,22 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/view/sign_up_form.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
+import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static String get routeName => 'login';
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormBuilderState> _loginKey = GlobalKey<FormBuilderState>();
   String _errorText = '';
 
@@ -52,21 +54,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> performLogin(String email, String password) async {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-
-    // Login success
-    if (context.mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const RootTab()),
-        (route) => false,
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
+
+      // Login success
+      if (context.mounted) {
+        // Modify the user state after successful login
+        ref
+            .read(userMeProvider.notifier)
+            .login(email: email, password: password);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => const RootTab()),
+          (route) => false,
+        );
+      }
+      print('로그인 성공: ${userCredential.user!.uid}');
+    } catch (e) {
+      displayError(e);
     }
-    print('로그인 성공: ${userCredential.user!.uid}');
   }
 
   void displayError(dynamic error) {

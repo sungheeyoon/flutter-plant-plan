@@ -14,7 +14,11 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
 
   UserMeStateNotifier() : super(UserModelBase.loading()) {
     // 앱 시작 시 현재 로그인된 사용자 정보 가져오기
-    _fetchCurrentUser();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _fetchCurrentUser();
   }
 
   Future<void> _fetchCurrentUser() async {
@@ -43,13 +47,17 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
         state = UserModelBase.user(
             id: user.email!, username: user.displayName ?? '');
       }
+      _fetchCurrentUser();
     } catch (e) {
       state = UserModelBase.error('로그인에 실패했습니다.');
     }
   }
 
   Future<void> logout() async {
-    state = UserModelBase.notLoggedIn();
+    //현재 빌드가 완료된 후에 상태를 수정하도록 Future.microtask
+    Future.microtask(() {
+      state = UserModelBase.notLoggedIn();
+    });
     await _auth.signOut();
   }
 }

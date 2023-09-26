@@ -2,22 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
+import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class SignUpForm extends StatefulWidget {
+class SignUpForm extends ConsumerStatefulWidget {
   static String get routeName => 'signUp';
 
   const SignUpForm({super.key});
 
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  ConsumerState<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpFormState extends ConsumerState<SignUpForm> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   String? _emailErrorMessage;
@@ -46,12 +49,16 @@ class _SignUpFormState extends State<SignUpForm> {
             'email': email,
           });
           print('회원가입 성공');
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => const RootTab()),
-            (route) => false,
-          );
+          try {
+            await performLogin(formData['email'], formData['password']);
+          } catch (e) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ErrorScreen(errorMessage: e.toString())),
+            );
+          }
         } else {
           print('회원가입 실패');
         }
@@ -67,6 +74,29 @@ class _SignUpFormState extends State<SignUpForm> {
         print('회원가입 에러: $e');
       }
     }
+  }
+
+  Future<void> performLogin(
+    String email,
+    String password,
+  ) async {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Login success
+    if (context.mounted) {
+      // Modify the user state after successful login
+      ref.read(userMeProvider.notifier).login(email: email, password: password);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => const RootTab()),
+        (route) => false,
+      );
+    }
+    print('로그인 성공: ${userCredential.user!.uid}');
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:plant_plan/common/widget/delete_modal.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/my_page/view/withdraw_first_screen.dart';
+import 'package:plant_plan/services/login_manager.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
@@ -18,7 +19,6 @@ class AccountScreen extends ConsumerStatefulWidget {
 }
 
 class _AccountScreenState extends ConsumerState<AccountScreen> {
-  bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
     final userMeState = ref.watch(userMeProvider);
@@ -103,10 +103,10 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                                   ),
                         ),
                         CupertinoSwitch(
-                          value: isSwitched,
+                          value: LoginManager().isAutoLogin,
                           onChanged: (value) {
                             setState(() {
-                              isSwitched = value;
+                              LoginManager().setAutoLogin(value);
                             });
                           },
                           trackColor: grayColor400,

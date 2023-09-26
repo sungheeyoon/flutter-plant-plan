@@ -25,78 +25,81 @@ class MyPageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMeState = ref.watch(userMeProvider) as UserModel;
+    final userMeState = ref.watch(userMeProvider);
     List<ListCardModel> cardList = getCardList(plants, true);
-
-    return DefaultLayout(
-      title: '마이페이지',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 9,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: UsernameAndAlarm(username: userMeState.username),
-          ),
-          const SizedBox(
-            height: 21,
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: SettingMenu(),
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          const Divider(
-            color: grayColor100,
-            thickness: 8,
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Favorite(
-            cardList: cardList,
-            plants: plants,
-          ),
-          const SizedBox(
-            height: 18,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '저장된 다이어리',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: grayBlack,
-                      ),
-                ),
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    final rootTabState =
-                        context.findAncestorStateOfType<RootTabState>();
-                    if (rootTabState != null) {
-                      rootTabState.navigateToBookMarkDiaryScreen();
-                    }
-                  },
-                  child: const Icon(
-                    Icons.navigate_next_sharp,
-                    color: grayColor500,
-                    size: 20,
-                  ),
-                ),
-              ],
+    if (userMeState is UserModel) {
+      return DefaultLayout(
+        title: '마이페이지',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 9,
             ),
-          ),
-        ],
-      ),
-    );
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: UsernameAndAlarm(username: userMeState.username),
+            ),
+            const SizedBox(
+              height: 21,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: SettingMenu(),
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            const Divider(
+              color: grayColor100,
+              thickness: 8,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Favorite(
+              cardList: cardList,
+              plants: plants,
+            ),
+            const SizedBox(
+              height: 18,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '저장된 다이어리',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: grayBlack,
+                        ),
+                  ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      final rootTabState =
+                          context.findAncestorStateOfType<RootTabState>();
+                      if (rootTabState != null) {
+                        rootTabState.navigateToBookMarkDiaryScreen();
+                      }
+                    },
+                    child: const Icon(
+                      Icons.navigate_next_sharp,
+                      color: grayColor500,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
