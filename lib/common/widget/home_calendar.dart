@@ -110,78 +110,101 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     double height =
         isSelectedDay ? MediaQuery.of(context).size.height * 0.8 : 74.h;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: (isSelectedDay && isToday)
-            ? Colors.white
-            : (isSelectedDay && !isToday)
-                ? pointColor2
-                : (!isSelectedDay && isToday)
-                    ? Colors.white
-                    : pointColor2,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(27.h),
-          bottom: Radius.circular(27.h),
+    return GestureDetector(
+      onTap: () {
+        // 선택한 날짜로 스크롤
+
+        int pageIndex = 500 +
+            date
+                .difference(
+                  DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  ),
+                )
+                .inDays;
+
+        // 선택한 페이지로 스크롤
+        _pageController.animateToPage(
+          pageIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: (isSelectedDay && isToday)
+              ? Colors.white
+              : (isSelectedDay && !isToday)
+                  ? pointColor2
+                  : (!isSelectedDay && isToday)
+                      ? Colors.white
+                      : pointColor2,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(27.h),
+            bottom: Radius.circular(27.h),
+          ),
+          border:
+              isSelectedDay ? Border.all(color: Colors.white, width: 2) : null,
         ),
-        border:
-            isSelectedDay ? Border.all(color: Colors.white, width: 2) : null,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            dayName,
-            style: (isSelectedDay && isToday)
-                ? Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: grayColor500)
-                : (isSelectedDay && !isToday)
-                    ? Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: Colors.white)
-                    : (!isSelectedDay && isToday)
-                        ? Theme.of(context)
-                            .textTheme
-                            .labelSmall!
-                            .copyWith(color: grayColor500)
-                        : Theme.of(context).textTheme.labelSmall!.copyWith(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
-          ),
-          if (isSelectedDay) SizedBox(height: 2.h),
-          Text(
-            dayNumber,
-            style: (isSelectedDay && isToday)
-                ? Theme.of(context)
-                    .textTheme
-                    .displayLarge!
-                    .copyWith(color: primaryColor)
-                : (isSelectedDay && !isToday)
-                    ? Theme.of(context)
-                        .textTheme
-                        .displayLarge!
-                        .copyWith(color: Colors.white)
-                    : (!isSelectedDay && isToday)
-                        ? Theme.of(context)
-                            .textTheme
-                            .displayMedium!
-                            .copyWith(color: primaryColor)
-                        : Theme.of(context).textTheme.displayMedium!.copyWith(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
-          ),
-          SizedBox(height: isSelectedDay ? 8.h : 2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: dots,
-          ),
-        ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              dayName,
+              style: (isSelectedDay && isToday)
+                  ? Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: grayColor500)
+                  : (isSelectedDay && !isToday)
+                      ? Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: Colors.white)
+                      : (!isSelectedDay && isToday)
+                          ? Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(color: grayColor500)
+                          : Theme.of(context).textTheme.labelSmall!.copyWith(
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+            ),
+            if (isSelectedDay) SizedBox(height: 2.h),
+            Text(
+              dayNumber,
+              style: (isSelectedDay && isToday)
+                  ? Theme.of(context)
+                      .textTheme
+                      .displayLarge!
+                      .copyWith(color: primaryColor)
+                  : (isSelectedDay && !isToday)
+                      ? Theme.of(context)
+                          .textTheme
+                          .displayLarge!
+                          .copyWith(color: Colors.white)
+                      : (!isSelectedDay && isToday)
+                          ? Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(color: primaryColor)
+                          : Theme.of(context).textTheme.displayMedium!.copyWith(
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+            ),
+            SizedBox(height: isSelectedDay ? 8.h : 2.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: dots,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -232,7 +255,11 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
               controller: _pageController,
               itemCount: 1000,
               itemBuilder: (BuildContext context, int index) {
-                final now = DateTime.now().add(
+                final now = DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ).add(
                   Duration(days: index - 500),
                 );
                 final isSelectedDay = now.year == selectedDateState.year &&
