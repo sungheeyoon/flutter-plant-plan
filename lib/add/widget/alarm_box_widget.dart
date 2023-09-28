@@ -53,7 +53,8 @@ class AlarmBoxWidget extends ConsumerWidget {
       DateTime.now().day,
     );
     //가장최근 알람확인일
-    DateTime? earliestDate = findEarliestDate(alarmState!.offDates);
+    DateTime? earliestDate =
+        alarmState is AlarmModel ? findEarliestDate(alarmState.offDates) : null;
 
     late String iconPath;
     late String title;
@@ -121,10 +122,21 @@ class AlarmBoxWidget extends ConsumerWidget {
                       const SizedBox(
                         width: 6,
                       ),
-                      buildDateDifferenceWidget(earliestDate, now, context),
+                      if (isDetail)
+                        buildDateDifferenceWidget(earliestDate, now, context),
                     ],
                   ),
-                  if (isDetail)
+                  if (alarmState == null)
+                    CircleAvatar(
+                      radius: 8.h,
+                      backgroundColor: pointColor2,
+                      child: const Icon(
+                        Icons.add, // 플러스 아이콘
+                        size: 16, // 아이콘 크기 설정
+                        color: Colors.white, // 아이콘 색상 설정
+                      ),
+                    ),
+                  if (alarmState != null && isDetail)
                     SizedBox(
                       width: 40.h,
                       height: 25.2.h,
@@ -147,119 +159,120 @@ class AlarmBoxWidget extends ConsumerWidget {
                     ),
                 ],
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    height: 16.h,
-                  ),
-                  Container(
-                    width: 360.w,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.h),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.h),
-                      boxShadow: [
-                        BoxShadow(
-                          color: grayBlack.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 6,
-                          offset:
-                              const Offset(2, 2), // changes position of shadow
-                        ),
-                      ],
+              if (alarmState != null)
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 16.h,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            alarmState.repeat == 0
-                                ? const SizedBox.shrink()
-                                : Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4.h,
-                                      vertical: 2.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: pointColor1.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(
-                                          4), // border radius 설정
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        alarmState.repeat == 1
-                                            ? '매일'
-                                            : alarmState.repeat == 7
-                                                ? '매주'
-                                                : '${alarmState.repeat}일 마다',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .copyWith(
-                                              color: pointColor1,
-                                            ),
+                    Container(
+                      width: 360.w,
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.h, horizontal: 16.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.h),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grayBlack.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 6,
+                            offset: const Offset(
+                                2, 2), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              alarmState.repeat == 0
+                                  ? const SizedBox.shrink()
+                                  : Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.h,
+                                        vertical: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: pointColor1.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(
+                                            4), // border radius 설정
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          alarmState.repeat == 1
+                                              ? '매일'
+                                              : alarmState.repeat == 7
+                                                  ? '매주'
+                                                  : '${alarmState.repeat}일 마다',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall!
+                                              .copyWith(
+                                                color: pointColor1,
+                                              ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                            if (alarmState.repeat != 0)
-                              SizedBox(
-                                height: 8.h,
+                              if (alarmState.repeat != 0)
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                              Visibility(
+                                visible: alarmState.title.isNotEmpty,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      alarmState.title,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: primaryColor),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                  ],
+                                ),
                               ),
-                            Visibility(
-                              visible: alarmState.title.isNotEmpty,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    alarmState.title,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(color: primaryColor),
-                                  ),
-                                  SizedBox(height: 2.h),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              DateFormat('h : mm a')
-                                  .format(alarmState.startTime),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayLarge!
-                                  .copyWith(
-                                    color: primaryColor,
-                                  ),
-                            )
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (isDetail) {
-                              ref
-                                  .read(detailProvider.notifier)
-                                  .deleteAlarm(alarmState.id);
-                              ref.read(plantsProvider.notifier).deleteAlarm(
-                                  alarmState.id, detailState!.data.docId);
-                            } else {
-                              ref
-                                  .read(addPlantProvider.notifier)
-                                  .deleteAlarm(alarmState.id);
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/icons/trash.png',
-                            width: 18.h,
-                            height: 18.h,
+                              Text(
+                                DateFormat('h : mm a')
+                                    .format(alarmState.startTime),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayLarge!
+                                    .copyWith(
+                                      color: primaryColor,
+                                    ),
+                              )
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                          GestureDetector(
+                            onTap: () {
+                              if (isDetail) {
+                                ref
+                                    .read(detailProvider.notifier)
+                                    .deleteAlarm(alarmState.id);
+                                ref.read(plantsProvider.notifier).deleteAlarm(
+                                    alarmState.id, detailState!.data.docId);
+                              } else {
+                                ref
+                                    .read(addPlantProvider.notifier)
+                                    .deleteAlarm(alarmState.id);
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/icons/trash.png',
+                              width: 18.h,
+                              height: 18.h,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
             ],
           ),
         ),
