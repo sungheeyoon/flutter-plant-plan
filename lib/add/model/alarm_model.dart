@@ -14,7 +14,7 @@ class AlarmModel with _$AlarmModel {
     @Default('') String title,
     @Default(true) bool isOn,
     @Default([]) List<DateTime> offDates,
-    required PlantField field, // nutrient, watering, repotting 중 하나의 필드
+    required PlantField field,
   }) = _AlarmModel;
 
   factory AlarmModel.fromJson(Map<String, dynamic> json) =>

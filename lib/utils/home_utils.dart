@@ -19,22 +19,23 @@ List<AlarmWithUserInfo> getSelectedDateList(
           alarm.startTime.month,
           alarm.startTime.day,
         );
+        if (zeroStartTime != selectedDateState) {
+          int difference = selectedDateState.difference(zeroStartTime).inDays;
 
-        int difference = selectedDateState.difference(zeroStartTime).inDays;
-
-        if ((difference == 0 && alarm.repeat == 0) ||
-            (alarm.repeat > 0 &&
-                difference > -1 &&
-                difference % alarm.repeat == 0)) {
-          results.add(
-            AlarmWithUserInfo(
-              alarm: alarm,
-              alias: plant.alias,
-              information: plant.information,
-              userImageUrl: plant.userImageUrl,
-              docId: plant.docId,
-            ),
-          );
+          if ((difference == 0 && alarm.repeat == 0) ||
+              (alarm.repeat > 0 &&
+                  difference > -1 &&
+                  difference % alarm.repeat == 0)) {
+            results.add(
+              AlarmWithUserInfo(
+                alarm: alarm,
+                alias: plant.alias,
+                information: plant.information,
+                userImageUrl: plant.userImageUrl,
+                docId: plant.docId,
+              ),
+            );
+          }
         }
       }
     }
