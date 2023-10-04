@@ -6,7 +6,11 @@ import 'package:plant_plan/utils/colors.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class WithdrawFirstScreen extends StatefulWidget {
-  const WithdrawFirstScreen({super.key});
+  final String username;
+  const WithdrawFirstScreen({
+    super.key,
+    required this.username,
+  });
 
   @override
   State<WithdrawFirstScreen> createState() => _WithdrawFirstScreenState();
@@ -15,6 +19,13 @@ class WithdrawFirstScreen extends StatefulWidget {
 class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
   TextEditingController reasonController = TextEditingController();
   TextEditingController messageController = TextEditingController();
+  @override
+  void dispose() {
+    reasonController.dispose();
+    messageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> reasonList = [
@@ -99,7 +110,7 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
                 height: 60,
               ),
               Text(
-                '케일리님, 탈퇴하시려는 이유가 무엇인가요?',
+                '${widget.username}님, 탈퇴하시려는 이유가 무엇인가요?',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!

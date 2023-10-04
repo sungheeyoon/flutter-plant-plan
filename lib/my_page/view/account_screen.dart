@@ -23,7 +23,6 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   Widget build(BuildContext context) {
     final userMeState = ref.watch(userMeProvider);
     if (userMeState is UserNotLoggedIn) {
-      // Navigate to login screen if not logged in
       Future.delayed(Duration.zero, () {
         Navigator.pushReplacement(
           context,
@@ -164,7 +163,8 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const WithdrawFirstScreen(),
+                        builder: (context) =>
+                            WithdrawFirstScreen(username: userMeState.username),
                       ),
                     ),
                     child: Container(
