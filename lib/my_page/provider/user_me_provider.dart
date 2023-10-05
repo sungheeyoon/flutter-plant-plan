@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
+import 'package:plant_plan/services/firebase_service.dart';
 
 final userMeProvider =
     StateNotifierProvider<UserMeStateNotifier, UserModelBase>(
@@ -59,5 +60,11 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
       state = UserModelBase.notLoggedIn();
     });
     await _auth.signOut();
+  }
+
+  Future<void> withdraw() async {
+    await FirebaseService().deleteAccount();
+    // deleteAccount()가 완료된 후에 상태를 변경
+    state = UserModelBase.notLoggedIn();
   }
 }

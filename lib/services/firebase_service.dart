@@ -355,4 +355,30 @@ class FirebaseService {
     }
     return [];
   }
+
+  Future<void> deleteAccount() async {
+    try {
+      if (_currentUser != null) {
+        final uid = _currentUser!.uid;
+
+        await FirebaseFirestore.instance.collection('user').doc(uid).delete();
+
+        await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+
+        await _currentUser!.delete();
+
+        // 사용자 삭제 성공 시 로그아웃
+        await _auth.signOut();
+      } else {
+        await _auth.signOut();
+        print('No signed in user');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        // 최근에 로그인한 사용자가 아니므로 다시 로그인하도록 유도
+        // 여기에서 로그인 화면으로 이동하거나 로그인 다이얼로그를 표시하도록 처리**
+        print('Requires recent login. Please re-authenticate.');
+      }
+    }
+  }
 }
