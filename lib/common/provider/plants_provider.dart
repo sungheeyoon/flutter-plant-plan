@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/diary_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
-import 'package:plant_plan/add/model/test_model.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
 import 'package:plant_plan/services/firebase_service.dart';
 
@@ -103,11 +102,19 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
     }
   }
 
-  Future<void> deleteAll(String docId) async {
+  Future<void> deleteAll() async {
     final PlantsModel currentState = state as PlantsModel;
     final List<PlantModel> allPlants = [...currentState.data];
 
-    for (plant in allPlants) {
+    // 리스트를 수정하지 않고 삭제할 요소들을 따로 모으기
+    List<PlantModel> plantsToDelete = [];
+
+    for (PlantModel plant in allPlants) {
+      plantsToDelete.add(plant);
+    }
+
+    // 따로 모은 요소들을 삭제
+    for (PlantModel plant in plantsToDelete) {
       allPlants.remove(plant);
       try {
         await FirebaseService().fireBaseDeletePlant(plant);
@@ -115,7 +122,7 @@ class PlantsNotifier extends StateNotifier<PlantsModelBase> {
         state = PlantsModelError(message: error.toString());
       }
     }
-    state = PlantsModel(data: []);
+    state = PlantsModel(data: allPlants);
   }
 
   Future<void> deleteAlarm(

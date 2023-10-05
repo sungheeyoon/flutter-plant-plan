@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/widget/delete_modal.dart';
+import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-class WithdrawLastScreen extends StatelessWidget {
+class WithdrawLastScreen extends ConsumerWidget {
   const WithdrawLastScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       title: '회원 탈퇴',
       floatingActionButton: Container(
@@ -25,7 +29,14 @@ class WithdrawLastScreen extends StatelessWidget {
                 buttonText: '삭제하기',
                 isRed: true,
                 onPressed: () async {
-                  //계정 삭제로직 추가예정
+                  ref.read(plantsProvider.notifier).deleteAll();
+                  await ref.read(userMeProvider.notifier).withdraw();
+                  if (!context.mounted) return;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
                   Navigator.of(context).pop();
                 },
               );

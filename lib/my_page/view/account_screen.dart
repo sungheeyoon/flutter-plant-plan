@@ -128,7 +128,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                             text: '정말 로그아웃 하시겠습니까?',
                             buttonText: '로그아웃',
                             isRed: false,
-                            onPressed: () {
+                            onPressed: () async {
                               ref.read(userMeProvider.notifier).logout();
 
                               Navigator.pushReplacement(
@@ -143,9 +143,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       );
                     },
                     child: Container(
-                      width: 136, // Fills the available width
+                      width: 136,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 0), // Adjust padding here
+                          vertical: 18, horizontal: 0),
                       child: Text(
                         '로그아웃',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -168,9 +168,9 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                       ),
                     ),
                     child: Container(
-                      width: 136, // Fills the available width
+                      width: 136,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 0), // Adjust padding here
+                          vertical: 18, horizontal: 0),
                       child: Text(
                         '탈퇴하기',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
