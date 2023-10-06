@@ -13,6 +13,7 @@ import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
 
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class RootTab extends ConsumerStatefulWidget {
@@ -86,7 +87,27 @@ class RootTabState extends ConsumerState<RootTab>
     } else if (plantsState is PlantsModel) {
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
+      LocalNotificationService notificationService = LocalNotificationService();
+      for (final plant in plants) {
+        for (final alarm in plant.alarms) {
+          notificationService.scheduleAlarmNotification(alarm);
+        }
+      }
+      void retrieveAndPrintNotifications() {
+        notificationService.retrieveNotifications().then((notifications) {
+          for (var notification in notifications) {
+            print('Notification ID: ${notification.id}');
+            print('Notification Title: ${notification.title}');
+            print('Notification Body: ${notification.body}');
+            print('Notification Payload: ${notification.payload}');
+            print('--------------------------------------------------');
+          }
+        }).catchError((error) {
+          print('Error retrieving notifications: $error');
+        });
+      }
 
+      retrieveAndPrintNotifications();
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState
             ? null
