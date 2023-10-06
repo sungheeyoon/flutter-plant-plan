@@ -65,12 +65,12 @@ class LocalNotificationService {
   }
 
   Future<void> scheduleAlarmNotification(AlarmModel alarm) async {
-    // 타이틀과 바디 채널 설정
     String title = '';
     String body = '';
     String channelId = alarm.id;
     String channelName = '';
     String channelDescription = '';
+    bool shouldSchedule = alarm.isOn;
 
     switch (alarm.field) {
       case PlantField.watering:
@@ -109,16 +109,13 @@ class LocalNotificationService {
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
     // 현재 시간부터 첫 번째 알림을 예약
-    await _localNotificationService.zonedSchedule(
-      alarm.id.hashCode, // 아이디를 사용하여 유니크한 알림 ID 생성
+    await _scheduleNotification(
+      alarm.id.hashCode,
       title,
       body,
       tz.TZDateTime.from(alarm.startTime, tz.local),
       platformChannelSpecifics,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-      payload: 'item x',
+      shouldSchedule,
     );
 
     // 추가적인 반복 알림 예약
@@ -133,11 +130,33 @@ class LocalNotificationService {
       }
 
       // 반복 알림 예약
-      await _localNotificationService.zonedSchedule(
-        alarm.id.hashCode + alarm.repeat, // 아이디를 사용하여 유니크한 알림 ID 생성
+      await _scheduleNotification(
+        alarm.id.hashCode + alarm.repeat,
         title,
         body,
         nextNotificationDate,
+        platformChannelSpecifics,
+        shouldSchedule &&
+            !_isDateInOffDates(nextNotificationDate, alarm.offDates),
+      );
+    }
+  }
+
+  Future<void> _scheduleNotification(
+    int id,
+    String title,
+    String body,
+    tz.TZDateTime scheduledDate,
+    NotificationDetails platformChannelSpecifics,
+    bool shouldSchedule,
+  ) async {
+    // 현재보다 미래거나 같을 때만 알람을 예약
+    if (shouldSchedule && scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+      await _localNotificationService.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
         platformChannelSpecifics,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
@@ -145,5 +164,28 @@ class LocalNotificationService {
         payload: 'item x',
       );
     }
+  }
+
+  bool _isDateInOffDates(tz.TZDateTime date, List<DateTime> offDates) {
+    return offDates.any((offDate) {
+      return date.year == offDate.year &&
+          date.month == offDate.month &&
+          date.day == offDate.day;
+    });
+  }
+
+  Future<void> deleteAllNotifications() async {
+    _localNotificationService.cancelAll();
+  }
+
+  Future<List<ActiveNotification>> retrieveNotifications() async {
+    List<ActiveNotification> activeNotifications = [];
+    try {
+      activeNotifications =
+          await _localNotificationService.getActiveNotifications();
+    } catch (e) {
+      print('Error retrieving notifications: $e');
+    }
+    return activeNotifications;
   }
 }
