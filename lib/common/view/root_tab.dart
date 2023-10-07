@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
@@ -30,6 +31,7 @@ class RootTabState extends ConsumerState<RootTab>
   int index = 0;
   bool isFavoriteForListScreen = false;
   bool isBookMarkForDiaryScreen = false;
+  LocalNotificationService notificationService = LocalNotificationService();
 
   @override
   void initState() {
@@ -76,6 +78,24 @@ class RootTabState extends ConsumerState<RootTab>
     await ref.read(plantsProvider.notifier).fetchPlants();
   }
 
+  Future<void> scheduleNotifications(List<PlantModel> plants) async {
+    await notificationService.deleteAllNotifications();
+    for (final plant in plants) {
+      for (final alarm in plant.alarms) {
+        await notificationService.scheduleAlarmNotification(alarm);
+      }
+    }
+    List<PendingNotificationRequest> notifications =
+        await notificationService.retrievePendingNotifications();
+    for (var notification in notifications) {
+      print('Notification ID: ${notification.id}');
+      print('Notification Title: ${notification.title}');
+      print('Notification Body: ${notification.body}');
+      print('Notification Payload: ${notification.payload}');
+      print('--------------------------------------------------');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final PlantsModelBase plantsState = ref.watch(plantsProvider);
@@ -87,27 +107,8 @@ class RootTabState extends ConsumerState<RootTab>
     } else if (plantsState is PlantsModel) {
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
-      LocalNotificationService notificationService = LocalNotificationService();
-      for (final plant in plants) {
-        for (final alarm in plant.alarms) {
-          notificationService.scheduleAlarmNotification(alarm);
-        }
-      }
-      void retrieveAndPrintNotifications() {
-        notificationService.retrieveNotifications().then((notifications) {
-          for (var notification in notifications) {
-            print('Notification ID: ${notification.id}');
-            print('Notification Title: ${notification.title}');
-            print('Notification Body: ${notification.body}');
-            print('Notification Payload: ${notification.payload}');
-            print('--------------------------------------------------');
-          }
-        }).catchError((error) {
-          print('Error retrieving notifications: $error');
-        });
-      }
+      scheduleNotifications(plants);
 
-      retrieveAndPrintNotifications();
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState
             ? null
