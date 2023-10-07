@@ -161,7 +161,7 @@ class LocalNotificationService {
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
-        payload: 'item x',
+        payload: '$scheduledDate',
       );
     }
   }
@@ -187,5 +187,15 @@ class LocalNotificationService {
       print('Error retrieving notifications: $e');
     }
     return activeNotifications;
+  }
+
+  Future<List<PendingNotificationRequest>>
+      retrievePendingNotifications() async {
+    try {
+      return await _localNotificationService.pendingNotificationRequests();
+    } catch (e) {
+      print('Error retrieving pending notifications: $e');
+      return [];
+    }
   }
 }
