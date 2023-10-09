@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
@@ -12,7 +14,7 @@ import 'package:plant_plan/common/view/splash_screen.dart';
 import 'package:plant_plan/diary/view/diary_screen.dart';
 import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
-
+import 'package:intl/intl.dart';
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -85,6 +87,29 @@ class RootTabState extends ConsumerState<RootTab>
         await notificationService.scheduleAlarmNotification(alarm);
       }
     }
+  }
+
+  Future<void> scheduleTestAlarm(
+      LocalNotificationService notificationService) async {
+    // 현재 시간으로부터 5초 뒤에 알람 설정
+    DateTime now = DateTime.now();
+    DateTime scheduledTime = now.add(const Duration(hours: 1));
+
+    // 포맷 변경 (시간을 "hh:mm a" 형식으로 표시)
+    String formattedTime = DateFormat.jm().format(scheduledTime);
+
+    // 알람 설정
+    await notificationService.scheduleAlarmNotification(
+      AlarmModel(
+        id: 'test_alarm',
+        field: PlantField.watering, // 예시로 물주기 알림 설정
+        startTime: scheduledTime,
+        repeat: 0,
+        offDates: [], // 예시로 비어 있는 offDates 설정
+        isOn: true,
+        title: 'Test Alarm',
+      ),
+    );
     List<PendingNotificationRequest> notifications =
         await notificationService.retrievePendingNotifications();
     for (var notification in notifications) {
@@ -94,6 +119,8 @@ class RootTabState extends ConsumerState<RootTab>
       print('Notification Payload: ${notification.payload}');
       print('--------------------------------------------------');
     }
+
+    print('Test alarm scheduled for: $formattedTime');
   }
 
   @override
@@ -108,7 +135,7 @@ class RootTabState extends ConsumerState<RootTab>
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
       scheduleNotifications(plants);
-
+      scheduleTestAlarm(notificationService);
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState
             ? null

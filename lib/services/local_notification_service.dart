@@ -65,6 +65,7 @@ class LocalNotificationService {
   }
 
   Future<void> scheduleAlarmNotification(AlarmModel alarm) async {
+    print('alarm: $alarm');
     String title = '';
     String body = '';
     String channelId = alarm.id;
