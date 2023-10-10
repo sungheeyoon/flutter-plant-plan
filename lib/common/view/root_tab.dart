@@ -14,10 +14,10 @@ import 'package:plant_plan/common/view/splash_screen.dart';
 import 'package:plant_plan/diary/view/diary_screen.dart';
 import 'package:plant_plan/list/provider/list_delete_mode_provider.dart';
 import 'package:plant_plan/list/view/list_screen.dart';
-import 'package:intl/intl.dart';
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class RootTab extends ConsumerStatefulWidget {
   static String get routeName => 'root';
@@ -83,33 +83,8 @@ class RootTabState extends ConsumerState<RootTab>
   Future<void> scheduleNotifications(List<PlantModel> plants) async {
     await notificationService.deleteAllNotifications();
     for (final plant in plants) {
-      for (final alarm in plant.alarms) {
-        await notificationService.scheduleAlarmNotification(alarm);
-      }
+      await notificationService.scheduleAlarmNotifications(plant);
     }
-  }
-
-  Future<void> scheduleTestAlarm(
-      LocalNotificationService notificationService) async {
-    // 현재 시간으로부터 5초 뒤에 알람 설정
-    DateTime now = DateTime.now();
-    DateTime scheduledTime = now.add(const Duration(hours: 1));
-
-    // 포맷 변경 (시간을 "hh:mm a" 형식으로 표시)
-    String formattedTime = DateFormat.jm().format(scheduledTime);
-
-    // 알람 설정
-    await notificationService.scheduleAlarmNotification(
-      AlarmModel(
-        id: 'test_alarm',
-        field: PlantField.watering, // 예시로 물주기 알림 설정
-        startTime: scheduledTime,
-        repeat: 0,
-        offDates: [], // 예시로 비어 있는 offDates 설정
-        isOn: true,
-        title: 'Test Alarm',
-      ),
-    );
     List<PendingNotificationRequest> notifications =
         await notificationService.retrievePendingNotifications();
     for (var notification in notifications) {
@@ -119,9 +94,35 @@ class RootTabState extends ConsumerState<RootTab>
       print('Notification Payload: ${notification.payload}');
       print('--------------------------------------------------');
     }
-
-    print('Test alarm scheduled for: $formattedTime');
   }
+
+  // Future<void> scheduleTestAlarm(
+  //     LocalNotificationService notificationService) async {
+  //   DateTime now = DateTime.now();
+  //   DateTime scheduledTime = now.add(const Duration(seconds: 5));
+
+  //   AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //       const AndroidNotificationDetails(
+  //     'test_channel_id',
+  //     'Test Channel',
+  //     channelDescription: 'Test channel for notifications',
+  //     importance: Importance.high,
+  //     priority: Priority.high,
+  //     ticker: 'ticker',
+  //   );
+
+  //   NotificationDetails platformChannelSpecifics =
+  //       NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  //   await notificationService.scheduleNotification(
+  //     id: 1234444444,
+  //     title: 'Test Alarm',
+  //     body: 'This is a test alarm notification',
+  //     scheduledDate: tz.TZDateTime.from(scheduledTime, tz.local),
+  //     platformChannelSpecifics: platformChannelSpecifics,
+  //     shouldSchedule: true,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +136,7 @@ class RootTabState extends ConsumerState<RootTab>
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
       scheduleNotifications(plants);
-      scheduleTestAlarm(notificationService);
+      // scheduleTestAlarm(notificationService);
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState
             ? null

@@ -17,6 +17,7 @@ import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/list/model/detail_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/list/provider/x_trigger_provider.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/list/wideget/tipButton_widget.dart';
 
@@ -45,11 +46,16 @@ class DetailScreen extends ConsumerWidget {
                     text: '해당 식물을 삭제하시겠습니까?',
                     buttonText: '삭제하기',
                     isRed: false,
-                    onPressed: () {
-                      ref
+                    onPressed: () async {
+                      await ref
                           .read(plantsProvider.notifier)
                           .deletePlant(detailState.data.docId);
-                      //modal창종료
+
+                      await LocalNotificationService()
+                          .deleteNotificationsWithPrefix(
+                              detailState.data.docId);
+
+                      if (!context.mounted) return;
                       Navigator.of(context).pop();
                       //listScreen으로이동
                       Navigator.of(context).pop();
