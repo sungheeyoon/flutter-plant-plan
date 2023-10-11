@@ -141,7 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       hintText: '비밀번호를 입력해주세요',
                       isPassword: true,
                     ),
-                    const SizedBox(height: 8.0),
+                    SizedBox(height: 8.0.h),
                     Text(
                       _errorText,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -203,37 +203,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               SizedBox(
                 height: 20.h,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image(
-                    image: AssetImage('assets/images/login/kakao.png'),
-                    width: 56,
-                    height: 56,
+                    image: const AssetImage('assets/images/login/kakao.png'),
+                    width: 56.h,
+                    height: 56.h,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 16.0,
                   ),
                   Image(
-                    image: AssetImage('assets/images/login/naver.png'),
-                    width: 56,
-                    height: 56,
+                    image: const AssetImage('assets/images/login/naver.png'),
+                    width: 56.h,
+                    height: 56.h,
                     fit: BoxFit.contain,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 16.0,
                   ),
                   Image(
-                    image: AssetImage('assets/images/login/google.png'),
-                    width: 58,
-                    height: 58,
+                    image: const AssetImage('assets/images/login/google.png'),
+                    width: 58.h,
+                    height: 58.h,
                     fit: BoxFit.contain,
                   ),
                 ],
               ),
               SizedBox(
-                height: 80.h,
+                height: 60.h,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -590,15 +590,19 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
       isDone = false;
     }
     Color fieldColor;
-
+    String field;
     if (widget.info.alarm.field == PlantField.watering) {
-      fieldColor = const Color(0xFF72CBE7);
+      fieldColor = subColor1;
+      field = '물주기';
     } else if (widget.info.alarm.field == PlantField.repotting) {
       fieldColor = subColor2;
+      field = '분갈이';
     } else if (widget.info.alarm.field == PlantField.nutrient) {
       fieldColor = keyColor400;
+      field = '영양제';
     } else {
       fieldColor = Colors.transparent;
+      field = 'none';
     }
 
     return Container(
@@ -615,7 +619,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 8.h,
@@ -629,7 +633,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+              padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -644,14 +648,32 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                           size: 36.h,
                           radius: 14.h),
                       SizedBox(width: 8.h),
-                      Text(
-                        widget.info.alias.isNotEmpty
-                            ? widget.info.alias
-                            : widget.info.information.name,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: grayBlack,
-                            ),
-                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            field,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(
+                                  color: grayColor600,
+                                ),
+                          ),
+                          Text(
+                            widget.info.alias.isNotEmpty
+                                ? widget.info.alias
+                                : widget.info.information.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   Row(
