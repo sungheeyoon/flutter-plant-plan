@@ -120,8 +120,8 @@ class PlantListCard extends ConsumerWidget {
         ),
         if (cardData.favorite)
           Positioned(
-            top: 10,
-            right: 10,
+            top: 10.h,
+            right: 10.h,
             child: Image.asset(
               'assets/icons/fav/fav_active.png',
               width: 16.h,
@@ -131,6 +131,8 @@ class PlantListCard extends ConsumerWidget {
         if (isdeleteIdList != null && isdeleteIdList!)
           Positioned(
             child: Container(
+              width: 150.h,
+              height: 160.h,
               decoration: BoxDecoration(
                 color: grayBlack.withOpacity(0.25),
                 borderRadius: BorderRadius.circular(12.h),
@@ -139,16 +141,14 @@ class PlantListCard extends ConsumerWidget {
           ),
         if (isdeleteIdList != null && isdeleteIdList!)
           Positioned(
-            bottom: 10,
-            right: 10,
-            child: CircleAvatar(
-              backgroundColor: Colors.blue,
-              radius: 10.h,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(Icons.check),
-                color: Colors.white,
-                onPressed: () {},
+            bottom: 10.h,
+            right: 15.h,
+            child: Container(
+              color: Colors.white,
+              child: Icon(
+                Icons.check_circle,
+                size: 20.h,
+                color: pointColor2,
               ),
             ),
 
