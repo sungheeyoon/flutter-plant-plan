@@ -256,34 +256,43 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           ),
         ),
       ],
-      child: ListView.builder(
-        itemCount: selectedPlantDocId != ""
-            ? selectedCardList.length
-            : cardList.length,
-        itemBuilder: (context, index) {
-          DiaryCardModel diaryCard = selectedPlantDocId != ""
-              ? selectedCardList[index]
-              : cardList[index];
-          String diaryDate = dateFormatter(diaryCard.diary.date);
-          bool last = false;
-          Widget dateWidget;
-          if (previousDate != diaryDate) {
-            dateWidget = DateContainer(date: diaryDate);
-            previousDate = diaryDate;
-            last = true;
-          } else {
-            dateWidget = const SizedBox.shrink();
-          }
+      child: cardList.isEmpty
+          ? Center(
+              child: Text(
+                '저장된 다이어리가 없습니다',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: grayColor600,
+                    ),
+              ),
+            )
+          : ListView.builder(
+              itemCount: selectedPlantDocId != ""
+                  ? selectedCardList.length
+                  : cardList.length,
+              itemBuilder: (context, index) {
+                DiaryCardModel diaryCard = selectedPlantDocId != ""
+                    ? selectedCardList[index]
+                    : cardList[index];
+                String diaryDate = dateFormatter(diaryCard.diary.date);
+                bool last = false;
+                Widget dateWidget;
+                if (previousDate != diaryDate) {
+                  dateWidget = DateContainer(date: diaryDate);
+                  previousDate = diaryDate;
+                  last = true;
+                } else {
+                  dateWidget = const SizedBox.shrink();
+                }
 
-          return Column(
-            children: [
-              if (!last) const SizedBox(height: 8),
-              dateWidget,
-              DiaryCard(diaryCard: diaryCard),
-            ],
-          );
-        },
-      ),
+                return Column(
+                  children: [
+                    if (!last) const SizedBox(height: 8),
+                    dateWidget,
+                    DiaryCard(diaryCard: diaryCard),
+                  ],
+                );
+              },
+            ),
     );
   }
 }
