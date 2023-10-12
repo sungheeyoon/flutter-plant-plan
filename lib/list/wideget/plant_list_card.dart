@@ -141,31 +141,13 @@ class PlantListCard extends ConsumerWidget {
           ),
         if (isdeleteIdList != null && isdeleteIdList!)
           Positioned(
-            bottom: 10.h,
-            right: 15.h,
-            child: Container(
-              color: Colors.white,
-              child: Icon(
-                Icons.check_circle,
-                size: 20.h,
-                color: pointColor2,
-              ),
+            bottom: 8.h,
+            right: 8.h,
+            child: Image.asset(
+              'assets/icons/blue_check.png',
+              width: 20.h,
+              height: 20.h,
             ),
-
-            // Container(
-            //   width: 19.h,
-            //   height: 19.h,
-            //   padding: const EdgeInsets.all(0.0),
-            //   decoration: const BoxDecoration(
-            //     color: Colors.white,
-            //     shape: BoxShape.circle, // 원 모양으로 설정
-            //   ),
-            //   child: Icon(
-            //     Icons.check_circle,
-            //     size: 20.h,
-            //     color: pointColor2,
-            //   ),
-            // ),
           ),
       ],
     );

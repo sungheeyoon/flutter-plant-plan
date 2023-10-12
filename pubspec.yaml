@@ -136,6 +136,7 @@ flutter:
     - assets/icons/add_emoji.png
     - assets/icons/camera.png
     - assets/icons/cancel.png
+    - assets/icons/blue_check.png
 
     - assets/icons/my_page/alarm.png
     - assets/icons/my_page/bell.png

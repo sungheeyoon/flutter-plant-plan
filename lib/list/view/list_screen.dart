@@ -153,147 +153,160 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               ),
             )
           : null,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(24.h, 20.h, 24.h, 12.h),
-        child: Column(
-          children: [
-            listDeleteModeState
-                ? Row(
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          setState(() {
-                            deleteIdList = [];
-                            for (final card in cardList) {
-                              deleteIdList.add(card.docId);
-                            }
-                          });
-                        },
-                        child: Text(
-                          '전체선택',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                  color: cardList.length <= deleteIdList.length
-                                      ? grayColor400
-                                      : grayColor700),
-                        ),
-                      ),
-                      SizedBox(width: 6.h),
-                      const VerticalLine(),
-                      SizedBox(width: 6.h),
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          setState(() {
-                            deleteIdList = [];
-                          });
-                        },
-                        child: Text(
-                          deleteIdList.isNotEmpty
-                              ? '선택해제 (${deleteIdList.length})'
-                              : '선택해제',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                  color: deleteIdList.isNotEmpty
-                                      ? grayColor700
-                                      : grayColor400),
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          _buildButton(0, '최근 등록순'),
-                          SizedBox(width: 6.h),
-                          const VerticalLine(),
-                          SizedBox(width: 6.h),
-                          _buildButton(1, '알림순'),
-                        ],
-                      ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
-                        },
-                        child: Row(
+      child: cardList.isEmpty
+          ? Center(
+              child: Text(
+                '등록된 식물이 없습니다',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: grayColor600,
+                    ),
+              ),
+            )
+          : SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(24.h, 20.h, 24.h, 12.h),
+              child: Column(
+                children: [
+                  listDeleteModeState
+                      ? Row(
                           children: [
-                            Text(
-                              '즐겨찾기',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                      color: isFavorite
-                                          ? pointColor2
-                                          : grayColor500),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                setState(() {
+                                  deleteIdList = [];
+                                  for (final card in cardList) {
+                                    deleteIdList.add(card.docId);
+                                  }
+                                });
+                              },
+                              child: Text(
+                                '전체선택',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                        color: cardList.length <=
+                                                deleteIdList.length
+                                            ? grayColor400
+                                            : grayColor700),
+                              ),
                             ),
-                            const SizedBox(
-                              width: 4,
+                            SizedBox(width: 6.h),
+                            const VerticalLine(),
+                            SizedBox(width: 6.h),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                setState(() {
+                                  deleteIdList = [];
+                                });
+                              },
+                              child: Text(
+                                deleteIdList.isNotEmpty
+                                    ? '선택해제 (${deleteIdList.length})'
+                                    : '선택해제',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                        color: deleteIdList.isNotEmpty
+                                            ? grayColor700
+                                            : grayColor400),
+                              ),
                             ),
-                            Icon(
-                              isFavorite
-                                  ? Icons.check_circle
-                                  : Icons.check_circle_outline,
-                              size: 14.h,
-                              color: isFavorite ? pointColor2 : grayColor500,
-                            )
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                _buildButton(0, '최근 등록순'),
+                                SizedBox(width: 6.h),
+                                const VerticalLine(),
+                                SizedBox(width: 6.h),
+                                _buildButton(1, '알림순'),
+                              ],
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                setState(() {
+                                  isFavorite = !isFavorite;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '즐겨찾기',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .copyWith(
+                                            color: isFavorite
+                                                ? pointColor2
+                                                : grayColor500),
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Icon(
+                                    isFavorite
+                                        ? Icons.check_circle
+                                        : Icons.check_circle_outline,
+                                    size: 14.h,
+                                    color:
+                                        isFavorite ? pointColor2 : grayColor500,
+                                  )
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-            SizedBox(height: 12.h),
-            GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12.h,
-                mainAxisSpacing: 12.h,
-                childAspectRatio: 150.w / 160.h,
-              ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: selectedCardList.length,
-              itemBuilder: (context, index) {
-                final ListCardModel card = selectedCardList[index];
-                return GestureDetector(
-                  onTap: () async {
-                    final plant = await ref
-                        .watch(plantsProvider.notifier)
-                        .getPlant(card.docId);
-                    if (listDeleteModeState) {
-                      toggleDeleteIdListSelection(card.docId);
-                    } else {
-                      ref.read(detailProvider.notifier).updateDetail(plant);
-                      if (!context.mounted) return;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DetailScreen(),
+                  SizedBox(height: 12.h),
+                  GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12.h,
+                      mainAxisSpacing: 12.h,
+                      childAspectRatio: 150.w / 160.h,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: selectedCardList.length,
+                    itemBuilder: (context, index) {
+                      final ListCardModel card = selectedCardList[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          final plant = await ref
+                              .watch(plantsProvider.notifier)
+                              .getPlant(card.docId);
+                          if (listDeleteModeState) {
+                            toggleDeleteIdListSelection(card.docId);
+                          } else {
+                            ref
+                                .read(detailProvider.notifier)
+                                .updateDetail(plant);
+                            if (!context.mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DetailScreen(),
+                              ),
+                            );
+                          }
+                        },
+                        child: PlantListCard(
+                          cardData: card,
+                          isdeleteIdList: deleteIdList.contains(card.docId),
                         ),
                       );
-                    }
-                  },
-                  child: PlantListCard(
-                    cardData: card,
-                    isdeleteIdList: deleteIdList.contains(card.docId),
+                    },
                   ),
-                );
-              },
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
