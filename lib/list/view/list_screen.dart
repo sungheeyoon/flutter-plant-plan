@@ -112,8 +112,9 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return DeleteModal(
-                        text: '해당 식물을 삭제하시겠습니까?',
-                        buttonText: '삭제하기',
+                        text: '식물을 삭제하시겠습니까?',
+                        warning: '삭제하시면 해당 식물의 알림과 다이어리가 모두 삭제됩니다',
+                        buttonText: '삭제',
                         isRed: false,
                         onPressed: () async {
                           for (final deleteId in deleteIdList) {
@@ -153,13 +154,27 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               ),
             )
           : null,
-      child: cardList.isEmpty
+      child: cardList.isEmpty && !isFavorite
           ? Center(
-              child: Text(
-                '등록된 식물이 없습니다',
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: grayColor600,
-                    ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '아직 등록한 내 식물이 없어요',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: grayColor600,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '+ 버튼을 눌러 식물을 등록해보세요!',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: grayColor600,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             )
           : SingleChildScrollView(
@@ -265,45 +280,60 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                           ],
                         ),
                   SizedBox(height: 12.h),
-                  GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12.h,
-                      mainAxisSpacing: 12.h,
-                      childAspectRatio: 150.w / 160.h,
-                    ),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: selectedCardList.length,
-                    itemBuilder: (context, index) {
-                      final ListCardModel card = selectedCardList[index];
-                      return GestureDetector(
-                        onTap: () async {
-                          final plant = await ref
-                              .watch(plantsProvider.notifier)
-                              .getPlant(card.docId);
-                          if (listDeleteModeState) {
-                            toggleDeleteIdListSelection(card.docId);
-                          } else {
-                            ref
-                                .read(detailProvider.notifier)
-                                .updateDetail(plant);
-                            if (!context.mounted) return;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DetailScreen(),
-                              ),
-                            );
-                          }
-                        },
-                        child: PlantListCard(
-                          cardData: card,
-                          isdeleteIdList: deleteIdList.contains(card.docId),
+                  if (cardList.isEmpty && isFavorite)
+                    SizedBox(
+                      height: 550.h,
+                      child: Center(
+                        child: Text(
+                          '즐겨찾기한 식물이 없습니다',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                          textAlign: TextAlign.center,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    )
+                  else
+                    GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12.h,
+                        mainAxisSpacing: 12.h,
+                        childAspectRatio: 150.w / 160.h,
+                      ),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: selectedCardList.length,
+                      itemBuilder: (context, index) {
+                        final ListCardModel card = selectedCardList[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            final plant = await ref
+                                .watch(plantsProvider.notifier)
+                                .getPlant(card.docId);
+                            if (listDeleteModeState) {
+                              toggleDeleteIdListSelection(card.docId);
+                            } else {
+                              ref
+                                  .read(detailProvider.notifier)
+                                  .updateDetail(plant);
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DetailScreen(),
+                                ),
+                              );
+                            }
+                          },
+                          child: PlantListCard(
+                            cardData: card,
+                            isdeleteIdList: deleteIdList.contains(card.docId),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),

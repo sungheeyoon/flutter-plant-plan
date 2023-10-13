@@ -4,16 +4,19 @@ import 'package:plant_plan/utils/colors.dart';
 
 class DeleteModal extends StatelessWidget {
   final String text;
+  final String? warning;
   final String buttonText;
   final VoidCallback onPressed;
   final bool isRed;
 
-  const DeleteModal(
-      {super.key,
-      required this.text,
-      required this.buttonText,
-      required this.onPressed,
-      required this.isRed});
+  const DeleteModal({
+    super.key,
+    required this.text,
+    this.warning,
+    required this.buttonText,
+    required this.onPressed,
+    required this.isRed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +26,50 @@ class DeleteModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       contentPadding: const EdgeInsets.all(0),
+      insetPadding: EdgeInsets.zero,
       content: SizedBox(
         width: 312.w,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 43),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: grayBlack,
-                      ),
-                ),
-              ),
-            ),
+            warning != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 32),
+                    child: Column(
+                      children: [
+                        Text(
+                          text,
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayBlack,
+                                  ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          warning!,
+                          textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: errorColor,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 43),
+                    child: Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: grayBlack,
+                          ),
+                    ),
+                  ),
             const Divider(
               color: grayColor200,
               thickness: 2,

@@ -43,8 +43,9 @@ class DetailScreen extends ConsumerWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return DeleteModal(
-                    text: '해당 식물을 삭제하시겠습니까?',
-                    buttonText: '삭제하기',
+                    text: '식물을 삭제하시겠습니까?',
+                    warning: '삭제하시면 해당 식물의 알림과 다이어리가 모두 삭제됩니다',
+                    buttonText: '삭제',
                     isRed: false,
                     onPressed: () async {
                       await ref
