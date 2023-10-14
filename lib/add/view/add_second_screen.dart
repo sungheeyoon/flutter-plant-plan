@@ -26,7 +26,7 @@ class AddSecondScreen extends ConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final photoState = ref.watch(photoProvider);
     final plantState = ref.watch(addPlantProvider);
-
+    bool isTapHandled = false;
     Future<void> insertNewPlant() async {
       final user = auth.currentUser;
 
@@ -68,6 +68,12 @@ class AddSecondScreen extends ConsumerWidget {
       title: '식물추가',
       bottomNavigationBar: GestureDetector(
         onTap: () async {
+          if (isTapHandled) {
+            return;
+          }
+
+          isTapHandled = true;
+
           if (plantState.information.id != "") {
             await insertNewPlant();
             if (!context.mounted) return;
@@ -77,6 +83,9 @@ class AddSecondScreen extends ConsumerWidget {
                     builder: (BuildContext context) => const RootTab()),
                 (route) => false);
           }
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          isTapHandled = false;
         },
         child: Container(
           height: 46.h,
