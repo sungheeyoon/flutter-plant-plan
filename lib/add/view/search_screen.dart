@@ -54,6 +54,37 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return DefaultLayout(
       title: '식물 추가',
       titleBackgroundColor: keyColor100,
+      floatingActionButton: TextButton(
+        onPressed: () {
+          // 버튼이 클릭되었을 때의 동작을 정의합니다.
+          print('버튼이 클릭되었습니다.');
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(pointColor2),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+            ),
+          ),
+          elevation: MaterialStateProperty.all<double>(0),
+          overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          shadowColor:
+              MaterialStateProperty.all<Color>(const Color(0x33000000)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 6.0,
+            vertical: 2.0,
+          ),
+          child: Text(
+            '+ 직접 추가하기',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: Colors.white),
+          ),
+        ),
+      ),
       child: SafeArea(
         child: Column(
           children: <Widget>[
