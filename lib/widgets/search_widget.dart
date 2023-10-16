@@ -15,7 +15,7 @@ class SearchWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SearchWidgetState createState() => _SearchWidgetState();
+  State createState() => _SearchWidgetState();
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
@@ -29,39 +29,27 @@ class _SearchWidgetState extends State<SearchWidget> {
         Theme.of(context).textTheme.bodyMedium!.copyWith(color: grayColor500);
     final style = widget.text.isEmpty ? styleHint : styleActive;
 
-    return Container(
+    return SizedBox(
+      width: 312.w,
       height: 42.h,
-      width: 360.w,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: grayColor100,
-        border: Border.all(color: grayColor100),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
         child: TextField(
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
           decoration: InputDecoration(
+            filled: true,
+            fillColor: grayColor100,
             suffixIcon: widget.text.isNotEmpty
                 ? GestureDetector(
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(20, 3, 1, 0),
-                      child: Icon(Icons.close, color: grayColor600),
-                    ),
+                    child: const Icon(Icons.close, color: grayColor600),
                     onTap: () {
                       controller.clear();
                       widget.onChanged('');
                       FocusScope.of(context).requestFocus(FocusNode());
                     },
                   )
-                : const Padding(
-                    padding: EdgeInsets.fromLTRB(20, 3, 1, 0),
-                    child: Icon(Icons.search, color: grayColor600),
-                  ),
+                : const Icon(Icons.search, color: grayColor600),
             hintText: widget.hintText,
             hintStyle: style,
             border: InputBorder.none,

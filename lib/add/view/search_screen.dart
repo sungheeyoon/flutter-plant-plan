@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:plant_plan/add/model/information_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
+import 'package:plant_plan/add/view/add_directly_screen.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
@@ -24,7 +25,7 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   late Stream<QuerySnapshot> _streamInformationList;
   String enteredKeyword = "";
-
+  bool foundMatches = false;
   final CollectionReference _referenceInformationList =
       FirebaseFirestore.instance.collection('plant_list');
 
@@ -54,37 +55,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return DefaultLayout(
       title: '식물 추가',
       titleBackgroundColor: keyColor100,
-      floatingActionButton: TextButton(
-        onPressed: () {
-          // 버튼이 클릭되었을 때의 동작을 정의합니다.
-          print('버튼이 클릭되었습니다.');
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(pointColor2),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0),
+      floatingActionButton: enteredKeyword.isNotEmpty && !foundMatches
+          ? null
+          : const AddDirectlyButton(
+              isShadow: true,
             ),
-          ),
-          elevation: MaterialStateProperty.all<double>(0),
-          overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-          shadowColor:
-              MaterialStateProperty.all<Color>(const Color(0x33000000)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 6.0,
-            vertical: 2.0,
-          ),
-          child: Text(
-            '+ 직접 추가하기',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.white),
-          ),
-        ),
-      ),
       child: SafeArea(
         child: Column(
           children: <Widget>[
@@ -105,116 +80,197 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   if (snapshot.connectionState == ConnectionState.active) {
                     List<InformationModel> informationList =
                         _informationListFromSnapshot(snapshot.data);
-                    return ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                      ),
-                      itemCount: informationList.length,
-                      itemBuilder: (context, index) {
-                        InformationModel document = informationList[index];
-                        if (enteredKeyword.isEmpty) {
-                          return ListTile(
-                            title: Text(
-                              document.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: grayBlack),
-                            ),
-                            leading: CachedNetworkImage(
-                              imageUrl: document.imageUrl,
-                              imageBuilder: (context, imageProvider) =>
-                                  ProfileImageWidget(
-                                imageProvider: imageProvider,
-                                size: 40.h,
-                                radius: 16.h,
-                              ),
-                              placeholder: (context, url) => SizedBox(
-                                width: 40.h,
-                                height: 40.h,
-                                child: const CircleAvatar(
-                                  backgroundColor: grayColor200,
+                    return enteredKeyword.isNotEmpty && !foundMatches
+                        ? Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '검색 결과가없습니다',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: grayColor600),
                                 ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                            onTap: () async {
-                              ref
-                                  .read(addPlantProvider.notifier)
-                                  .updateInformation(document);
-
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const AddFirstScreen()));
-                            },
-                          ).paddingOnly(bottom: 6.h);
-                        } else {
-                          RegExp regExp = getRegExp(
-                              enteredKeyword,
-                              RegExpOptions(
-                                initialSearch: false,
-                                startsWith: false,
-                                endsWith: false,
-                                fuzzy: false,
-                                ignoreSpace: false,
-                                ignoreCase: false,
-                              ));
-                          if (regExp.hasMatch(document.name)) {
-                            return ListTile(
-                              title: Text(
-                                document.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(color: grayBlack),
-                              ),
-                              leading: CachedNetworkImage(
-                                imageUrl: document.imageUrl,
-                                imageBuilder: (context, imageProvider) =>
-                                    ProfileImageWidget(
-                                  imageProvider: imageProvider,
-                                  size: 40.h,
-                                  radius: 16.h,
+                                const SizedBox(
+                                  height: 8,
                                 ),
-                                placeholder: (context, url) => SizedBox(
-                                  width: 40.h,
-                                  height: 40.h,
-                                  child: const CircleAvatar(
-                                    backgroundColor: grayColor200,
+                                const AddDirectlyButton(
+                                  isShadow: true,
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            itemCount: informationList.length,
+                            itemBuilder: (context, index) {
+                              InformationModel document =
+                                  informationList[index];
+                              if (enteredKeyword.isEmpty) {
+                                return ListTile(
+                                  title: Text(
+                                    document.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(color: grayBlack),
                                   ),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                              onTap: () {
-                                ref
-                                    .read(addPlantProvider.notifier)
-                                    .updateInformation(document);
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const AddFirstScreen()),
-                                    (route) => false);
-                              },
-                            ).paddingOnly(bottom: 6.h);
-                          }
-                        }
+                                  leading: CachedNetworkImage(
+                                    imageUrl: document.imageUrl,
+                                    imageBuilder: (context, imageProvider) =>
+                                        ProfileImageWidget(
+                                      imageProvider: imageProvider,
+                                      size: 40.h,
+                                      radius: 16.h,
+                                    ),
+                                    placeholder: (context, url) => SizedBox(
+                                      width: 40.h,
+                                      height: 40.h,
+                                      child: const CircleAvatar(
+                                        backgroundColor: grayColor200,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                  onTap: () async {
+                                    ref
+                                        .read(addPlantProvider.notifier)
+                                        .updateInformation(document);
 
-                        return Container();
-                      },
-                    );
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const AddFirstScreen()));
+                                  },
+                                ).paddingOnly(bottom: 6.h);
+                              } else {
+                                RegExp regExp = getRegExp(
+                                    enteredKeyword,
+                                    RegExpOptions(
+                                      initialSearch: false,
+                                      startsWith: false,
+                                      endsWith: false,
+                                      fuzzy: false,
+                                      ignoreSpace: false,
+                                      ignoreCase: false,
+                                    ));
+                                if (regExp.hasMatch(document.name)) {
+                                  foundMatches = true;
+                                  return ListTile(
+                                    title: Text(
+                                      document.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(color: grayBlack),
+                                    ),
+                                    leading: CachedNetworkImage(
+                                      imageUrl: document.imageUrl,
+                                      imageBuilder: (context, imageProvider) =>
+                                          ProfileImageWidget(
+                                        imageProvider: imageProvider,
+                                        size: 40.h,
+                                        radius: 16.h,
+                                      ),
+                                      placeholder: (context, url) => SizedBox(
+                                        width: 40.h,
+                                        height: 40.h,
+                                        child: const CircleAvatar(
+                                          backgroundColor: grayColor200,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                    onTap: () {
+                                      ref
+                                          .read(addPlantProvider.notifier)
+                                          .updateInformation(document);
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const AddFirstScreen()),
+                                          (route) => false);
+                                    },
+                                  ).paddingOnly(bottom: 6.h);
+                                } else {
+                                  foundMatches = false;
+                                }
+                              }
+                              return null;
+                            },
+                          );
+                    //regExp.hasMatch(document.name) 결과없으면
                   }
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddDirectlyButton extends StatelessWidget {
+  final bool isShadow;
+
+  const AddDirectlyButton({
+    super.key,
+    required this.isShadow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: (() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const AddDirectlyScreen();
+            },
+          ),
+        );
+      }),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size.zero, // Set this
+        padding: EdgeInsets.zero,
+        elevation: isShadow ? 4 : 0,
+        backgroundColor: pointColor2,
+        shadowColor: isShadow ? const Color(0x33000000) : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 12.0,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '직접 추가하기',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Colors.white),
             ),
           ],
         ),
