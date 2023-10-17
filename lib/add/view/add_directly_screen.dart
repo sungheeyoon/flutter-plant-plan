@@ -253,9 +253,36 @@ class Tip extends StatefulWidget {
 }
 
 class _TipState extends State<Tip> {
-  TextEditingController tipListController = TextEditingController();
-  List<String> leftTipList = ['물주기', '햇빛', '온도', '습도', '분갈이'];
-  List<String> addedTipList = [];
+  List<String> dropdownItems = ['물주기', '햇빛', '온도', '습도', '분갈이'];
+  List<TextEditingController> dropdownControllers = [];
+  List<String> previousValues = ['p', 'p', 'p', 'p', 'p'];
+
+  void onAddDropdown() {
+    setState(() {
+      dropdownControllers.add(TextEditingController());
+    });
+  }
+
+  void onRemoveDropdown(int index) {
+    setState(() {
+      if (index >= 0 && index < dropdownControllers.length) {
+        String removedItem = dropdownControllers[index].text;
+        dropdownControllers.removeAt(index);
+        if (removedItem.isNotEmpty && !dropdownItems.contains(removedItem)) {
+          dropdownItems.add(removedItem);
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    for (var controller in dropdownControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -282,12 +309,19 @@ class _TipState extends State<Tip> {
           height: 12.h,
         ),
         ListView.builder(
-          itemCount: addedTipList.length,
+          shrinkWrap: true,
+          itemCount: dropdownControllers.length,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
+            bool isFirstItem = index == 0;
+            bool isLastItem = index == dropdownControllers.length - 1;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //tipList 의 값이 중복되어 할수없다 ex/ 물주기 가두개있으면안됨
+                if (!isFirstItem)
+                  SizedBox(
+                    height: 16.h,
+                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -313,17 +347,24 @@ class _TipState extends State<Tip> {
                           width: 1.0,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                        items: leftTipList,
-                        controller: tipListController,
+                        items: dropdownItems,
+                        controller: dropdownControllers[index],
                         onChanged: (p0) {
-                          setState(
-                            () {},
-                          );
+                          print(p0);
+                          setState(() {
+                            if (previousValues[index] != 'p') {
+                              dropdownItems.add(previousValues[index]);
+                            }
+                            dropdownItems.remove(p0);
+                            previousValues[index] = p0;
+                          });
                         },
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        onRemoveDropdown(index);
+                      },
                       child: Image.asset(
                         'assets/icons/trash.png',
                         width: 18.h,
@@ -361,41 +402,49 @@ class _TipState extends State<Tip> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 12.h,
-                ),
+                if (!isLastItem)
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 16.h,
+                      ),
+                      const Divider(
+                        thickness: 1,
+                        color: grayColor200,
+                      ),
+                    ],
+                  ),
+                if (isLastItem)
+                  SizedBox(
+                    height: 12.h,
+                  ),
               ],
             );
           },
         ),
-
-        //항상 맨아래에 있으며 추가하기를 누르면 위의 Column 이 늘어난다, tipList의 길이만큼만 추가할수있다.
-        ElevatedButton(
-          onPressed: (() {
-            setState(() {
-              addedTipList.add('a');
-            });
-          }),
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size.zero,
-            padding: EdgeInsets.zero,
-            elevation: 0,
-            backgroundColor: pointColor1,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10.0,
-              vertical: 4.0,
+        if (dropdownControllers.length < 5)
+          ElevatedButton(
+            onPressed: onAddDropdown,
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.zero,
+              elevation: 0,
+              backgroundColor: pointColor1,
             ),
-            child: Text(
-              '+ 추가하기 ',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10.0,
+                vertical: 4.0,
+              ),
+              child: Text(
+                '+ 추가하기 ',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Colors.white),
+              ),
             ),
           ),
-        ),
       ],
     );
   }
