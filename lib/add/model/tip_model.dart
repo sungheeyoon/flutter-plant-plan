@@ -7,7 +7,6 @@ part 'tip_model.g.dart';
 class TipModel with _$TipModel {
   factory TipModel({
     @Default('') String part,
-    @Default('') String title,
     @Default('') String context,
   }) = _TipModel;
 

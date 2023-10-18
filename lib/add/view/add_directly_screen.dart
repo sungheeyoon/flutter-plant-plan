@@ -7,6 +7,7 @@ import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'dart:io';
+import 'package:plant_plan/add/view/add_first_screen.dart';
 
 class AddDirectlyScreen extends StatelessWidget {
   const AddDirectlyScreen({super.key});
@@ -15,6 +16,34 @@ class AddDirectlyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: '식물 추가',
+      bottomNavigationBar: GestureDetector(
+        onTap: () {
+          //여기서 사진 식물이름 들어왓는지확인하고싶어
+          if (true) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AddFirstScreen();
+                },
+              ),
+            );
+          }
+        },
+        child: Container(
+          height: 46.h,
+          width: 360.w,
+          decoration: const BoxDecoration(color: pointColor2),
+          child: Center(
+            child: Text(
+              "다음",
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Colors.white,
+                  ),
+            ),
+          ),
+        ),
+      ),
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -253,7 +282,7 @@ class Tip extends StatefulWidget {
 }
 
 class _TipState extends State<Tip> {
-  List<String> dropdownItems = ['물주기', '햇빛', '온도', '습도', '분갈이'];
+  Set<String> dropdownItems = {'물주기', '햇빛', '온도', '습도', '분갈이'};
   List<TextEditingController> dropdownControllers = [];
   List<String> previousValues = ['p', 'p', 'p', 'p', 'p'];
 
@@ -347,10 +376,9 @@ class _TipState extends State<Tip> {
                           width: 1.0,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                        items: dropdownItems,
+                        items: dropdownItems.toList(),
                         controller: dropdownControllers[index],
                         onChanged: (p0) {
-                          print(p0);
                           setState(() {
                             if (previousValues[index] != 'p') {
                               dropdownItems.add(previousValues[index]);
