@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/information_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
+import 'package:plant_plan/add/provider/information_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
@@ -14,11 +16,14 @@ import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/date_formatter.dart';
+import 'package:uuid/uuid.dart';
 
 class AddSecondScreen extends ConsumerWidget {
   static String get routeName => 'addSecond';
+  final bool fromDirect;
   const AddSecondScreen({
     super.key,
+    this.fromDirect = false,
   });
 
   @override
@@ -26,6 +31,7 @@ class AddSecondScreen extends ConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final photoState = ref.watch(photoProvider);
     final plantState = ref.watch(addPlantProvider);
+    final InformationModel informationState = ref.watch(informationProvider);
     bool isTapHandled = false;
     Future<void> insertNewPlant() async {
       final user = auth.currentUser;
@@ -50,7 +56,19 @@ class AddSecondScreen extends ConsumerWidget {
 
       final data = ref.read(addPlantProvider).toJson();
       data['timestamp'] = DateTime.now();
-      data['information'] = ref.read(addPlantProvider).information.toJson();
+      if (fromDirect) {
+        final tipsJson =
+            informationState.tips.map((tipModel) => tipModel.toJson()).toList();
+        data['information'] = {
+          'id': const Uuid().v4(),
+          'name': informationState.name,
+          'imageUrl': userImageUrl,
+          'tips': tipsJson,
+        };
+      } else {
+        data['information'] = ref.read(addPlantProvider).information.toJson();
+      }
+
       data['alarms'] = ref
           .read(addPlantProvider)
           .alarms
@@ -62,6 +80,7 @@ class AddSecondScreen extends ConsumerWidget {
       ref.read(photoProvider.notifier).reset();
       ref.read(alarmProvider.notifier).reset();
       ref.read(addPlantProvider.notifier).reset();
+      ref.read(informationProvider.notifier).reset();
     }
 
     return DefaultLayout(
@@ -74,15 +93,14 @@ class AddSecondScreen extends ConsumerWidget {
 
           isTapHandled = true;
 
-          if (plantState.information.id != "") {
-            await insertNewPlant();
-            if (!context.mounted) return;
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => const RootTab()),
-                (route) => false);
-          }
+          await insertNewPlant();
+          if (!context.mounted) return;
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const RootTab()),
+              (route) => false);
+
           await Future.delayed(const Duration(milliseconds: 500));
 
           isTapHandled = false;
