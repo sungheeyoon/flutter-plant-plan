@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plant_plan/add/model/information_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/alarm_provider.dart';
+import 'package:plant_plan/add/provider/information_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_second_screen.dart';
@@ -17,8 +19,10 @@ import 'package:plant_plan/utils/colors.dart';
 
 class AddFirstScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addFirst';
+  final bool fromDirect;
   const AddFirstScreen({
     super.key,
+    this.fromDirect = false,
   });
 
   @override
@@ -34,25 +38,39 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          ref.read(photoProvider.notifier).reset();
-          ref.read(alarmProvider.notifier).reset();
-          ref.read(addPlantProvider.notifier).reset();
+          if (widget.fromDirect == false) {
+            ref.read(photoProvider.notifier).reset();
+            ref.read(alarmProvider.notifier).reset();
+            ref.read(addPlantProvider.notifier).reset();
 
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => const RootTab()),
-              (route) => false);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const RootTab()),
+                (route) => false);
+          } else {
+            Navigator.pop(context);
+          }
         },
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          if (plantState.information.id != "") {
+          if (!widget.fromDirect && plantState.information.id != "") {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) {
                   return const AddSecondScreen();
+                },
+              ),
+            );
+          }
+          if (widget.fromDirect) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const AddSecondScreen(fromDirect: true);
                 },
               ),
             );
@@ -83,7 +101,9 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
               SizedBox(
                 height: 20.h,
               ),
-              const AddPlantCard(),
+              AddPlantCard(
+                fromDirect: widget.fromDirect,
+              ),
               SizedBox(
                 height: 32.h,
               ),
@@ -159,8 +179,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
 }
 
 class AddPlantCard extends ConsumerStatefulWidget {
+  final bool fromDirect;
   const AddPlantCard({
     super.key,
+    this.fromDirect = false,
   });
 
   @override
@@ -186,6 +208,7 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
   Widget build(BuildContext context) {
     final PlantModel plantState = ref.watch(addPlantProvider);
     final File? photoState = ref.watch(photoProvider);
+    final InformationModel informationState = ref.watch(informationProvider);
     return Center(
       child: Container(
         width: 360.w,
@@ -222,22 +245,23 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                                   size: 60.h,
                                   radius: 24.h,
                                 ),
-                                Positioned(
-                                  right: 1,
-                                  top: 1,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        ref
-                                            .read(photoProvider.notifier)
-                                            .reset();
-                                      },
-                                      child: Image(
-                                        image: const AssetImage(
-                                            'assets/icons/x.png'),
-                                        width: 16.h,
-                                        height: 16.h,
-                                      )),
-                                ),
+                                if (!widget.fromDirect)
+                                  Positioned(
+                                    right: 1,
+                                    top: 1,
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          ref
+                                              .read(photoProvider.notifier)
+                                              .reset();
+                                        },
+                                        child: Image(
+                                          image: const AssetImage(
+                                              'assets/icons/x.png'),
+                                          width: 16.h,
+                                          height: 16.h,
+                                        )),
+                                  ),
                               ])
                             else if (plantState.information.imageUrl != "")
                               ProfileImageWidget(
@@ -260,119 +284,119 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                     SizedBox(
                       width: 10.h,
                     ),
-                    if (plantState.information.name != "")
-                      Column(
-                        children: [
-                          Text(
-                            plantState.information.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: grayBlack,
-                                ),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    RoundedButton(
-                      onPressed: () => showModalBottomSheet(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
-                          ),
-                        ),
-                        builder: (context) => Container(
-                          padding: const EdgeInsets.all(32),
-                          height: 180.h,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("식물 사진 추가",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(color: grayBlack)),
-                              SizedBox(
-                                height: 32.h,
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  minimumSize: Size.zero,
-                                  padding: EdgeInsets.zero,
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                  ref
-                                      .read(photoProvider.notifier)
-                                      .setNewPhoto(camera: true);
-                                },
-                                child: Align(
-                                  alignment: const Alignment(-1.0, 0.0),
-                                  child: Text(
-                                    "카메라",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: grayColor700,
-                                        ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.fromDirect
+                              ? informationState.name
+                              : plantState.information.name,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: grayBlack,
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  minimumSize: Size.zero,
-                                  padding: EdgeInsets.zero,
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                  ref
-                                      .read(photoProvider.notifier)
-                                      .setNewPhoto(camera: false);
-                                },
-                                child: Align(
-                                  alignment: const Alignment(-1.0, 0.0),
-                                  child: Text(
-                                    "갤러리 사진 선택",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: grayColor700,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                      ),
-                      font: Theme.of(context).textTheme.labelMedium,
-                      backgroundColor: Colors.white,
-                      borderColor: pointColor2.withOpacity(
-                        0.5,
-                      ),
-                      width: 90.h,
-                      height: 30.h,
-                      textColor: pointColor2,
-                      name: photoState != null ? '사진 변경' : '사진 추가',
+                      ],
                     ),
                   ],
-                )
+                ),
+                if (!widget.fromDirect)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RoundedButton(
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                          ),
+                          builder: (context) => Container(
+                            padding: const EdgeInsets.all(32),
+                            height: 180.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("식물 사진 추가",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(color: grayBlack)),
+                                SizedBox(
+                                  height: 32.h,
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: EdgeInsets.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    ref
+                                        .read(photoProvider.notifier)
+                                        .setNewPhoto(camera: true);
+                                  },
+                                  child: Align(
+                                    alignment: const Alignment(-1.0, 0.0),
+                                    child: Text(
+                                      "카메라",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: grayColor700,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.h,
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: EdgeInsets.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    ref
+                                        .read(photoProvider.notifier)
+                                        .setNewPhoto(camera: false);
+                                  },
+                                  child: Align(
+                                    alignment: const Alignment(-1.0, 0.0),
+                                    child: Text(
+                                      "갤러리 사진 선택",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            color: grayColor700,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        font: Theme.of(context).textTheme.labelMedium,
+                        backgroundColor: Colors.white,
+                        borderColor: pointColor2.withOpacity(
+                          0.5,
+                        ),
+                        width: 90.h,
+                        height: 30.h,
+                        textColor: pointColor2,
+                        name: photoState != null ? '사진 변경' : '사진 추가',
+                      ),
+                    ],
+                  )
               ],
             ),
             SizedBox(
