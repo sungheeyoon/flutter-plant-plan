@@ -68,6 +68,7 @@ class LocalNotificationService {
   Future<void> scheduleAlarmNotifications(PlantModel plant) async {
     String title =
         plant.information.name + (plant.alias != "" ? '(${plant.alias})' : '');
+    int id = plant.docId.hashCode;
     for (AlarmModel alarm in plant.alarms) {
       String body = '';
       String channelId = alarm.id;
@@ -79,16 +80,19 @@ class LocalNotificationService {
           body = '$title의 물주기 날짜입니다.';
           channelName = 'watering';
           channelDescription = '$title의 물주기 알림';
+
           break;
         case PlantField.repotting:
           body = '$title의 분갈이 날짜입니다.';
           channelName = 'repotting';
           channelDescription = '$title의 분갈이 알림';
+
           break;
         case PlantField.nutrient:
           body = '$title에게 영양제를 주는 날짜입니다.';
           channelName = 'nutrient';
           channelDescription = '$title의 영양제 알림';
+
           break;
         case PlantField.none:
           break;
@@ -104,15 +108,25 @@ class LocalNotificationService {
         ticker: 'ticker',
       );
 
-      NotificationDetails platformChannelSpecifics =
-          NotificationDetails(android: androidPlatformChannelSpecifics);
+      DarwinNotificationDetails iOSPlatformChannelSpecifics =
+          DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        subtitle: 'Your subtitle',
+        categoryIdentifier: channelName,
+      );
+
+      NotificationDetails platformChannelSpecifics = NotificationDetails(
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
       if (alarm.isOn) {
         if (alarm.repeat == 0) {
           tz.TZDateTime scheduledDate =
               tz.TZDateTime.from(alarm.startTime, tz.local);
           if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
             await _localNotificationService.zonedSchedule(
-              alarm.id.hashCode,
+              id,
               title,
               body,
               scheduledDate,
@@ -123,19 +137,25 @@ class LocalNotificationService {
           }
         } else if (alarm.repeat > 0) {
           await scheduleRepeatingNotification(
-            alarm.id.hashCode.toString().substring(0, 6),
-            title,
-            body,
-            tz.TZDateTime.from(alarm.startTime, tz.local),
-            alarm,
-          );
+              id,
+              title,
+              body,
+              tz.TZDateTime.from(alarm.startTime, tz.local),
+              alarm,
+              platformChannelSpecifics);
         }
       }
     }
   }
 
-  Future<void> scheduleRepeatingNotification(String prefix, String title,
-      String body, tz.TZDateTime initialDateTime, AlarmModel alarm) async {
+  Future<void> scheduleRepeatingNotification(
+    int id,
+    String title,
+    String body,
+    tz.TZDateTime initialDateTime,
+    AlarmModel alarm,
+    NotificationDetails platformChannelSpecifics,
+  ) async {
     int alarmsToSchedule = 5;
 
     int count = 0;
@@ -145,20 +165,7 @@ class LocalNotificationService {
 
       if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local)) &&
           !_isDateInOffDates(scheduledDate, alarm.offDates)) {
-        int actualNotificationId = int.parse('$prefix$count');
-
-        AndroidNotificationDetails androidPlatformChannelSpecifics =
-            const AndroidNotificationDetails(
-          'channel_id',
-          'channel_name',
-          channelDescription: 'channel_description',
-          importance: Importance.high,
-          priority: Priority.high,
-          ticker: 'ticker',
-        );
-
-        NotificationDetails platformChannelSpecifics =
-            NotificationDetails(android: androidPlatformChannelSpecifics);
+        int actualNotificationId = int.parse('$id$count');
 
         await _localNotificationService.zonedSchedule(
           actualNotificationId,
