@@ -65,84 +65,101 @@ class LocalNotificationService {
     print('payload $details');
   }
 
-  Future<void> scheduleAlarmNotifications(PlantModel plant) async {
+  Future<void> scheduleAlarmNotifications({
+    required PlantModel plant,
+    required bool watering,
+    required bool repotting,
+    required bool nutrient,
+  }) async {
     String title =
         plant.information.name + (plant.alias != "" ? '(${plant.alias})' : '');
-    int id = plant.docId.hashCode;
+    int id = int.parse(plant.docId.hashCode.toString().substring(0, 6));
     for (AlarmModel alarm in plant.alarms) {
       String body = '';
       String channelId = alarm.id;
       String channelName = '';
       String channelDescription = '';
 
-      switch (alarm.field) {
-        case PlantField.watering:
-          body = '$title의 물주기 날짜입니다.';
-          channelName = 'watering';
-          channelDescription = '$title의 물주기 알림';
+      if ((alarm.field == PlantField.watering && watering) ||
+          (alarm.field == PlantField.repotting && repotting) ||
+          (alarm.field == PlantField.nutrient && nutrient)) {
+        switch (alarm.field) {
+          case PlantField.watering:
+            id = int.parse('1$id');
+            body = '$title의 물주기 날짜입니다.';
+            channelName = 'watering';
+            channelDescription = '$title의 물주기 알림';
 
-          break;
-        case PlantField.repotting:
-          body = '$title의 분갈이 날짜입니다.';
-          channelName = 'repotting';
-          channelDescription = '$title의 분갈이 알림';
+            break;
+          case PlantField.repotting:
+            id = int.parse('2$id');
+            body = '$title의 분갈이 날짜입니다.';
+            channelName = 'repotting';
+            channelDescription = '$title의 분갈이 알림';
 
-          break;
-        case PlantField.nutrient:
-          body = '$title에게 영양제를 주는 날짜입니다.';
-          channelName = 'nutrient';
-          channelDescription = '$title의 영양제 알림';
+            break;
+          case PlantField.nutrient:
+            id = int.parse('3$id');
+            body = '$title에게 영양제를 주는 날짜입니다.';
+            channelName = 'nutrient';
+            channelDescription = '$title의 영양제 알림';
 
-          break;
-        case PlantField.none:
-          break;
-      }
+            break;
+          case PlantField.none:
+            break;
+        }
 
-      AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails(
-        channelId,
-        channelName,
-        channelDescription: channelDescription,
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker',
-      );
+        AndroidNotificationDetails androidPlatformChannelSpecifics =
+            AndroidNotificationDetails(
+          channelId,
+          channelName,
+          channelDescription: channelDescription,
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
 
-      DarwinNotificationDetails iOSPlatformChannelSpecifics =
-          DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-        subtitle: 'Your subtitle',
-        categoryIdentifier: channelName,
-      );
+        DarwinNotificationDetails iOSPlatformChannelSpecifics =
+            DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+          subtitle: 'Your subtitle',
+          categoryIdentifier: channelName,
+        );
 
-      NotificationDetails platformChannelSpecifics = NotificationDetails(
+        NotificationDetails platformChannelSpecifics = NotificationDetails(
           android: androidPlatformChannelSpecifics,
-          iOS: iOSPlatformChannelSpecifics);
-      if (alarm.isOn) {
-        if (alarm.repeat == 0) {
-          tz.TZDateTime scheduledDate =
-              tz.TZDateTime.from(alarm.startTime, tz.local);
-          if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
-            await _localNotificationService.zonedSchedule(
-              id,
-              title,
-              body,
-              scheduledDate,
-              platformChannelSpecifics,
-              uiLocalNotificationDateInterpretation:
-                  UILocalNotificationDateInterpretation.absoluteTime,
-            );
+          iOS: iOSPlatformChannelSpecifics,
+        );
+
+        if (alarm.isOn) {
+          if (alarm.repeat == 0) {
+            tz.TZDateTime scheduledDate =
+                tz.TZDateTime.from(alarm.startTime, tz.local);
+            if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
+              await _localNotificationService.zonedSchedule(
+                id,
+                title,
+                body,
+                scheduledDate,
+                platformChannelSpecifics,
+                uiLocalNotificationDateInterpretation:
+                    UILocalNotificationDateInterpretation.absoluteTime,
+              );
+            }
+          } else if (alarm.repeat > 0) {
+            tz.TZDateTime nextNotificationDate = tz.TZDateTime.from(
+                alarm.startTime.add(Duration(days: alarm.repeat)), tz.local);
+
+            // 현재 시간 이후의 첫 번째 알림으로 설정
+            while (nextNotificationDate.isBefore(tz.TZDateTime.now(tz.local))) {
+              nextNotificationDate =
+                  nextNotificationDate.add(Duration(days: alarm.repeat));
+            }
+            await scheduleRepeatingNotification(id, title, body,
+                nextNotificationDate, alarm, platformChannelSpecifics);
           }
-        } else if (alarm.repeat > 0) {
-          await scheduleRepeatingNotification(
-              id,
-              title,
-              body,
-              tz.TZDateTime.from(alarm.startTime, tz.local),
-              alarm,
-              platformChannelSpecifics);
         }
       }
     }
@@ -191,63 +208,49 @@ class LocalNotificationService {
         offDate.day == localDate.day);
   }
 
-  Future<void> deleteNotificationsWithPrefix(String prefix) async {
+  //해당 docId 를가진 plant의 notifiaction을 모두삭제한다.
+  Future<void> deleteFromDocId(String docId) async {
     List<PendingNotificationRequest> pendingNotifications =
         await retrievePendingNotifications();
-
-    final realPrefix = prefix.hashCode.toString().substring(0, 6);
+    final int id = int.parse(docId.hashCode.toString().substring(0, 6));
+    //알람의 아이디 에서 substring(1, 7) 부분은 docId의 hashCode에 해당한다.
     for (var notification in pendingNotifications) {
-      if (notification.id.toString().startsWith(realPrefix)) {
+      if (int.parse(notification.id.toString().substring(1, 7)) == id) {
         await _localNotificationService.cancel(notification.id);
-        print('Notification with ID ${notification.id} deleted.');
-      } else {
-        print('Notification with ID ${notification.id} not deleted.');
       }
     }
   }
 
-  Future<void> rescheduleNotifications(PlantModel plant) async {
-    await deleteNotificationsWithPrefix(plant.docId);
+  Future<void> deleteFromField(PlantField field) async {
+    List<PendingNotificationRequest> pendingNotifications =
+        await retrievePendingNotifications();
+    int code = 0;
+    switch (field) {
+      case PlantField.watering:
+        code = 1;
 
-    await scheduleAlarmNotifications(plant);
-  }
+        break;
+      case PlantField.repotting:
+        code = 2;
 
-  Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required tz.TZDateTime scheduledDate,
-    required NotificationDetails platformChannelSpecifics,
-    required bool shouldSchedule,
-  }) async {
-    // 현재 시간 이후에만 알림을 예약
-    if (shouldSchedule && scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
-      await _localNotificationService.zonedSchedule(
-        id,
-        title,
-        body,
-        scheduledDate,
-        platformChannelSpecifics,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        payload: scheduledDate.toString(),
-      );
+        break;
+      case PlantField.nutrient:
+        code = 3;
+
+        break;
+      case PlantField.none:
+        break;
+    }
+
+    for (var notification in pendingNotifications) {
+      if (notification.id.toString().startsWith('$code')) {
+        await _localNotificationService.cancel(notification.id);
+      }
     }
   }
 
-  Future<void> deleteAllNotifications() async {
+  Future<void> deleteAll() async {
     _localNotificationService.cancelAll();
-  }
-
-  Future<List<ActiveNotification>> retrieveNotifications() async {
-    List<ActiveNotification> activeNotifications = [];
-    try {
-      activeNotifications =
-          await _localNotificationService.getActiveNotifications();
-    } catch (e) {
-      print('Error retrieving notifications: $e');
-    }
-    return activeNotifications;
   }
 
   Future<List<PendingNotificationRequest>>

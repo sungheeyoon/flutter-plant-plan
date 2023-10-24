@@ -53,8 +53,7 @@ class DetailScreen extends ConsumerWidget {
                           .deletePlant(detailState.data.docId);
 
                       await LocalNotificationService()
-                          .deleteNotificationsWithPrefix(
-                              detailState.data.docId);
+                          .deleteFromDocId(detailState.data.docId);
 
                       if (!context.mounted) return;
                       Navigator.of(context).pop();

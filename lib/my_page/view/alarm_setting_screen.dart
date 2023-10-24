@@ -1,36 +1,144 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/model/plants_model.dart';
+import 'package:plant_plan/common/provider/alarm_setting_provider.dart';
+import 'package:plant_plan/common/provider/plants_provider.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class AlarmSettingScreen extends StatefulWidget {
+class AlarmSettingScreen extends ConsumerStatefulWidget {
   const AlarmSettingScreen({super.key});
 
   @override
-  State<AlarmSettingScreen> createState() => _AlarmSettingScreenState();
+  ConsumerState<AlarmSettingScreen> createState() => _AlarmSettingScreenState();
 }
 
-class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
-  bool serviceSwitch = false;
-  bool waterringSwitch = false;
-  bool repottingSwitch = false;
-  bool nutrientSwitch = false;
-  bool noticeSwitch = false;
+class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
+  late bool serviceSwitch;
+  late bool wateringSwitch;
+  late bool repottingSwitch;
+  late bool nutrientSwitch;
+  late bool noticeSwitch;
+
+  LocalNotificationService notificationService = LocalNotificationService();
 
   @override
   void initState() {
     super.initState();
+    setSwitch();
   }
 
   void onSwitchValueChanged() {
     setState(() {
       serviceSwitch =
-          waterringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
+          wateringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
     });
+  }
+
+  void setSwitch() {
+    wateringSwitch = ref.read(wateringProvider);
+    repottingSwitch = ref.read(repottingProvider);
+    nutrientSwitch = ref.read(nutrientProvider);
+    noticeSwitch = ref.read(noticeProvider);
+    onSwitchValueChanged();
+  }
+
+  Future<void> printPendingNotifications() async {
+    List<PendingNotificationRequest> notifications =
+        await notificationService.retrievePendingNotifications();
+    for (var notification in notifications) {
+      print('Notification ID: ${notification.id}');
+      print('Notification Title: ${notification.title}');
+      print('Notification Body: ${notification.body}');
+      print('Notification Payload: ${notification.payload}');
+      print('--------------------------------------------------');
+    }
+  }
+
+  Future<void> setSwitchValue(key, value) async {
+    final PlantsModel plantsState = ref.read(plantsProvider) as PlantsModel;
+    final List<PlantModel> plants = plantsState.data;
+    LocalNotificationService notificationService = LocalNotificationService();
+    bool watering = false;
+    bool repotting = false;
+    bool nutrient = false;
+
+    switch (key) {
+      case 'watering':
+        ref.read(wateringProvider.notifier).state = value;
+        if (value) {
+          watering = true;
+          for (final plant in plants) {
+            await notificationService.scheduleAlarmNotifications(
+              plant: plant,
+              watering: watering,
+              repotting: repotting,
+              nutrient: nutrient,
+            );
+          }
+        } else {
+          await notificationService.deleteFromField(PlantField.watering);
+        }
+        break;
+      case 'repotting':
+        ref.read(repottingProvider.notifier).state = value;
+        if (value) {
+          repotting = true;
+          for (final plant in plants) {
+            await notificationService.scheduleAlarmNotifications(
+              plant: plant,
+              watering: watering,
+              repotting: repotting,
+              nutrient: nutrient,
+            );
+          }
+        } else {
+          await notificationService.deleteFromField(PlantField.repotting);
+        }
+        break;
+      case 'nutrient':
+        ref.read(nutrientProvider.notifier).state = value;
+        if (value) {
+          nutrient = true;
+          for (final plant in plants) {
+            await notificationService.scheduleAlarmNotifications(
+              plant: plant,
+              watering: watering,
+              repotting: repotting,
+              nutrient: nutrient,
+            );
+          }
+        } else {
+          await notificationService.deleteFromField(PlantField.nutrient);
+        }
+        break;
+      case 'notice':
+        ref.read(noticeProvider.notifier).state = value;
+        break;
+      default:
+        return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
   }
 
   @override
   Widget build(BuildContext context) {
+    wateringSwitch = ref.watch(wateringProvider);
+    repottingSwitch = ref.watch(repottingProvider);
+    nutrientSwitch = ref.watch(nutrientProvider);
+    noticeSwitch = ref.watch(noticeProvider);
+    serviceSwitch =
+        wateringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
+
+    printPendingNotifications();
     return DefaultLayout(
       title: '알림 설정',
       child: Padding(
@@ -70,10 +178,10 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
                   onChanged: (value) {
                     setState(() {
                       serviceSwitch = value;
-                      waterringSwitch = value;
-                      repottingSwitch = value;
-                      nutrientSwitch = value;
-                      noticeSwitch = value;
+                      setSwitchValue('watering', value);
+                      setSwitchValue('repotting', value);
+                      setSwitchValue('nutrient', value);
+                      setSwitchValue('notice', value);
                     });
                   },
                   trackColor: grayColor400,
@@ -109,10 +217,10 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
                         ),
                   ),
                   CupertinoSwitch(
-                    value: waterringSwitch,
+                    value: wateringSwitch,
                     onChanged: (value) {
                       setState(() {
-                        waterringSwitch = value;
+                        setSwitchValue('watering', value);
                         onSwitchValueChanged();
                       });
                     },
@@ -141,7 +249,7 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
                     value: repottingSwitch,
                     onChanged: (value) {
                       setState(() {
-                        repottingSwitch = value;
+                        setSwitchValue('repotting', value);
                         onSwitchValueChanged();
                       });
                     },
@@ -170,7 +278,7 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
                     value: nutrientSwitch,
                     onChanged: (value) {
                       setState(() {
-                        nutrientSwitch = value;
+                        setSwitchValue('nutrient', value);
                         onSwitchValueChanged();
                       });
                     },
@@ -211,7 +319,7 @@ class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
                     value: noticeSwitch,
                     onChanged: (value) {
                       setState(() {
-                        noticeSwitch = value;
+                        setSwitchValue('notice', value);
                         onSwitchValueChanged();
                       });
                     },

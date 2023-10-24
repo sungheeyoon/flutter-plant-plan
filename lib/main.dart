@@ -7,13 +7,13 @@ import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/services/login_manager.dart';
-import 'package:plant_plan/services/notifi_service.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationService().initNotification();
+
   tz.initializeTimeZones();
   await Firebase.initializeApp();
 

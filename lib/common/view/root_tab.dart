@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
-import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
+import 'package:plant_plan/common/provider/alarm_setting_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/home_screen.dart';
@@ -17,7 +15,6 @@ import 'package:plant_plan/list/view/list_screen.dart';
 import 'package:plant_plan/my_page/view/my_page_screen.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class RootTab extends ConsumerStatefulWidget {
   static String get routeName => 'root';
@@ -43,6 +40,7 @@ class RootTabState extends ConsumerState<RootTab>
     controller.addListener(tabListener);
 
     _fetchPlants();
+    getAlarmSetting();
   }
 
   @override
@@ -76,53 +74,31 @@ class RootTabState extends ConsumerState<RootTab>
     });
   }
 
+  Future<void> getAlarmSetting() async {
+    ref.read(wateringProviderFuture);
+    ref.read(repottingProviderFuture);
+    ref.read(nutrientProviderFuture);
+    ref.read(noticeProviderFuture);
+  }
+
   Future<void> _fetchPlants() async {
     await ref.read(plantsProvider.notifier).fetchPlants();
   }
 
   Future<void> scheduleNotifications(List<PlantModel> plants) async {
-    await notificationService.deleteAllNotifications();
+    await notificationService.deleteAll();
+    final watering = ref.read(wateringProvider);
+    final repotting = ref.read(repottingProvider);
+    final nutrient = ref.read(nutrientProvider);
     for (final plant in plants) {
-      await notificationService.scheduleAlarmNotifications(plant);
-    }
-    List<PendingNotificationRequest> notifications =
-        await notificationService.retrievePendingNotifications();
-    for (var notification in notifications) {
-      print('Notification ID: ${notification.id}');
-      print('Notification Title: ${notification.title}');
-      print('Notification Body: ${notification.body}');
-      print('Notification Payload: ${notification.payload}');
-      print('--------------------------------------------------');
+      await notificationService.scheduleAlarmNotifications(
+        plant: plant,
+        watering: watering,
+        repotting: repotting,
+        nutrient: nutrient,
+      );
     }
   }
-
-  // Future<void> scheduleTestAlarm(
-  //     LocalNotificationService notificationService) async {
-  //   DateTime now = DateTime.now();
-  //   DateTime scheduledTime = now.add(const Duration(seconds: 5));
-
-  //   AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       const AndroidNotificationDetails(
-  //     'test_channel_id',
-  //     'Test Channel',
-  //     channelDescription: 'Test channel for notifications',
-  //     importance: Importance.high,
-  //     priority: Priority.high,
-  //     ticker: 'ticker',
-  //   );
-
-  //   NotificationDetails platformChannelSpecifics =
-  //       NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  //   await notificationService.scheduleNotification(
-  //     id: 1234444444,
-  //     title: 'Test Alarm',
-  //     body: 'This is a test alarm notification',
-  //     scheduledDate: tz.TZDateTime.from(scheduledTime, tz.local),
-  //     platformChannelSpecifics: platformChannelSpecifics,
-  //     shouldSchedule: true,
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +112,7 @@ class RootTabState extends ConsumerState<RootTab>
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
       scheduleNotifications(plants);
-      // scheduleTestAlarm(notificationService);
+
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState
             ? null
