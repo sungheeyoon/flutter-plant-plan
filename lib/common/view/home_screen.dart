@@ -6,10 +6,12 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/alarm_with_userinfo.dart';
+import 'package:plant_plan/common/provider/alarm_setting_provider.dart';
 import 'package:plant_plan/common/provider/selected_date_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/common/widget/home_calendar.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/date_formatter.dart';
 import 'package:plant_plan/utils/home_utils.dart';
@@ -584,6 +586,46 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
     bool isDone;
 
+    Future<void> updateCheckBox() async {
+      LocalNotificationService notificationService = LocalNotificationService();
+
+      bool watering = ref.read(wateringProvider);
+      bool repotting = ref.read(repottingProvider);
+      bool nutrient = ref.read(nutrientProvider);
+
+      if (widget.info.alarm.field == PlantField.watering && watering) {
+        repotting = false;
+        nutrient = false;
+      } else if (widget.info.alarm.field == PlantField.repotting && repotting) {
+        watering = false;
+        nutrient = false;
+      } else if (widget.info.alarm.field == PlantField.nutrient && nutrient) {
+        watering = false;
+        repotting = false;
+      } else {
+        watering = false;
+        repotting = false;
+        nutrient = false;
+      }
+      //plant 를 docId를 통해 가져옴
+      final plant =
+          await ref.read(plantsProvider.notifier).getPlant(widget.info.docId);
+      //offDates 에 해당 날짜를 토글하여 넣거나 삭제
+      await ref.read(plantsProvider.notifier).updateAlarm(
+          widget.info.alarm.id, widget.info.docId,
+          offTime: selectedDateState);
+      //수정된 알림 우선삭제
+      await notificationService.deleteFromFieldWithDocId(
+          widget.info.alarm.field, widget.info.docId);
+      //수정된 알림  업데이트
+      await notificationService.scheduleAlarmNotifications(
+        plant: plant,
+        watering: watering,
+        repotting: repotting,
+        nutrient: nutrient,
+      );
+    }
+
     if (widget.info.alarm.offDates.contains(selectedDateState)) {
       isDone = true;
     } else {
@@ -687,12 +729,10 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                       ),
                       SizedBox(width: 8.h),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          updateCheckBox();
                           setState(() {
                             isDone = !isDone;
-                            ref.read(plantsProvider.notifier).updateAlarm(
-                                widget.info.alarm.id, widget.info.docId,
-                                offTime: selectedDateState);
                           });
                         },
                         child: Icon(
