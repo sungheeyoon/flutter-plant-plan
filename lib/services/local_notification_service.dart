@@ -249,6 +249,37 @@ class LocalNotificationService {
     }
   }
 
+  Future<void> deleteFromFieldWithDocId(PlantField field, String docId) async {
+    List<PendingNotificationRequest> pendingNotifications =
+        await retrievePendingNotifications();
+
+    final int id = int.parse(docId.hashCode.toString().substring(0, 6));
+    int code = 0;
+    switch (field) {
+      case PlantField.watering:
+        code = 1;
+
+        break;
+      case PlantField.repotting:
+        code = 2;
+
+        break;
+      case PlantField.nutrient:
+        code = 3;
+
+        break;
+      case PlantField.none:
+        break;
+    }
+
+    for (var notification in pendingNotifications) {
+      if (notification.id.toString().startsWith('$code') &&
+          int.parse(notification.id.toString().substring(1, 7)) == id) {
+        await _localNotificationService.cancel(notification.id);
+      }
+    }
+  }
+
   Future<void> deleteAll() async {
     _localNotificationService.cancelAll();
   }
