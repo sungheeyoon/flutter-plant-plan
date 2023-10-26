@@ -8,9 +8,11 @@ import 'package:plant_plan/add/provider/alarm_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/widget/date_picker_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/provider/alarm_setting_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/list/model/detail_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/date_formatter.dart';
@@ -75,6 +77,45 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     }
   }
 
+  Future<void> updateNotification() async {
+    if (widget.isDetail) {
+      final detailState = ref.read(detailProvider) as DetailModel;
+      LocalNotificationService notificationService = LocalNotificationService();
+
+      bool watering = ref.read(wateringProvider);
+      bool repotting = ref.read(repottingProvider);
+      bool nutrient = ref.read(nutrientProvider);
+
+      if (widget.field == PlantField.watering && watering) {
+        repotting = false;
+        nutrient = false;
+      } else if (widget.field == PlantField.repotting && repotting) {
+        watering = false;
+        nutrient = false;
+      } else if (widget.field == PlantField.nutrient && nutrient) {
+        watering = false;
+        repotting = false;
+      } else {
+        watering = false;
+        repotting = false;
+        nutrient = false;
+      }
+
+      final plant = detailState.data;
+
+      //수정된 알림 우선삭제
+      await notificationService.deleteFromFieldWithDocId(
+          widget.field, plant.docId);
+      //수정된 알림  업데이트
+      await notificationService.scheduleAlarmNotifications(
+        plant: plant,
+        watering: watering,
+        repotting: repotting,
+        nutrient: nutrient,
+      );
+    }
+  }
+
   @override
   void dispose() {
     textController.dispose();
@@ -89,15 +130,17 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     return DefaultLayout(
       actions: [
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             if (focusedButtonIndex != -1 && alarmState.repeat != 0) {
               if (widget.isDetail) {
                 final detailState = ref.read(detailProvider) as DetailModel;
                 ref
                     .read(detailProvider.notifier)
                     .updateAlarm(alarmState.id, alarmState);
-                ref.read(plantsProvider.notifier).updateOrAddAlarm(
+                await ref.read(plantsProvider.notifier).updateOrAddAlarm(
                     alarmState.id, detailState.data.docId, alarmState);
+                updateNotification();
+                if (!mounted) return;
                 Navigator.pop(context);
               } else {
                 ref
