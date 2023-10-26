@@ -149,8 +149,8 @@ class LocalNotificationService {
               );
             }
           } else if (alarm.repeat > 0) {
-            tz.TZDateTime nextNotificationDate = tz.TZDateTime.from(
-                alarm.startTime.add(Duration(days: alarm.repeat)), tz.local);
+            tz.TZDateTime nextNotificationDate =
+                tz.TZDateTime.from(alarm.startTime, tz.local);
 
             // 현재 시간 이후의 첫 번째 알림으로 설정
             while (nextNotificationDate.isBefore(tz.TZDateTime.now(tz.local))) {
@@ -173,10 +173,10 @@ class LocalNotificationService {
     AlarmModel alarm,
     NotificationDetails platformChannelSpecifics,
   ) async {
-    int alarmsToSchedule = 5;
+    int alarmsToSchedule = 4;
 
     int count = 0;
-    for (int i = 1; i <= alarmsToSchedule; i++) {
+    for (int i = 0; i <= alarmsToSchedule; i++) {
       tz.TZDateTime scheduledDate =
           initialDateTime.add(Duration(days: i * alarm.repeat));
 

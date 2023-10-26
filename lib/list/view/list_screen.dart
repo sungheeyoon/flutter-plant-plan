@@ -12,6 +12,7 @@ import 'package:plant_plan/list/view/detail_screen.dart';
 import 'package:plant_plan/list/wideget/plant_list_card.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/list_utils.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 
 class ListScreen extends ConsumerStatefulWidget {
   final List<PlantModel> plants;
@@ -118,9 +119,12 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                         isRed: false,
                         onPressed: () async {
                           for (final deleteId in deleteIdList) {
+                            LocalNotificationService notificationService =
+                                LocalNotificationService();
                             await ref
                                 .read(plantsProvider.notifier)
                                 .deletePlant(deleteId);
+                            await notificationService.deleteFromDocId(deleteId);
                           }
 
                           //modal창종료

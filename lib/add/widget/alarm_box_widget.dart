@@ -8,11 +8,13 @@ import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/alarm_screen.dart';
+import 'package:plant_plan/common/provider/alarm_setting_provider.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/list/model/detail_model.dart';
 import 'package:plant_plan/list/provider/detail_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/date_formatter.dart';
+import 'package:plant_plan/services/local_notification_service.dart';
 
 class AlarmBoxWidget extends ConsumerWidget {
   final PlantField field;
@@ -23,7 +25,7 @@ class AlarmBoxWidget extends ConsumerWidget {
     required this.field,
     required this.isDetail,
   });
-  //수정해야됨
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PlantModel addPlantState = ref.watch(addPlantProvider);
@@ -68,6 +70,48 @@ class AlarmBoxWidget extends ConsumerWidget {
     } else if (field == PlantField.nutrient) {
       iconPath = 'assets/images/management/nutrient.png';
       title = '영양제';
+    }
+
+    Future<void> updateNotification(bool value) async {
+      if (isDetail) {
+        LocalNotificationService notificationService =
+            LocalNotificationService();
+
+        bool watering = ref.read(wateringProvider);
+        bool repotting = ref.read(repottingProvider);
+        bool nutrient = ref.read(nutrientProvider);
+
+        if (field == PlantField.watering && watering) {
+          repotting = false;
+          nutrient = false;
+        } else if (field == PlantField.repotting && repotting) {
+          watering = false;
+          nutrient = false;
+        } else if (field == PlantField.nutrient && nutrient) {
+          watering = false;
+          repotting = false;
+        } else {
+          watering = false;
+          repotting = false;
+          nutrient = false;
+        }
+
+        final plant = detailState!.data;
+
+        if (value) {
+          //알림추가
+          await notificationService.scheduleAlarmNotifications(
+            plant: plant,
+            watering: watering,
+            repotting: repotting,
+            nutrient: nutrient,
+          );
+        } else {
+          //알림삭제
+          await notificationService.deleteFromFieldWithDocId(
+              field, plant.docId);
+        }
+      }
     }
 
     return GestureDetector(
@@ -144,13 +188,14 @@ class AlarmBoxWidget extends ConsumerWidget {
                         fit: BoxFit.fill,
                         child: CupertinoSwitch(
                           value: alarmState.isOn,
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             ref
                                 .read(detailProvider.notifier)
                                 .toggleIsOnAlarm(alarmState.id);
-                            ref.read(plantsProvider.notifier).updateAlarm(
+                            await ref.read(plantsProvider.notifier).updateAlarm(
                                 alarmState.id, detailState!.data.docId,
                                 isOnToggle: true);
+                            updateNotification(value);
                           },
                           trackColor: grayColor400,
                           activeColor: pointColor2,
@@ -256,6 +301,9 @@ class AlarmBoxWidget extends ConsumerWidget {
                                     .deleteAlarm(alarmState.id);
                                 ref.read(plantsProvider.notifier).deleteAlarm(
                                     alarmState.id, detailState!.data.docId);
+                                LocalNotificationService()
+                                    .deleteFromFieldWithDocId(
+                                        field, detailState.data.docId);
                               } else {
                                 ref
                                     .read(addPlantProvider.notifier)

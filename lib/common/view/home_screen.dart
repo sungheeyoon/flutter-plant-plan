@@ -46,7 +46,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
-
     final List<AlarmWithUserInfo> selectedDateAlarms =
         getSelectedDateList(widget.plants, selectedDateState);
     return DefaultLayout(
@@ -586,7 +585,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
     final DateTime selectedDateState = ref.watch(selectedDateProvider);
     bool isDone;
 
-    Future<void> updateCheckBox() async {
+    Future<void> updateCheckBoxWithNotification() async {
       LocalNotificationService notificationService = LocalNotificationService();
 
       bool watering = ref.read(wateringProvider);
@@ -730,7 +729,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                       SizedBox(width: 8.h),
                       GestureDetector(
                         onTap: () async {
-                          updateCheckBox();
+                          updateCheckBoxWithNotification();
                           setState(() {
                             isDone = !isDone;
                           });
