@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
@@ -40,6 +42,40 @@ class LocalNotificationService {
 
     return const NotificationDetails(
         android: androidNotificationDetails, iOS: darwinNotificationDetails);
+  }
+
+  Future<bool> checkNotificationPermission() async {
+    final settings =
+        await _localNotificationService.getNotificationAppLaunchDetails();
+    return settings?.didNotificationLaunchApp ?? false;
+  }
+
+  Future<bool?> requestPermission() async {
+    if (Platform.isIOS) {
+      _requestIOSPermission();
+    }
+    if (Platform.isAndroid) {
+      _requestAndroidPermission();
+    }
+    return null;
+  }
+
+  _requestIOSPermission() async {
+    return await _localNotificationService
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
+  _requestAndroidPermission() async {
+    return await _localNotificationService
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
   }
 
   Future<void> showNotificaion({

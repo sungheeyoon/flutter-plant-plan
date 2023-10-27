@@ -11,6 +11,8 @@ import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AlarmSettingScreen extends ConsumerStatefulWidget {
   const AlarmSettingScreen({super.key});
@@ -25,6 +27,7 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
   late bool repottingSwitch;
   late bool nutrientSwitch;
   late bool noticeSwitch;
+  bool systemSwitch = false;
 
   LocalNotificationService notificationService = LocalNotificationService();
 
@@ -148,6 +151,45 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
           children: [
             const SizedBox(
               height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Test',
+                      style:
+                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                color: grayBlack,
+                              ),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      'Test',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: grayColor500,
+                          ),
+                    ),
+                  ],
+                ),
+                CupertinoSwitch(
+                  value: systemSwitch,
+                  onChanged: (value) {
+                    setState(() {
+                      systemSwitch = value;
+                      if (value) {
+                        canLaunchUrlString('app-settings:');
+                      }
+                    });
+                  },
+                  trackColor: grayColor400,
+                  activeColor: pointColor2,
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
