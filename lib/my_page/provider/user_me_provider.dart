@@ -24,7 +24,6 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
 
   Future<void> _fetchCurrentUser() async {
     final user = _auth.currentUser;
-
     if (user != null) {
       state =
           UserModelBase.user(id: user.email!, username: user.displayName ?? '');
