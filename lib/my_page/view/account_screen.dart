@@ -7,6 +7,7 @@ import 'package:plant_plan/common/view/login_screen.dart';
 import 'package:plant_plan/common/widget/delete_modal.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
+import 'package:plant_plan/my_page/view/change_password_screen.dart';
 import 'package:plant_plan/my_page/view/withdraw_first_screen.dart';
 import 'package:plant_plan/services/login_manager.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -268,13 +269,22 @@ class AccountInfo extends StatelessWidget {
           thickness: 1,
           color: grayColor300,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          child: Text(
-            '비밀번호 변경',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: grayColor600,
-                ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ChangePasswordScreen(),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            child: Text(
+              '비밀번호 변경',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: grayColor600,
+                  ),
+            ),
           ),
         ),
       ],

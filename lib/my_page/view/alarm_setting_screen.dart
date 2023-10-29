@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
@@ -11,8 +13,6 @@ import 'package:plant_plan/common/provider/plants_provider.dart';
 import 'package:plant_plan/services/local_notification_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class AlarmSettingScreen extends ConsumerStatefulWidget {
   const AlarmSettingScreen({super.key});
@@ -27,6 +27,7 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
   late bool repottingSwitch;
   late bool nutrientSwitch;
   late bool noticeSwitch;
+  bool notificationStatus = false;
   bool systemSwitch = false;
 
   LocalNotificationService notificationService = LocalNotificationService();
@@ -34,7 +35,25 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    bool permissionStatus = await checkNotificationGranted();
+    setState(() {
+      notificationStatus = permissionStatus;
+    });
     setSwitch();
+  }
+
+  Future<bool> checkNotificationGranted() async {
+    PermissionStatus status = await Permission.notification.status;
+
+    if (status != PermissionStatus.granted) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   void onSwitchValueChanged() {
@@ -142,237 +161,286 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
         wateringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
 
     printPendingNotifications();
+
     return DefaultLayout(
       title: '알림 설정',
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Test',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: grayBlack,
-                              ),
+        child: !notificationStatus
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '서비스 알림',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                          ),
+                          const SizedBox(
+                            height: 6,
+                          ),
+                          Text(
+                            '푸시를 받으려면 알림 허용이 필요해요',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: grayColor500,
+                                    ),
+                          ),
+                        ],
+                      ),
+                      CupertinoSwitch(
+                        value: systemSwitch,
+                        onChanged: (value) async {
+                          setState(() {
+                            systemSwitch = value;
+                          });
+
+                          bool settingsOpened = await openAppSettings();
+                          if (settingsOpened) {
+                            BasicMessageChannel<String?> lifecycleChannel =
+                                SystemChannels.lifecycle;
+                            lifecycleChannel
+                                .setMessageHandler((String? msg) async {
+                              if (msg!.contains("resumed")) {
+                                //? 시스템 알림설정 종료했을때(< 뒤로가기 시)
+                                PermissionStatus changedStatus =
+                                    await Permission.notification.status;
+                                print('changedStatus:$changedStatus');
+                                if (changedStatus == PermissionStatus.granted) {
+                                  //!notification on - 알림설정함
+                                  setState(() {
+                                    notificationStatus = true;
+                                  });
+                                } else {
+                                  // notification off -알림설정 안함
+                                  setState(() {
+                                    notificationStatus = false;
+                                    setState(() {
+                                      systemSwitch = false;
+                                    });
+                                  });
+                                }
+                              }
+                              return '';
+                            });
+                          }
+                        },
+                        trackColor: grayColor400,
+                        activeColor: pointColor2,
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '서비스 알림',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                          ),
+                          const SizedBox(
+                            height: 6,
+                          ),
+                          Text(
+                            '푸시를 받으려면 알림 허용이 필요해요',
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      color: grayColor500,
+                                    ),
+                          ),
+                        ],
+                      ),
+                      CupertinoSwitch(
+                        value: serviceSwitch,
+                        onChanged: (value) {
+                          setState(() {
+                            serviceSwitch = value;
+                            setSwitchValue('watering', value);
+                            setSwitchValue('repotting', value);
+                            setSwitchValue('nutrient', value);
+                            setSwitchValue('notice', value);
+                          });
+                        },
+                        trackColor: grayColor400,
+                        activeColor: pointColor2,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    decoration: const BoxDecoration(
+                      color: grayColor200,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    Text(
-                      'Test',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: grayColor500,
+                    child: Text(
+                      '식물 관리 정보',
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: grayColor700,
                           ),
                     ),
-                  ],
-                ),
-                CupertinoSwitch(
-                  value: systemSwitch,
-                  onChanged: (value) {
-                    setState(() {
-                      systemSwitch = value;
-                      if (value) {
-                        canLaunchUrlString('app-settings:');
-                      }
-                    });
-                  },
-                  trackColor: grayColor400,
-                  activeColor: pointColor2,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '서비스 알림',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: grayBlack,
-                              ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '물주기',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
+                        CupertinoSwitch(
+                          value: wateringSwitch,
+                          onChanged: (value) {
+                            setState(() {
+                              setSwitchValue('watering', value);
+                              onSwitchValueChanged();
+                            });
+                          },
+                          trackColor: grayColor400,
+                          activeColor: pointColor2,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 6,
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: grayColor300,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '분갈이',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
+                        CupertinoSwitch(
+                          value: repottingSwitch,
+                          onChanged: (value) {
+                            setState(() {
+                              setSwitchValue('repotting', value);
+                              onSwitchValueChanged();
+                            });
+                          },
+                          trackColor: grayColor400,
+                          activeColor: pointColor2,
+                        ),
+                      ],
                     ),
-                    Text(
-                      '푸시를 받으려면 알림 허용이 필요해요',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: grayColor500,
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: grayColor300,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '영양제',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
+                        CupertinoSwitch(
+                          value: nutrientSwitch,
+                          onChanged: (value) {
+                            setState(() {
+                              setSwitchValue('nutrient', value);
+                              onSwitchValueChanged();
+                            });
+                          },
+                          trackColor: grayColor400,
+                          activeColor: pointColor2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    decoration: const BoxDecoration(
+                      color: grayColor200,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: Text(
+                      '이용 알림',
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: grayColor700,
                           ),
                     ),
-                  ],
-                ),
-                CupertinoSwitch(
-                  value: serviceSwitch,
-                  onChanged: (value) {
-                    setState(() {
-                      serviceSwitch = value;
-                      setSwitchValue('watering', value);
-                      setSwitchValue('repotting', value);
-                      setSwitchValue('nutrient', value);
-                      setSwitchValue('notice', value);
-                    });
-                  },
-                  trackColor: grayColor400,
-                  activeColor: pointColor2,
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: const BoxDecoration(
-                color: grayColor200,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              child: Text(
-                '식물 관리 정보',
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      color: grayColor700,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '공지사항',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
+                        CupertinoSwitch(
+                          value: noticeSwitch,
+                          onChanged: (value) {
+                            setState(() {
+                              setSwitchValue('notice', value);
+                              onSwitchValueChanged();
+                            });
+                          },
+                          trackColor: grayColor400,
+                          activeColor: pointColor2,
+                        ),
+                      ],
                     ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '물주기',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor600,
-                        ),
-                  ),
-                  CupertinoSwitch(
-                    value: wateringSwitch,
-                    onChanged: (value) {
-                      setState(() {
-                        setSwitchValue('watering', value);
-                        onSwitchValueChanged();
-                      });
-                    },
-                    trackColor: grayColor400,
-                    activeColor: pointColor2,
                   ),
                 ],
               ),
-            ),
-            const Divider(
-              thickness: 1,
-              color: grayColor300,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '분갈이',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor600,
-                        ),
-                  ),
-                  CupertinoSwitch(
-                    value: repottingSwitch,
-                    onChanged: (value) {
-                      setState(() {
-                        setSwitchValue('repotting', value);
-                        onSwitchValueChanged();
-                      });
-                    },
-                    trackColor: grayColor400,
-                    activeColor: pointColor2,
-                  ),
-                ],
-              ),
-            ),
-            const Divider(
-              thickness: 1,
-              color: grayColor300,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '영양제',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor600,
-                        ),
-                  ),
-                  CupertinoSwitch(
-                    value: nutrientSwitch,
-                    onChanged: (value) {
-                      setState(() {
-                        setSwitchValue('nutrient', value);
-                        onSwitchValueChanged();
-                      });
-                    },
-                    trackColor: grayColor400,
-                    activeColor: pointColor2,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: const BoxDecoration(
-                color: grayColor200,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              child: Text(
-                '이용 알림',
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      color: grayColor700,
-                    ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '공지사항',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor600,
-                        ),
-                  ),
-                  CupertinoSwitch(
-                    value: noticeSwitch,
-                    onChanged: (value) {
-                      setState(() {
-                        setSwitchValue('notice', value);
-                        onSwitchValueChanged();
-                      });
-                    },
-                    trackColor: grayColor400,
-                    activeColor: pointColor2,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
