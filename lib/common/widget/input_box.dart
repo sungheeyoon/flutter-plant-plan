@@ -8,6 +8,7 @@ class InputBox extends StatefulWidget {
   final String title;
   final String hintText;
   final String? Function(String?)? validator;
+  final String? condition;
   final bool isPassword;
 
   const InputBox({
@@ -15,6 +16,7 @@ class InputBox extends StatefulWidget {
     required this.name,
     required this.title,
     required this.hintText,
+    this.condition,
     this.validator,
     this.isPassword = false,
   }) : super(key: key);
@@ -45,11 +47,25 @@ class _InputBoxState extends State<InputBox> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          widget.title,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: grayColor600, // Changed to grey for consistency
+        Row(
+          children: [
+            Text(
+              widget.title,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: primaryColor, // Changed to grey for consistency
+                  ),
+            ),
+            const SizedBox(
+              width: 6,
+            ),
+            if (widget.condition is String)
+              Text(
+                widget.condition!,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: grayColor500, // Changed to grey for consistency
+                    ),
               ),
+          ],
         ),
         SizedBox(
           height: 4.h,

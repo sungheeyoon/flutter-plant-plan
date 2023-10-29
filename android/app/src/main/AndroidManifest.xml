@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.plant_plan">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <application
         android:label="plant_plan"
         android:name="${applicationName}"
@@ -37,7 +38,7 @@
             <!-- 카카오 로그인 Redirect URI -->
             <data android:scheme="kakao0a869172f4728637acce27ebffc3f863" android:host="oauth"/>
         </intent-filter>
-    </activity>
+        </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
