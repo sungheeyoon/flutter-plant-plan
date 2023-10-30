@@ -53,6 +53,32 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
     }
   }
 
+  Future<bool> checkPassword(
+      {required String id, required String password}) async {
+    try {
+      final authResult = await _auth.signInWithEmailAndPassword(
+        email: id,
+        password: password,
+      );
+
+      final user = authResult.user;
+      if (user != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> updatePassword(String password) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      user.updatePassword(password);
+    }
+  }
+
   Future<void> logout() async {
     //현재 빌드가 완료된 후에 상태를 수정하도록 Future.microtask
     Future.microtask(() {

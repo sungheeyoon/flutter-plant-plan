@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
+import 'package:plant_plan/my_page/model/user_model.dart';
+import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class ChangePasswordScreen extends ConsumerStatefulWidget {
@@ -19,13 +21,39 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
+  String? _emailErrorMessage;
+
   Future<void> _changePassword(BuildContext context) async {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
+
       final String currentPassword = formData['currentPassword'];
-      final String newPassword = formData['newPassword'];
+
       final String confirmNewPassword = formData['confirmNewPassword'];
+
+      final UserModel user = ref.read(userMeProvider) as UserModel;
+
+      final bool checkCurrentPassword = await ref
+          .read(userMeProvider.notifier)
+          .checkPassword(id: user.id, password: currentPassword);
+      if (checkCurrentPassword) {
+        await ref
+            .read(userMeProvider.notifier)
+            .updatePassword(confirmNewPassword);
+        if (context.mounted) Navigator.pop(context);
+      } else {
+        setState(() {
+          _emailErrorMessage = '비밀번호가 틀렸습니다.';
+        });
+      }
     }
+  }
+
+  Future<void> checkCurrentPassword(String password) async {
+    final UserModel user = ref.read(userMeProvider) as UserModel;
+    ref
+        .read(userMeProvider.notifier)
+        .checkPassword(id: user.id, password: password);
   }
 
   @override
@@ -71,6 +99,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     validator: (val) {
                       if (val == null || val.isEmpty) {
                         return '현재 비밀번호를 입력해주세요.';
+                      } else if (_emailErrorMessage != null) {
+                        return _emailErrorMessage;
                       }
                       return null;
                     },
