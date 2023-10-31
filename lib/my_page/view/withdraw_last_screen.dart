@@ -32,12 +32,12 @@ class WithdrawLastScreen extends ConsumerWidget {
                   ref.read(plantsProvider.notifier).deleteAll();
                   await ref.read(userMeProvider.notifier).withdraw();
                   if (!context.mounted) return;
-                  Navigator.pushReplacement(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const LoginScreen()),
+                    (route) => false,
                   );
-                  Navigator.of(context).pop();
                 },
               );
             },
@@ -55,7 +55,6 @@ class WithdrawLastScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
               height: 31,

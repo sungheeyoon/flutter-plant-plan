@@ -52,12 +52,12 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
           try {
             await performLogin(formData['email'], formData['password']);
           } catch (e) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      ErrorScreen(errorMessage: e.toString())),
-            );
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ErrorScreen(errorMessage: e.toString()),
+                ),
+                (route) => false);
           }
         } else {
           print('회원가입 실패');
