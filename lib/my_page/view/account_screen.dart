@@ -132,12 +132,12 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                             onPressed: () async {
                               ref.read(userMeProvider.notifier).logout();
 
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()),
-                              );
-                              Navigator.of(context).pop();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginScreen()),
+                                  (route) => false);
                             },
                           );
                         },

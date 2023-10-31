@@ -177,6 +177,10 @@ flutter:
     - assets/icons/svg/notetext.svg
     - assets/icons/svg/tag.svg
 
+    - assets/icons/permission/alarm.png
+    - assets/icons/permission/camera.png
+    - assets/icons/permission/picture.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
