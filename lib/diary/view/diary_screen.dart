@@ -464,7 +464,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
           const SizedBox(
             height: 8,
           ),
-          Padding(
+          Container(
+            width: 380.w,
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: ReadMoreText(
               text: widget.diaryCard.diary.context,
@@ -641,8 +642,7 @@ class _ReadMoreTextState extends State<ReadMoreText> {
         )..layout(maxWidth: constraints.maxWidth);
 
         if (textPainter.didExceedMaxLines) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          return Stack(
             children: [
               Text.rich(
                 textSpan,
@@ -650,19 +650,24 @@ class _ReadMoreTextState extends State<ReadMoreText> {
                 overflow:
                     isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-                child: Text(
-                  isExpanded ? '접기' : '더 보기',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: grayColor500,
-                      ),
+              if (textPainter.didExceedMaxLines)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
+                    },
+                    child: Text(
+                      isExpanded ? '접기' : '더 보기',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: grayColor500,
+                          ),
+                    ),
+                  ),
                 ),
-              ),
             ],
           );
         } else {

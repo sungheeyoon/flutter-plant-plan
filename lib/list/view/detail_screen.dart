@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
+import 'package:plant_plan/add/model/tip_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/widget/alarm_box_widget.dart';
@@ -127,7 +128,6 @@ class DetailCard extends ConsumerStatefulWidget {
 
 class _DetailCardState extends ConsumerState<DetailCard> {
   File? newPhoto;
-  TextEditingController textController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -135,14 +135,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   @override
   void dispose() {
-    textController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
-    textController = TextEditingController(text: detailState.data.alias);
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
@@ -254,7 +252,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
 
   Future<void> openDetailCardModal() async {
     final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
-    final result = await detailCardModal(); // 모달 창 열기 및 결과값 대기
+    final result =
+        await detailCardModal(detailState.data.alias); // 모달 창 열기 및 결과값 대기
     if (result == "updatedPhoto" || result == "updatedDelete") {
       //수정이된경우
       if (detailState.data.userImageUrl != "") {
@@ -296,7 +295,9 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     ref.read(photoProvider.notifier).reset();
   }
 
-  Future<dynamic> detailCardModal() {
+  Future<dynamic> detailCardModal(String alias) {
+    TextEditingController textController = TextEditingController(text: alias);
+
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -313,7 +314,6 @@ class _DetailCardState extends ConsumerState<DetailCard> {
               contentPadding: const EdgeInsets.all(0),
               content: Container(
                 width: 312.w,
-                height: 283.h,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -328,6 +328,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 24.h),
                     Stack(
@@ -856,140 +857,90 @@ class SettingAlarm extends StatelessWidget {
   }
 }
 
-class Tips extends StatefulWidget {
+class Tips extends ConsumerStatefulWidget {
   const Tips({
     super.key,
   });
 
   @override
-  State<Tips> createState() => _Tips();
+  ConsumerState<Tips> createState() => _TipsState();
 }
 
-class _Tips extends State<Tips> {
+class _TipsState extends ConsumerState<Tips> {
   int _selectedIndex = 0;
+  List<TipModel> tipList = [];
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 24.h),
-          child: Text(
-            "성장 TIP",
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: primaryColor),
-          ),
-        ),
-        SizedBox(
-          height: 12.h,
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SizedBox(width: 24.h),
-              TipButtonWidget(
-                text: "물주기",
-                isFocused: _selectedIndex == 0,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 0;
-                  });
-                },
-              ),
-              SizedBox(width: 8.h),
-              TipButtonWidget(
-                text: "햇빛",
-                isFocused: _selectedIndex == 1,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 1;
-                  });
-                },
-              ),
-              SizedBox(width: 8.h),
-              TipButtonWidget(
-                text: "온도",
-                isFocused: _selectedIndex == 2,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 2;
-                  });
-                },
-              ),
-              SizedBox(width: 8.h),
-              TipButtonWidget(
-                text: "습도",
-                isFocused: _selectedIndex == 3,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 3;
-                  });
-                },
-              ),
-              SizedBox(width: 8.h),
-              TipButtonWidget(
-                text: "흙",
-                isFocused: _selectedIndex == 4,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 4;
-                  });
-                },
-              ),
-              SizedBox(width: 8.h),
-              TipButtonWidget(
-                text: "분갈이",
-                isFocused: _selectedIndex == 5,
-                onPressed: () {
-                  setState(() {
-                    _selectedIndex = 5;
-                  });
-                },
-              ),
-              SizedBox(width: 24.h),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 12.h,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.h),
-          child: Container(
-            padding: EdgeInsets.all(20.h),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: grayColor100,
-              borderRadius: BorderRadius.all(Radius.circular(12.h)),
+    final DetailModel detailState = ref.watch(detailProvider) as DetailModel;
+    final List<TipModel> tipList = detailState.data.information.tips;
+
+    if (tipList.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 24.h),
+            child: Text(
+              "성장 TIP",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: primaryColor),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          SizedBox(
+            height: 12.h,
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
-                Text(
-                  "흙이 바싹 마르지 않게",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: grayBlack),
-                ),
-                SizedBox(
-                  height: 16.h,
-                ),
-                Text(
-                  "빠르게 성장하는 봄~가을에는 보통 주 1~2회 겉흙이 말랐을 때에 충분히 관수를 해주세요. 안시리움은 습한 환경을 좋아하는 특성을 가지고 있기 때문에 중간중간 잎에 분무를 해주어 습도를 올려주면 좋아요. 물을 준 뒤 통풍이 잘 되는 곳에서 관리해 주세요. 통풍이 안되는 곳에서 잎에 분무를 하게 되면 검은 점이 생길 수 있으니 조심하세요. 여름 장마철과 겨울에는 성장속도가 느려지기 때문에 물 주는 주기를 늘려 2주에 1번씩 주는 것이 좋아요.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: grayBlack),
-                )
+                SizedBox(width: 24.h),
+                for (int index = 0; index < tipList.length; index++)
+                  TipButtonWidget(
+                    text: tipList[index].part,
+                    isFocused: _selectedIndex == index,
+                    onPressed: () {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                  ),
+                SizedBox(width: 16.h),
               ],
             ),
           ),
-        ),
-      ],
-    );
+          SizedBox(
+            height: 12.h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.h),
+            child: Container(
+              padding: EdgeInsets.all(20.h),
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: grayColor100,
+                borderRadius: BorderRadius.all(Radius.circular(12.h)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tipList[_selectedIndex].context,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: grayBlack),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 }

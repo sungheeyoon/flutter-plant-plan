@@ -182,7 +182,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
               ),
             )
           : SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(24.h, 20.h, 24.h, 12.h),
+              padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 12.h),
               child: Column(
                 children: [
                   listDeleteModeState
@@ -302,9 +302,9 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                     GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 12.h,
-                        mainAxisSpacing: 12.h,
-                        childAspectRatio: 150.w / 160.h,
+                        crossAxisSpacing: 20.w,
+                        mainAxisSpacing: 20.w,
+                        childAspectRatio: 150.w / 158.w,
                       ),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),

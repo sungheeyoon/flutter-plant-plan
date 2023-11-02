@@ -14,7 +14,7 @@ class TipButtonWidget extends StatefulWidget {
   });
 
   @override
-  _TipButtonWidgetState createState() => _TipButtonWidgetState();
+  State<TipButtonWidget> createState() => _TipButtonWidgetState();
 }
 
 class _TipButtonWidgetState extends State<TipButtonWidget> {
@@ -22,22 +22,25 @@ class _TipButtonWidgetState extends State<TipButtonWidget> {
   Widget build(BuildContext context) {
     const pointColor2 = Colors.blue; // Replace this with your desired color
 
-    return ElevatedButton(
-      onPressed: widget.onPressed,
-      style: ElevatedButton.styleFrom(
-        foregroundColor: widget.isFocused ? Colors.white : pointColor2,
-        backgroundColor: widget.isFocused ? pointColor2 : Colors.white,
-        elevation: 0,
-        padding: EdgeInsets.symmetric(horizontal: 12.h, vertical: 8.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.h),
-          side: BorderSide(
-            width: 1,
-            color: widget.isFocused ? Colors.white : pointColor2,
+    return Padding(
+      padding: EdgeInsets.only(right: 8.h),
+      child: ElevatedButton(
+        onPressed: widget.onPressed,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: widget.isFocused ? Colors.white : pointColor2,
+          backgroundColor: widget.isFocused ? pointColor2 : Colors.white,
+          elevation: 0,
+          padding: EdgeInsets.symmetric(horizontal: 12.h, vertical: 8.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.h),
+            side: BorderSide(
+              width: 1,
+              color: widget.isFocused ? Colors.white : pointColor2,
+            ),
           ),
         ),
+        child: Text(widget.text),
       ),
-      child: Text(widget.text),
     );
   }
 }

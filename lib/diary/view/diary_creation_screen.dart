@@ -469,118 +469,113 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Divider(
-                  thickness: 1,
-                  color: grayColor200,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 1, color: grayColor200), // 검은색 선
                 ),
-                InkWell(
-                  onTap: () => showModalBottomSheet(
-                    backgroundColor: Colors.white,
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (context) => Container(
-                      padding: const EdgeInsets.all(32),
-                      height: 180.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("식물 사진 추가",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(color: grayBlack)),
-                          SizedBox(
-                            height: 32.h,
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              cameraImage();
-                            },
-                            child: Align(
-                              alignment: const Alignment(-1.0, 0.0),
-                              child: Text(
-                                "카메라",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: grayColor700,
-                                    ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.h,
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              galleryImage();
-                            },
-                            child: Align(
-                              alignment: const Alignment(-1.0, 0.0),
-                              child: Text(
-                                "갤러리 사진 선택",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: grayColor700,
-                                    ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+              ),
+              child: InkWell(
+                onTap: () => showModalBottomSheet(
+                  backgroundColor: Colors.white,
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    child: Row(
+                  builder: (context) => Container(
+                    padding: const EdgeInsets.all(32),
+                    height: 180.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Image(
-                          image: AssetImage('assets/icons/camera.png'),
-                          width: 20,
-                          height: 20,
+                        Text("식물 사진 추가",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(color: grayBlack)),
+                        SizedBox(
+                          height: 32.h,
                         ),
-                        const SizedBox(
-                          width: 8,
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: Size.zero,
+                            padding: EdgeInsets.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            cameraImage();
+                          },
+                          child: Align(
+                            alignment: const Alignment(-1.0, 0.0),
+                            child: Text(
+                              "카메라",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: grayColor700,
+                                  ),
+                            ),
+                          ),
                         ),
-                        Text(
-                          images.isEmpty
-                              ? "사진추가 (최대 10 장)"
-                              : "사진추가 (${netWorkImageUrls.length + images.length}/10)",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: grayColor500),
-                        )
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: Size.zero,
+                            padding: EdgeInsets.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            galleryImage();
+                          },
+                          child: Align(
+                            alignment: const Alignment(-1.0, 0.0),
+                            child: Text(
+                              "갤러리 사진 선택",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: grayColor700,
+                                  ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                )
-              ],
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Image(
+                      image: AssetImage('assets/icons/camera.png'),
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      images.isEmpty
+                          ? "사진추가 (최대 10 장)"
+                          : "사진추가 (${netWorkImageUrls.length + images.length}/10)",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: grayColor500),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ],

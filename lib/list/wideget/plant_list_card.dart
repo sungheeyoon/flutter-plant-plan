@@ -17,8 +17,8 @@ class PlantListCard extends ConsumerWidget {
     return Stack(
       children: [
         Container(
-          width: 150.h,
-          height: 160.h,
+          width: 150.w,
+          height: 158.w,
           padding: EdgeInsets.all(10.h),
           decoration: BoxDecoration(
             color: const Color(0xFFFFFFFF),
@@ -120,19 +120,19 @@ class PlantListCard extends ConsumerWidget {
         ),
         if (cardData.favorite)
           Positioned(
-            top: 10.h,
-            right: 10.h,
+            top: 10.w,
+            right: 10.w,
             child: Image.asset(
               'assets/icons/fav/fav_active.png',
-              width: 16.h,
-              height: 16.h,
+              width: 16.w,
+              height: 16.w,
             ),
           ),
         if (isdeleteIdList != null && isdeleteIdList!)
           Positioned(
             child: Container(
-              width: 150.h,
-              height: 160.h,
+              width: 150.w,
+              height: 158.w,
               decoration: BoxDecoration(
                 color: grayBlack.withOpacity(0.25),
                 borderRadius: BorderRadius.circular(12.h),
@@ -141,12 +141,12 @@ class PlantListCard extends ConsumerWidget {
           ),
         if (isdeleteIdList != null && isdeleteIdList!)
           Positioned(
-            bottom: 8.h,
-            right: 8.h,
+            bottom: 8.w,
+            right: 8.w,
             child: Image.asset(
               'assets/icons/blue_check.png',
-              width: 20.h,
-              height: 20.h,
+              width: 20.w,
+              height: 20.w,
             ),
           ),
       ],
