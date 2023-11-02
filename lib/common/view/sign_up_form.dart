@@ -108,6 +108,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
         child: ElevatedButton(
           onPressed: () => _signUp(context),
           style: ButtonStyle(
+            elevation: MaterialStateProperty.all(0),
             minimumSize:
                 MaterialStateProperty.all(Size(312.h, 42.h)), // 최대 너비 설정
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(

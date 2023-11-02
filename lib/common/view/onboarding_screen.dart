@@ -265,6 +265,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
                         minimumSize: MaterialStateProperty.all(
                             const Size(double.infinity, 42)), // 최대 너비 설정
                         shape:

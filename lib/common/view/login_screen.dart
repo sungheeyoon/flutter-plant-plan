@@ -152,6 +152,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ElevatedButton(
                       onPressed: () => _login(context),
                       style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
                         minimumSize: MaterialStateProperty.all(
                             const Size(double.infinity, 42)), // 최대 너비 설정
                         shape:

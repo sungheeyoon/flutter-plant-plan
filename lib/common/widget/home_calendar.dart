@@ -222,11 +222,11 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
             padding: EdgeInsets.symmetric(horizontal: 24.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 20.h,
-                ),
+                // SizedBox(
+                //   width: 20.h,
+                // ),
                 Text(
                   DateFormat.yMMM().format(selectedDateState),
                   textAlign: TextAlign.center,
@@ -235,16 +235,17 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                       .headlineMedium!
                       .copyWith(color: Colors.white),
                 ),
-                InkWell(
-                  onTap: () {
-                    // 클릭 이벤트 처리
-                  },
-                  child: Image.asset(
-                    'assets/icons/home/statistical_chart.png',
-                    width: 24.h,
-                    height: 24.h,
-                  ),
-                ),
+                //추가예정
+                // InkWell(
+                //   onTap: () {
+                //     // 클릭 이벤트 처리
+                //   },
+                //   child: Image.asset(
+                //     'assets/icons/home/statistical_chart.png',
+                //     width: 24.h,
+                //     height: 24.h,
+                //   ),
+                // ),
               ],
             ),
           ),

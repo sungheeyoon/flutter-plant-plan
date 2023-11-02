@@ -7,6 +7,7 @@ import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/diary_utils.dart';
 
 class ChangePasswordScreen extends ConsumerStatefulWidget {
   static String get routeName => 'signUp';
@@ -23,6 +24,14 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   String? _emailErrorMessage;
 
+  Future<bool> checkCurrentPassword(String password) async {
+    final UserModel user = ref.read(userMeProvider) as UserModel;
+
+    return await ref
+        .read(userMeProvider.notifier)
+        .checkPassword(id: user.id, password: password);
+  }
+
   Future<void> _changePassword(BuildContext context) async {
     if (_formKey.currentState!.saveAndValidate()) {
       final formData = _formKey.currentState!.value;
@@ -31,29 +40,22 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
       final String confirmNewPassword = formData['confirmNewPassword'];
 
-      final UserModel user = ref.read(userMeProvider) as UserModel;
+      final checkedPassword = await checkCurrentPassword(currentPassword);
 
-      final bool checkCurrentPassword = await ref
-          .read(userMeProvider.notifier)
-          .checkPassword(id: user.id, password: currentPassword);
-      if (checkCurrentPassword) {
+      if (checkedPassword) {
         await ref
             .read(userMeProvider.notifier)
             .updatePassword(confirmNewPassword);
-        if (context.mounted) Navigator.pop(context);
+        if (context.mounted) {
+          Navigator.pop(context);
+          showCustomToast(context, '비밀번호가 변경되었습니다');
+        }
       } else {
         setState(() {
-          _emailErrorMessage = '비밀번호가 틀렸습니다.';
+          _emailErrorMessage = '현재 비밀번호와 일치하지 않습니다.';
         });
       }
     }
-  }
-
-  Future<void> checkCurrentPassword(String password) async {
-    final UserModel user = ref.read(userMeProvider) as UserModel;
-    ref
-        .read(userMeProvider.notifier)
-        .checkPassword(id: user.id, password: password);
   }
 
   @override
@@ -65,8 +67,8 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         child: ElevatedButton(
           onPressed: () => _changePassword(context),
           style: ButtonStyle(
-            minimumSize:
-                MaterialStateProperty.all(Size(312.h, 42.h)), // 최대 너비 설정
+            elevation: MaterialStateProperty.all(0),
+            minimumSize: MaterialStateProperty.all(Size(312.w, 42.h)),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -97,6 +99,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     title: '현재 비밀번호',
                     hintText: '현재 비밀번호를 입력해주세요',
                     validator: (val) {
+                      if (_emailErrorMessage != null) {
+                        setState(() {
+                          _emailErrorMessage = null;
+                        });
+                      }
                       if (val == null || val.isEmpty) {
                         return '현재 비밀번호를 입력해주세요.';
                       } else if (_emailErrorMessage != null) {
@@ -113,13 +120,18 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     condition: '8자 이상 (영문,숫자,기호 중 2종류 조합)',
                     validator: (val) {
                       if (val == null || val.length < 8) {
-                        return '비밀번호는 8자 이상이어야 합니다.';
+                        return '비밀번호는 8자 이상이어야 합니다';
                       }
                       // 영문, 숫자, 특수문자 중 2가지 이상 조합을 검사하는 정규식
                       RegExp passwordRegex = RegExp(
                           r'^(?=.*[A-Za-z])(?=.*\d|[\W_])([A-Za-z\d\W_]){8,}$');
                       if (!passwordRegex.hasMatch(val)) {
-                        return '비밀번호는 영문, 숫자, 기호 중 2가지 이상 조합이어야 합니다.';
+                        return '형식을 올바르게 입력해주세요';
+                      }
+                      if (val ==
+                          _formKey
+                              .currentState!.fields['currentPassword']?.value) {
+                        return '기존 비밀번호와 같습니다';
                       }
                       return null;
                     },
