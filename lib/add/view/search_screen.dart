@@ -248,9 +248,9 @@ class AddDirectlyButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size.zero, // Set this
         padding: EdgeInsets.zero,
-        elevation: isShadow ? 4 : 0,
+        elevation: isShadow ? 3 : 0,
         backgroundColor: pointColor2,
-        shadowColor: isShadow ? const Color(0x33000000) : null,
+        shadowColor: isShadow ? grayBlack : null,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

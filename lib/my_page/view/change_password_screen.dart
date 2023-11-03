@@ -42,6 +42,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
       final checkedPassword = await checkCurrentPassword(currentPassword);
 
+      if (_emailErrorMessage != null) {
+        setState(() {
+          _emailErrorMessage = null;
+        });
+      }
       if (checkedPassword) {
         await ref
             .read(userMeProvider.notifier)
@@ -87,74 +92,74 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          children: [
-            FormBuilder(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  InputBox(
-                    name: 'currentPassword',
-                    title: '현재 비밀번호',
-                    hintText: '현재 비밀번호를 입력해주세요',
-                    validator: (val) {
-                      if (_emailErrorMessage != null) {
-                        setState(() {
-                          _emailErrorMessage = null;
-                        });
-                      }
-                      if (val == null || val.isEmpty) {
-                        return '현재 비밀번호를 입력해주세요.';
-                      } else if (_emailErrorMessage != null) {
-                        return _emailErrorMessage;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20.0.h),
-                  InputBox(
-                    name: 'newPassword',
-                    title: '새 비밀번호',
-                    hintText: '새 비밀번호를 입력해주세요',
-                    condition: '8자 이상 (영문,숫자,기호 중 2종류 조합)',
-                    validator: (val) {
-                      if (val == null || val.length < 8) {
-                        return '비밀번호는 8자 이상이어야 합니다';
-                      }
-                      // 영문, 숫자, 특수문자 중 2가지 이상 조합을 검사하는 정규식
-                      RegExp passwordRegex = RegExp(
-                          r'^(?=.*[A-Za-z])(?=.*\d|[\W_])([A-Za-z\d\W_]){8,}$');
-                      if (!passwordRegex.hasMatch(val)) {
-                        return '형식을 올바르게 입력해주세요';
-                      }
-                      if (val ==
-                          _formKey
-                              .currentState!.fields['currentPassword']?.value) {
-                        return '기존 비밀번호와 같습니다';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20.0),
-                  InputBox(
-                    name: 'confirmNewPassword',
-                    title: '새 비밀번호 확인',
-                    hintText: '새 비밀번호를 다시 입력해주세요',
-                    validator: (val) {
-                      if (val == null ||
-                          val !=
-                              _formKey
-                                  .currentState!.fields['newPassword']?.value) {
-                        return '입력하신 비밀번호와 일치하지 않습니다';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              FormBuilder(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InputBox(
+                      name: 'currentPassword',
+                      title: '현재 비밀번호',
+                      hintText: '현재 비밀번호를 입력해주세요',
+                      isPassword: true,
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return '현재 비밀번호를 입력해주세요.';
+                        } else if (_emailErrorMessage != null) {
+                          return _emailErrorMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20.0.h),
+                    InputBox(
+                      name: 'newPassword',
+                      title: '새 비밀번호',
+                      hintText: '새 비밀번호를 입력해주세요',
+                      isPassword: true,
+                      condition: '8자 이상 (영문,숫자,기호 중 2종류 조합)',
+                      validator: (val) {
+                        if (val == null || val.length < 8) {
+                          return '비밀번호는 8자 이상이어야 합니다';
+                        }
+                        // 영문, 숫자, 특수문자 중 2가지 이상 조합을 검사하는 정규식
+                        RegExp passwordRegex = RegExp(
+                            r'^(?=.*[A-Za-z])(?=.*\d|[\W_])([A-Za-z\d\W_]){8,}$');
+                        if (!passwordRegex.hasMatch(val)) {
+                          return '형식을 올바르게 입력해주세요';
+                        }
+                        if (val ==
+                            _formKey.currentState!.fields['currentPassword']
+                                ?.value) {
+                          return '기존 비밀번호와 같습니다';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    InputBox(
+                      name: 'confirmNewPassword',
+                      title: '새 비밀번호 확인',
+                      hintText: '새 비밀번호를 다시 입력해주세요',
+                      isPassword: true,
+                      validator: (val) {
+                        if (val == null ||
+                            val !=
+                                _formKey.currentState!.fields['newPassword']
+                                    ?.value) {
+                          return '입력하신 비밀번호와 일치하지 않습니다';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

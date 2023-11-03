@@ -255,7 +255,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
+                                horizontal: 6, vertical: 0),
                             decoration: BoxDecoration(
                               border: Border.all(width: 1, color: grayColor400),
                               borderRadius: BorderRadius.circular(8),
@@ -277,6 +277,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                                     .copyWith(color: grayColor400),
                                 hintMaxLines: 3,
                                 border: InputBorder.none,
+                                contentPadding: const EdgeInsets.all(10),
                               ),
                             ),
                           ),
