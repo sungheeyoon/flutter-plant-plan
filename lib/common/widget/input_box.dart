@@ -26,6 +26,8 @@ class InputBox extends StatefulWidget {
 }
 
 class _InputBoxState extends State<InputBox> {
+  bool _obscureText = true; // Added to manage obscure text
+
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -52,7 +54,7 @@ class _InputBoxState extends State<InputBox> {
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: primaryColor, // Changed to grey for consistency
+                    color: primaryColor,
                   ),
             ),
             const SizedBox(
@@ -62,7 +64,7 @@ class _InputBoxState extends State<InputBox> {
               Text(
                 widget.condition!,
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: grayColor500, // Changed to grey for consistency
+                      color: grayColor500,
                     ),
               ),
           ],
@@ -72,48 +74,66 @@ class _InputBoxState extends State<InputBox> {
         ),
         SizedBox(
           width: double.infinity,
-          child: FormBuilderTextField(
-            focusNode: _focusNode,
-            obscureText: widget.isPassword,
-            name: widget.name,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Colors.black, // Changed to black for consistency
-                ),
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: grayColor400,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              FormBuilderTextField(
+                focusNode: _focusNode,
+                obscureText: _obscureText,
+                name: widget.name,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Colors.black,
+                    ),
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: grayColor400,
+                      ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: grayColor400,
+                    ),
                   ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: grayColor400, // 비활성화 상태에서의 외곽선 색상 설정
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: keyColor500,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: errorColor,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: errorColor,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 16,
+                  ),
                 ),
+                validator: widget.validator,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: keyColor500, // 활성화 상태에서의 외곽선 색상 설정
+              if (widget
+                  .isPassword) // Toggle visibility icon for password field
+                IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: grayColor600,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
                 ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: errorColor, // 실패 상태에서의 외곽선 색상 설정
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  color: errorColor, // 실패 상태에서의 외곽선 색상 설정
-                ),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 16,
-              ),
-            ),
-            validator: widget.validator,
+            ],
           ),
         ),
       ],

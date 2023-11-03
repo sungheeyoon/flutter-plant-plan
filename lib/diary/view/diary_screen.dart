@@ -29,6 +29,7 @@ class DiaryScreen extends ConsumerStatefulWidget {
 
 class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   String selectedPlantDocId = "";
+  String selectedPhotoUrl = "";
   bool isBookMark = false;
   List<DiaryCardModel> selectedCardList = [];
 
@@ -50,7 +51,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         : getDiaryCardList(widget.plants, false);
 
     //drawer에서 선택된 식물만 selectedCardList 에 담아 보여준다
-    void selectedPlant(String id) {
+    void selectedPlant(String id, String phtoUrl) {
       setState(() {
         if (isBookMark) {
           isBookMark = false;
@@ -58,6 +59,8 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         }
         selectedCardList = [];
         selectedPlantDocId = id;
+        selectedPhotoUrl = phtoUrl;
+
         for (final card in cardList) {
           if (card.docId == selectedPlantDocId) {
             selectedCardList.add(card);
@@ -129,7 +132,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 ],
               ),
               onTap: () {
-                selectedPlant("");
+                selectedPlant("", "");
                 Navigator.pop(context);
               },
             ),
@@ -168,7 +171,11 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ],
                 ),
                 onTap: () {
-                  selectedPlant(plant.docId);
+                  selectedPlant(
+                      plant.docId,
+                      plant.userImageUrl == ""
+                          ? plant.information.imageUrl
+                          : plant.userImageUrl);
                   Navigator.pop(context);
                 },
               ),
@@ -214,7 +221,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   : Row(
                       children: [
                         CachedNetworkImage(
-                          imageUrl: selectedCardList[0].imageUrl,
+                          imageUrl: selectedPhotoUrl,
                           imageBuilder: (context, imageProvider) =>
                               ProfileImageWidget(
                             imageProvider: imageProvider,
@@ -265,34 +272,43 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                     ),
               ),
             )
-          : ListView.builder(
-              itemCount: selectedPlantDocId != ""
-                  ? selectedCardList.length
-                  : cardList.length,
-              itemBuilder: (context, index) {
-                DiaryCardModel diaryCard = selectedPlantDocId != ""
-                    ? selectedCardList[index]
-                    : cardList[index];
-                String diaryDate = dateFormatter(diaryCard.diary.date);
-                bool last = false;
-                Widget dateWidget;
-                if (previousDate != diaryDate) {
-                  dateWidget = DateContainer(date: diaryDate);
-                  previousDate = diaryDate;
-                  last = true;
-                } else {
-                  dateWidget = const SizedBox.shrink();
-                }
+          : selectedPlantDocId != "" && selectedCardList.isEmpty
+              ? Center(
+                  child: Text(
+                    '해당 식물의 다이어리가 없습니다',
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: grayColor600,
+                        ),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: selectedPlantDocId != ""
+                      ? selectedCardList.length
+                      : cardList.length,
+                  itemBuilder: (context, index) {
+                    DiaryCardModel diaryCard = selectedPlantDocId != ""
+                        ? selectedCardList[index]
+                        : cardList[index];
+                    String diaryDate = dateFormatter(diaryCard.diary.date);
+                    bool last = false;
+                    Widget dateWidget;
+                    if (previousDate != diaryDate) {
+                      dateWidget = DateContainer(date: diaryDate);
+                      previousDate = diaryDate;
+                      last = true;
+                    } else {
+                      dateWidget = const SizedBox.shrink();
+                    }
 
-                return Column(
-                  children: [
-                    if (!last) const SizedBox(height: 8),
-                    dateWidget,
-                    DiaryCard(diaryCard: diaryCard),
-                  ],
-                );
-              },
-            ),
+                    return Column(
+                      children: [
+                        if (!last) const SizedBox(height: 8),
+                        dateWidget,
+                        DiaryCard(diaryCard: diaryCard),
+                      ],
+                    );
+                  },
+                ),
     );
   }
 }
@@ -417,49 +433,51 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
               ],
             ),
           ),
-          const SizedBox(
-            height: 12,
-          ),
-          //images
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                const SizedBox(width: 24),
-                for (int index = 0;
-                    index < widget.diaryCard.diary.imageUrl.length;
-                    index++)
-                  Row(
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.diaryCard.diary.imageUrl[index],
-                        imageBuilder: (context, imageProvider) =>
-                            ProfileImageWidget(
-                          imageProvider: imageProvider,
-                          size: 168.h,
-                          radius: 12.h,
-                        ),
-                        placeholder: (context, url) => Container(
-                          width: 168.h,
-                          height: 168.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.h),
-                            color: grayColor200,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                      if (index != widget.diaryCard.diary.imageUrl.length - 1)
-                        const SizedBox(
-                          width: 16,
-                        ),
-                    ],
-                  ),
-                const SizedBox(width: 24),
-              ],
+          if (widget.diaryCard.diary.imageUrl.isNotEmpty)
+            const SizedBox(
+              height: 8,
             ),
-          ),
+          //images
+          if (widget.diaryCard.diary.imageUrl.isNotEmpty)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  const SizedBox(width: 24),
+                  for (int index = 0;
+                      index < widget.diaryCard.diary.imageUrl.length;
+                      index++)
+                    Row(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: widget.diaryCard.diary.imageUrl[index],
+                          imageBuilder: (context, imageProvider) =>
+                              ProfileImageWidget(
+                            imageProvider: imageProvider,
+                            size: 168.h,
+                            radius: 12.h,
+                          ),
+                          placeholder: (context, url) => Container(
+                            width: 168.h,
+                            height: 168.h,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.h),
+                              color: grayColor200,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                        if (index != widget.diaryCard.diary.imageUrl.length - 1)
+                          const SizedBox(
+                            width: 16,
+                          ),
+                      ],
+                    ),
+                  const SizedBox(width: 24),
+                ],
+              ),
+            ),
 
           const SizedBox(
             height: 8,
