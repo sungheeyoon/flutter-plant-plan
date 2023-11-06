@@ -65,6 +65,7 @@ class AddSecondScreen extends ConsumerWidget {
           'imageUrl': userImageUrl,
           'tips': tipsJson,
         };
+        data['userImageUrl'] = '';
       } else {
         data['information'] = ref.read(addPlantProvider).information.toJson();
       }

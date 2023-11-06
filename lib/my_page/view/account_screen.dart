@@ -38,151 +38,161 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
         title: '계정정보',
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AccountInfo(userMeState: userMeState),
-              const SizedBox(
-                height: 40,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    '로그인',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: grayBlack,
-                        ),
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  const Divider(
-                    thickness: 1,
-                    color: grayBlack,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '로그인 방식',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: grayColor600,
-                                  ),
-                        ),
-                        Text(
-                          '이메일',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: grayBlack,
-                                  ),
-                        ),
-                      ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AccountInfo(userMeState: userMeState),
+                const SizedBox(
+                  height: 40,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 12,
                     ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                    color: grayColor300,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '자동로그인',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: grayColor600,
-                                  ),
-                        ),
-                        CupertinoSwitch(
-                          value: LoginManager().isAutoLogin,
-                          onChanged: (value) {
-                            setState(() {
-                              LoginManager().setAutoLogin(value);
-                            });
-                          },
-                          trackColor: grayColor400,
-                          activeColor: pointColor2,
-                        ),
-                      ],
+                    Text(
+                      '로그인',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color: grayBlack,
+                          ),
                     ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                    color: grayColor300,
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DeleteModal(
-                            text: '정말 로그아웃 하시겠습니까?',
-                            buttonText: '로그아웃',
-                            isRed: false,
-                            onPressed: () async {
-                              ref.read(userMeProvider.notifier).logout();
-
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreen()),
-                                  (route) => false);
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    const Divider(
+                      thickness: 1,
+                      color: grayBlack,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '로그인 방식',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayColor600,
+                                ),
+                          ),
+                          Text(
+                            '이메일',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      thickness: 1,
+                      color: grayColor300,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '자동로그인',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayColor600,
+                                ),
+                          ),
+                          CupertinoSwitch(
+                            value: LoginManager().isAutoLogin,
+                            onChanged: (value) {
+                              setState(() {
+                                LoginManager().setAutoLogin(value);
+                              });
                             },
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 136,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 0),
-                      child: Text(
-                        '로그아웃',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: grayColor600,
-                            ),
+                            trackColor: grayColor400,
+                            activeColor: pointColor2,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                    color: grayColor300,
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            WithdrawFirstScreen(username: userMeState.username),
+                    const Divider(
+                      thickness: 1,
+                      color: grayColor300,
+                    ),
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteModal(
+                              text: '정말 로그아웃 하시겠습니까?',
+                              buttonText: '로그아웃',
+                              isRed: false,
+                              onPressed: () async {
+                                ref.read(userMeProvider.notifier).logout();
+
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                    (route) => false);
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: 136,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 0),
+                        child: Text(
+                          '로그아웃',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
                       ),
                     ),
-                    child: Container(
-                      width: 136,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 0),
-                      child: Text(
-                        '탈퇴하기',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: grayColor600,
-                            ),
-                      ),
+                    const Divider(
+                      thickness: 1,
+                      color: grayColor300,
                     ),
-                  )
-                ],
-              )
-            ],
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WithdrawFirstScreen(
+                              username: userMeState.username),
+                        ),
+                      ),
+                      child: Container(
+                        width: 136,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 18, horizontal: 0),
+                        child: Text(
+                          '탈퇴하기',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: grayColor600,
+                                  ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       );

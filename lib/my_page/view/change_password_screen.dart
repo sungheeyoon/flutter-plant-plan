@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
-import 'package:plant_plan/my_page/model/user_model.dart';
-import 'package:plant_plan/my_page/provider/user_me_provider.dart';
+
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/diary_utils.dart';
 
@@ -21,56 +22,84 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
 
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-
-  String? _emailErrorMessage;
-
-  Future<bool> checkCurrentPassword(String password) async {
-    final UserModel user = ref.read(userMeProvider) as UserModel;
-
-    return await ref
-        .read(userMeProvider.notifier)
-        .checkPassword(id: user.id, password: password);
-  }
+  bool _isChangingPassword = false;
+  String? currentPasswordErrorMessage;
 
   Future<void> _changePassword(BuildContext context) async {
-    if (_formKey.currentState!.saveAndValidate()) {
+    setState(() {
+      _isChangingPassword = true;
+    });
+
+    final isFormValid = _formKey.currentState!.saveAndValidate();
+    if (!isFormValid) {
+      setState(() {
+        _isChangingPassword = false;
+      });
+
+      return;
+    }
+
+    try {
       final formData = _formKey.currentState!.value;
+      final currentPassword = formData['currentPassword'];
+      final confirmNewPassword = formData['confirmNewPassword'];
 
-      final String currentPassword = formData['currentPassword'];
+      final user = FirebaseAuth.instance.currentUser!;
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
 
-      final String confirmNewPassword = formData['confirmNewPassword'];
+      await user.reauthenticateWithCredential(credential);
+      await FirebaseAuth.instance.currentUser!
+          .updatePassword(confirmNewPassword);
 
-      final checkedPassword = await checkCurrentPassword(currentPassword);
-
-      if (_emailErrorMessage != null) {
-        setState(() {
-          _emailErrorMessage = null;
-        });
+      if (context.mounted) {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
+        Navigator.pop(context);
+        showCustomToast(context, '비밀번호가 변경되었습니다');
       }
-      if (checkedPassword) {
-        await ref
-            .read(userMeProvider.notifier)
-            .updatePassword(confirmNewPassword);
-        if (context.mounted) {
-          Navigator.pop(context);
-          showCustomToast(context, '비밀번호가 변경되었습니다');
+    } catch (e) {
+      print("Error: $e");
+      String errorMessage = '';
+      if (e is FirebaseAuthException) {
+        if (e.code == 'wrong-password') {
+          errorMessage = '현재 비밀번호가 일치하지 않습니다';
+        } else if (e.code == 'too-many-requests') {
+          errorMessage = '너무 많은 요청으로 차단되었습니다. 잠시 후 다시 시도해주세요.';
+        } else {
+          errorMessage = '오류가 발생했습니다. 다시 시도해주세요.';
         }
       } else {
-        setState(() {
-          _emailErrorMessage = '현재 비밀번호와 일치하지 않습니다.';
-        });
+        errorMessage = '오류가 발생했습니다. 다시 시도해주세요.';
       }
+
+      setState(() {
+        currentPasswordErrorMessage = errorMessage;
+      });
+    } finally {
+      setState(() {
+        _isChangingPassword = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    print(currentPasswordErrorMessage);
     return DefaultLayout(
       title: "비밀번호 변경",
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: ElevatedButton(
-          onPressed: () => _changePassword(context),
+          onPressed: _isChangingPassword
+              ? null
+              : () {
+                  setState(() {
+                    currentPasswordErrorMessage = null;
+                  });
+                  _changePassword(context);
+                },
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(0),
             minimumSize: MaterialStateProperty.all(Size(312.w, 42.h)),
@@ -105,11 +134,12 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       title: '현재 비밀번호',
                       hintText: '현재 비밀번호를 입력해주세요',
                       isPassword: true,
+                      currentPasswordErrorMessage: currentPasswordErrorMessage,
                       validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return '현재 비밀번호를 입력해주세요.';
-                        } else if (_emailErrorMessage != null) {
-                          return _emailErrorMessage;
+                        if (val == null) {
+                          return '현재 비밀번호를 입력해주세요';
+                        } else if (currentPasswordErrorMessage != null) {
+                          return currentPasswordErrorMessage;
                         }
                         return null;
                       },

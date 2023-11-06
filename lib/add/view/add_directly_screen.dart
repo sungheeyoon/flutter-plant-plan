@@ -26,11 +26,15 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
   List<TextEditingController> dropdownControllers = [];
   List<TextEditingController> contextControllers = [];
   List<String> previousValues = ['p', 'p', 'p', 'p', 'p'];
+  late ScrollController _scrollController;
 
   void onAddDropdown() {
     setState(() {
       dropdownControllers.add(TextEditingController());
       contextControllers.add(TextEditingController());
+      Future.delayed(const Duration(milliseconds: 200), () {
+        scrollToBottom();
+      });
     });
   }
 
@@ -71,7 +75,14 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
   void dispose() {
+    _scrollController.dispose();
     for (var controller in dropdownControllers) {
       controller.dispose();
     }
@@ -79,6 +90,14 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  void scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -141,6 +160,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
         ),
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
@@ -303,7 +323,10 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                   ),
                   if (dropdownControllers.length < 5)
                     ElevatedButton(
-                      onPressed: onAddDropdown,
+                      onPressed: () {
+                        onAddDropdown();
+                        scrollToBottom();
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size.zero,
                         padding: EdgeInsets.zero,
@@ -325,6 +348,9 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                       ),
                     ),
                 ],
+              ),
+              const SizedBox(
+                height: 60,
               ),
             ],
           ),
