@@ -10,6 +10,7 @@ class InputBox extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? condition;
   final bool isPassword;
+  final String? currentPasswordErrorMessage;
 
   const InputBox({
     Key? key,
@@ -19,6 +20,7 @@ class InputBox extends StatefulWidget {
     this.condition,
     this.validator,
     this.isPassword = false,
+    this.currentPasswordErrorMessage,
   }) : super(key: key);
 
   @override
@@ -46,6 +48,8 @@ class _InputBoxState extends State<InputBox> {
 
   @override
   Widget build(BuildContext context) {
+    String? currentPasswordErrorMessage = widget.currentPasswordErrorMessage;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -89,6 +93,9 @@ class _InputBoxState extends State<InputBox> {
                   hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: grayColor400,
                       ),
+                  errorStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: errorColor,
+                      ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(
@@ -118,10 +125,29 @@ class _InputBoxState extends State<InputBox> {
                     horizontal: 16,
                   ),
                 ),
-                validator: widget.validator,
+                validator: (val) {
+                  if (widget.validator != null) {
+                    final customError = widget.validator!(val);
+                    if (customError != null) {
+                      setState(() {
+                        currentPasswordErrorMessage = customError;
+                      });
+                      return customError;
+                    } else if (widget.currentPasswordErrorMessage != null) {
+                      setState(() {
+                        currentPasswordErrorMessage =
+                            widget.currentPasswordErrorMessage;
+                      });
+                      return widget.currentPasswordErrorMessage;
+                    }
+                  }
+                  setState(() {
+                    currentPasswordErrorMessage = null;
+                  });
+                  return null;
+                },
               ),
-              if (widget
-                  .isPassword) // Toggle visibility icon for password field
+              if (widget.isPassword)
                 IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility : Icons.visibility_off,

@@ -38,7 +38,15 @@ class DefaultLayout extends StatelessWidget {
       floatingActionButtonLocation: floatingActionButtonLocation,
       resizeToAvoidBottomInset: true,
       drawer: drawer,
-      body: child,
+      body: GestureDetector(
+        onTap: () {
+          // FocusManager를 사용하여 현재 포커스된 요소가 있으면 키보드를 닫음
+          if (FocusManager.instance.primaryFocus != null) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
+        child: child,
+      ),
     );
   }
 
