@@ -10,7 +10,7 @@ class InputBox extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? condition;
   final bool isPassword;
-  final String? currentPasswordErrorMessage;
+  final String? currentErrorMessage;
 
   const InputBox({
     Key? key,
@@ -20,7 +20,7 @@ class InputBox extends StatefulWidget {
     this.condition,
     this.validator,
     this.isPassword = false,
-    this.currentPasswordErrorMessage,
+    this.currentErrorMessage,
   }) : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class _InputBoxState extends State<InputBox> {
 
   @override
   Widget build(BuildContext context) {
-    String? currentPasswordErrorMessage = widget.currentPasswordErrorMessage;
+    String? currentErrorMessage = widget.currentErrorMessage;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,7 +83,7 @@ class _InputBoxState extends State<InputBox> {
             children: [
               FormBuilderTextField(
                 focusNode: _focusNode,
-                obscureText: _obscureText,
+                obscureText: widget.isPassword ? _obscureText : false,
                 name: widget.name,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Colors.black,
@@ -130,19 +130,18 @@ class _InputBoxState extends State<InputBox> {
                     final customError = widget.validator!(val);
                     if (customError != null) {
                       setState(() {
-                        currentPasswordErrorMessage = customError;
+                        currentErrorMessage = customError;
                       });
                       return customError;
-                    } else if (widget.currentPasswordErrorMessage != null) {
+                    } else if (widget.currentErrorMessage != null) {
                       setState(() {
-                        currentPasswordErrorMessage =
-                            widget.currentPasswordErrorMessage;
+                        currentErrorMessage = widget.currentErrorMessage;
                       });
-                      return widget.currentPasswordErrorMessage;
+                      return widget.currentErrorMessage;
                     }
                   }
                   setState(() {
-                    currentPasswordErrorMessage = null;
+                    currentErrorMessage = null;
                   });
                   return null;
                 },
