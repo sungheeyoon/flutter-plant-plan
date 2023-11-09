@@ -18,7 +18,8 @@ import 'package:plant_plan/utils/colors.dart';
 
 class RootTab extends ConsumerStatefulWidget {
   static String get routeName => 'root';
-  const RootTab({super.key});
+  final int initialTabIndex;
+  const RootTab({super.key, this.initialTabIndex = 0});
 
   @override
   ConsumerState<RootTab> createState() => RootTabState();
@@ -37,6 +38,7 @@ class RootTabState extends ConsumerState<RootTab>
     super.initState();
 
     controller = TabController(length: 5, vsync: this);
+    controller.index = widget.initialTabIndex;
     controller.addListener(tabListener);
 
     _fetchPlants();
