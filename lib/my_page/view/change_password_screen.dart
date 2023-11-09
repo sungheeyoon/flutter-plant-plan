@@ -134,7 +134,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       title: '현재 비밀번호',
                       hintText: '현재 비밀번호를 입력해주세요',
                       isPassword: true,
-                      currentPasswordErrorMessage: currentPasswordErrorMessage,
+                      currentErrorMessage: currentPasswordErrorMessage,
                       validator: (val) {
                         if (val == null) {
                           return '현재 비밀번호를 입력해주세요';
