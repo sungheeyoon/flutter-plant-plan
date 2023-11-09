@@ -12,6 +12,7 @@ import 'package:plant_plan/add/provider/information_provider.dart';
 import 'package:plant_plan/add/provider/photo_provider.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
+import 'package:plant_plan/common/view/error_screen.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -32,6 +33,7 @@ class AddSecondScreen extends ConsumerWidget {
     final photoState = ref.watch(photoProvider);
     final plantState = ref.watch(addPlantProvider);
     final InformationModel informationState = ref.watch(informationProvider);
+
     bool isTapHandled = false;
     Future<void> insertNewPlant() async {
       final user = auth.currentUser;
@@ -90,21 +92,40 @@ class AddSecondScreen extends ConsumerWidget {
         onTap: () async {
           if (isTapHandled) {
             return;
+          } else {
+            isTapHandled = true;
+            try {
+              await insertNewPlant();
+              if (!context.mounted) return;
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const RootTab(initialTabIndex: 1),
+                ),
+                (route) => false,
+              );
+              await Future.delayed(const Duration(milliseconds: 1500));
+            } catch (e) {
+              // 에러가 발생할 때 필요한 처리
+              if (!context.mounted) return;
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const ErrorScreen(errorMessage: "식물 추가 에러"),
+                ),
+                (route) => false,
+              );
+              await Future.delayed(const Duration(milliseconds: 1500));
+              isTapHandled = false;
+            } finally {
+              //한번누르면 무조건 에러가나지않는이상 isTapHandled 을 true로 유지한다
+              // if (context.mounted) {
+              //   isTapHandled = false;
+              // }
+            }
           }
-
-          isTapHandled = true;
-
-          await insertNewPlant();
-          if (!context.mounted) return;
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => const RootTab()),
-              (route) => false);
-
-          await Future.delayed(const Duration(milliseconds: 500));
-
-          isTapHandled = false;
         },
         child: Container(
           height: 46.h,
