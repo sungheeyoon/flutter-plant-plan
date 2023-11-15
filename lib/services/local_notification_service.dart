@@ -87,7 +87,7 @@ class LocalNotificationService {
     return await _localNotificationService.show(id, title, body, details);
   }
 
-  Future onDidReceiveLocalNotification(
+  Future<void> onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
     try {
       print('id $id');

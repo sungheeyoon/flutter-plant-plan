@@ -81,28 +81,29 @@ class _ListScreenState extends ConsumerState<ListScreen> {
       backgroundColor: const Color(0xFFF8F8F8),
       title: '내 식물',
       actions: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            setState(() {
-              ref
-                  .read(listDeleteModeProvider.notifier)
-                  .update((state) => !state);
-              deleteIdList = [];
-              isFavorite = false;
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(right: 24.0),
-            child: Image.asset(
-              listDeleteModeState
-                  ? 'assets/icons/cancel.png'
-                  : 'assets/icons/trash.png',
-              width: 24,
-              height: 24,
+        if (cardList.isNotEmpty)
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              setState(() {
+                ref
+                    .read(listDeleteModeProvider.notifier)
+                    .update((state) => !state);
+                deleteIdList = [];
+                isFavorite = false;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 24.0),
+              child: Image.asset(
+                listDeleteModeState
+                    ? 'assets/icons/cancel.png'
+                    : 'assets/icons/trash.png',
+                width: 24,
+                height: 24,
+              ),
             ),
-          ),
-        )
+          )
       ],
       bottomNavigationBar: listDeleteModeState
           ? GestureDetector(

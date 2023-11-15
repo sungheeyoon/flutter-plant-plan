@@ -128,74 +128,79 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          children: [
-            FormBuilder(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  InputBox(
-                    name: 'name',
-                    title: '닉네임',
-                    hintText: '이름을 입력해주세요',
-                    validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        return '이름을 입력해주세요.';
-                      }
-                      return null;
-                    },
+        padding: const EdgeInsets.only(bottom: 80.0),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              children: [
+                FormBuilder(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      InputBox(
+                        name: 'name',
+                        title: '닉네임',
+                        hintText: '이름을 입력해주세요',
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return '이름을 입력해주세요.';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 20.0.h),
+                      InputBox(
+                        name: 'email',
+                        title: '이메일',
+                        hintText: '이메일을 입력해주세요',
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return '이메일을 입력해주세요.';
+                          } else if (!RegExp(
+                                  r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(val)) {
+                            return '이메일 형식이 유효하지 않습니다.';
+                          } else if (_emailErrorMessage != null) {
+                            return _emailErrorMessage;
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 20.0.h),
+                      InputBox(
+                        name: 'password',
+                        title: '비밀번호',
+                        hintText: '비밀번호를 입력해주세요',
+                        validator: (val) {
+                          if (val == null || val.length < 6) {
+                            return '비밀번호는 6자 이상이어야 합니다.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20.0),
+                      InputBox(
+                        name: 'confirmPassword',
+                        title: '비밀번호 확인',
+                        hintText: '비밀번호를 다시 입력해주세요',
+                        validator: (val) {
+                          if (val == null ||
+                              val !=
+                                  _formKey.currentState!.fields['password']
+                                      ?.value) {
+                            return '비밀번호가 일치하지 않습니다.';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20.0.h),
-                  InputBox(
-                    name: 'email',
-                    title: '이메일',
-                    hintText: '이메일을 입력해주세요',
-                    validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        return '이메일을 입력해주세요.';
-                      } else if (!RegExp(
-                              r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                          .hasMatch(val)) {
-                        return '이메일 형식이 유효하지 않습니다.';
-                      } else if (_emailErrorMessage != null) {
-                        return _emailErrorMessage;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20.0.h),
-                  InputBox(
-                    name: 'password',
-                    title: '비밀번호',
-                    hintText: '비밀번호를 입력해주세요',
-                    validator: (val) {
-                      if (val == null || val.length < 6) {
-                        return '비밀번호는 6자 이상이어야 합니다.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20.0),
-                  InputBox(
-                    name: 'confirmPassword',
-                    title: '비밀번호 확인',
-                    hintText: '비밀번호를 다시 입력해주세요',
-                    validator: (val) {
-                      if (val == null ||
-                          val !=
-                              _formKey
-                                  .currentState!.fields['password']?.value) {
-                        return '비밀번호가 일치하지 않습니다.';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

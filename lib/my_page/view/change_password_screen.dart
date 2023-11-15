@@ -28,6 +28,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   Future<void> _changePassword(BuildContext context) async {
     setState(() {
       _isChangingPassword = true;
+      currentPasswordErrorMessage = null;
     });
 
     final isFormValid = _formKey.currentState!.saveAndValidate();

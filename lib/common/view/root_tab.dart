@@ -39,10 +39,19 @@ class RootTabState extends ConsumerState<RootTab>
 
     controller = TabController(length: 5, vsync: this);
     controller.index = widget.initialTabIndex;
+    index = widget.initialTabIndex;
     controller.addListener(tabListener);
 
     _fetchPlants();
     getAlarmSetting();
+  }
+
+  @override
+  void didUpdateWidget(RootTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTabIndex != widget.initialTabIndex) {
+      controller.index = widget.initialTabIndex;
+    }
   }
 
   @override
