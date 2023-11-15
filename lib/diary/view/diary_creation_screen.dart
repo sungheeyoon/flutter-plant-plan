@@ -49,6 +49,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
         return Dialog(
           backgroundColor: Colors.black.withOpacity(0.5),
           insetPadding: EdgeInsets.zero,
+          shape: const BeveledRectangleBorder(borderRadius: BorderRadius.zero),
           child: const SizedBox(
             width: 1000,
             height: 1000,

@@ -51,21 +51,22 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         : getDiaryCardList(widget.plants, false);
 
     //drawer에서 선택된 식물만 selectedCardList 에 담아 보여준다
-    void selectedPlant(String id, String phtoUrl) {
+    void selectedPlant(String id, String photoUrl) {
       setState(() {
+        // isBookMark이 true일 때만 처리하도록 변경
         if (isBookMark) {
           isBookMark = false;
           cardList = getDiaryCardList(widget.plants, false);
         }
-        selectedCardList = [];
-        selectedPlantDocId = id;
-        selectedPhotoUrl = phtoUrl;
 
-        for (final card in cardList) {
-          if (card.docId == selectedPlantDocId) {
-            selectedCardList.add(card);
-          }
-        }
+        // selectedCardList를 새로운 리스트로 초기화
+        selectedCardList = List.from(cardList);
+
+        // 선택된 plant에 해당하는 카드만 유지
+        selectedCardList.retainWhere((card) => card.docId == id);
+
+        selectedPlantDocId = id;
+        selectedPhotoUrl = photoUrl;
       });
     }
 
@@ -266,7 +267,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
       child: cardList.isEmpty
           ? Center(
               child: Text(
-                '저장된 다이어리가 없습니다',
+                '기록한 다이어리가 없습니다',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: grayColor600,
                     ),
@@ -660,7 +661,8 @@ class _ReadMoreTextState extends State<ReadMoreText> {
         )..layout(maxWidth: constraints.maxWidth);
 
         if (textPainter.didExceedMaxLines) {
-          return Stack(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text.rich(
                 textSpan,
@@ -668,24 +670,22 @@ class _ReadMoreTextState extends State<ReadMoreText> {
                 overflow:
                     isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
               ),
-              if (textPainter.didExceedMaxLines)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                      });
-                    },
-                    child: Text(
-                      isExpanded ? '접기' : '더 보기',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: grayColor500,
-                          ),
-                    ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    isExpanded ? '접기' : '더 보기',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: grayColor500,
+                        ),
                   ),
                 ),
+              ),
             ],
           );
         } else {

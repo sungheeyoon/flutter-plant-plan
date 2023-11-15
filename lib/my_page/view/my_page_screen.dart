@@ -122,11 +122,6 @@ class UsernameAndAlarm extends StatelessWidget {
                 color: grayBlack,
               ),
         ),
-        const ImageIcon(
-          AssetImage('assets/icons/my_page/bell.png'),
-          color: primaryColor,
-          size: 28,
-        ),
       ],
     );
   }

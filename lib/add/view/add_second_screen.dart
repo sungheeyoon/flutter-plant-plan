@@ -199,7 +199,7 @@ class AddSecondScreen extends ConsumerWidget {
                       SizedBox(
                         height: 12.h,
                       ),
-                      if (plantState.information.name != "")
+                      if (plantState.alias != "")
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Container(
@@ -215,7 +215,7 @@ class AddSecondScreen extends ConsumerWidget {
                             ),
                             child: Center(
                               child: Text(
-                                plantState.information.name,
+                                plantState.alias,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelMedium!
@@ -226,13 +226,13 @@ class AddSecondScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                      if (plantState.alias != "")
+                      if (plantState.information.name != "")
                         SizedBox(
                           height: 4.h,
                         ),
-                      if (plantState.alias != "")
+                      if (plantState.information.name != "")
                         Text(
-                          plantState.alias,
+                          plantState.information.name,
                           style:
                               Theme.of(context).textTheme.labelLarge!.copyWith(
                                     color: grayBlack,
