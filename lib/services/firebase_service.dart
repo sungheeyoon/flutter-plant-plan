@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/diary_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/my_page/model/announcement_model.dart';
 
 class FirebaseService {
   //사용자의 인증 상태
@@ -379,6 +380,46 @@ class FirebaseService {
         // 여기에서 로그인 화면으로 이동하거나 로그인 다이얼로그를 표시하도록 처리**
         print('Requires recent login. Please re-authenticate.');
       }
+    }
+  }
+
+  Future<void> addAnnouncement(AnnouncementModel announcement) async {
+    try {
+      if (_currentUser != null) {
+        await FirebaseFirestore.instance.collection('announcements').add({
+          'title': announcement.title,
+          'date': announcement.date,
+          'isNew': announcement.isNew,
+          'body': announcement.body,
+        });
+      } else {
+        print('사용자가 로그인하지 않았습니다. 공지사항을 추가할 수 없습니다.');
+      }
+    } catch (e) {
+      print('공지사항을 추가하는 동안 오류가 발생했습니다: $e');
+    }
+  }
+
+  Future<List<AnnouncementModel>> getAnnouncements() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('announcements').get();
+
+      List<AnnouncementModel> announcements = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return AnnouncementModel(
+          title: data['title'] ?? '',
+          date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          isNew: data['isNew'] ?? false,
+          body: data['body'] ?? '',
+          isExpanded: false,
+        );
+      }).toList();
+
+      return announcements;
+    } catch (e) {
+      print('공지사항을 가져오는 동안 오류가 발생했습니다: $e');
+      return [];
     }
   }
 }
