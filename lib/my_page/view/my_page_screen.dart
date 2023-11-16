@@ -12,7 +12,7 @@ import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/my_page/view/account_screen.dart';
 import 'package:plant_plan/my_page/view/alarm_setting_screen.dart';
-import 'package:plant_plan/my_page/view/notice_screen.dart';
+import 'package:plant_plan/my_page/view/announcement_screen.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/list_utils.dart';
 
@@ -223,7 +223,7 @@ class SettingMenu extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const NoticeScreen(),
+                builder: (context) => const AnnouncementScreen(),
               ),
             ),
             child: Container(

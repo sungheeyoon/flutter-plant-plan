@@ -1,18 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/my_page/model/notice_model.dart';
+import 'package:plant_plan/my_page/model/announcement_model.dart';
+import 'package:plant_plan/services/firebase_service.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/date_formatter.dart';
 
-class NoticeScreen extends StatefulWidget {
-  const NoticeScreen({super.key});
+class AnnouncementScreen extends StatefulWidget {
+  const AnnouncementScreen({super.key});
 
   @override
-  State<NoticeScreen> createState() => _NoticeScreenState();
+  State<AnnouncementScreen> createState() => _AnnouncementScreenState();
 }
 
-class _NoticeScreenState extends State<NoticeScreen> {
-  List<NoticeModel> data = generateNotice(5);
+class _AnnouncementScreenState extends State<AnnouncementScreen> {
+  List<AnnouncementModel> announcements = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchAnnouncements();
+  }
+
+  void addAnnouncement() async {
+    FirebaseService firebaseService = FirebaseService();
+
+    AnnouncementModel announcement = AnnouncementModel(
+      title: '식물관리앱 `식플` Beta Open!',
+      date: DateTime.now(),
+      isNew: true,
+      body: '''
+      안녕하세요:)  
+      식물관리앱 ‘식플'이 드디어 베타서비스를 오픈했습니다!
+
+      이제 식플에서 내 식물을 등록하고, 상태에 맞는 알림을 설정하여  
+      빼먹지 않고 내 식물을 관리하는 올바른 식집사 생활을 시작해보세요!
+
+      많은 관심과 사랑 부탁드립니다🤓
+    ''',
+    );
+
+    try {
+      // 공지사항 추가
+      await firebaseService.addAnnouncement(announcement);
+      print('공지사항 추가 성공');
+    } catch (e) {
+      print('공지사항 추가 실패: $e');
+    }
+  }
+
+  void fetchAnnouncements() async {
+    try {
+      FirebaseService firebaseService = FirebaseService();
+      List<AnnouncementModel> fetchedAnnouncements =
+          await firebaseService.getAnnouncements();
+
+      setState(() {
+        announcements = fetchedAnnouncements;
+      });
+    } catch (e) {
+      print('공지사항 패치 실패: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
@@ -24,11 +72,13 @@ class _NoticeScreenState extends State<NoticeScreen> {
           dividerColor: grayColor300,
           expansionCallback: (int index, bool isExpanded) {
             setState(() {
-              data[index].isExpanded = isExpanded;
+              announcements[index] =
+                  announcements[index].copyWith(isExpanded: isExpanded);
             });
           },
           expandedHeaderPadding: EdgeInsets.zero,
-          children: data.map<ExpansionPanel>((NoticeModel notice) {
+          children: announcements
+              .map<ExpansionPanel>((AnnouncementModel announcement) {
             return ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return Container(
@@ -46,7 +96,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 8),
                                 child: Text(
-                                  notice.isNew ? '[NEW]' : '',
+                                  announcement.isNew ? '[NEW]' : '',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -56,7 +106,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                 ),
                               ),
                               Text(
-                                notice.title,
+                                announcement.title,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -72,7 +122,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                         height: 6,
                       ),
                       Text(
-                        dateFormatter(notice.date),
+                        dateFormatter(announcement.date),
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: grayColor500,
                             ),
@@ -88,7 +138,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                 child: Row(
                   children: [
                     Text(
-                      notice.body,
+                      announcement.body,
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             color: grayColor600,
                           ),
@@ -96,22 +146,11 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   ],
                 ),
               ),
-              isExpanded: notice.isExpanded,
+              isExpanded: announcement.isExpanded,
             );
           }).toList(),
         ),
       ),
     );
   }
-}
-
-List<NoticeModel> generateNotice(int numberOfItems) {
-  return List<NoticeModel>.generate(numberOfItems, (int index) {
-    return NoticeModel(
-      title: 'Panel $index',
-      date: DateTime.now(),
-      isNew: true,
-      body: 'This is item number $index',
-    );
-  });
 }
