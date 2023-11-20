@@ -31,7 +31,6 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   String selectedPlantDocId = "";
   String selectedPhotoUrl = "";
   bool isBookMark = false;
-  List<DiaryCardModel> selectedCardList = [];
 
   @override
   void didUpdateWidget(covariant DiaryScreen oldWidget) {
@@ -47,28 +46,16 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     List<DiaryCardModel> cardList = isBookMark
-        ? getDiaryCardList(widget.plants, true)
-        : getDiaryCardList(widget.plants, false);
-
-    //drawer에서 선택된 식물만 selectedCardList 에 담아 보여준다
-    void selectedPlant(String id, String photoUrl) {
-      setState(() {
-        // isBookMark이 true일 때만 처리하도록 변경
-        if (isBookMark) {
-          isBookMark = false;
-          cardList = getDiaryCardList(widget.plants, false);
-        }
-
-        // selectedCardList를 새로운 리스트로 초기화
-        selectedCardList = List.from(cardList);
-
-        // 선택된 plant에 해당하는 카드만 유지
-        selectedCardList.retainWhere((card) => card.docId == id);
-
-        selectedPlantDocId = id;
-        selectedPhotoUrl = photoUrl;
-      });
-    }
+        ? getDiaryCardList(
+            plantsState: widget.plants,
+            isBookMark: true,
+            selectedPlantDocId: selectedPlantDocId,
+          )
+        : getDiaryCardList(
+            plantsState: widget.plants,
+            isBookMark: false,
+            selectedPlantDocId: selectedPlantDocId,
+          );
 
     String? previousDate;
 
@@ -133,7 +120,10 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 ],
               ),
               onTap: () {
-                selectedPlant("", "");
+                setState(() {
+                  selectedPlantDocId = "";
+                });
+
                 Navigator.pop(context);
               },
             ),
@@ -172,12 +162,17 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ],
                 ),
                 onTap: () {
-                  selectedPlant(
-                      plant.docId,
-                      plant.userImageUrl == ""
-                          ? plant.information.imageUrl
-                          : plant.userImageUrl);
-                  Navigator.pop(context);
+                  setState(
+                    () {
+                      setState(() {
+                        selectedPlantDocId = plant.docId;
+                        selectedPhotoUrl = plant.userImageUrl == ""
+                            ? plant.information.imageUrl
+                            : plant.userImageUrl;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
                 },
               ),
           ],
@@ -264,7 +259,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           ),
         ),
       ],
-      child: cardList.isEmpty
+      child: selectedPlantDocId == "" && cardList.isEmpty
           ? Center(
               child: Text(
                 '기록한 다이어리가 없습니다',
@@ -273,7 +268,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                     ),
               ),
             )
-          : selectedPlantDocId != "" && selectedCardList.isEmpty
+          : selectedPlantDocId != "" && cardList.isEmpty
               ? Center(
                   child: Text(
                     '해당 식물의 다이어리가 없습니다',
@@ -283,13 +278,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ),
                 )
               : ListView.builder(
-                  itemCount: selectedPlantDocId != ""
-                      ? selectedCardList.length
-                      : cardList.length,
+                  itemCount: cardList.length,
                   itemBuilder: (context, index) {
-                    DiaryCardModel diaryCard = selectedPlantDocId != ""
-                        ? selectedCardList[index]
-                        : cardList[index];
+                    DiaryCardModel diaryCard = cardList[index];
                     String diaryDate = dateFormatter(diaryCard.diary.date);
                     bool last = false;
                     Widget dateWidget;
