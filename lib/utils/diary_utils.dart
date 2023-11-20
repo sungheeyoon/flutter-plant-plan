@@ -5,8 +5,11 @@ import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/utils/colors.dart';
 
-List<DiaryCardModel> getDiaryCardList(
-    List<PlantModel> plantsState, bool isBookMark) {
+List<DiaryCardModel> getDiaryCardList({
+  required List<PlantModel> plantsState,
+  required bool isBookMark,
+  required String selectedPlantDocId,
+}) {
   List<DiaryCardModel> results = [];
 
   for (final PlantModel plant in plantsState) {
@@ -21,16 +24,17 @@ List<DiaryCardModel> getDiaryCardList(
       if (isBookMark && !diary.bookMark) {
         continue;
       }
-
-      results.add(
-        DiaryCardModel(
-          docId: docId,
-          name: name,
-          alias: alias,
-          imageUrl: imageUrl,
-          diary: diary,
-        ),
-      );
+      if (selectedPlantDocId.isEmpty || selectedPlantDocId == docId) {
+        results.add(
+          DiaryCardModel(
+            docId: docId,
+            name: name,
+            alias: alias,
+            imageUrl: imageUrl,
+            diary: diary,
+          ),
+        );
+      }
     }
   }
   results.sort((a, b) => b.diary.date.compareTo(a.diary.date));
