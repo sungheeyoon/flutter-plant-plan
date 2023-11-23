@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:plant_plan/my_page/model/user_model.dart';
 import 'package:plant_plan/services/firebase_service.dart';
 
@@ -23,12 +24,16 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
   }
 
   Future<void> _fetchCurrentUser() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      state =
-          UserModelBase.user(id: user.email!, username: user.displayName ?? '');
-    } else {
-      state = UserModelBase.notLoggedIn();
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        state = UserModelBase.user(
+            id: user.email!, username: user.displayName ?? '');
+      } else {
+        state = UserModelBase.notLoggedIn();
+      }
+    } catch (e) {
+      state = UserModelBase.error('사용자 정보를 가져오는 데 실패했습니다.');
     }
   }
 
@@ -37,19 +42,55 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
     required String password,
   }) async {
     try {
-      final authResult = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      final user = authResult.user;
+      _fetchCurrentUser();
+    } catch (e) {
+      state = UserModelBase.error('로그인에 실패했습니다.');
+    }
+  }
+
+  Future<User?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        // 사용자가 로그인을 취소한 경우
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+
       if (user != null) {
         state = UserModelBase.user(
             id: user.email!, username: user.displayName ?? '');
       }
-      _fetchCurrentUser();
+
+      return user;
     } catch (e) {
+      if (e is FirebaseAuthException) {
+        // 이미 가입된 이메일 주소로 인한 오류 처리
+        if (e.code == 'account-exists-with-different-credential') {
+          // 이미 다른 방법으로 가입된 경우
+          print('이미 다른 방법으로 가입된 계정이 있습니다.');
+        }
+      }
+
       state = UserModelBase.error('로그인에 실패했습니다.');
+      return null;
     }
   }
 

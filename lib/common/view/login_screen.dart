@@ -10,6 +10,7 @@ import 'package:plant_plan/common/view/sign_up_form.dart';
 import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
+import 'package:plant_plan/utils/diary_utils.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static String get routeName => 'login';
@@ -206,71 +207,89 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                   ),
                 ),
-                //간편 로그인 추가예정
-                // SizedBox(
-                //   height: 60.h,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     const Expanded(
-                //       child: Divider(
-                //         thickness: 1,
-                //         color: Colors.grey, // 변경된 색상
-                //       ),
-                //     ),
-                //     const SizedBox(width: 8.0),
-                //     Text(
-                //       '또는 간편로그인하기',
-                //       style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                //             color: grayColor700,
-                //           ),
-                //     ),
-                //     const SizedBox(width: 8.0),
-                //     const Expanded(
-                //       child: Divider(
-                //         thickness: 1,
-                //         color: Colors.grey, // 변경된 색상
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: 20.h,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Image(
-                //       image: const AssetImage('assets/images/login/kakao.png'),
-                //       width: 56.h,
-                //       height: 56.h,
-                //       fit: BoxFit.contain,
-                //     ),
-                //     const SizedBox(
-                //       width: 16.0,
-                //     ),
-                //     Image(
-                //       image: const AssetImage('assets/images/login/naver.png'),
-                //       width: 56.h,
-                //       height: 56.h,
-                //       fit: BoxFit.contain,
-                //     ),
-                //     const SizedBox(
-                //       width: 16.0,
-                //     ),
-                //     Image(
-                //       image: const AssetImage('assets/images/login/google.png'),
-                //       width: 58.h,
-                //       height: 58.h,
-                //       fit: BoxFit.contain,
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(
-                //   height: 60.h,
-                // ),
-
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        color: Colors.grey, // 변경된 색상
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text(
+                      '또는 간편로그인하기',
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: grayColor700,
+                          ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    const Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        color: Colors.grey, // 변경된 색상
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Image(
+                    //   image: const AssetImage('assets/images/login/kakao.png'),
+                    //   width: 56.h,
+                    //   height: 56.h,
+                    //   fit: BoxFit.contain,
+                    // ),
+                    // const SizedBox(
+                    //   width: 16.0,
+                    // ),
+                    // Image(
+                    //   image: const AssetImage('assets/images/login/naver.png'),
+                    //   width: 56.h,
+                    //   height: 56.h,
+                    //   fit: BoxFit.contain,
+                    // ),
+                    // const SizedBox(
+                    //   width: 16.0,
+                    // ),
+                    GestureDetector(
+                      onTap: () async {
+                        User? user = await ref
+                            .read(userMeProvider.notifier)
+                            .signInWithGoogle();
+                        print(user);
+                        if (user != null) {
+                          // 로그인 성공한 화면이동
+                          if (context.mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const RootTab()),
+                              (route) => false,
+                            );
+                          }
+                        } else {
+                          // 로그인 실패 시 토스트 메시지 표시
+                          if (context.mounted) {
+                            showCustomToast(context, '로그인에 실패했습니다.');
+                          }
+                        }
+                      },
+                      child: Image(
+                        image:
+                            const AssetImage('assets/images/login/google.png'),
+                        width: 58.h,
+                        height: 58.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
