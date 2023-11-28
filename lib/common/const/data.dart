@@ -1,1 +1,0 @@
-const NATIVE_APP_KEY = "0a869172f4728637acce27ebffc3f863";

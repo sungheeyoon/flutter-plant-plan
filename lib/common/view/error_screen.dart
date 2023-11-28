@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_plan/common/view/login_screen.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String errorMessage;
@@ -30,7 +31,11 @@ class ErrorScreen extends StatelessWidget {
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // 다시 시도 버튼을 누르면 작업을 다시 시도하도록 처리할 수 있습니다.
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => const LoginScreen()),
+                    (route) => false);
               },
               child: const Text('다시 시도'),
             ),

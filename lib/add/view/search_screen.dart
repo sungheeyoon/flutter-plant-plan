@@ -9,10 +9,10 @@ import 'package:plant_plan/add/model/information_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:plant_plan/add/view/add_directly_screen.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
+import 'package:plant_plan/add/widget/search_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
-import 'package:plant_plan/widgets/search_widget.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   static String get routeName => 'addSearch';
