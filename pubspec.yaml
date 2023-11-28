@@ -100,26 +100,12 @@ flutter:
     - assets/images/management/humid.png
     - assets/images/management/repotting.png
     - assets/images/management/nutrient.png
-    - assets/images/management/sun.png
-    - assets/images/management/humid_outline.png
-    - assets/images/management/repotting_outline.png
-    - assets/images/management/nutrient_outline.png
-    - assets/images/management/sun_outline.png
-    #   - images/a_dot_ham.jpeg
-    - assets/images/weather/cloudy.png
-    - assets/images/weather/partly_sunny.png
-    - assets/images/weather/sunny.png
 
-    - assets/images/plants/plantA.png
-
-    - assets/images/pot.png
     - assets/images/splash.png
 
     - assets/images/onboarding/onboarding1.png
     - assets/images/onboarding/onboarding2.png
     - assets/images/onboarding/onboarding3.png
-    - assets/images/onboarding/dot.png
-    - assets/images/onboarding/long_dot.png
 
     - assets/images/login/login.png
     - assets/images/login/kakao.png
@@ -127,8 +113,6 @@ flutter:
     - assets/images/login/google.png
     - assets/images/login/logo.png
 
-    - assets/icons/favorite_outline.png
-    - assets/icons/favorite.png
     - assets/icons/img.png
     - assets/icons/edit.png
     - assets/icons/search.png
@@ -167,7 +151,6 @@ flutter:
 
     - assets/icons/bookmark.png
     - assets/icons/bookmark_outline.png
-    - assets/icons/pot_add.png
 
     - assets/icons/home/change_view.png
     - assets/icons/home/statistical_chart.png
