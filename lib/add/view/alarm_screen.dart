@@ -475,32 +475,34 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   }
 
   Widget hourMinute12H({required DateTime time}) {
-    return Container(
-      width: 360.w,
-      height: 194.h,
-      decoration: BoxDecoration(
-        color: pointColor2.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: TimePickerSpinner(
-        time: time,
-        is24HourMode: false,
-        normalTextStyle: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 28.sp,
-          color: pointColor2.withOpacity(0.25),
+    return Center(
+      child: Container(
+        width: 312.w,
+        height: 196.h,
+        decoration: BoxDecoration(
+          color: pointColor2.withOpacity(0.04),
+          borderRadius: BorderRadius.circular(16),
         ),
-        itemWidth: 45,
-        isForce2Digits: true,
-        highlightedTextStyle: TextStyle(
-            fontWeight: FontWeight.w700, fontSize: 30.sp, color: pointColor2),
-        alignment: Alignment.center,
-        spacing: 44.w,
-        onTimeChange: (time) async {
-          ref
-              .read(alarmProvider.notifier)
-              .setStartTime(StartTimeOption.time, time);
-        },
+        child: TimePickerSpinner(
+          time: time,
+          is24HourMode: false,
+          normalTextStyle: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 26.sp,
+            color: pointColor2.withOpacity(0.25),
+          ),
+          itemWidth: 45.w,
+          isForce2Digits: true,
+          highlightedTextStyle: TextStyle(
+              fontWeight: FontWeight.w700, fontSize: 28.sp, color: pointColor2),
+          alignment: Alignment.center,
+          spacing: 54.w,
+          onTimeChange: (time) async {
+            ref
+                .read(alarmProvider.notifier)
+                .setStartTime(StartTimeOption.time, time);
+          },
+        ),
       ),
     );
   }

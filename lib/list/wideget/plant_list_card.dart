@@ -40,12 +40,12 @@ class PlantListCard extends ConsumerWidget {
                 imageUrl: cardData.imageUrl,
                 imageBuilder: (context, imageProvider) => ProfileImageWidget(
                   imageProvider: imageProvider,
-                  size: 68.h,
-                  radius: 28.h,
+                  size: 68.w,
+                  radius: 28.w,
                 ),
                 placeholder: (context, url) => SizedBox(
-                  width: 68.h,
-                  height: 68.h,
+                  width: 68.w,
+                  height: 68.w,
                   child: const CircleAvatar(
                     backgroundColor: grayColor200,
                   ),
@@ -73,32 +73,32 @@ class PlantListCard extends ConsumerWidget {
                     if (cardData.fields.isEmpty)
                       Image.asset(
                         'assets/icons/alarm_none.png',
-                        width: 16.h,
-                        height: 16.h,
+                        width: 16.w,
+                        height: 16.w,
                       ),
                     if (cardData.fields.contains(PlantField.watering))
                       Image.asset(
                         'assets/images/management/humid.png',
-                        width: 14.h,
-                        height: 14.h,
+                        width: 14.w,
+                        height: 14.w,
                         fit: BoxFit.contain,
                       ),
                     if (cardData.fields.contains(PlantField.repotting))
                       Image.asset(
                         'assets/images/management/repotting.png',
-                        width: 14.h,
-                        height: 14.h,
+                        width: 14.w,
+                        height: 14.w,
                         fit: BoxFit.contain,
                       ),
                     if (cardData.fields.contains(PlantField.nutrient))
                       Image.asset(
                         'assets/images/management/nutrient.png',
-                        width: 14.h,
-                        height: 14.h,
+                        width: 14.w,
+                        height: 14.w,
                         fit: BoxFit.contain,
                       ),
-                    SizedBox(
-                      width: 6.h,
+                    const SizedBox(
+                      width: 6,
                     ),
                     Text(
                       cardData.fields.isEmpty

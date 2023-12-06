@@ -1,4 +1,4 @@
-package com.example.plant_plan
+package com.torushy.plantPlan
 
 import io.flutter.embedding.android.FlutterActivity
 

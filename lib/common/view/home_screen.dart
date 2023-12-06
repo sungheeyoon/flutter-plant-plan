@@ -536,14 +536,20 @@ class TodoTap extends ConsumerWidget {
                           b.alarm.offDates.contains(selectedDateState);
 
                       if (aHasOffDate && !bHasOffDate) {
-                        return 1; // a가 offDates를 가지고 있고 b가 가지고 있지 않은 경우 b를 더 앞에 배치
+                        return 1; // offDates를 가지고 있는 항목은 뒤로 배치
                       } else if (!aHasOffDate && bHasOffDate) {
-                        return -1; // a가 offDates를 가지고 있지 않고 b가 가지고 있는 경우 a를 더 앞에 배치
+                        return -1; // offDates를 가지고 있지 않은 항목은 앞으로 배치
                       } else {
-                        return b.alarm.startTime.compareTo(a.alarm
-                            .startTime); // offDates가 동일한 경우 startTime을 기준으로 정렬 (시간 순서를 반대로)
+                        // 시간만을 비교하도록 수정
+                        final aTime = DateTime(0, 0, 0, a.alarm.startTime.hour,
+                            a.alarm.startTime.minute);
+                        final bTime = DateTime(0, 0, 0, b.alarm.startTime.hour,
+                            b.alarm.startTime.minute);
+
+                        return aTime.compareTo(bTime);
                       }
                     });
+
                     final info = selectedDateAlarms[index];
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 6.h),

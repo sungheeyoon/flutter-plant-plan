@@ -11,6 +11,7 @@ import 'package:plant_plan/common/widget/input_box.dart';
 import 'package:plant_plan/my_page/provider/user_me_provider.dart';
 import 'package:plant_plan/utils/colors.dart';
 import 'package:plant_plan/utils/diary_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static String get routeName => 'login';
@@ -57,8 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> performLogin(String email, String password) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -75,7 +75,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           (route) => false,
         );
       }
-      print('로그인 성공: ${userCredential.user!.uid}');
     } catch (e) {
       displayError(e);
     }
@@ -96,8 +95,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     print('로그인 실패: $errorMessage');
   }
 
+  //// for SharedPreferences test
+  Future<void> clearSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // clearSharedPreferences();
     return DefaultLayout(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -261,7 +267,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         User? user = await ref
                             .read(userMeProvider.notifier)
                             .signInWithGoogle();
-                        print(user);
+
                         if (user != null) {
                           // 로그인 성공한 화면이동
                           if (context.mounted) {
@@ -286,6 +292,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 58.h,
                         height: 58.h,
                         fit: BoxFit.contain,
+                        semanticLabel: 'googleButton',
                       ),
                     ),
                   ],

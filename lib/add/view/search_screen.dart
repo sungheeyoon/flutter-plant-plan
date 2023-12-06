@@ -269,7 +269,7 @@ class AddDirectlyButton extends StatelessWidget {
               '직접 추가하기',
               style: Theme.of(context)
                   .textTheme
-                  .titleLarge!
+                  .titleMedium!
                   .copyWith(color: Colors.white),
             ),
           ],
