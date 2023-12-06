@@ -36,7 +36,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   void didUpdateWidget(covariant DiaryScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.bookMark) {
+    if (widget.bookMark != oldWidget.bookMark) {
       setState(() {
         isBookMark = widget.bookMark;
       });

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
@@ -71,17 +70,17 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
     onSwitchValueChanged();
   }
 
-  Future<void> printPendingNotifications() async {
-    List<PendingNotificationRequest> notifications =
-        await notificationService.retrievePendingNotifications();
-    for (var notification in notifications) {
-      print('Notification ID: ${notification.id}');
-      print('Notification Title: ${notification.title}');
-      print('Notification Body: ${notification.body}');
-      print('Notification Payload: ${notification.payload}');
-      print('--------------------------------------------------');
-    }
-  }
+  // Future<void> printPendingNotifications() async {
+  //   List<PendingNotificationRequest> notifications =
+  //       await notificationService.retrievePendingNotifications();
+  //   for (var notification in notifications) {
+  //     print('Notification ID: ${notification.id}');
+  //     print('Notification Title: ${notification.title}');
+  //     print('Notification Body: ${notification.body}');
+  //     print('Notification Payload: ${notification.payload}');
+  //     print('--------------------------------------------------');
+  //   }
+  // }
 
   Future<void> setSwitchValue(key, value) async {
     final PlantsModel plantsState = ref.read(plantsProvider) as PlantsModel;
@@ -159,8 +158,8 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
     noticeSwitch = ref.watch(noticeProvider);
     serviceSwitch =
         wateringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
-
-    printPendingNotifications();
+    //for  notifications test
+    // printPendingNotifications();
 
     return DefaultLayout(
       title: '알림 설정',

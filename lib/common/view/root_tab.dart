@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
+import 'package:plant_plan/add/provider/connectivity_provider.dart';
 import 'package:plant_plan/add/view/search_screen.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/model/plants_model.dart';
@@ -36,7 +39,8 @@ class RootTabState extends ConsumerState<RootTab>
   @override
   void initState() {
     super.initState();
-
+    notificationService.initialize;
+    notificationService.requestPermission();
     controller = TabController(length: 5, vsync: this);
     controller.index = widget.initialTabIndex;
     index = widget.initialTabIndex;
@@ -44,6 +48,15 @@ class RootTabState extends ConsumerState<RootTab>
 
     _fetchPlants();
     getAlarmSetting();
+
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      final ConnectivityStatus connectivityStatus =
+          ref.read(connectivityStatusProvider);
+      print('connectivityStatus: $connectivityStatus');
+      if (connectivityStatus == ConnectivityStatus.isDisconnected) {
+        connectivityDialog(context);
+      }
+    });
   }
 
   @override
@@ -111,9 +124,76 @@ class RootTabState extends ConsumerState<RootTab>
     }
   }
 
+  void connectivityDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          contentPadding: const EdgeInsets.all(0),
+          insetPadding: EdgeInsets.zero,
+          content: SizedBox(
+            width: 312.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 43),
+                  child: Text(
+                    '인터넷 연결을 확인 후 다시 실행해주세요.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: grayBlack,
+                        ),
+                  ),
+                ),
+                const Divider(
+                  color: grayColor200,
+                  thickness: 2,
+                  height: 1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            SystemNavigator.pop();
+                          },
+                          child: Text(
+                            '확인',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color: primaryColor,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final PlantsModelBase plantsState = ref.watch(plantsProvider);
+    final ConnectivityStatus connectivityStatus =
+        ref.watch(connectivityStatusProvider);
 
     if (plantsState is PlantsModelLoading) {
       return const SplashScreen();
@@ -123,6 +203,11 @@ class RootTabState extends ConsumerState<RootTab>
       final List<PlantModel> plants = plantsState.data;
       final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
       scheduleNotifications(plants);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (connectivityStatus == ConnectivityStatus.isDisconnected) {
+          connectivityDialog(context);
+        }
+      });
 
       return DefaultLayout(
         bottomNavigationBar: listDeleteModeState

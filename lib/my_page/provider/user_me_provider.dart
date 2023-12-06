@@ -81,12 +81,20 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase> {
 
       return user;
     } catch (e) {
+      print('Error during Google sign-in: $e');
+
       if (e is FirebaseAuthException) {
-        // 이미 가입된 이메일 주소로 인한 오류 처리
+        // Firebase Auth 예외 처리
+        print(
+            'Firebase Auth Exception - Code: ${e.code}, Message: ${e.message}');
+
         if (e.code == 'account-exists-with-different-credential') {
           // 이미 다른 방법으로 가입된 경우
           print('이미 다른 방법으로 가입된 계정이 있습니다.');
         }
+      } else {
+        // 기타 예외 처리
+        print('Other Exception: $e');
       }
 
       state = UserModelBase.error('로그인에 실패했습니다.');

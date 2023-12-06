@@ -13,7 +13,7 @@ class LocalNotificationService {
 
   Future<void> initialize() async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@drawable/home');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     DarwinInitializationSettings darwinInitializationSettings =
         DarwinInitializationSettings(
             requestAlertPermission: true,
@@ -153,6 +153,7 @@ class LocalNotificationService {
           importance: Importance.max,
           priority: Priority.high,
           ticker: 'ticker',
+          icon: '@mipmap/ic_launcher',
         );
 
         DarwinNotificationDetails iOSPlatformChannelSpecifics =

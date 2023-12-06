@@ -53,7 +53,8 @@ class _ListScreenState extends ConsumerState<ListScreen> {
   void didUpdateWidget(covariant ListScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.favorite) {
+    // widget.favorite 값이 변경되면 isFavorite 업데이트
+    if (widget.favorite != oldWidget.favorite) {
       setState(() {
         isFavorite = widget.favorite;
       });

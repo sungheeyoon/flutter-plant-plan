@@ -16,23 +16,22 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   late PageController controller;
   int currentIndex = 0;
+  bool isDialogShown = false;
 
   @override
   void initState() {
     controller = PageController();
+    readShowDialogFlag();
     super.initState();
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  Future<void> readShowDialogFlag() async {
+    final prefs = await SharedPreferences.getInstance();
+    final showDialogFlag = prefs.getBool('showDialogFlag') ?? true;
 
-  @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 화면이 렌더링된 후 모달창을 띄우기 위한 콜백
+    // showDialogFlag가 true이면 showDialog를 띄움
+    if (showDialogFlag) {
+      if (!mounted) return;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -261,13 +260,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        // SharedPreferences에 showLogin 플래그를 false로 설정
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setBool('showLogin', false);
+
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(0),
                         minimumSize: MaterialStateProperty.all(
-                            const Size(double.infinity, 42)), // 최대 너비 설정
+                            const Size(double.infinity, 42)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -290,8 +294,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           );
         },
       );
-    });
+    }
+  }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultLayout(
       child: Column(
         children: [
@@ -351,7 +364,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   controller: controller,
                   currentPage: 0,
                   title: "잊지 말고,",
-                  subtitle: "내 식물에게 꼭 필요한 관리\n 까먹지 말고 사랑해주세요",
+                  subtitle: "오늘 해야하는 관리\n 까먹지 않도록 모두 보여드릴게요",
                   imageTopPadding: 23.h,
                   image: Image(
                     image: const AssetImage(
@@ -364,8 +377,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 OnboardingContent(
                   controller: controller,
                   currentPage: 1,
-                  title: "알아 두고,",
-                  subtitle: "내 식물을 위한 다양한 지식을 알아두어\n 잘 자랄 수 있도록 해주세요",
+                  title: "꾸준하게,",
+                  subtitle: "지속적으로 내 식물을 관리할 수 있도록\n 알림을 보내드리니 확인해주세요",
                   imageTopPadding: 121.h,
                   image: Image(
                     image: const AssetImage(
@@ -379,7 +392,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   controller: controller,
                   currentPage: 2,
                   title: "기억하자",
-                  subtitle: "내 식물들과 함께한 시간을 기억하고\n  행복했던 순간을 추억해보세요",
+                  subtitle: "내 식물들과 함께한 시간을 기억하고\n  행복했던 순간을 추억할 수 있어요",
                   imageTopPadding: 40.h,
                   image: Image(
                     image: const AssetImage(
@@ -482,7 +495,7 @@ class OnboardingContent extends StatelessWidget {
               Center(
                 child: SizedBox(
                   width: 312.w,
-                  height: 36.h,
+                  height: 44.h,
                   child: OutlinedButton(
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();

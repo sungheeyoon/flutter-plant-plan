@@ -149,8 +149,9 @@ class _InputBoxState extends State<InputBox> {
               if (widget.isPassword)
                 IconButton(
                   icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
                     color: grayColor600,
+                    semanticLabel: 'visibility',
                   ),
                   onPressed: () {
                     setState(() {
