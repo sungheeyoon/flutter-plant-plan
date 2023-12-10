@@ -23,19 +23,24 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   void addAnnouncement() async {
     FirebaseService firebaseService = FirebaseService();
 
+    String originalBody = '''
+    안녕하세요:)  
+    식물관리앱 ‘식플'이 드디어 베타서비스를 오픈했습니다!
+
+    이제 식플에서 내 식물을 등록하고, 상태에 맞는 알림을 설정하여  
+    빼먹지 않고 내 식물을 관리하는 올바른 식집사 생활을 시작해보세요!
+
+    많은 관심과 사랑 부탁드립니다🤓1
+  ''';
+
+    //마지막 줄바꿈 삭제
+    String trimmedBody = originalBody.trimRight();
+
     AnnouncementModel announcement = AnnouncementModel(
       title: '식물관리앱 `식플` Beta Open!',
       date: DateTime.now(),
       isNew: true,
-      body: '''
-      안녕하세요:)  
-      식물관리앱 ‘식플'이 드디어 베타서비스를 오픈했습니다!
-
-      이제 식플에서 내 식물을 등록하고, 상태에 맞는 알림을 설정하여  
-      빼먹지 않고 내 식물을 관리하는 올바른 식집사 생활을 시작해보세요!
-
-      많은 관심과 사랑 부탁드립니다🤓
-    ''',
+      body: trimmedBody,
     );
 
     try {
