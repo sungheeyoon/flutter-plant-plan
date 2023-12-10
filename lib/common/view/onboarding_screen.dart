@@ -511,7 +511,7 @@ class OnboardingContent extends StatelessWidget {
                       },
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(100),
                         ),
                         side: const BorderSide(
                           width: 0,
@@ -523,7 +523,7 @@ class OnboardingContent extends StatelessWidget {
                         "시작하기",
                         style: Theme.of(context)
                             .textTheme
-                            .labelLarge!
+                            .bodyLarge!
                             .copyWith(color: Colors.white),
                       )),
                 ),
