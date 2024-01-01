@@ -12,7 +12,7 @@ class ImageHelper {
 
   Future<XFile?> pickImage({
     bool camera = false,
-    int imageQuality = 20,
+    int imageQuality = 100,
   }) async {
     XFile? file;
     if (camera) {
@@ -35,5 +35,7 @@ class ImageHelper {
       await _imageCropper.cropImage(
         sourcePath: file.path,
         cropStyle: cropStyle,
+        maxHeight: 1000,
+        maxWidth: 1000,
       );
 }

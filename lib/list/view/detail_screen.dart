@@ -285,6 +285,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
         final String newUserImageUrl = await ref
             .read(photoProvider.notifier)
             .uploadPhotoAndGetUserImageUrl();
+        //변경된 imageUrl Detail State에 update
+        ref.read(detailProvider.notifier).updateUserImageUrl(newUserImageUrl);
         //변경된 imageUrl State에 update
         await ref
             .read(plantsProvider.notifier)
@@ -585,41 +587,50 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                       thickness: 1,
                       color: Colors.grey[200],
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(15.0),
-                          bottomRight: Radius.circular(15.0),
-                        ),
-                        highlightColor: Colors.grey[200],
-                        onTap: () async {
-                          if (detailState.data.alias != textController.text) {
-                            //별칭이 수정됐을경우
-                            ref
-                                .read(detailProvider.notifier)
-                                .updateAlias(textController.text);
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (detailState.data.alias != textController.text) {
+                          // 별칭이 수정됐을 경우
+                          ref
+                              .read(detailProvider.notifier)
+                              .updateAlias(textController.text);
 
-                            await ref.read(plantsProvider.notifier).updatePlant(
+                          await ref.read(plantsProvider.notifier).updatePlant(
                                 detailState.data.docId,
-                                alias: textController.text);
-                          }
-                          if (xTrigger) {
-                            //xTrigger 이면 기존사진삭제 및 기본사진으로
-                            if (context.mounted) {
-                              return Navigator.of(context).pop("updatedDelete");
-                            }
-                          } else if (photoState != null && xTrigger == false) {
-                            //새로운이미지를 추가하는경우
-                            if (context.mounted) {
-                              return Navigator.of(context).pop("updatedPhoto");
-                            }
-                          }
+                                alias: textController.text,
+                              );
+                        }
+                        if (xTrigger) {
+                          // xTrigger 이면 기존사진삭제 및 기본사진으로
                           if (context.mounted) {
-                            return Navigator.of(context).pop();
-                          } // 모달 창 닫기
-                        },
+                            return Navigator.of(context).pop("updatedDelete");
+                          }
+                        } else if (photoState != null && xTrigger == false) {
+                          // 새로운 이미지를 추가하는 경우
+                          if (context.mounted) {
+                            return Navigator.of(context).pop("updatedPhoto");
+                          }
+                        }
+                        if (context.mounted) {
+                          return Navigator.of(context).pop();
+                        } // 모달 창 닫기
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent, // 버튼 배경색을 투명하게 설정
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(15.0),
+                            bottomRight: Radius.circular(15.0),
+                          ),
+                        ),
+                        elevation: 0, // 그림자 없애기
+// 탭 시 그림자 없애기
+                        side: BorderSide(
+                            color: Colors.grey[200]!), // 하이라이트 시 테두리 추가
+                      ),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
                         child: Center(
                           child: Text(
                             "수정",

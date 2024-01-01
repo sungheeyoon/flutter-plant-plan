@@ -133,7 +133,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 title: Row(
                   children: [
                     CachedNetworkImage(
-                      imageUrl: plant.information.imageUrl,
+                      imageUrl: plant.userImageUrl == ""
+                          ? plant.information.imageUrl
+                          : plant.userImageUrl,
                       imageBuilder: (context, imageProvider) =>
                           ProfileImageWidget(
                         imageProvider: imageProvider,
@@ -154,7 +156,8 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                       width: 16,
                     ),
                     Text(
-                      plant.information.name,
+                      plant.information.name +
+                          (plant.alias != "" ? '(${plant.alias})' : ''),
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: grayBlack,
                           ),

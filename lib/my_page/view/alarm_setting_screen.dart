@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
@@ -43,6 +44,8 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
       notificationStatus = permissionStatus;
     });
     setSwitch();
+    //for notification print
+    // await printPendingNotifications();
   }
 
   Future<bool> checkNotificationGranted() async {
@@ -158,8 +161,6 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
     noticeSwitch = ref.watch(noticeProvider);
     serviceSwitch =
         wateringSwitch || repottingSwitch || nutrientSwitch || noticeSwitch;
-    //for  notifications test
-    // printPendingNotifications();
 
     return DefaultLayout(
       title: '알림 설정',
