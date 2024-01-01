@@ -5,6 +5,7 @@ import 'package:plant_plan/add/model/alarm_model.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/add/provider/add_plant_provider.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'dart:math';
 
 class LocalNotificationService {
   LocalNotificationService();
@@ -171,9 +172,13 @@ class LocalNotificationService {
         );
 
         if (alarm.isOn) {
+          //알람의 초단위를 0으로초기화
+          DateTime updatedStartTime = alarm.startTime
+              .subtract(Duration(seconds: alarm.startTime.second));
+
           if (alarm.repeat == 0) {
             tz.TZDateTime scheduledDate =
-                tz.TZDateTime.from(alarm.startTime, tz.local);
+                tz.TZDateTime.from(updatedStartTime, tz.local);
             if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
               await _localNotificationService.zonedSchedule(
                 id,
@@ -187,7 +192,7 @@ class LocalNotificationService {
             }
           } else if (alarm.repeat > 0) {
             tz.TZDateTime nextNotificationDate =
-                tz.TZDateTime.from(alarm.startTime, tz.local);
+                tz.TZDateTime.from(updatedStartTime, tz.local);
 
             // 현재 시간 이후의 첫 번째 알림으로 설정
             while (nextNotificationDate.isBefore(tz.TZDateTime.now(tz.local))) {
@@ -219,7 +224,8 @@ class LocalNotificationService {
 
       if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local)) &&
           !_isDateInOffDates(scheduledDate, alarm.offDates)) {
-        int actualNotificationId = int.parse('$id$count');
+        int actualNotificationId = int.parse('$id${count % 100}'
+            .substring(0, min(9, '$id${count % 100}'.length)));
 
         await _localNotificationService.zonedSchedule(
           actualNotificationId,
