@@ -35,55 +35,57 @@ class AddSecondScreen extends ConsumerWidget {
     final InformationModel informationState = ref.watch(informationProvider);
 
     bool isTapHandled = false;
+
     Future<void> insertNewPlant() async {
-      final user = auth.currentUser;
+      try {
+        Map<String, dynamic> data;
+        final user = auth.currentUser;
 
-      if (user == null) return;
+        // 사용자가 없으면 종료
+        if (user == null) return;
 
-      final uid = user.uid;
+        final uid = user.uid;
 
-      final DocumentReference docRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('plants')
-          .doc();
+        // uid 를 document 이름에 넣음으로써 해당 doc에 하나의 유저 식물정보들만 모음
+        final docRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('plants')
+            .doc();
+        final docId = docRef.id;
 
-      final String docId = docRef.id;
+        // Provider notifiers를 사용하여 docId 및 userImageUrl 업데이트
+        await ref.read(addPlantProvider.notifier).updateDocId(docId);
+        final userImageUrl = await ref
+            .read(photoProvider.notifier)
+            .uploadPhotoAndGetUserImageUrl();
+        ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
-      await ref.read(addPlantProvider.notifier).updateDocId(docId);
-      final String userImageUrl = await ref
-          .read(photoProvider.notifier)
-          .uploadPhotoAndGetUserImageUrl();
-      ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
+        data = plantState.toJson();
 
-      final data = ref.read(addPlantProvider).toJson();
-      data['timestamp'] = DateTime.now();
-      if (fromDirect) {
-        final tipsJson =
-            informationState.tips.map((tipModel) => tipModel.toJson()).toList();
-        data['information'] = {
-          'id': const Uuid().v4(),
-          'name': informationState.name,
-          'imageUrl': userImageUrl,
-          'tips': tipsJson,
-        };
-        data['userImageUrl'] = '';
-      } else {
-        data['information'] = ref.read(addPlantProvider).information.toJson();
+        //직접 추가한 경우 informationState에 담긴 데이터와 , 넣은이미지를 information 필드에넣는다.(사용자가 넣은정보가 기본정보가됨)
+        if (fromDirect) {
+          data['information'] = informationState.toJson();
+          data['information']['imageUrl'] = userImageUrl;
+        }
+
+        data['timestamp'] = DateTime.now();
+        data['information']['id'] = const Uuid().v4();
+        data['docId'] = docId;
+
+        await docRef.set(data);
+
+        // Provider 상태 초기화
+        ref.read(photoProvider.notifier).reset();
+        ref.read(alarmProvider.notifier).reset();
+        ref.read(addPlantProvider.notifier).reset();
+        ref.read(informationProvider.notifier).reset();
+      } catch (e, stackTrace) {
+        // 오류가 발생한 경우 처리
+        // print('오류: $e');
+        // print('StackTrace: $stackTrace');
+        // 필요한 대로 오류 처리
       }
-
-      data['alarms'] = ref
-          .read(addPlantProvider)
-          .alarms
-          .map((alarm) => alarm.toJson())
-          .toList();
-
-      await docRef.set(data);
-
-      ref.read(photoProvider.notifier).reset();
-      ref.read(alarmProvider.notifier).reset();
-      ref.read(addPlantProvider.notifier).reset();
-      ref.read(informationProvider.notifier).reset();
     }
 
     return DefaultLayout(

@@ -33,9 +33,9 @@ Map<String, dynamic> _$$_PlantModelToJson(_$_PlantModel instance) =>
       'userImageUrl': instance.userImageUrl,
       'alias': instance.alias,
       'favorite': instance.favorite,
-      'information': instance.information,
-      'diary': instance.diary,
-      'alarms': instance.alarms,
+      'information': instance.information.toJson(),
+      'diary': instance.diary.map((e) => e.toJson()).toList(),
+      'alarms': instance.alarms.map((e) => e.toJson()).toList(),
       'timestamp': _$JsonConverterToJson<dynamic, DateTime>(
           instance.timestamp, const TimestampSerializer().toJson),
     };

@@ -6,6 +6,7 @@ part 'information_model.g.dart';
 
 @freezed
 class InformationModel with _$InformationModel {
+  @JsonSerializable(explicitToJson: true)
   factory InformationModel({
     @Default('') String id,
     @Default('') String name,

@@ -29,7 +29,7 @@ class InputBox extends StatefulWidget {
 
 class _InputBoxState extends State<InputBox> {
   bool _obscureText = true; // Added to manage obscure text
-
+  String? currentErrorMessage;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -48,8 +48,6 @@ class _InputBoxState extends State<InputBox> {
 
   @override
   Widget build(BuildContext context) {
-    String? currentErrorMessage = widget.currentErrorMessage;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
