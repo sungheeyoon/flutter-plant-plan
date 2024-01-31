@@ -9,6 +9,8 @@ part 'plant_model.g.dart';
 
 @freezed
 class PlantModel with _$PlantModel {
+  @JsonSerializable(explicitToJson: true)
+  //하위 모델이 toJson이안되서 추가한 항목
   factory PlantModel({
     @Default("") String docId,
     @Default("") String userImageUrl,
