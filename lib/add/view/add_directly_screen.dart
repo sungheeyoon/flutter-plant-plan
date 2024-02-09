@@ -282,12 +282,14 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                             ),
                             child: TextField(
                               controller: contextControllers[index],
+                              maxLength: 1000,
                               maxLines: null,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(color: grayBlack),
                               decoration: InputDecoration(
+                                counterText: '',
                                 isDense: true,
                                 hintText:
                                     '나중에도 계속해서 참고할 수 있도록 식물과 관련된 물주기 정보를 직접 입력해보세요!',
@@ -493,54 +495,55 @@ class PlantName extends ConsumerWidget {
           height: 8.h,
         ),
         SizedBox(
-          height: 42.h,
-          child: Column(
-            children: [
-              TextFormField(
-                onChanged: (value) {
-                  ref.read(informationProvider.notifier).updateName(value);
-                },
-                textAlignVertical: TextAlignVertical.center,
-                textAlign: TextAlign.start,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayBlack),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        8.0,
-                      ),
-                    ),
-                    borderSide: BorderSide(width: 1, color: grayColor400),
+          height: 70.h,
+          child: TextFormField(
+            maxLength: 20,
+            onChanged: (value) {
+              ref.read(informationProvider.notifier).updateName(value);
+            },
+            textAlignVertical: TextAlignVertical.center,
+            textAlign: TextAlign.start,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: grayBlack),
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.fromLTRB(16, 10.h, 0, 10.h),
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    8.0,
                   ),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        8.0,
-                      ),
-                    ),
-                    borderSide: BorderSide(color: grayColor400, width: 1.0),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        8.0,
-                      ),
-                    ),
-                    borderSide: BorderSide(color: grayColor400, width: 1.0),
-                  ),
-                  hintText: '식물 이름을 입력해주세요',
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: grayColor400),
                 ),
+                borderSide: BorderSide(width: 1, color: grayColor400),
               ),
-            ],
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    8.0,
+                  ),
+                ),
+                borderSide: BorderSide(color: grayColor400, width: 1.0),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    8.0,
+                  ),
+                ),
+                borderSide: BorderSide(color: grayColor400, width: 1.0),
+              ),
+              hintText: '식물 이름을 입력해주세요',
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: grayColor400),
+              counterStyle: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: grayColor600),
+            ),
           ),
         ),
       ],

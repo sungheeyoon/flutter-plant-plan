@@ -55,6 +55,7 @@ class WithdrawLastScreen extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(
               height: 31,

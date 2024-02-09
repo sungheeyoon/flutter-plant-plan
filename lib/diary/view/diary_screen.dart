@@ -155,12 +155,16 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Text(
-                      plant.information.name +
-                          (plant.alias != "" ? '(${plant.alias})' : ''),
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: grayBlack,
-                          ),
+                    SizedBox(
+                      width: 180.w,
+                      child: Text(
+                        plant.information.name +
+                            (plant.alias != "" ? '(${plant.alias})' : ''),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: grayBlack,
+                            ),
+                        maxLines: 3,
+                      ),
                     ),
                   ],
                 ),
@@ -357,19 +361,29 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                     const SizedBox(
                       width: 8,
                     ),
-                    Text(
-                      widget.diaryCard.name,
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            color: grayBlack,
-                          ),
+                    SizedBox(
+                      width: 180.w,
+                      child: Text(
+                        widget.diaryCard.name,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: grayBlack,
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
-                Text(
-                  widget.diaryCard.alias,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: keyColor700,
-                      ),
+                SizedBox(
+                  width: 100.w,
+                  child: Text(
+                    widget.diaryCard.alias,
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: keyColor700,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
@@ -388,7 +402,6 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
           const SizedBox(
             height: 8,
           ),
-          //emoji title dotdotdot
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
@@ -397,21 +410,31 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
               children: [
                 Row(
                   children: [
-                    if (widget.diaryCard.diary.emoji != "")
-                      Image.asset(
-                        'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
-                        width: 24,
-                        height: 24,
+                    SizedBox(
+                      width: 280.w,
+                      child: RichText(
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: grayBlack,
+                                  ),
+                          children: [
+                            if (widget.diaryCard.diary.emoji != "")
+                              WidgetSpan(
+                                child: Image.asset(
+                                  'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
+                            TextSpan(
+                              text: widget.diaryCard.diary.title,
+                            ),
+                          ],
+                        ),
                       ),
-                    if (widget.diaryCard.diary.emoji != "")
-                      const SizedBox(
-                        width: 4,
-                      ),
-                    Text(
-                      widget.diaryCard.diary.title,
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            color: grayBlack,
-                          ),
                     ),
                   ],
                 ),

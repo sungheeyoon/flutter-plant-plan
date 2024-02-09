@@ -394,10 +394,11 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       height: 8.h,
                     ),
                     SizedBox(
-                      height: 42.h,
+                      height: 70.h,
                       child: Column(
                         children: [
                           TextFormField(
+                            maxLength: 20,
                             controller: textController,
                             onChanged: (text) {
                               ref.read(alarmProvider.notifier).setTitle(text);
@@ -411,7 +412,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding:
-                                  EdgeInsets.fromLTRB(16, 10.h, 16, 10.h),
+                                  EdgeInsets.fromLTRB(16, 10.h, 0, 10.h),
                               enabledBorder: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
@@ -444,6 +445,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                                   .textTheme
                                   .bodyMedium!
                                   .copyWith(color: grayColor400),
+                              counterStyle: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: grayColor600),
                             ),
                           ),
                         ],

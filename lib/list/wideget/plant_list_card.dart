@@ -57,6 +57,9 @@ class PlantListCard extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge!.copyWith(
                       color: grayBlack,
                     ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               Container(
                 decoration: BoxDecoration(

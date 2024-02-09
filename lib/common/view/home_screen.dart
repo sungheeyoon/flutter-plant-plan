@@ -683,8 +683,11 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
               padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ProfileImageWidget(
                           imageProvider: NetworkImage(
@@ -708,16 +711,21 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                                   color: grayColor600,
                                 ),
                           ),
-                          Text(
-                            widget.info.alias.isNotEmpty
-                                ? widget.info.alias
-                                : widget.info.information.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: grayBlack,
-                                ),
+                          SizedBox(
+                            width: 140.w,
+                            child: Text(
+                              widget.info.alias.isNotEmpty
+                                  ? widget.info.alias
+                                  : widget.info.information.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: grayBlack,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       )
