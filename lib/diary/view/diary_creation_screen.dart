@@ -268,22 +268,23 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                       ref.read(diaryProvider.notifier).setTitle(text);
                     },
                     decoration: InputDecoration(
-                      hintText: '제목',
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: grayColor400),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: grayColor400),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: grayBlack),
-                      ),
-                    ),
+                        hintText: '제목',
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: grayColor400),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: grayColor400),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: grayBlack),
+                        ),
+                        counterText: ''),
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
                         .copyWith(color: grayBlack),
+                    maxLength: 100,
                   ),
                 ),
                 GestureDetector(
@@ -451,8 +452,13 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
                                       .bodyMedium!
                                       .copyWith(color: grayColor400),
                                   border: InputBorder.none,
+                                  counterStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(color: grayColor600),
                                 ),
                                 maxLines: null,
+                                maxLength: 500,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!

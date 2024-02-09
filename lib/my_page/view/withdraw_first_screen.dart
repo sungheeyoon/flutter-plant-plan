@@ -38,17 +38,15 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
 
     return DefaultLayout(
       title: '회원 탈퇴',
-      floatingActionButton: Container(
+      bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         width: 360.w,
-        child: FloatingActionButton.extended(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          elevation: 0,
+        child: ElevatedButton(
           onPressed: () {
             if ((reasonController.text.isEmpty ||
                     reasonController.text == '기타') &&
                 messageController.text.isEmpty) {
-              null;
+              return;
             } else {
               Navigator.push(
                   context,
@@ -56,12 +54,19 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
                       builder: (context) => const WithdrawLastScreen()));
             }
           },
-          backgroundColor: (reasonController.text.isEmpty ||
-                      reasonController.text == '기타') &&
-                  messageController.text.isEmpty
-              ? grayColor300
-              : errorColor,
-          label: Text(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 0,
+            minimumSize: const Size(0, 52),
+            backgroundColor: (reasonController.text.isEmpty ||
+                        reasonController.text == '기타') &&
+                    messageController.text.isEmpty
+                ? grayColor300
+                : errorColor,
+          ),
+          child: Text(
             "탈퇴하기",
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: Colors.white,
@@ -69,7 +74,6 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -157,6 +161,7 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
                       .copyWith(color: grayBlack),
                   controller: messageController,
                   maxLines: 5,
+                  maxLength: 500,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -164,6 +169,7 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
                         color: grayColor400,
                       ),
                     ),
+                    counterText: '',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: const BorderSide(color: grayColor400),

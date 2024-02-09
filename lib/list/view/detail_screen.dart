@@ -197,11 +197,17 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        detailState.data.information.name,
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: grayBlack,
-                            ),
+                      SizedBox(
+                        width: 120.w,
+                        child: Text(
+                          detailState.data.information.name,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    color: grayBlack,
+                                  ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const SizedBox(
                         width: 6,

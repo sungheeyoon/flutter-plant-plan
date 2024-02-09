@@ -25,7 +25,7 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   late Stream<QuerySnapshot> _streamInformationList;
   String enteredKeyword = "";
-  bool foundMatches = false;
+  bool foundMatches = true;
   final CollectionReference _referenceInformationList =
       FirebaseFirestore.instance.collection('plant_list');
 
@@ -49,13 +49,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           onChanged: (value) {
             setState(() {
               enteredKeyword = value;
+              if (enteredKeyword.isEmpty) {
+                foundMatches = true;
+              }
             });
           },
         );
+
     return DefaultLayout(
       title: '식물 추가',
       titleBackgroundColor: keyColor100,
-      floatingActionButton: enteredKeyword.isNotEmpty && !foundMatches
+      floatingActionButton: !foundMatches
           ? null
           : const AddDirectlyButton(
               isShadow: true,
@@ -80,7 +84,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   if (snapshot.connectionState == ConnectionState.active) {
                     List<InformationModel> informationList =
                         _informationListFromSnapshot(snapshot.data);
-                    return enteredKeyword.isNotEmpty && !foundMatches
+
+                    return !foundMatches
                         ? Center(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -103,13 +108,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             ),
                           )
                         : ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             itemCount: informationList.length,
                             itemBuilder: (context, index) {
                               InformationModel document =
                                   informationList[index];
+
+                              // 검색어가 비어 있는 경우
                               if (enteredKeyword.isEmpty) {
                                 return ListTile(
                                   title: Text(
@@ -136,6 +141,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                         backgroundColor: grayColor200,
                                       ),
                                     ),
+                                    cacheManager: null,
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
                                   ),
@@ -143,26 +149,32 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                     ref
                                         .read(addPlantProvider.notifier)
                                         .updateInformation(document);
-
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                const AddFirstScreen()));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const AddFirstScreen(),
+                                      ),
+                                    );
                                   },
                                 ).paddingOnly(bottom: 6.h);
                               } else {
+                                // 검색어가 있는 경우
                                 RegExp regExp = getRegExp(
-                                    enteredKeyword,
-                                    RegExpOptions(
-                                      initialSearch: false,
-                                      startsWith: false,
-                                      endsWith: false,
-                                      fuzzy: false,
-                                      ignoreSpace: false,
-                                      ignoreCase: false,
-                                    ));
+                                  enteredKeyword,
+                                  RegExpOptions(
+                                    initialSearch: false,
+                                    startsWith: false,
+                                    endsWith: false,
+                                    fuzzy: false,
+                                    ignoreSpace: false,
+                                    ignoreCase: false,
+                                  ),
+                                );
+
+                                // 검색어와 일치하는 경우
                                 if (regExp.hasMatch(document.name)) {
+                                  // 검색 결과가 있는 경우, foundMatches를 true로 설정
                                   foundMatches = true;
                                   return ListTile(
                                     title: Text(
@@ -189,6 +201,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                           backgroundColor: grayColor200,
                                         ),
                                       ),
+                                      cacheManager: null,
                                       errorWidget: (context, url, error) =>
                                           const Icon(Icons.error),
                                     ),
@@ -197,18 +210,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                           .read(addPlantProvider.notifier)
                                           .updateInformation(document);
                                       Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  const AddFirstScreen()),
-                                          (route) => false);
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const AddFirstScreen(),
+                                        ),
+                                        (route) => false,
+                                      );
                                     },
                                   ).paddingOnly(bottom: 6.h);
                                 } else {
+                                  // 검색 결과가 없는 경우, foundMatches를 false로 설정
                                   foundMatches = false;
                                 }
                               }
-                              return null;
+
+                              // 기존 코드에서 return null; 제거
+                              return const SizedBox.shrink();
                             },
                           );
                     //regExp.hasMatch(document.name) 결과없으면

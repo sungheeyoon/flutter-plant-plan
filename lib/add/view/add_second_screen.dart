@@ -80,7 +80,7 @@ class AddSecondScreen extends ConsumerWidget {
         ref.read(alarmProvider.notifier).reset();
         ref.read(addPlantProvider.notifier).reset();
         ref.read(informationProvider.notifier).reset();
-      } catch (e, stackTrace) {
+      } catch (e) {
         // 오류가 발생한 경우 처리
         // print('오류: $e');
         // print('StackTrace: $stackTrace');

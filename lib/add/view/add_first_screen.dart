@@ -286,14 +286,21 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                     ),
                     Column(
                       children: [
-                        Text(
-                          widget.fromDirect
-                              ? informationState.name
-                              : plantState.information.name,
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    color: grayBlack,
-                                  ),
+                        SizedBox(
+                          width: widget.fromDirect ? 210.w : 120.w,
+                          child: Text(
+                            widget.fromDirect
+                                ? informationState.name
+                                : plantState.information.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -412,6 +419,7 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                     onChanged: (text) {
                       ref.read(addPlantProvider.notifier).updateAlias(text);
                     },
+                    maxLength: 20,
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.start,
                     style: Theme.of(context)
@@ -419,6 +427,7 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                         .bodyMedium!
                         .copyWith(color: grayBlack),
                     decoration: InputDecoration(
+                      counterText: '',
                       contentPadding: const EdgeInsets.only(left: 16),
                       hintText: '내 식물의 별칭을 입력해주세요',
                       hintStyle:
