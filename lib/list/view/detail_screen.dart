@@ -161,95 +161,98 @@ class _DetailCardState extends ConsumerState<DetailCard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              newPhoto != null
-                  ? ProfileImageWidget(
-                      //새로운사진을 넣었을때
-                      imageProvider: FileImage(newPhoto!),
-                      size: 60.h,
-                      radius: 24.h,
-                    )
-                  : ProfileImageWidget(
-                      imageProvider: NetworkImage(
-                        detailState.data.userImageUrl == ""
-                            ? detailState.data.information.imageUrl
-                            : detailState.data.userImageUrl,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                newPhoto != null
+                    ? ProfileImageWidget(
+                        //새로운사진을 넣었을때
+                        imageProvider: FileImage(newPhoto!),
+                        size: 60.h,
+                        radius: 24.h,
+                      )
+                    : ProfileImageWidget(
+                        imageProvider: NetworkImage(
+                          detailState.data.userImageUrl == ""
+                              ? detailState.data.information.imageUrl
+                              : detailState.data.userImageUrl,
+                        ),
+                        size: 60.h,
+                        radius: 24.h,
                       ),
-                      size: 60.h,
-                      radius: 24.h,
-                    ),
-              SizedBox(
-                width: 16.h,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (detailState.data.alias != "")
-                    Text(
-                      detailState.data.alias,
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            color: keyColor700,
-                          ),
-                    ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                SizedBox(
+                  width: 10.w,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: 120.w,
-                        child: Text(
-                          detailState.data.information.name,
+                      if (detailState.data.alias != "")
+                        Text(
+                          detailState.data.alias,
                           style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: grayBlack,
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: keyColor700,
                                   ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                      Text(
+                        detailState.data.information.name,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: grayBlack,
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(
-                        width: 6,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          setState(
-                            () {
-                              ref
-                                  .read(detailProvider.notifier)
-                                  .toggleFavorite();
-                              ref.read(plantsProvider.notifier).updatePlant(
-                                  detailState.data.docId,
-                                  favoriteToggle: true);
-                            },
-                          );
-                        },
-                        child: Image(
-                          image: AssetImage(
-                            detailState.data.favorite
-                                ? 'assets/icons/fav/fav_active.png'
-                                : 'assets/icons/fav/fav_inactive.png',
-                          ),
-                          width: 20.h,
-                          height: 20.h,
-                        ),
+                      SizedBox(
+                        width: 10.w,
                       ),
                     ],
                   ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  openDetailCardModal();
+                },
+                child: Image(
+                  image: const AssetImage('assets/icons/edit.png'),
+                  width: 24.h,
+                  height: 24.h,
+                ),
+              ),
+              SizedBox(
+                width: 6.w,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  setState(
+                    () {
+                      ref.read(detailProvider.notifier).toggleFavorite();
+                      ref.read(plantsProvider.notifier).updatePlant(
+                          detailState.data.docId,
+                          favoriteToggle: true);
+                    },
+                  );
+                },
+                child: Image(
+                  image: AssetImage(
+                    detailState.data.favorite
+                        ? 'assets/icons/fav/fav_active.png'
+                        : 'assets/icons/fav/fav_inactive.png',
+                  ),
+                  width: 20.h,
+                  height: 20.h,
+                ),
               ),
             ],
-          ),
-          GestureDetector(
-            onTap: () {
-              openDetailCardModal();
-            },
-            child: Image(
-              image: const AssetImage('assets/icons/edit.png'),
-              width: 24.h,
-              height: 24.h,
-            ),
           ),
         ],
       ),

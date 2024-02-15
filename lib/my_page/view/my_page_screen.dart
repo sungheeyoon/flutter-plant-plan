@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/provider/plants_provider.dart';
@@ -143,73 +144,39 @@ class SettingMenu extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AccountScreen(),
+          Flexible(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AccountScreen(),
+                ),
               ),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const ImageIcon(
-                    AssetImage('assets/icons/my_page/setting.png'),
-                    color: grayColor700,
-                    size: 24,
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    '계정 정보',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: grayColor700),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            width: 2.0,
-            height: 16,
-            color: grayColor300,
-          ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AlarmSettingScreen(),
-              ),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const ImageIcon(
-                    AssetImage('assets/icons/my_page/alarm.png'),
-                    color: grayColor700,
-                    size: 24,
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    '알림 설정',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: grayColor700),
-                  ),
-                ],
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const ImageIcon(
+                      AssetImage('assets/icons/my_page/setting.png'),
+                      color: grayColor700,
+                      size: 24,
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      '계정 정보',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: grayColor700),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -218,35 +185,76 @@ class SettingMenu extends StatelessWidget {
             height: 16,
             color: grayColor300,
           ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AnnouncementScreen(),
+          Flexible(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AlarmSettingScreen(),
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const ImageIcon(
+                      AssetImage('assets/icons/my_page/alarm.png'),
+                      color: grayColor700,
+                      size: 24,
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      '알림 설정',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: grayColor700),
+                    ),
+                  ],
+                ),
               ),
             ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const ImageIcon(
-                    AssetImage('assets/icons/my_page/megaphone.png'),
-                    color: grayColor700,
-                    size: 24,
-                  ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    '공지사항',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: grayColor700),
-                  ),
-                ],
+          ),
+          Container(
+            width: 2.0,
+            height: 16,
+            color: grayColor300,
+          ),
+          Flexible(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AnnouncementScreen(),
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const ImageIcon(
+                      AssetImage('assets/icons/my_page/megaphone.png'),
+                      color: grayColor700,
+                      size: 24,
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      '공지사항',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(color: grayColor700),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -230,81 +230,75 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        Stack(
-                          children: [
-                            //x 버튼 유무
-                            if (photoState != null)
-                              Stack(children: [
-                                ProfileImageWidget(
-                                  imageProvider: FileImage(photoState),
-                                  size: 60.h,
-                                  radius: 24.h,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Stack(
+                        children: [
+                          //x 버튼 유무
+                          if (photoState != null)
+                            Stack(children: [
+                              ProfileImageWidget(
+                                imageProvider: FileImage(photoState),
+                                size: 60.h,
+                                radius: 24.h,
+                              ),
+                              if (!widget.fromDirect)
+                                Positioned(
+                                  right: 1,
+                                  top: 1,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        ref
+                                            .read(photoProvider.notifier)
+                                            .reset();
+                                      },
+                                      child: Image(
+                                        image: const AssetImage(
+                                            'assets/icons/x.png'),
+                                        width: 16.h,
+                                        height: 16.h,
+                                      )),
                                 ),
-                                if (!widget.fromDirect)
-                                  Positioned(
-                                    right: 1,
-                                    top: 1,
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          ref
-                                              .read(photoProvider.notifier)
-                                              .reset();
-                                        },
-                                        child: Image(
-                                          image: const AssetImage(
-                                              'assets/icons/x.png'),
-                                          width: 16.h,
-                                          height: 16.h,
-                                        )),
+                            ])
+                          else if (plantState.information.imageUrl != "")
+                            ProfileImageWidget(
+                              imageProvider:
+                                  NetworkImage(plantState.information.imageUrl),
+                              size: 60.h,
+                              radius: 24.h,
+                            )
+                          else
+                            ProfileImageWidget(
+                              imageProvider:
+                                  const AssetImage('assets/images/pot.png'),
+                              size: 60.h,
+                              radius: 24.h,
+                            )
+                        ],
+                      ),
+                      SizedBox(
+                        width: 10.w,
+                      ),
+                      Expanded(
+                        child: Text(
+                          widget.fromDirect
+                              ? informationState.name
+                              : plantState.information.name,
+                          style:
+                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                                    color: grayBlack,
                                   ),
-                              ])
-                            else if (plantState.information.imageUrl != "")
-                              ProfileImageWidget(
-                                imageProvider: NetworkImage(
-                                    plantState.information.imageUrl),
-                                size: 60.h,
-                                radius: 24.h,
-                              )
-                            else
-                              ProfileImageWidget(
-                                imageProvider:
-                                    const AssetImage('assets/images/pot.png'),
-                                size: 60.h,
-                                radius: 24.h,
-                              )
-                          ],
+                          maxLines: 2,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 10.h,
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: widget.fromDirect ? 210.w : 120.w,
-                          child: Text(
-                            widget.fromDirect
-                                ? informationState.name
-                                : plantState.information.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: grayBlack,
-                                ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      SizedBox(
+                        width: 10.w,
+                      ),
+                    ],
+                  ),
                 ),
                 if (!widget.fromDirect)
                   Row(
@@ -397,7 +391,7 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                         borderColor: pointColor2.withOpacity(
                           0.5,
                         ),
-                        width: 90.h,
+                        width: 90.w,
                         height: 30.h,
                         textColor: pointColor2,
                         name: photoState != null ? '사진 변경' : '사진 추가',
@@ -409,7 +403,6 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
             SizedBox(
               height: 16.h,
             ),
-            //별칭
             Stack(
               children: [
                 Container(
