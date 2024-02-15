@@ -328,42 +328,51 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(
+        vertical: 16,
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: widget.diaryCard.imageUrl,
-                      imageBuilder: (context, imageProvider) =>
-                          ProfileImageWidget(
-                        imageProvider: imageProvider,
-                        size: 28.h,
-                        radius: 11.h,
-                      ),
-                      placeholder: (context, url) => SizedBox(
-                        width: 28.h,
-                        height: 28.h,
-                        child: const CircleAvatar(
-                          backgroundColor: grayColor200,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                CachedNetworkImage(
+                  imageUrl: widget.diaryCard.imageUrl,
+                  imageBuilder: (context, imageProvider) => ProfileImageWidget(
+                    imageProvider: imageProvider,
+                    size: 28.h,
+                    radius: 11.h,
+                  ),
+                  placeholder: (context, url) => SizedBox(
+                    width: 28.h,
+                    height: 28.h,
+                    child: const CircleAvatar(
+                      backgroundColor: grayColor200,
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    SizedBox(
-                      width: 180.w,
-                      child: Text(
+                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.diaryCard.alias,
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: keyColor700,
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
                         widget.diaryCard.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: grayBlack,
@@ -371,18 +380,17 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  width: 100.w,
-                  child: Text(
-                    widget.diaryCard.alias,
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: keyColor700,
-                        ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                GestureDetector(
+                  onTap: () {
+                    showDropdownMenu(widget.diaryCard);
+                  },
+                  child: Icon(
+                    Icons.more_horiz,
+                    size: 24.w,
+                    color: Colors.grey,
                   ),
                 ),
               ],
@@ -405,47 +413,31 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 280.w,
-                      child: RichText(
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        text: TextSpan(
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    color: grayBlack,
-                                  ),
-                          children: [
-                            if (widget.diaryCard.diary.emoji != "")
-                              WidgetSpan(
-                                child: Image.asset(
-                                  'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
-                            TextSpan(
-                              text: widget.diaryCard.diary.title,
+                Expanded(
+                  child: RichText(
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: grayBlack,
+                          ),
+                      children: [
+                        if (widget.diaryCard.diary.emoji != "")
+                          WidgetSpan(
+                            child: Image.asset(
+                              'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
+                              width: 24,
+                              height: 24,
                             ),
-                          ],
+                          ),
+                        TextSpan(
+                          text: widget.diaryCard.diary.title,
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    showDropdownMenu(widget.diaryCard);
-                  },
-                  child: const Icon(
-                    Icons.more_horiz,
-                    size: 24.0,
-                    color: Colors.grey,
                   ),
                 ),
               ],
@@ -549,8 +541,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
   }
 
   void showDropdownMenu(DiaryCardModel diaryCard) {
-    final RenderBox button = context.findRenderObject() as RenderBox;
-    final Offset position = button.localToGlobal(Offset(236.w, 110));
+    final RenderBox iconRenderBox = context.findRenderObject() as RenderBox;
+    final Offset iconPosition = iconRenderBox.localToGlobal(Offset.zero);
 
     showMenu(
       shape: const RoundedRectangleBorder(
@@ -559,10 +551,10 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
       color: Colors.white,
       context: context,
       position: RelativeRect.fromLTRB(
-        position.dx,
-        position.dy,
-        position.dx + button.size.width,
-        position.dy + 1.0,
+        iconPosition.dx.w,
+        iconPosition.dy.h,
+        0,
+        0,
       ),
       items: [
         PopupMenuItem<String>(

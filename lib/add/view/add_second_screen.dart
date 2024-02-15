@@ -59,6 +59,7 @@ class AddSecondScreen extends ConsumerWidget {
         final userImageUrl = await ref
             .read(photoProvider.notifier)
             .uploadPhotoAndGetUserImageUrl();
+        print('userImageUrl = $userImageUrl');
         ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
         data = plantState.toJson();
@@ -67,6 +68,8 @@ class AddSecondScreen extends ConsumerWidget {
         if (fromDirect) {
           data['information'] = informationState.toJson();
           data['information']['imageUrl'] = userImageUrl;
+        } else {
+          data['userImageUrl'] = userImageUrl;
         }
 
         data['timestamp'] = DateTime.now();

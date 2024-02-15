@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +10,6 @@ import 'package:plant_plan/add/view/add_directly_screen.dart';
 import 'package:plant_plan/add/view/add_first_screen.dart';
 import 'package:plant_plan/add/widget/search_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
-import 'package:plant_plan/common/widget/profile_image_widget.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -25,7 +23,9 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   late Stream<QuerySnapshot> _streamInformationList;
   String enteredKeyword = "";
-  bool foundMatches = true;
+  bool hasSearchWords = false;
+  bool hasSearchResults = false;
+
   final CollectionReference _referenceInformationList =
       FirebaseFirestore.instance.collection('plant_list');
 
@@ -41,39 +41,105 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }).toList();
   }
 
+  void _updateSearchResults(List<InformationModel> informationList) {
+    RegExp regExp = getRegExp(
+      enteredKeyword,
+      RegExpOptions(
+        initialSearch: false,
+        startsWith: false,
+        endsWith: false,
+        fuzzy: false,
+        ignoreSpace: false,
+        ignoreCase: false,
+      ),
+    );
+
+    hasSearchResults =
+        informationList.any((document) => regExp.hasMatch(document.name));
+  }
+
+  Widget buildCommonListTile(BuildContext context, InformationModel document) {
+    return ListTile(
+      title: Text(
+        document.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style:
+            Theme.of(context).textTheme.titleMedium!.copyWith(color: grayBlack),
+      ),
+      leading: Image.network(
+        document.imageUrl,
+        width: 40.h,
+        height: 40.h,
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            // 이미지 로딩 완료
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(16.h),
+              child: child,
+            );
+          } else {
+            // 이미지 로딩 중
+            return Container(
+              width: 40.h,
+              height: 40.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.h),
+                color: grayColor200,
+              ),
+              child: const CircleAvatar(
+                backgroundColor: grayColor200,
+              ),
+            );
+          }
+        },
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
+          // 이미지 로딩 중 에러 발생 시
+          return const Icon(Icons.error);
+        },
+      ),
+      onTap: () {
+        ref.read(addPlantProvider.notifier).updateInformation(document);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => const AddFirstScreen(),
+          ),
+          (route) => false,
+        );
+      },
+    ).paddingOnly(bottom: 6.h);
+  }
+
+  Widget buildSearch() => SearchWidget(
+        text: enteredKeyword,
+        hintText: '식물 이름을 입력해주세요',
+        onChanged: (value) {
+          setState(() {
+            enteredKeyword = value;
+            hasSearchWords = enteredKeyword.isNotEmpty;
+            hasSearchResults = false;
+          });
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
-    Widget buildSearch() => SearchWidget(
-          text: enteredKeyword,
-          hintText: '식물 이름을 입력해주세요',
-          onChanged: (value) {
-            setState(() {
-              enteredKeyword = value;
-              if (enteredKeyword.isEmpty) {
-                foundMatches = true;
-              }
-            });
-          },
-        );
-
     return DefaultLayout(
       title: '식물 추가',
       titleBackgroundColor: keyColor100,
-      floatingActionButton: !foundMatches
+      floatingActionButton: hasSearchWords && !hasSearchResults
           ? null
-          : const AddDirectlyButton(
-              isShadow: true,
-            ),
+          : const AddDirectlyButton(isShadow: true),
       child: SafeArea(
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: 20.h,
-            ),
+            SizedBox(height: 20.h),
             buildSearch(),
-            SizedBox(
-              height: 20.h,
-            ),
+            SizedBox(height: 20.h),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: _streamInformationList,
@@ -85,151 +151,67 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     List<InformationModel> informationList =
                         _informationListFromSnapshot(snapshot.data);
 
-                    return !foundMatches
-                        ? Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '검색 결과가없습니다',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: grayColor600),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const AddDirectlyButton(
-                                  isShadow: true,
-                                ),
-                              ],
+                    if (hasSearchWords) {
+                      _updateSearchResults(informationList);
+                    }
+                    if (hasSearchWords && !hasSearchResults) {
+                      //검색어가있으나 결과가없는경우
+                      return Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '검색 결과가 없습니다',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(color: grayColor600),
                             ),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            itemCount: informationList.length,
-                            itemBuilder: (context, index) {
-                              InformationModel document =
-                                  informationList[index];
+                            const SizedBox(height: 8),
+                            const AddDirectlyButton(isShadow: true),
+                          ],
+                        ),
+                      );
+                    }
 
-                              // 검색어가 비어 있는 경우
-                              if (enteredKeyword.isEmpty) {
-                                return ListTile(
-                                  title: Text(
-                                    document.name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(color: grayBlack),
-                                  ),
-                                  leading: CachedNetworkImage(
-                                    imageUrl: document.imageUrl,
-                                    imageBuilder: (context, imageProvider) =>
-                                        ProfileImageWidget(
-                                      imageProvider: imageProvider,
-                                      size: 40.h,
-                                      radius: 16.h,
-                                    ),
-                                    placeholder: (context, url) => SizedBox(
-                                      width: 40.h,
-                                      height: 40.h,
-                                      child: const CircleAvatar(
-                                        backgroundColor: grayColor200,
-                                      ),
-                                    ),
-                                    cacheManager: null,
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ),
-                                  onTap: () async {
-                                    ref
-                                        .read(addPlantProvider.notifier)
-                                        .updateInformation(document);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const AddFirstScreen(),
-                                      ),
-                                    );
-                                  },
-                                ).paddingOnly(bottom: 6.h);
-                              } else {
-                                // 검색어가 있는 경우
-                                RegExp regExp = getRegExp(
-                                  enteredKeyword,
-                                  RegExpOptions(
-                                    initialSearch: false,
-                                    startsWith: false,
-                                    endsWith: false,
-                                    fuzzy: false,
-                                    ignoreSpace: false,
-                                    ignoreCase: false,
-                                  ),
-                                );
-
-                                // 검색어와 일치하는 경우
-                                if (regExp.hasMatch(document.name)) {
-                                  // 검색 결과가 있는 경우, foundMatches를 true로 설정
-                                  foundMatches = true;
-                                  return ListTile(
-                                    title: Text(
-                                      document.name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(color: grayBlack),
-                                    ),
-                                    leading: CachedNetworkImage(
-                                      imageUrl: document.imageUrl,
-                                      imageBuilder: (context, imageProvider) =>
-                                          ProfileImageWidget(
-                                        imageProvider: imageProvider,
-                                        size: 40.h,
-                                        radius: 16.h,
-                                      ),
-                                      placeholder: (context, url) => SizedBox(
-                                        width: 40.h,
-                                        height: 40.h,
-                                        child: const CircleAvatar(
-                                          backgroundColor: grayColor200,
-                                        ),
-                                      ),
-                                      cacheManager: null,
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),
-                                    onTap: () {
-                                      ref
-                                          .read(addPlantProvider.notifier)
-                                          .updateInformation(document);
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              const AddFirstScreen(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    },
-                                  ).paddingOnly(bottom: 6.h);
-                                } else {
-                                  // 검색 결과가 없는 경우, foundMatches를 false로 설정
-                                  foundMatches = false;
-                                }
-                              }
-
-                              // 기존 코드에서 return null; 제거
-                              return const SizedBox.shrink();
-                            },
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      itemCount: informationList.length,
+                      itemBuilder: (context, index) {
+                        InformationModel document = informationList[index];
+                        if (hasSearchWords) {
+                          //검색어가 있는경우 검색결과(hasSearchResults)여부 반환
+                          RegExp regExp = getRegExp(
+                            enteredKeyword,
+                            RegExpOptions(
+                              initialSearch: false,
+                              startsWith: false,
+                              endsWith: false,
+                              fuzzy: false,
+                              ignoreSpace: false,
+                              ignoreCase: false,
+                            ),
                           );
-                    //regExp.hasMatch(document.name) 결과없으면
+                          if (regExp.hasMatch(document.name)) {
+                            hasSearchResults = true;
+                          } else {
+                            hasSearchResults = false;
+                          }
+                        }
+                        if (!hasSearchWords) {
+                          // 검색어가 없다면 전부 반환
+                          return buildCommonListTile(
+                              context, informationList[index]);
+                        } else if (hasSearchResults) {
+                          //검색결과가 있는 경우
+                          return buildCommonListTile(
+                              context, informationList[index]);
+                        }
+
+                        return const SizedBox.shrink();
+                      },
+                    );
                   }
                   return const Center(child: CircularProgressIndicator());
                 },
