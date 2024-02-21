@@ -63,53 +63,52 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
       backgroundColor: grayColor100,
       title: isBookMark ? '저장된 다이어리' : '다이어리',
       drawer: Drawer(
+        width: 220.w,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
         ),
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 0.w),
           children: [
-            SizedBox(
-              height: 64.0.h,
-              child: DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.white),
-                margin: EdgeInsets.zero,
-                padding: const EdgeInsets.all(0.0),
-                child: Text(
-                  '식물별로 보기',
-                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: primaryColor,
-                      ),
-                ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 40.h, 0, 22.h),
+              child: Text(
+                '식물별로 보기',
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      color: primaryColor,
+                    ),
               ),
             ),
             ListTile(
-              contentPadding: const EdgeInsets.only(left: 0.0),
+              dense: true,
+              minVerticalPadding: 0,
+              contentPadding: EdgeInsets.only(bottom: 10.h),
+              visualDensity: VisualDensity.compact,
               title: Row(
                 children: [
                   Container(
-                    width: 32.h,
-                    height: 32.h,
+                    width: 32.w,
+                    height: 32.w,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: grayColor400,
                         width: 1.0,
                       ),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.w),
                     ),
                     child: Center(
                       child: Text(
                         'All',
                         style:
                             Theme.of(context).textTheme.labelMedium!.copyWith(
-                                  color: grayColor500,
+                                  color: grayColor600,
                                 ),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 16,
+                  SizedBox(
+                    width: 16.w,
                   ),
                   Text(
                     '전체',
@@ -128,59 +127,68 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
               },
             ),
             for (var plant in widget.plants)
-              ListTile(
-                contentPadding: const EdgeInsets.only(left: 0.0),
-                title: Row(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: plant.userImageUrl == ""
-                          ? plant.information.imageUrl
-                          : plant.userImageUrl,
-                      imageBuilder: (context, imageProvider) =>
-                          ProfileImageWidget(
-                        imageProvider: imageProvider,
-                        size: 32.h,
-                        radius: 11.h,
-                      ),
-                      placeholder: (context, url) => SizedBox(
-                        width: 32.h,
-                        height: 32.h,
-                        child: const CircleAvatar(
-                          backgroundColor: grayColor200,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    SizedBox(
-                      width: 180.w,
-                      child: Text(
-                        plant.information.name +
-                            (plant.alias != "" ? '(${plant.alias})' : ''),
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: grayBlack,
+              Column(
+                children: [
+                  ListTile(
+                    dense: true,
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.only(bottom: 10.h),
+                    visualDensity: VisualDensity.compact,
+                    title: Row(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: plant.userImageUrl == ""
+                              ? plant.information.imageUrl
+                              : plant.userImageUrl,
+                          imageBuilder: (context, imageProvider) =>
+                              ProfileImageWidget(
+                            imageProvider: imageProvider,
+                            size: 32.w,
+                            radius: 11.w,
+                          ),
+                          placeholder: (context, url) => SizedBox(
+                            width: 32.w,
+                            height: 32.w,
+                            child: const CircleAvatar(
+                              backgroundColor: grayColor200,
                             ),
-                        maxLines: 3,
-                      ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                        SizedBox(
+                          width: 16.w,
+                        ),
+                        Flexible(
+                          child: Text(
+                            plant.information.name +
+                                (plant.alias != "" ? '(${plant.alias})' : ''),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: grayBlack,
+                                ),
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                onTap: () {
-                  setState(
-                    () {
-                      setState(() {
-                        selectedPlantDocId = plant.docId;
-                        selectedPhotoUrl = plant.userImageUrl == ""
-                            ? plant.information.imageUrl
-                            : plant.userImageUrl;
-                      });
-                      Navigator.pop(context);
+                    onTap: () {
+                      setState(
+                        () {
+                          setState(() {
+                            selectedPlantDocId = plant.docId;
+                            selectedPhotoUrl = plant.userImageUrl == ""
+                                ? plant.information.imageUrl
+                                : plant.userImageUrl;
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                ],
               ),
           ],
         ),
@@ -198,14 +206,14 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   ? Row(
                       children: [
                         Container(
-                          width: 28,
-                          height: 28,
+                          width: 28.w,
+                          height: 28.w,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: grayColor400,
                               width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10.w),
                           ),
                           child: Center(
                             child: Text(
@@ -214,7 +222,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                                   .textTheme
                                   .labelMedium!
                                   .copyWith(
-                                    color: grayColor500,
+                                    color: grayColor600,
                                   ),
                             ),
                           ),
@@ -228,13 +236,13 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                           imageBuilder: (context, imageProvider) =>
                               ProfileImageWidget(
                             imageProvider: imageProvider,
-                            size: 28,
-                            radius: 11,
+                            size: 28.w,
+                            radius: 11.w,
                           ),
-                          placeholder: (context, url) => const SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: CircleAvatar(
+                          placeholder: (context, url) => SizedBox(
+                            width: 28.w,
+                            height: 28.w,
+                            child: const CircleAvatar(
                               backgroundColor: grayColor200,
                             ),
                           ),
@@ -251,10 +259,10 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 12.0),
           child: IconButton(
-            icon: const Image(
-              image: AssetImage('assets/icons/edit.png'),
-              width: 24,
-              height: 24,
+            icon: Icon(
+              Icons.add,
+              size: 24.w,
+              color: grayColor600,
             ),
             onPressed: () {
               Navigator.push(
@@ -332,8 +340,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
         vertical: 16,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -345,33 +353,35 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                   imageUrl: widget.diaryCard.imageUrl,
                   imageBuilder: (context, imageProvider) => ProfileImageWidget(
                     imageProvider: imageProvider,
-                    size: 28.h,
-                    radius: 11.h,
+                    size: 28.w,
+                    radius: 11.w,
                   ),
                   placeholder: (context, url) => SizedBox(
-                    width: 28.h,
-                    height: 28.h,
+                    width: 28.w,
+                    height: 28.w,
                     child: const CircleAvatar(
                       backgroundColor: grayColor200,
                     ),
                   ),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                const SizedBox(
-                  width: 8,
+                SizedBox(
+                  width: 8.w,
                 ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.diaryCard.alias,
-                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: keyColor700,
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      if (widget.diaryCard.alias != '')
+                        Text(
+                          widget.diaryCard.alias,
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: keyColor700,
+                                  ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       Text(
                         widget.diaryCard.name,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -429,8 +439,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                           WidgetSpan(
                             child: Image.asset(
                               'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
-                              width: 24,
-                              height: 24,
+                              width: 24.w,
+                              height: 24.w,
                             ),
                           ),
                         TextSpan(
@@ -444,14 +454,15 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
             ),
           ),
           if (widget.diaryCard.diary.imageUrl.isNotEmpty)
-            const SizedBox(
-              height: 8,
+            SizedBox(
+              height: 8.h,
             ),
           //images
           if (widget.diaryCard.diary.imageUrl.isNotEmpty)
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(width: 24),
                   for (int index = 0;
@@ -464,14 +475,14 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                           imageBuilder: (context, imageProvider) =>
                               ProfileImageWidget(
                             imageProvider: imageProvider,
-                            size: 168.h,
-                            radius: 12.h,
+                            size: 120.w,
+                            radius: 12.w,
                           ),
                           placeholder: (context, url) => Container(
-                            width: 168.h,
-                            height: 168.h,
+                            width: 120.w,
+                            height: 120.w,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.h),
+                              borderRadius: BorderRadius.circular(12.w),
                               color: grayColor200,
                             ),
                           ),
@@ -479,8 +490,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                               const Icon(Icons.error),
                         ),
                         if (index != widget.diaryCard.diary.imageUrl.length - 1)
-                          const SizedBox(
-                            width: 16,
+                          SizedBox(
+                            width: 16.w,
                           ),
                       ],
                     ),
@@ -489,8 +500,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
               ),
             ),
 
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: 8.h,
           ),
           Container(
             width: 380.w,
@@ -504,8 +515,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
             ),
           ),
           //bookMark time
-          const SizedBox(
-            height: 8,
+          SizedBox(
+            height: 8.h,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -522,8 +533,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
                     widget.diaryCard.diary.bookMark
                         ? 'assets/icons/bookmark.png'
                         : 'assets/icons/bookmark_outline.png',
-                    width: 24,
-                    height: 24,
+                    width: 24.w,
+                    height: 24.w,
                   ),
                 ),
                 Text(
@@ -551,8 +562,8 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
       color: Colors.white,
       context: context,
       position: RelativeRect.fromLTRB(
-        iconPosition.dx.w,
-        iconPosition.dy.h,
+        1,
+        iconPosition.dy.h + 32,
         0,
         0,
       ),

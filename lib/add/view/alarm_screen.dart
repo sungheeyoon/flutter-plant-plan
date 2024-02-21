@@ -181,23 +181,15 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 28.h,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      lastDayText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: primaryColor),
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                  ],
+                Text(
+                  lastDayText,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: primaryColor),
+                ),
+                SizedBox(
+                  height: 8.h,
                 ),
                 DatePickerWidget(
                   field: widget.field,
@@ -213,65 +205,59 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 16.h,
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  '반복 주기',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: primaryColor),
+                ),
+                SizedBox(
+                  height: 12.h,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      '반복 주기',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: primaryColor),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        PeriodButton(
-                          flex: 2,
-                          text: '매일',
-                          isFocused: focusedButtonIndex == 0,
-                          onTapCallback: () => {
-                            setState(
-                              () {
-                                ref.read(alarmProvider.notifier).setRepeat(1);
-                                _updateFocusedButton(0);
-                              },
-                            )
+                    PeriodButton(
+                      flex: 2,
+                      text: '매일',
+                      isFocused: focusedButtonIndex == 0,
+                      onTapCallback: () => {
+                        setState(
+                          () {
+                            ref.read(alarmProvider.notifier).setRepeat(1);
+                            _updateFocusedButton(0);
                           },
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        PeriodButton(
-                          flex: 2,
-                          text: '매주',
-                          isFocused: focusedButtonIndex == 1,
-                          onTapCallback: () => {
-                            setState(
-                              () {
-                                ref.read(alarmProvider.notifier).setRepeat(7);
+                        )
+                      },
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    PeriodButton(
+                      flex: 2,
+                      text: '매주',
+                      isFocused: focusedButtonIndex == 1,
+                      onTapCallback: () => {
+                        setState(
+                          () {
+                            ref.read(alarmProvider.notifier).setRepeat(7);
 
-                                _updateFocusedButton(1);
-                              },
-                            )
+                            _updateFocusedButton(1);
                           },
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        PeriodButton(
-                          flex: 2,
-                          text: '직접 입력',
-                          isFocused: focusedButtonIndex == 3,
-                          onTapCallback: () => _updateFocusedButton(3),
-                        ),
-                      ],
-                    )
+                        )
+                      },
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    PeriodButton(
+                      flex: 2,
+                      text: '직접 입력',
+                      isFocused: focusedButtonIndex == 3,
+                      onTapCallback: () => _updateFocusedButton(3),
+                    ),
                   ],
                 ),
                 if (focusedButtonIndex == 3)
@@ -354,21 +340,19 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                     ],
                   ),
                 if (focusedButtonIndex != -1)
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 8.h,
-                        ),
-                        Text(
-                          nextAlarmFomattor(nextAlarmDate),
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(color: pointColor1),
-                        )
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      Text(
+                        nextAlarmFomattor(nextAlarmDate),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelMedium!
+                            .copyWith(color: pointColor1),
+                      )
+                    ],
                   ),
                 SizedBox(
                   height: 16.h,
@@ -380,81 +364,65 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 SizedBox(
                   height: 16.h,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '제목',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: primaryColor),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    SizedBox(
-                      height: 70.h,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            maxLength: 20,
-                            controller: textController,
-                            onChanged: (text) {
-                              ref.read(alarmProvider.notifier).setTitle(text);
-                            },
-                            textAlignVertical: TextAlignVertical.center,
-                            textAlign: TextAlign.start,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(color: grayBlack),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding:
-                                  EdgeInsets.fromLTRB(16, 10.h, 0, 10.h),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    8.0,
-                                  ),
-                                ),
-                                borderSide:
-                                    BorderSide(width: 1, color: grayColor400),
-                              ),
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    8.0,
-                                  ),
-                                ),
-                                borderSide:
-                                    BorderSide(color: grayColor400, width: 1.0),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    8.0,
-                                  ),
-                                ),
-                                borderSide:
-                                    BorderSide(color: grayColor400, width: 1.0),
-                              ),
-                              hintText: '나만의 알림 제목을 설정해보세요',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(color: grayColor400),
-                              counterStyle: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(color: grayColor600),
-                            ),
-                          ),
-                        ],
+                Text(
+                  '제목',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: primaryColor),
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                TextFormField(
+                  maxLength: 20,
+                  controller: textController,
+                  onChanged: (text) {
+                    ref.read(alarmProvider.notifier).setTitle(text);
+                  },
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: grayBlack),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(16, 10.h, 0, 10.h),
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          8.0,
+                        ),
                       ),
+                      borderSide: BorderSide(width: 1, color: grayColor400),
                     ),
-                  ],
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          8.0,
+                        ),
+                      ),
+                      borderSide: BorderSide(color: grayColor400, width: 1.0),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          8.0,
+                        ),
+                      ),
+                      borderSide: BorderSide(color: grayColor400, width: 1.0),
+                    ),
+                    hintText: '나만의 알림 제목을 설정해보세요',
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: grayColor400),
+                    counterStyle: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: grayColor600),
+                  ),
                 ),
                 const SizedBox(
                   height: 40,
@@ -483,7 +451,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     return Center(
       child: Container(
         width: 312.w,
-        height: 196.h,
+        height: 196.w,
         decoration: BoxDecoration(
           color: pointColor2.withOpacity(0.04),
           borderRadius: BorderRadius.circular(16),

@@ -52,7 +52,7 @@ class RootTabState extends ConsumerState<RootTab>
     Future.delayed(const Duration(milliseconds: 2000), () {
       final ConnectivityStatus connectivityStatus =
           ref.read(connectivityStatusProvider);
-      print('connectivityStatus: $connectivityStatus');
+
       if (connectivityStatus == ConnectivityStatus.isDisconnected) {
         connectivityDialog(context);
       }
@@ -245,56 +245,59 @@ class RootTabState extends ConsumerState<RootTab>
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/icons/navbar/home.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     activeIcon: Image.asset(
                       'assets/icons/navbar/home_active.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     label: '',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/icons/navbar/pot.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     activeIcon: Image.asset(
                       'assets/icons/navbar/pot_active.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     label: '',
                   ),
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.add),
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.add,
+                      size: 30.w,
+                    ),
                     label: '',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/icons/navbar/post.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     activeIcon: Image.asset(
                       'assets/icons/navbar/post_active.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     label: '',
                   ),
                   BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/icons/navbar/mypage.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     activeIcon: Image.asset(
                       'assets/icons/navbar/mypage_active.png',
-                      width: 30,
-                      height: 30,
+                      width: 30.w,
+                      height: 30.w,
                     ),
                     label: '',
                   ),

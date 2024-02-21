@@ -100,8 +100,8 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                 listDeleteModeState
                     ? 'assets/icons/cancel.png'
                     : 'assets/icons/trash.png',
-                width: 24,
-                height: 24,
+                width: 24.w,
+                height: 24.w,
               ),
             ),
           )
@@ -258,6 +258,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                                 });
                               },
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     '즐겨찾기',
@@ -269,14 +270,14 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                                                 ? pointColor2
                                                 : grayColor500),
                                   ),
-                                  const SizedBox(
-                                    width: 4,
+                                  SizedBox(
+                                    width: 4.w,
                                   ),
                                   Icon(
                                     isFavorite
                                         ? Icons.check_circle
                                         : Icons.check_circle_outline,
-                                    size: 14.h,
+                                    size: 14.w,
                                     color:
                                         isFavorite ? pointColor2 : grayColor500,
                                   )
@@ -304,8 +305,8 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                     GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 20.w,
-                        mainAxisSpacing: 20.w,
+                        crossAxisSpacing: 12.w,
+                        mainAxisSpacing: 12.w,
                         childAspectRatio: 150.w / 158.w,
                       ),
                       shrinkWrap: true,

@@ -108,7 +108,10 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
     return DefaultLayout(
       title: '식물 추가',
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: Icon(
+          Icons.arrow_back,
+          size: 24.w,
+        ),
         onPressed: () {
           ref.read(photoProvider.notifier).reset();
           ref.read(alarmProvider.notifier).reset();
@@ -143,7 +146,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
           }
         },
         child: Container(
-          height: 46.h,
+          height: 46.w,
           width: 360.w,
           decoration: BoxDecoration(
               color: photoState != null && informationState.name.isNotEmpty
@@ -264,8 +267,8 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                                 },
                                 child: Image.asset(
                                   'assets/icons/trash.png',
-                                  width: 18.h,
-                                  height: 18.h,
+                                  width: 18.w,
+                                  height: 18.w,
                                 ),
                               ),
                             ],
@@ -274,8 +277,8 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                             height: 8.h,
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 6.w, vertical: 0),
                             decoration: BoxDecoration(
                               border: Border.all(width: 1, color: grayColor400),
                               borderRadius: BorderRadius.circular(8),
@@ -371,80 +374,95 @@ class MyPicture extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () => showModalBottomSheet(
+        backgroundColor: Colors.white,
         context: context,
-        shape: const RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20),
+            top: Radius.circular(20.w),
           ),
         ),
-        builder: (context) => Container(
-          padding: const EdgeInsets.all(32),
-          height: 180.h,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("식물 사진 추가",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: grayBlack)),
-              SizedBox(
-                height: 32.h,
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  padding: EdgeInsets.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  ref.read(photoProvider.notifier).setNewPhoto(camera: true);
-                },
-                child: Align(
-                  alignment: const Alignment(-1.0, 0.0),
-                  child: Text(
-                    "카메라",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor700,
-                        ),
+        builder: (context) => Column(
+          // 수정된 부분
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(32.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "식물 사진 추가",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: grayBlack),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  padding: EdgeInsets.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  ref.read(photoProvider.notifier).setNewPhoto(camera: false);
-                },
-                child: Align(
-                  alignment: const Alignment(-1.0, 0.0),
-                  child: Text(
-                    "갤러리 사진 선택",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: grayColor700,
-                        ),
+                  SizedBox(
+                    height: 22.h,
                   ),
-                ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 10.0.w),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      ref
+                          .read(photoProvider.notifier)
+                          .setNewPhoto(camera: true);
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft, // 좌측 정렬
+                      child: Text(
+                        "카메라",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: grayColor700,
+                            ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 10.0.w),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      ref
+                          .read(photoProvider.notifier)
+                          .setNewPhoto(camera: false);
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "갤러리 사진 선택",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: grayColor700,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       child: photoState == null
           ? Container(
-              width: 100.h,
-              height: 100.h,
+              width: 100.w,
+              height: 100.w,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40.h),
+                  borderRadius: BorderRadius.circular(40.w),
                   color: grayColor200),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -452,11 +470,11 @@ class MyPicture extends ConsumerWidget {
                 children: [
                   Image.asset(
                     'assets/icons/camera.png',
-                    width: 40,
-                    height: 40,
+                    width: 40.w,
+                    height: 40.w,
                   ),
-                  const SizedBox(
-                    height: 4,
+                  SizedBox(
+                    height: 4.w,
                   ),
                   Text(
                     "사진추가",
@@ -469,8 +487,8 @@ class MyPicture extends ConsumerWidget {
             )
           : ProfileImageWidget(
               imageProvider: FileImage(photoState),
-              size: 100.h,
-              radius: 40.h,
+              size: 100.w,
+              radius: 40.w,
             ),
     );
   }

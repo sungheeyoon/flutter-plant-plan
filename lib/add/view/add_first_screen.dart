@@ -14,7 +14,6 @@ import 'package:plant_plan/add/widget/alarm_box_widget.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/common/view/root_tab.dart';
 import 'package:plant_plan/common/widget/profile_image_widget.dart';
-import 'package:plant_plan/common/widget/rounded_button.dart';
 import 'package:plant_plan/utils/colors.dart';
 
 class AddFirstScreen extends ConsumerStatefulWidget {
@@ -36,7 +35,10 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
     return DefaultLayout(
       title: '식물추가',
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: Icon(
+          Icons.arrow_back,
+          size: 24.w,
+        ),
         onPressed: () {
           if (widget.fromDirect == false) {
             ref.read(photoProvider.notifier).reset();
@@ -77,7 +79,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
           }
         },
         child: Container(
-          height: 46.h,
+          height: 46.w,
           width: 360.w,
           decoration: const BoxDecoration(color: pointColor2),
           child: Center(
@@ -168,7 +170,7 @@ class _AddFirstScreenState extends ConsumerState<AddFirstScreen> {
                     ),
               ),
               SizedBox(
-                height: 128.h,
+                height: 40.h,
               ),
             ],
           ),
@@ -212,10 +214,10 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
     return Center(
       child: Container(
         width: 360.w,
-        padding: EdgeInsets.all(20.h),
+        padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.w),
           boxShadow: [
             BoxShadow(
               color: grayBlack.withOpacity(0.1),
@@ -240,8 +242,8 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                             Stack(children: [
                               ProfileImageWidget(
                                 imageProvider: FileImage(photoState),
-                                size: 60.h,
-                                radius: 24.h,
+                                size: 60.w,
+                                radius: 24.w,
                               ),
                               if (!widget.fromDirect)
                                 Positioned(
@@ -256,8 +258,8 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                                       child: Image(
                                         image: const AssetImage(
                                             'assets/icons/x.png'),
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       )),
                                 ),
                             ])
@@ -265,15 +267,15 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                             ProfileImageWidget(
                               imageProvider:
                                   NetworkImage(plantState.information.imageUrl),
-                              size: 60.h,
-                              radius: 24.h,
+                              size: 60.w,
+                              radius: 24.w,
                             )
                           else
                             ProfileImageWidget(
                               imageProvider:
                                   const AssetImage('assets/images/pot.png'),
-                              size: 60.h,
-                              radius: 24.h,
+                              size: 60.w,
+                              radius: 24.w,
                             )
                         ],
                       ),
@@ -301,102 +303,112 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                   ),
                 ),
                 if (!widget.fromDirect)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      RoundedButton(
-                        onPressed: () => showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20),
-                            ),
-                          ),
-                          builder: (context) => Container(
-                            padding: const EdgeInsets.all(32),
-                            height: 180.h,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("식물 사진 추가",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(color: grayBlack)),
-                                SizedBox(
-                                  height: 32.h,
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    ref
-                                        .read(photoProvider.notifier)
-                                        .setNewPhoto(camera: true);
-                                  },
-                                  child: Align(
-                                    alignment: const Alignment(-1.0, 0.0),
-                                    child: Text(
-                                      "카메라",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            color: grayColor700,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    ref
-                                        .read(photoProvider.notifier)
-                                        .setNewPhoto(camera: false);
-                                  },
-                                  child: Align(
-                                    alignment: const Alignment(-1.0, 0.0),
-                                    child: Text(
-                                      "갤러리 사진 선택",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            color: grayColor700,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                  GestureDetector(
+                    onTap: () => showModalBottomSheet(
+                      backgroundColor: Colors.white,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.w),
                         ),
-                        font: Theme.of(context).textTheme.labelMedium,
-                        backgroundColor: Colors.white,
-                        borderColor: pointColor2.withOpacity(
-                          0.5,
-                        ),
-                        width: 90.w,
-                        height: 30.h,
-                        textColor: pointColor2,
-                        name: photoState != null ? '사진 변경' : '사진 추가',
                       ),
-                    ],
+                      builder: (context) => Padding(
+                        padding: EdgeInsets.all(32.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("식물 사진 추가",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(color: grayBlack)),
+                            SizedBox(
+                              height: 22.h,
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 10.0.w),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                ref
+                                    .read(photoProvider.notifier)
+                                    .setNewPhoto(camera: true);
+                              },
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "카메라",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: grayColor700,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 10.0.w),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0),
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                ref
+                                    .read(photoProvider.notifier)
+                                    .setNewPhoto(camera: false);
+                              },
+                              child: Align(
+                                alignment: const Alignment(-1.0, 0.0),
+                                child: Text(
+                                  "갤러리 사진 선택",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                        color: grayColor700,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white, // 전체 배경색
+                        border: Border.all(
+                          color: pointColor2.withOpacity(0.5), // 테두리 색상
+                          width: 1.0.w,
+                        ),
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(20.0.w),
+                          right: Radius.circular(20.0.w),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          photoState != null ? '사진 변경' : '사진 추가',
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    color: pointColor2,
+                                  ),
+                        ),
+                      ),
+                    ),
                   )
               ],
             ),
@@ -458,11 +470,11 @@ class _AddPlantCardState extends ConsumerState<AddPlantCard> {
                   child: Container(
                     color: Colors.white,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.0,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.0.w,
                       ),
                       child: Text(
-                        '별칭',
+                        '별칭(선택)',
                         style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               color: grayColor600,
                             ),

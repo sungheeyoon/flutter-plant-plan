@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,16 +25,17 @@ Future main() async {
   final isAutoLogin = autoLoginManager.isAutoLogin;
 
   runApp(
-    ProviderScope(
-      child: MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
-    ),
-    // 해상도 대응용
+    // 프로덕션용
     // ProviderScope(
-    //   child: DevicePreview(
-    //     builder: (context) =>
-    //         MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
-    //   ),
+    //   child: MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
     // ),
+    // 해상도 대응용
+    ProviderScope(
+      child: DevicePreview(
+        builder: (context) =>
+            MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
+      ),
+    ),
   );
 }
 

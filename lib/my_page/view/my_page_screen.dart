@@ -34,15 +34,15 @@ class MyPageScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 9,
+            SizedBox(
+              height: 9.h,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: UsernameAndAlarm(username: userMeState.username),
             ),
-            const SizedBox(
-              height: 21,
+            SizedBox(
+              height: 21.h,
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
@@ -86,10 +86,10 @@ class MyPageScreen extends ConsumerWidget {
                         rootTabState.navigateToBookMarkDiaryScreen();
                       }
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.navigate_next_sharp,
                       color: grayColor500,
-                      size: 20,
+                      size: 20.w,
                     ),
                   ),
                 ],
@@ -138,9 +138,9 @@ class SettingMenu extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
-          16,
+          16.w,
         ),
-        border: Border.all(color: grayColor200),
+        border: Border.all(color: grayColor200, width: 1.w),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -156,17 +156,17 @@ class SettingMenu extends StatelessWidget {
                 ),
               ),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 28.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const ImageIcon(
-                      AssetImage('assets/icons/my_page/setting.png'),
+                    ImageIcon(
+                      const AssetImage('assets/icons/my_page/setting.png'),
                       color: grayColor700,
-                      size: 24,
+                      size: 24.w,
                     ),
-                    const SizedBox(
-                      height: 6,
+                    SizedBox(
+                      height: 6.h,
                     ),
                     Text(
                       '계정 정보',
@@ -181,9 +181,9 @@ class SettingMenu extends StatelessWidget {
             ),
           ),
           Container(
-            width: 2.0,
-            height: 16,
-            color: grayColor300,
+            width: 2.0.w,
+            height: 16.w,
+            color: grayColor200,
           ),
           Flexible(
             child: GestureDetector(
@@ -195,17 +195,17 @@ class SettingMenu extends StatelessWidget {
                 ),
               ),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 28.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const ImageIcon(
-                      AssetImage('assets/icons/my_page/alarm.png'),
+                    ImageIcon(
+                      const AssetImage('assets/icons/my_page/alarm.png'),
                       color: grayColor700,
-                      size: 24,
+                      size: 24.w,
                     ),
-                    const SizedBox(
-                      height: 6,
+                    SizedBox(
+                      height: 6.h,
                     ),
                     Text(
                       '알림 설정',
@@ -220,9 +220,9 @@ class SettingMenu extends StatelessWidget {
             ),
           ),
           Container(
-            width: 2.0,
-            height: 16,
-            color: grayColor300,
+            width: 2.0.w,
+            height: 16.w,
+            color: grayColor200,
           ),
           Flexible(
             child: GestureDetector(
@@ -234,17 +234,17 @@ class SettingMenu extends StatelessWidget {
                 ),
               ),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 28.w),
+                padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 28.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const ImageIcon(
-                      AssetImage('assets/icons/my_page/megaphone.png'),
+                    ImageIcon(
+                      const AssetImage('assets/icons/my_page/megaphone.png'),
                       color: grayColor700,
-                      size: 24,
+                      size: 24.w,
                     ),
-                    const SizedBox(
-                      height: 6,
+                    SizedBox(
+                      height: 6.h,
                     ),
                     Text(
                       '공지사항',
@@ -309,10 +309,10 @@ class Favorite extends ConsumerWidget {
                             color: grayColor500,
                           ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.navigate_next_sharp,
                       color: grayColor500,
-                      size: 20,
+                      size: 20.w,
                     ),
                   ],
                 ),
@@ -349,8 +349,8 @@ class Favorite extends ConsumerWidget {
                           },
                           child: PlantListCard(cardData: cardList[index])),
                       if (cardList.length - 1 != index)
-                        const SizedBox(
-                          width: 8,
+                        SizedBox(
+                          width: 8.w,
                         )
                     ],
                   ),
