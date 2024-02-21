@@ -19,10 +19,10 @@ class PlantListCard extends ConsumerWidget {
         Container(
           width: 150.w,
           height: 158.w,
-          padding: EdgeInsets.all(10.h),
+          padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 10.w),
           decoration: BoxDecoration(
             color: const Color(0xFFFFFFFF),
-            borderRadius: BorderRadius.circular(12.h),
+            borderRadius: BorderRadius.circular(12.w),
             boxShadow: const [
               BoxShadow(
                 offset: Offset(2, 2),
@@ -34,7 +34,7 @@ class PlantListCard extends ConsumerWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CachedNetworkImage(
                 imageUrl: cardData.imageUrl,
@@ -63,11 +63,11 @@ class PlantListCard extends ConsumerWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.h),
+                  borderRadius: BorderRadius.circular(10.w),
                   border:
-                      Border.all(width: 1.h, color: const Color(0xFFEDEDED)),
+                      Border.all(width: 1.w, color: const Color(0xFFEDEDED)),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 4.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -100,8 +100,8 @@ class PlantListCard extends ConsumerWidget {
                         height: 14.w,
                         fit: BoxFit.contain,
                       ),
-                    const SizedBox(
-                      width: 6,
+                    SizedBox(
+                      width: 6.w,
                     ),
                     Text(
                       cardData.fields.isEmpty

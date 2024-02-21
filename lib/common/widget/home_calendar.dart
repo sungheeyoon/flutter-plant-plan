@@ -56,12 +56,11 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (watering != null) {
       dots.add(
         Container(
-          margin: const EdgeInsets.only(left: 2),
-          width: 4.h,
-          height: 4.h,
+          width: 4.w,
+          height: 4.w,
           decoration: BoxDecoration(
             color: subColor1,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
       );
@@ -70,12 +69,11 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (repotting != null) {
       dots.add(
         Container(
-          margin: EdgeInsets.only(left: 4.h),
-          width: 4.h,
-          height: 4.h,
+          width: 4.w,
+          height: 4.w,
           decoration: BoxDecoration(
             color: subColor2,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
       );
@@ -84,31 +82,20 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
     if (nutrient != null) {
       dots.add(
         Container(
-          margin: EdgeInsets.only(left: 4.h),
-          width: 4.h,
-          height: 4.h,
+          width: 4.w,
+          height: 4.w,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(76, 237, 0, 1),
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(100),
           ),
         ),
       );
     }
 
-    if (watering == null && repotting == null && nutrient == null) {
-      dots.add(
-        Container(
-          margin: EdgeInsets.only(left: 4.h),
-          width: 4.h,
-          height: 4.h,
-        ),
-      );
-    }
-
     double width =
-        isSelectedDay ? MediaQuery.of(context).size.width * 0.8 : 46.h;
+        isSelectedDay ? MediaQuery.of(context).size.width * 0.8 : 46.w;
     double height =
-        isSelectedDay ? MediaQuery.of(context).size.height * 0.8 : 74.h;
+        isSelectedDay ? MediaQuery.of(context).size.height * 0.8 : 75.h;
 
     return GestureDetector(
       onTap: () {
@@ -134,7 +121,12 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: EdgeInsets.symmetric(
+          horizontal: 0.w,
+        ),
+        margin: EdgeInsets.symmetric(
+          horizontal: 3.w,
+        ),
         width: width,
         height: height,
         decoration: BoxDecoration(
@@ -145,15 +137,16 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                   : (!isSelectedDay && isToday)
                       ? Colors.white
                       : pointColor2,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(27.h),
-            bottom: Radius.circular(27.h),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(90),
+            bottom: Radius.circular(90),
           ),
           border:
               isSelectedDay ? Border.all(color: Colors.white, width: 2) : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               dayName,
@@ -199,9 +192,12 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
                               ),
             ),
             SizedBox(height: isSelectedDay ? 8.h : 2.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: dots,
+            SizedBox(
+              width: 25.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: dots,
+              ),
             ),
           ],
         ),
@@ -249,67 +245,69 @@ class _MyCalendarState extends ConsumerState<MyCalendar> {
               ],
             ),
           ),
-          SizedBox(height: 30.h),
-          SizedBox(
-            height: 90.h,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: 1000,
-              itemBuilder: (BuildContext context, int index) {
-                final now = DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                ).add(
-                  Duration(days: index - 500),
-                );
-                final isSelectedDay = now.year == selectedDateState.year &&
-                    now.month == selectedDateState.month &&
-                    now.day == selectedDateState.day;
-                final isToday = index == 500;
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 22.h),
+            child: SizedBox(
+              height: 90.w,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: 1000,
+                itemBuilder: (BuildContext context, int index) {
+                  final now = DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day,
+                  ).add(
+                    Duration(days: index - 500),
+                  );
+                  final isSelectedDay = now.year == selectedDateState.year &&
+                      now.month == selectedDateState.month &&
+                      now.day == selectedDateState.day;
+                  final isToday = index == 500;
 
-                PlantField? watering;
-                PlantField? repotting;
-                PlantField? nutrient;
+                  PlantField? watering;
+                  PlantField? repotting;
+                  PlantField? nutrient;
 
-                for (final PlantModel plant in widget.plants) {
-                  final List<AlarmModel> alarms = plant.alarms;
+                  for (final PlantModel plant in widget.plants) {
+                    final List<AlarmModel> alarms = plant.alarms;
 
-                  for (final AlarmModel alarm in alarms) {
-                    DateTime zeroStartTime = DateTime(
-                      alarm.startTime.year,
-                      alarm.startTime.month,
-                      alarm.startTime.day,
-                    );
+                    for (final AlarmModel alarm in alarms) {
+                      DateTime zeroStartTime = DateTime(
+                        alarm.startTime.year,
+                        alarm.startTime.month,
+                        alarm.startTime.day,
+                      );
 
-                    if (alarm.isOn &&
-                            (alarm.repeat != 0 &&
-                                (now.isAfter(zeroStartTime) &&
-                                    now.difference(zeroStartTime).inDays %
-                                            alarm.repeat ==
-                                        0)) ||
-                        (alarm.repeat == 0 &&
-                            selectedDateState == zeroStartTime)) {
-                      if (alarm.field == PlantField.watering) {
-                        watering = PlantField.watering;
-                      } else if (alarm.field == PlantField.repotting) {
-                        repotting = PlantField.repotting;
-                      } else if (alarm.field == PlantField.nutrient) {
-                        nutrient = PlantField.nutrient;
+                      if (alarm.isOn &&
+                              (alarm.repeat != 0 &&
+                                  (now.isAfter(zeroStartTime) &&
+                                      now.difference(zeroStartTime).inDays %
+                                              alarm.repeat ==
+                                          0)) ||
+                          (alarm.repeat == 0 &&
+                              selectedDateState == zeroStartTime)) {
+                        if (alarm.field == PlantField.watering) {
+                          watering = PlantField.watering;
+                        } else if (alarm.field == PlantField.repotting) {
+                          repotting = PlantField.repotting;
+                        } else if (alarm.field == PlantField.nutrient) {
+                          nutrient = PlantField.nutrient;
+                        }
                       }
                     }
                   }
-                }
 
-                return _buildDateContainer(
-                  date: now,
-                  isToday: isToday,
-                  isSelectedDay: isSelectedDay,
-                  watering: watering,
-                  repotting: repotting,
-                  nutrient: nutrient,
-                );
-              },
+                  return _buildDateContainer(
+                    date: now,
+                    isToday: isToday,
+                    isSelectedDay: isSelectedDay,
+                    watering: watering,
+                    repotting: repotting,
+                    nutrient: nutrient,
+                  );
+                },
+              ),
             ),
           ),
         ],

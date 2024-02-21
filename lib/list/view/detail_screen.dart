@@ -36,6 +36,15 @@ class DetailScreen extends ConsumerWidget {
       return ErrorScreen(errorMessage: detailState.message);
     } else if (detailState is DetailModel) {
       return DefaultLayout(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            size: 24.w,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -69,8 +78,8 @@ class DetailScreen extends ConsumerWidget {
               padding: const EdgeInsets.only(right: 24.0),
               child: Image.asset(
                 'assets/icons/trash.png',
-                width: 24,
-                height: 24,
+                width: 24.w,
+                height: 24.w,
               ),
             ),
           )
@@ -80,7 +89,7 @@ class DetailScreen extends ConsumerWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 6.h,
+                height: 8.h,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.h),
@@ -144,7 +153,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
     return Container(
       width: 360.w,
       padding: EdgeInsets.symmetric(
-        horizontal: 16.h,
+        horizontal: 16.w,
         vertical: 12.h,
       ),
       decoration: BoxDecoration(
@@ -170,8 +179,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     ? ProfileImageWidget(
                         //새로운사진을 넣었을때
                         imageProvider: FileImage(newPhoto!),
-                        size: 60.h,
-                        radius: 24.h,
+                        size: 60.w,
+                        radius: 24.w,
                       )
                     : ProfileImageWidget(
                         imageProvider: NetworkImage(
@@ -179,8 +188,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                               ? detailState.data.information.imageUrl
                               : detailState.data.userImageUrl,
                         ),
-                        size: 60.h,
-                        radius: 24.h,
+                        size: 60.w,
+                        radius: 24.w,
                       ),
                 SizedBox(
                   width: 10.w,
@@ -224,8 +233,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                 },
                 child: Image(
                   image: const AssetImage('assets/icons/edit.png'),
-                  width: 24.h,
-                  height: 24.h,
+                  width: 24.w,
+                  height: 24.w,
                 ),
               ),
               SizedBox(
@@ -248,8 +257,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                         ? 'assets/icons/fav/fav_active.png'
                         : 'assets/icons/fav/fav_inactive.png',
                   ),
-                  width: 20.h,
-                  height: 20.h,
+                  width: 20.w,
+                  height: 20.w,
                 ),
               ),
             ],
@@ -327,7 +336,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                 width: 312.w,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.w),
                   boxShadow: const [
                     BoxShadow(
                       color: Color(0x1A000000),
@@ -352,8 +361,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                 children: [
                                   ProfileImageWidget(
                                     imageProvider: FileImage(photoState),
-                                    size: 60.h,
-                                    radius: 24.h,
+                                    size: 60.w,
+                                    radius: 24.w,
                                   ),
                                   Positioned(
                                     right: 1,
@@ -372,8 +381,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                       child: Image(
                                         image: const AssetImage(
                                             'assets/icons/x.png'),
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                   ),
@@ -384,8 +393,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                 children: [
                                   ProfileImageWidget(
                                     imageProvider: FileImage(newPhoto!),
-                                    size: 60.h,
-                                    radius: 24.h,
+                                    size: 60.w,
+                                    radius: 24.w,
                                   ),
                                   Positioned(
                                     right: 1,
@@ -404,8 +413,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                       child: Image(
                                         image: const AssetImage(
                                             'assets/icons/x.png'),
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                   ),
@@ -419,8 +428,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   ProfileImageWidget(
                                     imageProvider: NetworkImage(
                                         detailState.data.userImageUrl),
-                                    size: 60.h,
-                                    radius: 24.h,
+                                    size: 60.w,
+                                    radius: 24.w,
                                   ),
                                   Positioned(
                                     right: 1,
@@ -436,8 +445,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                       child: Image(
                                         image: const AssetImage(
                                             'assets/icons/x.png'),
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                   ),
@@ -449,16 +458,16 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                               ProfileImageWidget(
                                 imageProvider: NetworkImage(
                                     detailState.data.information.imageUrl),
-                                size: 60.h,
-                                radius: 24.h,
+                                size: 60.w,
+                                radius: 24.w,
                               )
                             else
                               // 어떤 이미지도 없는 경우
                               ProfileImageWidget(
                                 imageProvider:
                                     const AssetImage('assets/images/pot.png'),
-                                size: 60.h,
-                                radius: 24.h,
+                                size: 60.w,
+                                radius: 24.w,
                               )
                           ],
                         ),
@@ -490,12 +499,12 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                           borderColor: pointColor2.withOpacity(
                             0.5,
                           ),
-                          width: 90.h,
-                          height: 30.h,
+                          width: 90.w,
+                          height: 30.w,
                           textColor: pointColor2,
                           name: '사진 찍기',
                         ),
-                        SizedBox(width: 8.h),
+                        SizedBox(width: 8.w),
                         RoundedButton(
                           onPressed: () {
                             setState(() {
@@ -510,8 +519,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                           borderColor: pointColor2.withOpacity(
                             0.5,
                           ),
-                          width: 90.h,
-                          height: 30.h,
+                          width: 90.w,
+                          height: 30.w,
                           textColor: pointColor2,
                           name: '사진 선택',
                         ),
@@ -519,11 +528,11 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                     ),
                     SizedBox(height: 20.h),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       child: Stack(
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(top: 8),
+                            margin: EdgeInsets.only(top: 8.h),
                             child: TextFormField(
                               controller: textController,
                               textAlignVertical: TextAlignVertical.center,
@@ -533,7 +542,8 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                   .bodyMedium!
                                   .copyWith(color: grayBlack),
                               decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.only(left: 16),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(16.w, 10.w, 0, 10.w),
                                 hintText: '내 식물의 별칭을 입력해주세요',
                                 hintStyle: Theme.of(context)
                                     .textTheme
@@ -541,13 +551,13 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                                     .copyWith(
                                       color: grayColor400,
                                     ),
-                                focusedBorder: const OutlineInputBorder(
+                                focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(
-                                      8.0,
+                                      8.0.w,
                                     ),
                                   ),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 1,
                                     color: keyColor500,
                                   ),
@@ -567,7 +577,7 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                             ),
                           ),
                           Positioned(
-                            left: 12,
+                            left: 12.w,
                             top: 0,
                             child: Container(
                               color: Colors.white,
@@ -632,23 +642,25 @@ class _DetailCardState extends ConsumerState<DetailCard> {
                             bottomRight: Radius.circular(15.0),
                           ),
                         ),
-                        elevation: 0, // 그림자 없애기
-// 탭 시 그림자 없애기
+                        elevation: 0,
+
                         side: BorderSide(
                             color: Colors.grey[200]!), // 하이라이트 시 테두리 추가
                       ),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            "수정",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .copyWith(
-                                  color: primaryColor,
-                                ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.w),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text(
+                              "수정",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .copyWith(
+                                    color: primaryColor,
+                                  ),
+                            ),
                           ),
                         ),
                       ),
@@ -721,7 +733,7 @@ class UpcomingAlarm extends ConsumerWidget {
             //다가오는 알림 컨테이너
             Container(
               width: 98.w,
-              height: 110.h,
+              height: 110.w,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12.h),
@@ -736,8 +748,8 @@ class UpcomingAlarm extends ConsumerWidget {
                 children: [
                   Image.asset(
                     'assets/images/management/humid.png',
-                    width: 28.h,
-                    height: 28.h,
+                    width: 28.w,
+                    height: 28.w,
                   ),
                   Text(
                     "물주기",
@@ -749,7 +761,6 @@ class UpcomingAlarm extends ConsumerWidget {
                     watering == "" ? '알림 없음' : watering,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: watering == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
                         ),
                   ),
                 ],
@@ -757,7 +768,7 @@ class UpcomingAlarm extends ConsumerWidget {
             ),
             Container(
               width: 98.w,
-              height: 110.h,
+              height: 110.w,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12.h),
@@ -772,8 +783,8 @@ class UpcomingAlarm extends ConsumerWidget {
                 children: [
                   Image.asset(
                     'assets/images/management/repotting.png',
-                    width: 28.h,
-                    height: 28.h,
+                    width: 28.w,
+                    height: 28.w,
                   ),
                   Text(
                     "분갈이",
@@ -785,7 +796,6 @@ class UpcomingAlarm extends ConsumerWidget {
                     repotting == "" ? '알림 없음' : repotting,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: repotting == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
                         ),
                   ),
                 ],
@@ -793,7 +803,7 @@ class UpcomingAlarm extends ConsumerWidget {
             ),
             Container(
               width: 98.w,
-              height: 110.h,
+              height: 110.w,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12.h),
@@ -808,8 +818,8 @@ class UpcomingAlarm extends ConsumerWidget {
                 children: [
                   Image.asset(
                     'assets/images/management/nutrient.png',
-                    width: 28.h,
-                    height: 28.h,
+                    width: 28.w,
+                    height: 28.w,
                   ),
                   Text(
                     "영양제",
@@ -821,7 +831,6 @@ class UpcomingAlarm extends ConsumerWidget {
                     nutrient == "" ? '알림 없음' : nutrient,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                           color: nutrient == "" ? grayColor400 : grayBlack,
-                          fontSize: 16,
                         ),
                   ),
                 ],

@@ -59,7 +59,7 @@ class AddSecondScreen extends ConsumerWidget {
         final userImageUrl = await ref
             .read(photoProvider.notifier)
             .uploadPhotoAndGetUserImageUrl();
-        print('userImageUrl = $userImageUrl');
+
         ref.read(addPlantProvider.notifier).updateUserImageUrl(userImageUrl);
 
         data = plantState.toJson();
@@ -93,6 +93,15 @@ class AddSecondScreen extends ConsumerWidget {
 
     return DefaultLayout(
       title: '식물추가',
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          size: 24.w,
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
           if (isTapHandled) {
@@ -133,7 +142,7 @@ class AddSecondScreen extends ConsumerWidget {
           }
         },
         child: Container(
-          height: 46.h,
+          height: 46.w,
           width: 360.w,
           decoration: const BoxDecoration(color: pointColor2),
           child: Center(
@@ -161,10 +170,10 @@ class AddSecondScreen extends ConsumerWidget {
               Center(
                 child: Container(
                   width: 360.w,
-                  padding: EdgeInsets.all(16.h),
+                  padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16.h),
+                    borderRadius: BorderRadius.circular(16.w),
                     boxShadow: [
                       BoxShadow(
                         color: grayBlack.withOpacity(0.1),
@@ -182,8 +191,8 @@ class AddSecondScreen extends ConsumerWidget {
                           children: [
                             ProfileImageWidget(
                               imageProvider: FileImage(photoState),
-                              size: 60.h,
-                              radius: 24.h,
+                              size: 60.w,
+                              radius: 24.w,
                             ),
                           ],
                         )
@@ -191,55 +200,38 @@ class AddSecondScreen extends ConsumerWidget {
                         ProfileImageWidget(
                           imageProvider:
                               NetworkImage(plantState.information.imageUrl),
-                          size: 60.h,
-                          radius: 24.h,
+                          size: 60.w,
+                          radius: 24.w,
                         )
                       else
                         ProfileImageWidget(
                           imageProvider:
                               const AssetImage('assets/images/pot.png'),
-                          size: 60.h,
-                          radius: 24.h,
+                          size: 60.w,
+                          radius: 24.w,
                         ),
                       SizedBox(
                         height: 12.h,
                       ),
                       if (plantState.alias != "")
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 6.h,
-                              vertical: 2.h,
-                            ),
-                            decoration: const BoxDecoration(
-                              color: keyColor100,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(4),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                plantState.alias,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .copyWith(
+                        Center(
+                          child: Text(
+                            plantState.alias,
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
                                       color: keyColor700,
                                     ),
-                              ),
-                            ),
                           ),
                         ),
                       if (plantState.information.name != "")
                         SizedBox(
-                          height: 4.h,
+                          height: 2.h,
                         ),
                       if (plantState.information.name != "")
                         Text(
                           plantState.information.name,
                           style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
                                     color: grayBlack,
                                   ),
                         ),
@@ -307,14 +299,14 @@ class ImmutableAlarmBox extends ConsumerWidget {
       child: Container(
         width: 360.w,
         padding: EdgeInsets.symmetric(
-          vertical: 10.h,
-          horizontal: 12.h,
+          vertical: 10.w,
+          horizontal: 12.w,
         ),
         decoration: BoxDecoration(
           color: grayColor100,
-          borderRadius: BorderRadius.circular(16.h),
+          borderRadius: BorderRadius.circular(16.w),
           border: Border.all(
-            width: 1.h,
+            width: 1.w,
             color: grayColor300,
           ),
         ),
@@ -329,11 +321,11 @@ class ImmutableAlarmBox extends ConsumerWidget {
                   children: [
                     Image.asset(
                       iconPath,
-                      width: 16.h,
-                      height: 16.h,
+                      width: 16.w,
+                      height: 16.w,
                     ),
                     SizedBox(
-                      height: 4.h,
+                      width: 4.w,
                     ),
                     Text(
                       title,
@@ -348,17 +340,17 @@ class ImmutableAlarmBox extends ConsumerWidget {
             Column(
               children: [
                 SizedBox(
-                  height: 8.h,
+                  height: 8.w,
                 ),
                 Container(
                   width: 360.w,
                   padding: EdgeInsets.symmetric(
-                    vertical: 10.h,
-                    horizontal: 20.h,
+                    vertical: 10.w,
+                    horizontal: 20.w,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.h),
+                    borderRadius: BorderRadius.circular(8.w),
                     boxShadow: [
                       BoxShadow(
                         color: grayBlack.withOpacity(0.1),

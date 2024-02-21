@@ -60,6 +60,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget buildCommonListTile(BuildContext context, InformationModel document) {
     return ListTile(
+      contentPadding: const EdgeInsets.all(0),
       title: Text(
         document.name,
         maxLines: 1,
@@ -69,24 +70,24 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ),
       leading: Image.network(
         document.imageUrl,
-        width: 40.h,
-        height: 40.h,
+        width: 40.w,
+        height: 40.w,
         fit: BoxFit.cover,
         loadingBuilder: (BuildContext context, Widget child,
             ImageChunkEvent? loadingProgress) {
           if (loadingProgress == null) {
             // 이미지 로딩 완료
             return ClipRRect(
-              borderRadius: BorderRadius.circular(16.h),
+              borderRadius: BorderRadius.circular(16.w),
               child: child,
             );
           } else {
             // 이미지 로딩 중
             return Container(
-              width: 40.h,
-              height: 40.h,
+              width: 40.w,
+              height: 40.w,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.h),
+                borderRadius: BorderRadius.circular(16.w),
                 color: grayColor200,
               ),
               child: const CircleAvatar(
@@ -129,95 +130,107 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          size: 24.w, // 원하는 크기로 조절
+        ),
+        onPressed: () {
+          // 뒤로가기 동작
+          Navigator.of(context).pop();
+        },
+      ),
       title: '식물 추가',
       titleBackgroundColor: keyColor100,
       floatingActionButton: hasSearchWords && !hasSearchResults
           ? null
           : const AddDirectlyButton(isShadow: true),
       child: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 20.h),
-            buildSearch(),
-            SizedBox(height: 20.h),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _streamInformationList,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(child: Text(snapshot.error.toString()));
-                  }
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    List<InformationModel> informationList =
-                        _informationListFromSnapshot(snapshot.data);
-
-                    if (hasSearchWords) {
-                      _updateSearchResults(informationList);
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 20.h),
+              buildSearch(),
+              SizedBox(height: 20.h),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _streamInformationList,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error.toString()));
                     }
-                    if (hasSearchWords && !hasSearchResults) {
-                      //검색어가있으나 결과가없는경우
-                      return Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '검색 결과가 없습니다',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(color: grayColor600),
-                            ),
-                            const SizedBox(height: 8),
-                            const AddDirectlyButton(isShadow: true),
-                          ],
-                        ),
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      List<InformationModel> informationList =
+                          _informationListFromSnapshot(snapshot.data);
+
+                      if (hasSearchWords) {
+                        _updateSearchResults(informationList);
+                      }
+                      if (hasSearchWords && !hasSearchResults) {
+                        //검색어가있으나 결과가없는경우
+                        return Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '검색 결과가 없습니다',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(color: grayColor600),
+                              ),
+                              SizedBox(height: 8.h),
+                              const AddDirectlyButton(isShadow: true),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: informationList.length,
+                        itemBuilder: (context, index) {
+                          InformationModel document = informationList[index];
+                          if (hasSearchWords) {
+                            //검색어가 있는경우 검색결과(hasSearchResults)여부 반환
+                            RegExp regExp = getRegExp(
+                              enteredKeyword,
+                              RegExpOptions(
+                                initialSearch: false,
+                                startsWith: false,
+                                endsWith: false,
+                                fuzzy: false,
+                                ignoreSpace: false,
+                                ignoreCase: false,
+                              ),
+                            );
+                            if (regExp.hasMatch(document.name)) {
+                              hasSearchResults = true;
+                            } else {
+                              hasSearchResults = false;
+                            }
+                          }
+                          if (!hasSearchWords) {
+                            // 검색어가 없다면 전부 반환
+                            return buildCommonListTile(
+                                context, informationList[index]);
+                          } else if (hasSearchResults) {
+                            //검색결과가 있는 경우
+                            return buildCommonListTile(
+                                context, informationList[index]);
+                          }
+
+                          return const SizedBox.shrink();
+                        },
                       );
                     }
-
-                    return ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      itemCount: informationList.length,
-                      itemBuilder: (context, index) {
-                        InformationModel document = informationList[index];
-                        if (hasSearchWords) {
-                          //검색어가 있는경우 검색결과(hasSearchResults)여부 반환
-                          RegExp regExp = getRegExp(
-                            enteredKeyword,
-                            RegExpOptions(
-                              initialSearch: false,
-                              startsWith: false,
-                              endsWith: false,
-                              fuzzy: false,
-                              ignoreSpace: false,
-                              ignoreCase: false,
-                            ),
-                          );
-                          if (regExp.hasMatch(document.name)) {
-                            hasSearchResults = true;
-                          } else {
-                            hasSearchResults = false;
-                          }
-                        }
-                        if (!hasSearchWords) {
-                          // 검색어가 없다면 전부 반환
-                          return buildCommonListTile(
-                              context, informationList[index]);
-                        } else if (hasSearchResults) {
-                          //검색결과가 있는 경우
-                          return buildCommonListTile(
-                              context, informationList[index]);
-                        }
-
-                        return const SizedBox.shrink();
-                      },
-                    );
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -253,18 +266,19 @@ class AddDirectlyButton extends StatelessWidget {
         shadowColor: isShadow ? grayBlack : null,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 12.0,
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.0.w,
+          vertical: 12.0.w,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.add,
               color: Colors.white,
+              size: 16.w,
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4.w),
             Text(
               '직접 추가하기',
               style: Theme.of(context)

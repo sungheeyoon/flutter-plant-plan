@@ -50,60 +50,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         getSelectedDateList(widget.plants, selectedDateState);
     return DefaultLayout(
       backgroundColor: pointColor2,
-      child: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            height: 760.h,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  pointColor2,
-                  Colors.white,
-                ],
-                stops: [0.5, 0.5],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+      child: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                pointColor2,
+                Colors.white,
+              ],
+              stops: [0.5, 0.5],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 194.h,
-                  child: MyCalendar(plants: widget.plants),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 12.h,
-                  ),
-                  decoration: const BoxDecoration(
+          ),
+          child: Column(
+            children: [
+              MyCalendar(plants: widget.plants),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30.w),
+                      topRight: Radius.circular(30.w),
                     ),
                     color: Colors.white,
                   ),
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 12.h,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
                         child: ProgressWidget(
-                            selectedDateAlarms: selectedDateAlarms,
-                            completeCount: calculateCompleteCount(
-                                selectedDateAlarms, selectedDateState)),
+                          selectedDateAlarms: selectedDateAlarms,
+                          completeCount: calculateCompleteCount(
+                              selectedDateAlarms, selectedDateState),
+                        ),
                       ),
                       SizedBox(
                         height: 20.h,
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
                         ),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              TextButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              flex: 2,
+                              child: TextButton(
                                 onPressed: () {
                                   _pageController.animateToPage(0,
                                       duration:
@@ -116,13 +114,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 },
                                 style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.symmetric(vertical: 8.w),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   backgroundColor: _currentPageIndex == 0
                                       ? primaryColor
                                       : Colors.white,
-                                  shape: const RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
+                                      left: Radius.circular(30.w),
+                                      right: Radius.circular(30.w),
                                     ),
                                   ),
                                 ),
@@ -150,7 +152,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ],
                                 ),
                               ),
-                              TextButton(
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: TextButton(
                                 onPressed: () {
                                   _pageController.animateToPage(1,
                                       duration:
@@ -163,13 +168,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 },
                                 style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.symmetric(vertical: 8.w),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   backgroundColor: _currentPageIndex == 1
                                       ? primaryColor
                                       : Colors.white,
-                                  shape: const RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
+                                      left: Radius.circular(30.w),
+                                      right: Radius.circular(30.w),
                                     ),
                                   ),
                                 ),
@@ -182,12 +191,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           _currentPageIndex == 0 ? 1.0 : 0.75,
                                       child: Image.asset(
                                         'assets/images/management/humid.png',
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 4.w,
+                                      width: 3.w,
                                     ),
                                     Text(
                                       '물주기',
@@ -206,13 +215,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     .withOpacity(0.75),
                                               ),
                                     ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
                                   ],
                                 ),
                               ),
-                              TextButton(
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: TextButton(
                                 onPressed: () {
                                   _pageController.animateToPage(2,
                                       duration:
@@ -225,13 +234,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 },
                                 style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.symmetric(vertical: 8.w),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   backgroundColor: _currentPageIndex == 2
                                       ? primaryColor
                                       : Colors.white,
-                                  shape: const RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
+                                      left: Radius.circular(30.w),
+                                      right: Radius.circular(30.w),
                                     ),
                                   ),
                                 ),
@@ -244,12 +257,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           _currentPageIndex == 2 ? 1.0 : 0.75,
                                       child: Image.asset(
                                         'assets/images/management/repotting.png',
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 4.w,
+                                      width: 3.w,
                                     ),
                                     Text(
                                       '분갈이',
@@ -268,13 +281,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     .withOpacity(0.75),
                                               ),
                                     ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
                                   ],
                                 ),
                               ),
-                              TextButton(
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: TextButton(
                                 onPressed: () {
                                   _pageController.animateToPage(3,
                                       duration:
@@ -285,13 +298,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   });
                                 },
                                 style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.symmetric(vertical: 8.w),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   backgroundColor: _currentPageIndex == 3
                                       ? primaryColor
                                       : Colors.white,
-                                  shape: const RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(30),
-                                      right: Radius.circular(30),
+                                      left: Radius.circular(30.w),
+                                      right: Radius.circular(30.w),
                                     ),
                                   ),
                                 ),
@@ -304,12 +321,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           _currentPageIndex == 3 ? 1.0 : 0.75,
                                       child: Image.asset(
                                         'assets/images/management/nutrient.png',
-                                        width: 16.h,
-                                        height: 16.h,
+                                        width: 16.w,
+                                        height: 16.w,
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 4.w,
+                                      width: 3.w,
                                     ),
                                     Text(
                                       '영양제',
@@ -328,18 +345,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     .withOpacity(0.75),
                                               ),
                                     ),
-                                    SizedBox(
-                                      width: 4.h,
-                                    ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
-                        height: 325.h,
+                        height: 16.h,
+                      ),
+                      Expanded(
                         child: PageView(
                           controller: _pageController,
                           onPageChanged: (index) {
@@ -375,9 +391,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                     ],
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -404,88 +420,90 @@ class ProgressWidget extends StatelessWidget {
         ),
         color: grayColor100,
       ),
-      height: 54.h,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '해야할 일',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall!
-                    .copyWith(color: grayColor500),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Text(
-                '${selectedDateAlarms.length}',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall!
-                    .copyWith(color: grayBlack),
-              ),
-            ],
-          ),
-          Container(
-            width: 1.0,
-            height: 16.h,
-            color: grayColor300,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '완료',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall!
-                    .copyWith(color: grayColor500),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Text(
-                '$completeCount',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall!
-                    .copyWith(color: grayBlack),
-              ),
-            ],
-          ),
-          Container(
-            width: 1.0,
-            height: 16.h,
-            color: grayColor300,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '성공률',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall!
-                    .copyWith(color: grayColor500),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              Text(
-                //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
-                '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall!
-                    .copyWith(color: grayBlack),
-              ),
-            ],
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '해야할 일',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall!
+                      .copyWith(color: grayColor500),
+                ),
+                const SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  '${selectedDateAlarms.length}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(color: grayBlack),
+                ),
+              ],
+            ),
+            Container(
+              width: 1.0,
+              height: 16.h,
+              color: grayColor300,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '완료',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall!
+                      .copyWith(color: grayColor500),
+                ),
+                const SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  '$completeCount',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(color: grayBlack),
+                ),
+              ],
+            ),
+            Container(
+              width: 1.0,
+              height: 16.h,
+              color: grayColor300,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '성공률',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall!
+                      .copyWith(color: grayColor500),
+                ),
+                const SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  //selectedDateState 날짜에 매치된 userInfoList Alarm isOn/userInfoList Alarm 갯수 를 퍼센트로 보여준다
+                  '${selectedDateAlarms.isNotEmpty ? (completeCount / selectedDateAlarms.length * 100).toInt() : 0}%',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(color: grayBlack),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -533,11 +551,8 @@ class TodoTap extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 16,
-                ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Text(
                     '${selectedDateAlarms.length}개의 일정이 있어요',
                     style: Theme.of(context)
@@ -546,9 +561,9 @@ class TodoTap extends ConsumerWidget {
                         .copyWith(color: fieldColor),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
                   primary: false,
                   shrinkWrap: true,
                   itemCount: selectedDateAlarms.length,
@@ -583,7 +598,6 @@ class TodoTap extends ConsumerWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 8),
               ],
             ),
           );
@@ -675,10 +689,11 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
     }
 
     return Container(
-      height: 60.h,
+      width: 360.w,
+      height: 60.w,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.h),
         boxShadow: const [
           BoxShadow(
             offset: Offset(2, 2),
@@ -689,56 +704,58 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 9.h,
-                decoration: BoxDecoration(
-                  color: fieldColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8),
+          Expanded(
+            child: Row(
+              children: [
+                Container(
+                  width: 8.w,
+                  decoration: BoxDecoration(
+                    color: fieldColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8.w),
+                      bottomLeft: Radius.circular(8.w),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 8.w),
-              ProfileImageWidget(
+                SizedBox(width: 16.w),
+                ProfileImageWidget(
                   imageProvider: NetworkImage(
                     widget.info.userImageUrl == ""
                         ? widget.info.information.imageUrl
                         : widget.info.userImageUrl,
                   ),
-                  size: 36.h,
-                  radius: 14.h),
-              SizedBox(width: 8.w),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    field,
-                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                          color: grayColor600,
-                        ),
+                  size: 36.w,
+                  radius: 14.w,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        field,
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              color: grayColor600,
+                            ),
+                      ),
+                      Text(
+                        widget.info.alias.isNotEmpty
+                            ? widget.info.alias
+                            : widget.info.information.name,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: grayBlack,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 140.w,
-                    child: Text(
-                      widget.info.alias.isNotEmpty
-                          ? widget.info.alias
-                          : widget.info.information.name,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: grayBlack,
-                          ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -750,7 +767,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                       color: primaryColor,
                     ),
               ),
-              SizedBox(width: 4.w),
+              SizedBox(width: 8.w),
               GestureDetector(
                 onTap: () async {
                   updateCheckBoxWithNotification();
@@ -760,11 +777,11 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                 },
                 child: Icon(
                   isDone ? Icons.check_circle : Icons.check_circle_outline,
-                  size: 28.h,
+                  size: 28.w,
                   color: fieldColor,
                 ),
               ),
-              SizedBox(width: 4.w),
+              SizedBox(width: 12.w),
             ],
           )
         ],

@@ -130,12 +130,12 @@ class AlarmBoxWidget extends ConsumerWidget {
       child: Center(
         child: Container(
           width: 360.w,
-          padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 16.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           decoration: BoxDecoration(
             color: grayColor100,
-            borderRadius: BorderRadius.circular(16.h),
+            borderRadius: BorderRadius.circular(16.w),
             border: Border.all(
-              width: 1.h,
+              width: 1.w,
               color: grayColor300,
             ),
           ),
@@ -151,11 +151,11 @@ class AlarmBoxWidget extends ConsumerWidget {
                     children: [
                       Image.asset(
                         iconPath,
-                        width: 20.h,
-                        height: 20.h,
+                        width: 20.w,
+                        height: 20.w,
                       ),
-                      const SizedBox(
-                        width: 4,
+                      SizedBox(
+                        width: 4.w,
                       ),
                       Text(
                         title,
@@ -163,8 +163,8 @@ class AlarmBoxWidget extends ConsumerWidget {
                               color: grayBlack,
                             ),
                       ),
-                      const SizedBox(
-                        width: 6,
+                      SizedBox(
+                        width: 6.w,
                       ),
                       if (isDetail)
                         buildDateDifferenceWidget(earliestDate, now, context),
@@ -172,18 +172,18 @@ class AlarmBoxWidget extends ConsumerWidget {
                   ),
                   if (alarmState == null)
                     CircleAvatar(
-                      radius: 8.h,
+                      radius: 8.w,
                       backgroundColor: pointColor2,
-                      child: const Icon(
+                      child: Icon(
                         Icons.add, // 플러스 아이콘
-                        size: 16, // 아이콘 크기 설정
+                        size: 16.w, // 아이콘 크기 설정
                         color: Colors.white, // 아이콘 색상 설정
                       ),
                     ),
                   if (alarmState != null && isDetail)
                     SizedBox(
-                      width: 40.h,
-                      height: 25.2.h,
+                      width: 40.w,
+                      height: 25.2.w,
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: CupertinoSwitch(
@@ -213,10 +213,12 @@ class AlarmBoxWidget extends ConsumerWidget {
                     Container(
                       width: 360.w,
                       padding: EdgeInsets.symmetric(
-                          vertical: 12.h, horizontal: 16.h),
+                        vertical: 12.h,
+                        horizontal: 16.w,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.h),
+                        borderRadius: BorderRadius.circular(8.w),
                         boxShadow: [
                           BoxShadow(
                             color: grayBlack.withOpacity(0.1),
@@ -237,13 +239,14 @@ class AlarmBoxWidget extends ConsumerWidget {
                                   ? const SizedBox.shrink()
                                   : Container(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: 4.h,
-                                        vertical: 2.h,
+                                        horizontal: 4.w,
+                                        vertical: 2.w,
                                       ),
                                       decoration: BoxDecoration(
                                         color: pointColor1.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(
-                                            4), // border radius 설정
+                                          4.w,
+                                        ),
                                       ),
                                       child: Center(
                                         child: Text(
@@ -312,8 +315,8 @@ class AlarmBoxWidget extends ConsumerWidget {
                             },
                             child: Image.asset(
                               'assets/icons/trash.png',
-                              width: 18.h,
-                              height: 18.h,
+                              width: 18.w,
+                              height: 18.w,
                             ),
                           ),
                         ],

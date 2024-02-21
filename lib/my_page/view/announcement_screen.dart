@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/common/layout/default_layout.dart';
 import 'package:plant_plan/my_page/model/announcement_model.dart';
 import 'package:plant_plan/services/firebase_service.dart';
@@ -87,8 +88,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             return ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16.w),
                   color: Colors.white,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,8 +138,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
               },
               body: Container(
                 decoration: const BoxDecoration(color: grayColor100),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16.w),
                 child: Row(
                   children: [
                     Text(
