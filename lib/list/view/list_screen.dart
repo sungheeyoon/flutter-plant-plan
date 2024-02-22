@@ -63,6 +63,7 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(deleteIdList);
     final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
     List<ListCardModel> cardList = isFavorite
         ? getCardList(widget.plants, true)
@@ -121,12 +122,12 @@ class _ListScreenState extends ConsumerState<ListScreen> {
                         isRed: false,
                         onPressed: () async {
                           for (final deleteId in deleteIdList) {
-                            LocalNotificationService notificationService =
-                                LocalNotificationService();
                             await ref
                                 .read(plantsProvider.notifier)
                                 .deletePlant(deleteId);
-                            await notificationService.deleteFromDocId(deleteId);
+
+                            await LocalNotificationService()
+                                .deleteFromDocId(deleteId);
                           }
 
                           //modal창종료

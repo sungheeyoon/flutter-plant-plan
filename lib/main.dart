@@ -26,16 +26,16 @@ Future main() async {
 
   runApp(
     // 프로덕션용
-    // ProviderScope(
-    //   child: MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
-    // ),
-    // 해상도 대응용
     ProviderScope(
-      child: DevicePreview(
-        builder: (context) =>
-            MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
-      ),
+      child: MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
     ),
+    // 해상도 대응용
+    // ProviderScope(
+    //   child: DevicePreview(
+    //     builder: (context) =>
+    //         MyApp(isShowLogin: isShowLogin, isAutoLogin: isAutoLogin),
+    //   ),
+    // ),
   );
 }
 

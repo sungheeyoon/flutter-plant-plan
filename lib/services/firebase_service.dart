@@ -54,12 +54,12 @@ class FirebaseService {
 
       //유저가 설정한 식물이미지 삭제
       if (plant.userImageUrl != "") {
-        deleteImageFromStorage(plant.userImageUrl);
+        await deleteImageFromStorage(plant.userImageUrl);
       }
       //해당 식물의 다이어리 이미지 전부 삭제
       for (DiaryModel diary in plant.diary) {
         for (final diaryImage in diary.imageUrl) {
-          deleteImageFromStorage(diaryImage);
+          await deleteImageFromStorage(diaryImage);
         }
       }
 
