@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_plan/utils/colors.dart';
 
 class ProfileImageWidget extends StatelessWidget {
   final ImageProvider imageProvider;
@@ -17,6 +18,7 @@ class ProfileImageWidget extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
+        color: grayColor200,
         image: DecorationImage(
           fit: BoxFit.cover,
           image: imageProvider,

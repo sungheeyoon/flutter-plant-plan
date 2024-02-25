@@ -155,73 +155,79 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
         },
       ),
       actions: [
-        TextButton(
-          onPressed: () async {
-            if (index != -1 &&
-                diaryState.title != "" &&
-                diaryState.context != "") {
-              final docId = plantIdList[index];
-              showLoadingDialog(context);
+        Padding(
+          padding: const EdgeInsets.only(right: 24),
+          child: TextButton(
+            onPressed: () async {
+              if (index != -1 &&
+                  diaryState.title != "" &&
+                  diaryState.context != "") {
+                final docId = plantIdList[index];
+                showLoadingDialog(context);
 
-              //만약 netWorkImageUrls 가 삭제되었다면
-              if (widget.diaryCard != null &&
-                  netWorkImageUrls.toString() !=
-                      diaryState.imageUrl.toString()) {
-                //삭제할 이미지를 deletedImageUrls 에 추가시킨다.
-                final List<String> deletedImageUrls = [];
-                for (final imageUrl in widget.diaryCard!.diary.imageUrl) {
-                  if (!netWorkImageUrls.contains(imageUrl)) {
-                    deletedImageUrls.add(imageUrl);
+                //만약 netWorkImageUrls 가 삭제되었다면
+                if (widget.diaryCard != null &&
+                    netWorkImageUrls.toString() !=
+                        diaryState.imageUrl.toString()) {
+                  //삭제할 이미지를 deletedImageUrls 에 추가시킨다.
+                  final List<String> deletedImageUrls = [];
+                  for (final imageUrl in widget.diaryCard!.diary.imageUrl) {
+                    if (!netWorkImageUrls.contains(imageUrl)) {
+                      deletedImageUrls.add(imageUrl);
+                    }
                   }
-                }
-                for (final imageUrl in deletedImageUrls) {
-                  await CachedNetworkImage.evictFromCache(imageUrl);
-                  await FirebaseService().deleteImageFromStorage(imageUrl);
+                  for (final imageUrl in deletedImageUrls) {
+                    await CachedNetworkImage.evictFromCache(imageUrl);
+                    await FirebaseService().deleteImageFromStorage(imageUrl);
+                  }
+
+                  await FirebaseService().syncImagesWithFirebaseStorage(
+                      netWorkImageUrls, docId, widget.diaryCard!.diary.id);
                 }
 
-                await FirebaseService().syncImagesWithFirebaseStorage(
-                    netWorkImageUrls, docId, widget.diaryCard!.diary.id);
-              }
+                //글쓰기인경우
+                if (widget.diaryCard == null) {
+                  //작성날짜를 현재로 설정한다.
+                  ref.read(diaryProvider.notifier).setDateNow();
+                  //변경,추가된 diary와 이미지를 추가삽입한다.
+                  await FirebaseService()
+                      .fireBaseAddDiary(docId, diaryState, images);
+                } else {
+                  await FirebaseService().fireBaseUpdateDiary(
+                      docId, diaryState, netWorkImageUrls, images);
+                }
 
-              //글쓰기인경우
-              if (widget.diaryCard == null) {
-                //작성날짜를 현재로 설정한다.
-                ref.read(diaryProvider.notifier).setDateNow();
-                //변경,추가된 diary와 이미지를 추가삽입한다.
-                await FirebaseService()
-                    .fireBaseAddDiary(docId, diaryState, images);
+                await ref.read(plantsProvider.notifier).updatedDiaryList(docId);
+                ref.read(diaryProvider.notifier).reset();
+
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                Navigator.pop(context);
+                final message = (widget.diaryCard != null)
+                    ? '다이어리가 수정되었습니다'
+                    : '다이어리가 추가되었습니다';
+                showCustomToast(context, message);
               } else {
-                await FirebaseService().fireBaseUpdateDiary(
-                    docId, diaryState, netWorkImageUrls, images);
+                return;
               }
-
-              await ref.read(plantsProvider.notifier).updatedDiaryList(docId);
-              ref.read(diaryProvider.notifier).reset();
-
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-              Navigator.pop(context);
-              final message = (widget.diaryCard != null)
-                  ? '다이어리가 수정되었습니다'
-                  : '다이어리가 추가되었습니다';
-              showCustomToast(context, message);
-            } else {
-              return;
-            }
-          },
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.only(right: 24),
-            disabledForegroundColor: const Color(0xFF999999).withOpacity(0.38),
-          ),
-          child: Text(
-            '완료',
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: index != -1 &&
-                          diaryState.title != "" &&
-                          diaryState.context != ""
-                      ? pointColor2
-                      : const Color(0xFF999999).withOpacity(0.38),
-                ),
+            },
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: const EdgeInsets.all(4),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              disabledForegroundColor:
+                  const Color(0xFF999999).withOpacity(0.38),
+            ),
+            child: Text(
+              '완료',
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: index != -1 &&
+                            diaryState.title != "" &&
+                            diaryState.context != ""
+                        ? pointColor2
+                        : const Color(0xFF999999).withOpacity(0.38),
+                  ),
+            ),
           ),
         )
       ],
