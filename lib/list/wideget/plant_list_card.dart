@@ -46,8 +46,9 @@ class PlantListCard extends ConsumerWidget {
                 placeholder: (context, url) => SizedBox(
                   width: 68.w,
                   height: 68.w,
-                  child: const CircleAvatar(
+                  child: CircleAvatar(
                     backgroundColor: grayColor200,
+                    radius: 34.w,
                   ),
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),

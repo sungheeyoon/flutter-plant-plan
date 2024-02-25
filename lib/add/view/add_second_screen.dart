@@ -36,6 +36,30 @@ class AddSecondScreen extends ConsumerWidget {
 
     bool isTapHandled = false;
 
+    void showLoadingDialog(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.black.withOpacity(0.5),
+            insetPadding: EdgeInsets.zero,
+            shape:
+                const BeveledRectangleBorder(borderRadius: BorderRadius.zero),
+            child: const SizedBox(
+              width: 1000,
+              height: 1000,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     Future<void> insertNewPlant() async {
       try {
         Map<String, dynamic> data;
@@ -104,7 +128,9 @@ class AddSecondScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
+          showLoadingDialog(context);
           if (isTapHandled) {
+            Navigator.pop(context);
             return;
           } else {
             isTapHandled = true;
@@ -134,6 +160,9 @@ class AddSecondScreen extends ConsumerWidget {
               await Future.delayed(const Duration(milliseconds: 1500));
               isTapHandled = false;
             } finally {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
               //한번누르면 무조건 에러가나지않는이상 isTapHandled 을 true로 유지한다
               // if (context.mounted) {
               //   isTapHandled = false;
