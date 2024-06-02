@@ -39,6 +39,10 @@ List<ListCardModel> getCardList(List<PlantModel> plantsState, bool isFavorite) {
           alarm.startTime.day,
         );
 
+        if (alarmDay == today) {
+          alarmDay = alarmDay.add(Duration(days: alarm.repeat));
+        }
+
         while (alarm.repeat > 0 && alarmDay.isBefore(today)) {
           alarmDay = alarmDay.add(Duration(days: alarm.repeat));
         }
