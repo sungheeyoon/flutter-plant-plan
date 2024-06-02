@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
@@ -423,31 +424,25 @@ class _DiaryCardState extends ConsumerState<DiaryCard> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                if (widget.diaryCard.diary.emoji != "")
+                  Image.asset(
+                    'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
+                    width: 24.w,
+                    height: 24.w,
+                  ),
+                const SizedBox(
+                  width: 4,
+                ),
                 Expanded(
-                  child: RichText(
+                  child: Text(
+                    widget.diaryCard.diary.title,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            color: grayBlack,
-                          ),
-                      children: [
-                        if (widget.diaryCard.diary.emoji != "")
-                          WidgetSpan(
-                            child: Image.asset(
-                              'assets/icons/emoji/${widget.diaryCard.diary.emoji}.png',
-                              width: 24.w,
-                              height: 24.w,
-                            ),
-                          ),
-                        TextSpan(
-                          text: widget.diaryCard.diary.title,
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: grayBlack,
                         ),
-                      ],
-                    ),
                   ),
                 ),
               ],

@@ -48,7 +48,7 @@ DateTime? findEarliestDate(List<DateTime> offDates) {
   }
 
   DateTime earliestDate = offDates.reduce((currentDate, nextDate) {
-    return currentDate.isBefore(nextDate) ? currentDate : nextDate;
+    return currentDate.isBefore(nextDate) ? nextDate : currentDate;
   });
 
   // 년,월,일만사용
