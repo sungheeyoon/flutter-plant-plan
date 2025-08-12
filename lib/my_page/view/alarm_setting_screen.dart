@@ -218,7 +218,6 @@ class _AlarmSettingScreenState extends ConsumerState<AlarmSettingScreen> {
                                 //? 시스템 알림설정 종료했을때(< 뒤로가기 시)
                                 PermissionStatus changedStatus =
                                     await Permission.notification.status;
-                                print('changedStatus:$changedStatus');
                                 if (changedStatus == PermissionStatus.granted) {
                                   //!notification on - 알림설정함
                                   setState(() {

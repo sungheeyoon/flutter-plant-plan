@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:toastification/toastification.dart';
 import 'package:plant_plan/add/model/plant_model.dart';
 import 'package:plant_plan/diary/model/diary_card_model.dart';
 import 'package:plant_plan/utils/colors.dart';
@@ -43,28 +43,23 @@ List<DiaryCardModel> getDiaryCardList({
 }
 
 void showCustomToast(BuildContext context, String msg) {
-  final fToast = FToast();
-  fToast.init(context);
-
-  Widget toast = Container(
-    width: 360.w,
-    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8.0),
-      color: grayBlack.withOpacity(0.6),
-    ),
-    child: Text(
+  toastification.show(
+    context: context,
+    title: Text(
       msg,
-      textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
             color: Colors.white,
           ),
     ),
-  );
-
-  fToast.showToast(
-    child: toast,
-    toastDuration: const Duration(seconds: 3),
-    gravity: ToastGravity.BOTTOM,
+    type: ToastificationType.info,
+    style: ToastificationStyle.minimal,
+    backgroundColor: grayBlack.withOpacity(0.6),
+    foregroundColor: Colors.white,
+    borderRadius: BorderRadius.circular(8.0),
+    alignment: Alignment.bottomCenter,
+    autoCloseDuration: const Duration(seconds: 3),
+    showProgressBar: false,
+    showIcon: false,
+    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
   );
 }

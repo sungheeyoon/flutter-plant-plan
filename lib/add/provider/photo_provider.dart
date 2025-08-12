@@ -31,8 +31,7 @@ class PhotoNotifier extends StateNotifier<File?> {
         : await imageHelper.pickImage();
 
     if (file != null) {
-      final croppedFile =
-          await imageHelper.crop(file: file, cropStyle: CropStyle.circle);
+      final croppedFile = await imageHelper.crop(file: file);
       if (croppedFile != null) {
         final pickedPhoto = XFile(croppedFile.path);
         state = File(pickedPhoto.path);
@@ -74,9 +73,7 @@ class PhotoNotifier extends StateNotifier<File?> {
 
     try {
       await imageRef.delete();
-      print("Image deleted successfully");
     } catch (error) {
-      print("Error deleting image: $error");
     }
   }
 }

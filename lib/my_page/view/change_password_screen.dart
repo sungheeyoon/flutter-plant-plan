@@ -61,7 +61,6 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         showCustomToast(context, '비밀번호가 변경되었습니다');
       }
     } catch (e) {
-      print("Error: $e");
       String errorMessage = '';
       if (e is FirebaseAuthException) {
         if (e.code == 'wrong-password') {
@@ -87,7 +86,6 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentPasswordErrorMessage);
     return DefaultLayout(
       title: "비밀번호 변경",
       floatingActionButton: Padding(

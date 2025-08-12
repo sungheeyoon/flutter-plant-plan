@@ -52,7 +52,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         displayError(e);
       }
     } else {
-      print('로그인 실패: 유효성 검사 실패');
     }
   }
 
@@ -92,7 +91,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _errorText = errorMessage;
     });
 
-    print('로그인 실패: $errorMessage');
   }
 
   //// for SharedPreferences test
@@ -100,6 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
 
   @override
   Widget build(BuildContext context) {

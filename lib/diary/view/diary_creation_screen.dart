@@ -33,7 +33,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
   String emoji = "";
   final List<XFile> images = [];
   List<String> netWorkImageUrls = [];
-  TextEditingController plantController = TextEditingController();
+  SingleSelectController<String?> plantController = SingleSelectController<String?>(null);
   TextEditingController titleController = TextEditingController();
   TextEditingController contextController = TextEditingController();
   ScrollController scrollController = ScrollController();
@@ -116,7 +116,7 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
         ref.read(diaryProvider.notifier).setDiary(widget.diaryCard!.diary);
 
         index = plantIdList.indexOf(widget.diaryCard!.docId);
-        plantController.text = plantNameList[index];
+        plantController.value = plantNameList[index];
       });
       titleController.text = widget.diaryCard!.diary.title;
       contextController.text = widget.diaryCard!.diary.context;
@@ -238,29 +238,31 @@ class _DiaryCreationScreenState extends ConsumerState<DiaryCreationScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: CustomDropdown(
+            child: CustomDropdown<String>(
               hintText: '식물을 선택해주세요',
-              hintStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: grayColor400),
-              selectedStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: grayBlack),
-              listItemStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: grayBlack),
-              borderSide: const BorderSide(
-                color: grayColor400,
-                width: 1.0,
-              ),
               items: plantNameList.isEmpty ? ['No items'] : plantNameList,
               controller: plantController,
+              decoration: CustomDropdownDecoration(
+                closedBorderRadius: BorderRadius.circular(8),
+                expandedBorderRadius: BorderRadius.circular(8),
+                closedBorder: const Border.fromBorderSide(BorderSide(
+                  color: grayColor400,
+                  width: 1.0,
+                )),
+                expandedBorder: const Border.fromBorderSide(BorderSide(
+                  color: grayColor400,
+                  width: 1.0,
+                )),
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: grayColor400),
+                closedFillColor: Colors.white,
+                expandedFillColor: Colors.white,
+              ),
               onChanged: (p0) {
                 setState(() {
-                  index = plantNameList.indexOf(plantController.text);
+                  index = plantNameList.indexOf(plantController.value ?? '');
                 });
               },
             ),

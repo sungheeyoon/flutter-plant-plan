@@ -23,14 +23,14 @@ class AddDirectlyScreen extends ConsumerStatefulWidget {
 
 class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
   Set<String> dropdownItems = {'물주기', '햇빛', '온도', '습도', '분갈이'};
-  List<TextEditingController> dropdownControllers = [];
+  List<SingleSelectController<String?>> dropdownControllers = [];
   List<TextEditingController> contextControllers = [];
   List<String> previousValues = ['p', 'p', 'p', 'p', 'p'];
   late ScrollController _scrollController;
 
   void onAddDropdown() {
     setState(() {
-      dropdownControllers.add(TextEditingController());
+      dropdownControllers.add(SingleSelectController<String?>(null));
       contextControllers.add(TextEditingController());
       Future.delayed(const Duration(milliseconds: 200), () {
         scrollToBottom();
@@ -41,7 +41,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
   void onRemoveDropdown(int index) {
     setState(() {
       if (index >= 0 && index < dropdownControllers.length) {
-        String removedItem = dropdownControllers[index].text;
+        String removedItem = dropdownControllers[index].value ?? '';
         dropdownControllers.removeAt(index);
         contextControllers.removeAt(index);
         if (removedItem.isNotEmpty && !dropdownItems.contains(removedItem)) {
@@ -52,7 +52,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
   }
 
   List<TipModel> createTipModels(
-      List<TextEditingController> dropdownControllers,
+      List<SingleSelectController<String?>> dropdownControllers,
       List<TextEditingController> contextControllers) {
     assert(dropdownControllers.length == contextControllers.length,
         'Controllers length mismatch');
@@ -60,7 +60,7 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
     List<TipModel> tipModels = [];
 
     for (int i = 0; i < dropdownControllers.length; i++) {
-      final String part = dropdownControllers[i].text;
+      final String part = dropdownControllers[i].value ?? '';
       final String context = contextControllers[i].text;
 
       if (part.isEmpty || context.isEmpty) {
@@ -228,36 +228,39 @@ class _AddDirectlyScreenState extends ConsumerState<AddDirectlyScreen> {
                               SizedBox(
                                 height: 42.h,
                                 width: 122.w,
-                                child: CustomDropdown(
+                                child: CustomDropdown<String>(
                                   hintText: '선택',
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: grayColor400),
-                                  selectedStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: grayBlack),
-                                  listItemStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: grayBlack),
-                                  borderSide: const BorderSide(
-                                    color: grayColor400,
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
                                   items: dropdownItems.toList(),
                                   controller: dropdownControllers[index],
+                                  decoration: CustomDropdownDecoration(
+                                    closedBorderRadius: BorderRadius.circular(8),
+                                    expandedBorderRadius: BorderRadius.circular(8),
+                                    closedBorder: const Border.fromBorderSide(BorderSide(
+                                      color: grayColor400,
+                                      width: 1.0,
+                                    )),
+                                    expandedBorder: const Border.fromBorderSide(BorderSide(
+                                      color: grayColor400,
+                                      width: 1.0,
+                                    )),
+                                    hintStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: grayColor400),
+                                    closedFillColor: Colors.white,
+                                    expandedFillColor: Colors.white,
+                                  ),
                                   onChanged: (p0) {
-                                    setState(() {
-                                      if (previousValues[index] != 'p') {
-                                        dropdownItems
-                                            .add(previousValues[index]);
-                                      }
-                                      dropdownItems.remove(p0);
-                                      previousValues[index] = p0;
-                                    });
+                                    if (p0 != null) {
+                                      setState(() {
+                                        if (previousValues[index] != 'p') {
+                                          dropdownItems
+                                              .add(previousValues[index]);
+                                        }
+                                        dropdownItems.remove(p0);
+                                        previousValues[index] = p0;
+                                      });
+                                    }
                                   },
                                 ),
                               ),

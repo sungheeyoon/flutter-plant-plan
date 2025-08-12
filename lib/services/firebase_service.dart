@@ -109,10 +109,8 @@ class FirebaseService {
 
         await plantDocRef.update({'alarms': alarms});
       } else {
-        print('the plant document does not exist');
       }
     } else {
-      print('Handle when the user is not logged in');
     }
   }
 
@@ -141,10 +139,8 @@ class FirebaseService {
 
         await plantDocRef.update({'diary': diaryEntries});
       } else {
-        print('the plant document does not exist');
       }
     } else {
-      print('Handle when the user is not logged in');
     }
   }
 
@@ -186,7 +182,6 @@ class FirebaseService {
 
   Future<void> fireBaseUpdateDiary(String docId, DiaryModel diary,
       List<String> netWorkImageUrls, List<XFile> images) async {
-    print(netWorkImageUrls);
     if (_currentUser != null) {
       final uid = _currentUser!.uid;
 
@@ -218,7 +213,6 @@ class FirebaseService {
 
             diary = diary.copyWith(imageUrl: updatedImageUrls);
             updatedDiaries[i] = diary.toJson();
-            print('updatedDiaries[i] : $updatedDiaries[i]');
             break;
           }
         }
@@ -256,7 +250,6 @@ class FirebaseService {
       Reference imageRef = FirebaseStorage.instance.refFromURL(imageUrl);
       await imageRef.delete();
     } catch (error) {
-      print("Error deleting image from storage: $error");
     }
   }
 
@@ -372,13 +365,11 @@ class FirebaseService {
         await _auth.signOut();
       } else {
         await _auth.signOut();
-        print('No signed in user');
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
         // 최근에 로그인한 사용자가 아니므로 다시 로그인하도록 유도
         // 여기에서 로그인 화면으로 이동하거나 로그인 다이얼로그를 표시하도록 처리**
-        print('Requires recent login. Please re-authenticate.');
       }
     }
   }
@@ -393,10 +384,8 @@ class FirebaseService {
           'body': announcement.body,
         });
       } else {
-        print('사용자가 로그인하지 않았습니다. 공지사항을 추가할 수 없습니다.');
       }
     } catch (e) {
-      print('공지사항을 추가하는 동안 오류가 발생했습니다: $e');
     }
   }
 
@@ -418,7 +407,6 @@ class FirebaseService {
 
       return announcements;
     } catch (e) {
-      print('공지사항을 가져오는 동안 오류가 발생했습니다: $e');
       return [];
     }
   }

@@ -17,7 +17,7 @@ class WithdrawFirstScreen extends StatefulWidget {
 }
 
 class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
-  TextEditingController reasonController = TextEditingController();
+  SingleSelectController<String?> reasonController = SingleSelectController<String?>(null);
   TextEditingController messageController = TextEditingController();
   @override
   void dispose() {
@@ -43,8 +43,8 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
         width: 360.w,
         child: ElevatedButton(
           onPressed: () {
-            if ((reasonController.text.isEmpty ||
-                    reasonController.text == '기타') &&
+            final reason = reasonController.value;
+            if ((reason == null || reason.isEmpty || reason == '기타') &&
                 messageController.text.isEmpty) {
               return;
             } else {
@@ -60,11 +60,13 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
             ),
             elevation: 0,
             minimumSize: const Size(0, 52),
-            backgroundColor: (reasonController.text.isEmpty ||
-                        reasonController.text == '기타') &&
-                    messageController.text.isEmpty
-                ? grayColor300
-                : errorColor,
+            backgroundColor: () {
+              final reason = reasonController.value;
+              return (reason == null || reason.isEmpty || reason == '기타') &&
+                      messageController.text.isEmpty
+                  ? grayColor300
+                  : errorColor;
+            }(),
           ),
           child: Text(
             "탈퇴하기",
@@ -123,37 +125,38 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
               const SizedBox(
                 height: 12,
               ),
-              CustomDropdown(
-                borderRadius: BorderRadius.circular(8),
+              CustomDropdown<String>(
                 hintText: '탈퇴 이유를 선택해주세요',
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayColor400),
-                selectedStyle: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayBlack),
-                listItemStyle: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: grayBlack),
-                borderSide: const BorderSide(
-                  color: grayColor400,
-                  width: 1.0,
-                ),
                 items: reasonList,
                 controller: reasonController,
+                decoration: CustomDropdownDecoration(
+                  closedBorderRadius: BorderRadius.circular(8),
+                  expandedBorderRadius: BorderRadius.circular(8),
+                  closedBorder: const Border.fromBorderSide(BorderSide(
+                    color: grayColor400,
+                    width: 1.0,
+                  )),
+                  expandedBorder: const Border.fromBorderSide(BorderSide(
+                    color: grayColor400,
+                    width: 1.0,
+                  )),
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: grayColor400),
+                  closedFillColor: Colors.white,
+                  expandedFillColor: Colors.white,
+                ),
                 onChanged: (p0) {
                   setState(() {
-                    reasonController.text = reasonController.text;
+                    // SingleSelectController는 자동으로 값이 설정되므로 별도 설정 불필요
                   });
                 },
               ),
               const SizedBox(
                 height: 12,
               ),
-              if (reasonController.text == '기타')
+              if (reasonController.value == '기타')
                 TextFormField(
                   style: Theme.of(context)
                       .textTheme
@@ -184,7 +187,7 @@ class _WithdrawFirstScreenState extends State<WithdrawFirstScreen> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      messageController.text = messageController.text;
+                      // UI 상태 업데이트
                     });
                   },
                 ),

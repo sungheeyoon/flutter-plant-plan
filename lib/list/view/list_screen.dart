@@ -63,7 +63,6 @@ class _ListScreenState extends ConsumerState<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(deleteIdList);
     final bool listDeleteModeState = ref.watch(listDeleteModeProvider);
     List<ListCardModel> cardList = isFavorite
         ? getCardList(widget.plants, true)

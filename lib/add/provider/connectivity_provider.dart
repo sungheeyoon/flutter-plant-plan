@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,21 +10,33 @@ final connectivityStatusProvider =
 );
 
 class ConnectivityStatusNotifier extends StateNotifier<ConnectivityStatus> {
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
   ConnectivityStatusNotifier() : super(ConnectivityStatus.notDetermined) {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      updateConnectivityStatus(result);
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      updateConnectivityStatus(results);
     });
 
-    Connectivity().checkConnectivity().then(updateConnectivityStatus);
+    Connectivity().checkConnectivity().then((List<ConnectivityResult> results) {
+      updateConnectivityStatus(results);
+    });
   }
 
-  void updateConnectivityStatus(ConnectivityResult result) {
-    final newStatus = result != ConnectivityResult.none
+  void updateConnectivityStatus(List<ConnectivityResult> results) {
+    final hasConnection = results.any((result) => result != ConnectivityResult.none);
+    
+    final newStatus = hasConnection
         ? ConnectivityStatus.isConnected
         : ConnectivityStatus.isDisconnected;
 
     if (newStatus != state) {
       state = newStatus;
     }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 }

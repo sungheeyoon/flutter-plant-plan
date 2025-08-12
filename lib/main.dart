@@ -86,12 +86,11 @@ class _MyAppState extends ConsumerState<MyApp> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.blue,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
               brightness: Brightness.light,
             ).copyWith(
               surface: Colors.white,
-              surfaceTint: Colors.white,
             ),
             scaffoldBackgroundColor: Colors.white,
             fontFamily: 'Pretendard',

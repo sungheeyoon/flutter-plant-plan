@@ -29,13 +29,30 @@ class ImageHelper {
     return null;
   }
 
-  Future<CroppedFile?> crop(
-          {required XFile file,
-          CropStyle cropStyle = CropStyle.rectangle}) async =>
-      await _imageCropper.cropImage(
-        sourcePath: file.path,
-        cropStyle: cropStyle,
-        maxHeight: 1000,
-        maxWidth: 1000,
-      );
+  Future<CroppedFile?> crop({required XFile file}) async {
+    return await ImageCropper().cropImage(
+      sourcePath: file.path,
+      maxHeight: 1000,
+      maxWidth: 1000,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 90,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: '이미지 자르기',
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+          ],
+        ),
+        IOSUiSettings(
+          title: '이미지 자르기',
+          aspectRatioLockEnabled: true,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+          ],
+        ),
+      ],
+    );
+  }
 }

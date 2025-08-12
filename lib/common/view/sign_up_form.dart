@@ -48,7 +48,6 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
             'userName': formData['name'],
             'email': email,
           });
-          print('회원가입 성공');
           try {
             await performLogin(formData['email'], formData['password']);
           } catch (e) {
@@ -60,7 +59,6 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
                 (route) => false);
           }
         } else {
-          print('회원가입 실패');
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'email-already-in-use') {
@@ -68,10 +66,8 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
             _emailErrorMessage = '이미 가입된 이메일 주소입니다.';
           });
         } else {
-          print('회원가입 에러: $e');
         }
       } catch (e) {
-        print('회원가입 에러: $e');
       }
     }
   }
@@ -96,7 +92,6 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
         (route) => false,
       );
     }
-    print('로그인 성공: ${userCredential.user!.uid}');
   }
 
   @override
@@ -173,6 +168,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
                         name: 'password',
                         title: '비밀번호',
                         hintText: '비밀번호를 입력해주세요',
+                        isPassword: true,
                         validator: (val) {
                           if (val == null || val.length < 6) {
                             return '비밀번호는 6자 이상이어야 합니다.';
@@ -185,6 +181,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
                         name: 'confirmPassword',
                         title: '비밀번호 확인',
                         hintText: '비밀번호를 다시 입력해주세요',
+                        isPassword: true,
                         validator: (val) {
                           if (val == null ||
                               val !=

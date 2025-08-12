@@ -39,7 +39,7 @@ class RootTabState extends ConsumerState<RootTab>
   @override
   void initState() {
     super.initState();
-    notificationService.initialize;
+    notificationService.initialize();
     notificationService.requestPermission();
     controller = TabController(length: 5, vsync: this);
     controller.index = widget.initialTabIndex;

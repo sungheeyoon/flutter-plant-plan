@@ -47,9 +47,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     try {
       // 공지사항 추가
       await firebaseService.addAnnouncement(announcement);
-      print('공지사항 추가 성공');
     } catch (e) {
-      print('공지사항 추가 실패: $e');
     }
   }
 
@@ -63,7 +61,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         announcements = fetchedAnnouncements;
       });
     } catch (e) {
-      print('공지사항 패치 실패: $e');
     }
   }
 
