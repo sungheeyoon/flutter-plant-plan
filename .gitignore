@@ -46,3 +46,18 @@ app.*.map.json
 # Claude Code related
 CLAUDE.md
 .claude/
+
+# Security and sensitive files
+secrets/
+.env*
+!.env.example
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+*.jks
+*.p12
+*.pem
+*.key
+**/upload-keystore*
+**/*keystore*
+**/*certificate*
+key.properties
